@@ -1,12 +1,26 @@
-import React from 'react'
-
+import React from "react";
+import {
+  About,
+  CTA,
+  Footer,
+  Hero,
+  Navbar,
+  Services,
+  Testimonials,
+} from "./LandingPage";
 
 function App() {
   return (
-    <div>
-      <h1 className='text-3xl text-red-500 flex justify-center items-center'>Welcome to Revo</h1>
-    </div>
-  )
+    <>
+      <Navbar />
+      <Hero />
+      <About />
+      <Services />
+      <Testimonials />
+      <CTA />
+      <Footer />
+    </>
+  );
 }
 
-export default App
+export default App;
