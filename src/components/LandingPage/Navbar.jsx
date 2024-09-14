@@ -66,7 +66,7 @@ const Navbar = () => {
 
             <div className="hidden md:flex space-x-6">
               <a
-                href="#"
+                href= "#"
                 className={`${
                   scrolled
                     ? "text-black-800 border-primary-500 hover:bg-primary-500"
@@ -76,7 +76,7 @@ const Navbar = () => {
                 Login
               </a>
               <a
-                href="#"
+                href="/auth" //added the path for redirecting to the signUP page
                 className={`${
                   scrolled
                     ? "bg-primary-500 text-white"

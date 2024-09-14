@@ -1,0 +1,1 @@
+export { default as passwordIssue } from "./PasswordIssue";
