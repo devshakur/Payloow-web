@@ -23,6 +23,9 @@ export default {
         "black-700": "#343a40",
         "black-800": "#212529",
       },
+      backgroundImage: {  
+        'custom-gradient': 'linear-gradient(to right, #003366, #004080, #0059b3, #0073e6)',  
+      }, 
     },
   },
   plugins: [],

@@ -1,0 +1,12 @@
+ .bg {
+        background-image: url('/images/authbg.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 375px;
+        width: 100%;
+        position: absolute;
+        top: -2rem;
+        max-width: 36rem;
+     }
+    
