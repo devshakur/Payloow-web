@@ -11,7 +11,7 @@ import {
 
 function App() {
   return (
-    <>
+    <body className="overflow-hidden">
       <Navbar />
       <Hero />
       <About />
@@ -19,7 +19,7 @@ function App() {
       <Testimonials />
       <CTA />
       <Footer />
-    </>
+    </body>
   );
 }
 

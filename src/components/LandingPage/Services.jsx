@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { ArrowRight3 } from "iconsax-react";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -62,7 +63,12 @@ const Services = () => {
       <section className="pb-20 bg-background" id="services">
         <div className="max-w-[1440px] mx-auto">
           <div className="grid md:grid-cols-2 md:h-screen">
-            <div className="bg-primary-500 text-white md:text-left text-center md:pl-20 px-5 py-10 space-y-3 relative">
+            <motion.div
+              initial={{ x: -600 }}
+              whileInView={{ x: 0 }}
+              transition={{ duration: 1.5, type: "spring" }}
+              className="bg-primary-500 text-white md:text-left text-center md:pl-20 px-5 py-10 space-y-3 relative"
+            >
               <ShapeOne />
               <h1 className="text-4xl md:max-w-sm font-bold">
                 Pay Your Bills Effortlessly
@@ -94,23 +100,38 @@ const Services = () => {
                   Start Paying Your Bills
                 </Link>
               </div>
-            </div>
-            <div className="bg-white md:mb-0 mb-10">
+            </motion.div>
+            <motion.div
+              initial={{ x: 600 }}
+              whileInView={{ x: 0 }}
+              transition={{ duration: 1.5, type: "spring" }}
+              className="bg-white md:mb-0 mb-10"
+            >
               <img
                 src="/images/bills-payment.webp"
                 alt=""
                 className="h-full object-cover"
               />
-            </div>
+            </motion.div>
           </div>
-          <div className="grid md:grid-cols-2 md:h-screen">
-            <div className="bg-white md:order-first order-last md:mb-0 mb-10">
+          <motion.div
+            initial={{ y: 200 }}
+            whileInView={{ y: 0 }}
+            transition={{ duration: 0.5, type: "tween" }}
+            className="grid md:grid-cols-2 md:h-screen"
+          >
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="bg-white md:order-first order-last md:mb-0 mb-10"
+            >
               <img
                 src="/images/investment.jpg"
                 alt=""
                 className="h-full w-full object-cover object-right"
               />
-            </div>
+            </motion.div>
             <div className="bg-primary-500 text-white md:text-left text-center md:pl-20 px-5 py-10 space-y-3 relative">
               <ShapeTwo />
               <h1 className="text-4xl md:max-w-md font-bold">
@@ -144,9 +165,14 @@ const Services = () => {
                 </Link>
               </div>
             </div>
-          </div>
+          </motion.div>
           <div className="grid md:grid-cols-2 md:h-screen">
-            <div className="bg-primary-500 text-white md:text-left text-center md:pl-20 px-5 py-10 space-y-3 relative">
+            <motion.div
+              initial={{ x: 100 }}
+              whileInView={{ x: 0 }}
+              transition={{ duration: 1.5, type: "spring" }}
+              className="bg-primary-500 text-white md:text-left text-center md:pl-20 px-5 py-10 space-y-3 relative"
+            >
               <ShapeOne />
               <h1 className="text-4xl md:max-w-md font-bold">
                 Learn Anytime, Anywhere
@@ -178,16 +204,26 @@ const Services = () => {
                   Explore Courses
                 </Link>
               </div>
-            </div>
-            <div className="bg-white">
+            </motion.div>
+            <motion.div
+              initial={{ x: -100 }}
+              whileInView={{ x: 0 }}
+              transition={{ duration: 1.5, type: "spring" }}
+              className="bg-white"
+            >
               <img
                 src="/images/e-learning.webp"
                 alt=""
                 className="h-full object-cover object-right"
               />
-            </div>
+            </motion.div>
           </div>
-          <div className="grid md:grid-cols-2 md:h-screen">
+          <motion.div
+            initial={{ y: 500 }}
+            whileInView={{ y: 0 }}
+            transition={{ duration: 0.5, type: "tween" }}
+            className="grid md:grid-cols-2 md:h-screen"
+          >
             <div className="bg-white md:order-first order-last">
               <img
                 src="/images/easybuy.jpg"
@@ -228,7 +264,7 @@ const Services = () => {
                 </Link>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </>
