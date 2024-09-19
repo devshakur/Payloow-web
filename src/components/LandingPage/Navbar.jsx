@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
+import { motion } from "framer-motion";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -26,7 +27,12 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className={navbarClasses}>
+      <motion.nav
+        initial={{ y: -250, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, type: "spring" }}
+        className={navbarClasses}
+      >
         <div className="max-w-[1440px] mx-auto">
           <div className="container mx-auto md:px-20 px-5 py-4 flex justify-between items-center font-plus-jakarta">
             <div
@@ -66,7 +72,7 @@ const Navbar = () => {
 
             <div className="hidden md:flex space-x-6">
               <a
-                href= "#"
+                href="#"
                 className={`${
                   scrolled
                     ? "text-black-800 border-primary-500 hover:bg-primary-500"
@@ -140,7 +146,7 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-      </nav>
+      </motion.nav>
     </>
   );
 };
