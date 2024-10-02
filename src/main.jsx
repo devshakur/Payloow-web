@@ -6,6 +6,7 @@ import ErrorPage from "./components/ErrorPage.jsx";
 import "./index.css";
 import Auth from "./components/AuthenticationPage/Auth.jsx";
 import PasswordIssue from "./components/AuthenticationPage/password-issues/PasswordIssue.jsx";
+import DashboardHome from "./components/Dashboard/DashboardHome.jsx";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,11 @@ const router = createBrowserRouter([
   {
     path: "/pswdissue",
     element: <PasswordIssue />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/dashboard",
+    element: <DashboardHome />,
     errorElement: <ErrorPage />,
   },
 ]);

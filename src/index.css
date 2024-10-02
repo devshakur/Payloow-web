@@ -5,3 +5,7 @@
 .link-hover {
   @apply md:hover:underline underline-offset-4;
 }
+
+* {
+  @apply font-plus-jakarta
+}
