@@ -5,9 +5,12 @@ export default {
     extend: {
       fontFamily: {
         "plus-jakarta": ["Plus Jakarta Sans", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
+        sans: ["Fira Sans", "sans-serif"],
       },
       colors: {
         background: "#f2f7f8",
+        primary: "#3369F4",
         "primary-100": "#c7f9cc",
         "primary-200": "#80ed99",
         "primary-300": "#57cc99",
@@ -22,10 +25,11 @@ export default {
         "black-600": "#495057",
         "black-700": "#343a40",
         "black-800": "#212529",
+        "primary-text": "#1D2433",
       },
-      backgroundImage: {  
-        'custom-gradient': 'linear-gradient(to right, #003366, #004080, #0059b3, #0073e6)',  
-      }, 
+      fontSizes: {
+        normal: "14px",
+      },
     },
   },
   plugins: [],

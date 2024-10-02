@@ -10,13 +10,10 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import {
-  ArrowDown,
+  ArrowDown2,
   BookSaved,
-  Calendar,
   Chart,
   CloseCircle,
-  DocumentCloud,
-  Folder,
   HambergerMenu,
   Headphone,
   Home,
@@ -24,28 +21,24 @@ import {
   MoneyChange,
   Notification,
   SearchNormal,
-  Setting,
   Setting2,
   TableDocument,
-  User,
 } from "iconsax-react";
+import { useLocation } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { Toaster } from "react-hot-toast";
 
 const navigation = [
-  { name: "Dashboard", href: "#", icon: Home, current: true },
-  { name: "Easybuy", href: "#", icon: MoneyChange, current: false },
-  { name: "Bills", href: "#", icon: TableDocument, current: false },
-  { name: "E-Learning", href: "#", icon: BookSaved, current: false },
-  { name: "Investment", href: "#", icon: Chart, current: false },
+  { name: "Dashboard", href: "/dashboard", icon: Home },
+  { name: "Easybuy", href: "/easybuy", icon: MoneyChange },
+  { name: "Bills", href: "/bills-payment", icon: TableDocument },
+  { name: "E-Learning", href: "/e-learning", icon: BookSaved },
+  { name: "Investment", href: "/investment", icon: Chart },
 ];
 const action = [
-  { name: "Support", href: "#", icon: Headphone, current: false },
-  { name: "Settings ", href: "#", icon: Setting2, current: false },
-  { name: "Logout", href: "#", icon: LogoutCurve, current: false },
-];
-const teams = [
-  { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
-  { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
-  { id: 3, name: "Workcation", href: "#", initial: "W", current: false },
+  { name: "Support", href: "/support", icon: Headphone },
+  { name: "Settings ", href: "/settings", icon: Setting2 },
+  { name: "Logout", href: "/", icon: LogoutCurve },
 ];
 const userNavigation = [
   { name: "Your profile", href: "#" },
@@ -57,10 +50,13 @@ function classNames(...classes) {
 }
 
 export default function DashboardLayout({ children }) {
+  const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isActive = (href) => location.pathname === href;
 
   return (
     <>
+      <Toaster />
       <div className="font-plus-jakarta">
         <Dialog
           open={sidebarOpen}
@@ -92,13 +88,12 @@ export default function DashboardLayout({ children }) {
                   </button>
                 </div>
               </TransitionChild>
-              {/* Sidebar component, swap this element with another sidebar if you like */}
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
                 <div className="flex h-16 shrink-0 items-center">
                   <img
                     alt="Your Company"
-                    src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-                    className="h-8 w-auto"
+                    src="/images/logo.svg"
+                    className="h-10 w-auto"
                   />
                 </div>
                 <nav className="flex flex-1 flex-col">
@@ -106,25 +101,25 @@ export default function DashboardLayout({ children }) {
                     <li>
                       <ul
                         role="list"
-                        className="-mx-2 space-y-1 font-plus-jakarta"
+                        className="-mx-2 space-y-5 font-plus-jakarta"
                       >
                         {navigation.map((item) => (
                           <li key={item.name}>
                             <a
                               href={item.href}
                               className={classNames(
-                                item.current
-                                  ? "bg-gray-50 text-indigo-600"
-                                  : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
-                                "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                                isActive(item.href)
+                                  ? "bg-primary text-white"
+                                  : "hover:bg-primary hover:text-white",
+                                "group flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6"
                               )}
                             >
                               <item.icon
                                 aria-hidden="true"
                                 className={classNames(
-                                  item.current
-                                    ? "text-indigo-600"
-                                    : "text-gray-400 group-hover:text-indigo-600",
+                                  isActive(item.href)
+                                    ? "text-white"
+                                    : "group-hover:text-white",
                                   "h-6 w-6 shrink-0"
                                 )}
                               />
@@ -142,18 +137,18 @@ export default function DashboardLayout({ children }) {
                             <a
                               href={item.href}
                               className={classNames(
-                                item.current
-                                  ? "bg-gray-50 text-indigo-600"
-                                  : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
-                                "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                                isActive(item.href)
+                                  ? "bg-primary text-white"
+                                  : "hover:bg-primary hover:text-white",
+                                "group flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6"
                               )}
                             >
                               <item.icon
                                 aria-hidden="true"
                                 className={classNames(
-                                  item.current
-                                    ? "text-indigo-600"
-                                    : "text-gray-400 group-hover:text-indigo-600",
+                                  isActive(item.href)
+                                    ? "text-white"
+                                    : "group-hover:text-white",
                                   "h-6 w-6 shrink-0"
                                 )}
                               />
@@ -172,34 +167,34 @@ export default function DashboardLayout({ children }) {
 
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-            <div className="flex h-16 shrink-0 items-center">
+            <div className="flex shrink-0 items-center mt-8">
               <img
-                alt="Your Company"
-                src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-                className="h-8 w-auto"
+                alt="Paylow Logo"
+                src="/images/logo.svg"
+                className="h-14 w-auto"
               />
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
                 <li>
-                  <ul role="list" className="-mx-2 space-y-1">
+                  <ul role="list" className="-mx-2 space-y-3">
                     {navigation.map((item) => (
                       <li key={item.name}>
                         <a
                           href={item.href}
                           className={classNames(
-                            item.current
-                              ? "bg-gray-50 text-indigo-600"
-                              : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
-                            "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                            isActive(item.href)
+                              ? "bg-primary text-white"
+                              : "hover:bg-primary hover:text-white",
+                            "group flex gap-x-3 rounded-md p-5 text-sm font-semibold leading-6"
                           )}
                         >
                           <item.icon
                             aria-hidden="true"
                             className={classNames(
-                              item.current
-                                ? "text-indigo-600"
-                                : "text-gray-400 group-hover:text-indigo-600",
+                              isActive(item.href)
+                                ? "text-white"
+                                : "group-hover:text-white",
                               "h-6 w-6 shrink-0"
                             )}
                           />
@@ -216,18 +211,18 @@ export default function DashboardLayout({ children }) {
                         <a
                           href={item.href}
                           className={classNames(
-                            item.current
-                              ? "bg-gray-50 text-indigo-600"
-                              : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
-                            "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                            isActive(item.href)
+                              ? "bg-primary text-white"
+                              : "hover:bg-primary hover:text-white",
+                            "group flex gap-x-3 rounded-md p-5 text-sm font-semibold leading-6"
                           )}
                         >
                           <item.icon
                             aria-hidden="true"
                             className={classNames(
-                              item.current
-                                ? "text-indigo-600"
-                                : "text-gray-400 group-hover:text-indigo-600",
+                              isActive(item.href)
+                                ? "text-white"
+                                : "group-hover:text-white",
                               "h-6 w-6 shrink-0"
                             )}
                           />
@@ -252,8 +247,6 @@ export default function DashboardLayout({ children }) {
               <span className="sr-only">Open sidebar</span>
               <HambergerMenu aria-hidden="true" className="h-6 w-6" />
             </button>
-
-            {/* Separator */}
             <div
               aria-hidden="true"
               className="h-6 w-px bg-gray-200 lg:hidden"
@@ -305,9 +298,9 @@ export default function DashboardLayout({ children }) {
                         aria-hidden="true"
                         className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                       >
-                        Tom Cook
+                        Mayowa Sunusi
                       </span>
-                      <ArrowDown
+                      <ArrowDown2
                         aria-hidden="true"
                         className="ml-2 h-5 w-5 text-gray-400"
                       />
@@ -333,7 +326,7 @@ export default function DashboardLayout({ children }) {
             </div>
           </div>
 
-          <main className="py-10">
+          <main className="py-10 bg-[#f8f9fc]">
             <div className="px-4 sm:px-6 lg:px-8">{children}</div>
           </main>
         </div>

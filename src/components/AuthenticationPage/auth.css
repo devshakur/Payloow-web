@@ -1,12 +1,58 @@
- .bg {
-        background-image: url('/images/authbg.png');
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        height: 375px;
-        width: 100%;
-        position: absolute;
-        top: -2rem;
-        max-width: 36rem;
-     }
-    
+.input-field {  
+   height: 56px;  
+   width: 100%;   
+   border-radius: 6px;  
+   border: 1px solid #ccc;  
+   padding: 0 10px;  
+   outline: none;  
+   color: black; 
+   background-color: transparent; 
+  margin-bottom: 2vh;  
+}  
+.input-field:focus {
+   border: 1px solid #3b82f6;
+}
+
+.bg{
+   background-image: url('images/Rectangle.png');
+   background-color: #0B1D33;
+   background-repeat: no-repeat;
+   background-size: cover;
+}
+.vector{
+   background-image: url('images/Vector-line.png');
+   background-size: cover;
+}
+.vectors{
+   background-image: url('images/Vector-line.png');
+   background-size: cover;
+   width: 100vw;
+   height: 100vh;
+   display: flex;
+   justify-content: center;
+   flex-direction: column;
+   margin-top: -7vh;
+   align-items: center;
+}
+.code{
+   width: 56px;
+   height: 56px;
+   border: 1px solid #D0D5DD;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   border-radius: 8px;
+}
+.circle{
+   border: 1px solid #D0D5DD;
+   width: 40px;
+   height: 40px; 
+   border-radius: 50%; 
+   font-size: 24px; 
+   text-align: center;
+}
+input[type=number]::-webkit-inner-spin-button,  
+input[type=number]::-webkit-outer-spin-button {  
+   -webkit-appearance: none;  
+   margin: 0;  
+}  
