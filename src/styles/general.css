@@ -1,16 +1,16 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     line-height: 1.6;
-    font-family:  'Plus Jakarta Sans'; 
+    font-family: 'Plus Jakarta Sans';
 }
 
-@font-face {  
-    font-family: 'Plus Jakarta Sans';  
-    font-style: normal;  
-    font-weight: 600;  
-    font-display: swap;  
-    src: url(../../../../s/plusjakartasans/v7/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yyygA-1.woff2) format('woff2');  
-    unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;  
+@font-face {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url(../../../../s/plusjakartasans/v7/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yyygA-1.woff2) format('woff2');
+    unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }

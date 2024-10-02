@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Loader } from "../AuthContext/Loader.jsx";
 import App from "../components/App.jsx";
 import ErrorPage from "../ErrorPage/ErrorPage.jsx";
+import DashboardHome from "../components/Dashboard/DashboardHome.jsx";
 const Regsiter = React.lazy(()=> import('../components/AuthenticationPage/Auth-section/Register.jsx'))
 const Login = React.lazy(()=> import('../components/AuthenticationPage/Auth-section/Login.jsx'))
 const ForgotPswd = React.lazy(()=>import('../components/AuthenticationPage/password-issues/ForgotPswd.jsx'))
@@ -55,4 +56,12 @@ export const router = createBrowserRouter([
       </Suspense>,
       errorElement: <ErrorPage />,
     },
+     {
+    path: "/dashboard",
+    element: 
+      <Suspense fallback={<Loader />}>
+        <DashboardHome />
+      </Suspense>,
+      errorElement: <ErrorPage />,
+  },
   ]);

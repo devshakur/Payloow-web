@@ -5,3 +5,35 @@
 .link-hover {
   @apply md:hover:underline underline-offset-4;
 }
+
+* {
+  @apply font-plus-jakarta
+}
+
+.available-balance {
+  background-image: url('/images/available-balance-bg.svg');
+  background-color: rgb(30, 61, 215);
+  background-size: auto;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 248px;
+}
+
+.loan-balance {
+  background-image: url('/images/loan-balance-bg.svg');
+  background-color: rgb(0, 153, 255);
+  background-size: auto;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 248px;
+}
+
+.courses {
+  /* background-color: rgb(237, 237, 237); */
+  background-color: #fff;
+  height: 248px;
+}
+
+body {
+  @apply bg-[#f8f9fc]
+}
