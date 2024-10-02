@@ -1,32 +1,16 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import App from "./components/App.jsx";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ErrorPage from "./components/ErrorPage.jsx";
+import { AuthProvider } from "./AuthContext/authContext.jsx";
+import { router } from "./Routes/index.jsx";
 import "./index.css";
-import Auth from "./components/AuthenticationPage/Auth.jsx";
-import PasswordIssue from "./components/AuthenticationPage/password-issues/PasswordIssue.jsx";
+import { RouterProvider } from "react-router-dom";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/auth",
-    element: <Auth />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/pswdissue",
-    element: <PasswordIssue />,
-    errorElement: <ErrorPage />,
-  },
-]);
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+  <RouterProvider router={router} /> 
+    </AuthProvider>
   </React.StrictMode>
 );

@@ -82,7 +82,7 @@ const Navbar = () => {
                 Login
               </a>
               <a
-                href="/auth" //added the path for redirecting to the signUP page
+                href="/register" //added the path for redirecting to the signUP page
                 className={`${
                   scrolled
                     ? "bg-primary-500 text-white"
