@@ -1,113 +1,102 @@
-import React from 'react'
-import { Button, TextField } from '@mui/material'
-import SocialLogins from './SocialLogins'
+import React, { useState } from 'react'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { useRouter } from '../../../Routes/router'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import '@fontsource/fira-sans'
+import '../auth.css'
+import RegisterOne from './RegisterOne'
+import RegisterTwo from './RegisterTwo'
+import useAuth from '../../../hooks/useAuth'
+
 
 
 function Register() {
+  const { RegisterUser } = useAuth();
+  const [formInput, setFormInput] = useState({
+    firstName: '',
+    lastName: '',
+    password: '',
+    phone: '',
+    email: '',
+    country: '',
+    state: '',
+    address: '',
+    identify: ''
+  });
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleNextPage = () => {
+    setCurrentIndex(currentIndex + 1)
+  }
+
+  const router = useRouter()
+
+
+
+  const formik = useFormik({
+    initialValues: formInput,
+    validationSchema: Yup.object({
+      firstName: Yup.string("field must be a text").required('Required'),
+      lastName: Yup.string().required('Required'),
+      password: Yup.string().required('Required')
+        .min(8, 'Password must be at least 8 characters')
+        .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+        .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+        .matches(/[0-9]/, 'Password must contain at least one number'),
+      phone: Yup.string().matches(/^[0-9]+$/, 'Phone number must be digits').required('Required'),
+      email: Yup.string().email('Invalid email address').required('Required'),
+      country: Yup.string().required('Required'),
+      state: Yup.string().required('Required'),
+      address: Yup.string().required('Required'),
+      identify: Yup.string().required('Required'),
+    }),
+    
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        const { identify, ...payload } = values
+        const resp = await RegisterUser(payload)
+        if (resp) {
+          toast.success('Congratulation you have been successfully registered go to Login')
+          setTimeout(() => {
+            router.push('/login') 
+        }, 6000);
+        }
+      } catch (error) {
+        if (error) {
+          toast.error('Failed to Register User')
+          setTimeout(() => {
+            router.reload();
+        }, 6000);   
+        }
+      }
+      setSubmitting(false);
+    },
+  });
   return (
-    <div className='w-[100%] mt-6 text-red-500 items-center'>
-      <form action="" className='grid gap-4'>
-        <div className='w-[100%] grid  grid-cols-2 gap-2 '>
-          <TextField
-            required
-            id="outlined-required-1"
-            placeholder='firstName'
-            type='text'
-            InputProps={{
-              style: { height: 45,  borderRadius: 10 }
-            }}
-          />
-          <TextField
-            required
-            id="outlined-required-2"
-            placeholder='lastName'
-          type='text'
-            InputProps={{
-              style: { height: 45, borderRadius: 10 }
-            }}
-          />
+    <main className='bg h-screen w-screen overflow-y-auto'>
+      <div className='vector'>
+        <div className='flex justify-center p-6 items-center'>
+          <span><img src="images/pay.png" alt="" /></span>
+          <span><img src="" alt="" /></span>
+          <span><img src="" alt="" /></span>
+          <span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3'>ayloow</span>
         </div>
-        <TextField
-          required
-          id="outlined-required-3"
-          placeholder='Email'
-          type='email'
-          fullWidth
-          InputProps={{
-            style: { height: 50,  borderRadius: 10 }
-          }}
-        />
-          <div className='w-[100%] grid  grid-cols-2 gap-2 '>
-          <TextField
-            required
-            id="outlined-required-1"
-            placeholder='Mobile No.'
-            type='phone'
-            InputProps={{
-              style: { height: 50,  borderRadius: 10 }
-            }}
-          />
-          <TextField
-            required
-            id="outlined-required-2"
-            placeholder='Enter password'
-          type='password'
-            InputProps={{
-              style: { height: 50, borderRadius: 10 }
-            }}
-          />
+            <form onSubmit={formik.handleSubmit} className='flex flex-col'>
+              {currentIndex === 0 ?
+                <RegisterOne formik={formik} handleNextPage={handleNextPage} /> : <RegisterTwo formik={formik} />}
+            </form>
+            <ToastContainer
+              position='top-center' autoClose={5000} className='w-[100%]'
+
+            />
         </div>
-
-        <div className='w-[100%] grid  grid-cols-2 gap-2 '>
-          <TextField
-            required
-            id="outlined-required-1"
-            placeholder='Country'
-            type='text'
-            InputProps={{
-              style: { height: 50,  borderRadius: 10 }
-            }}
-          />
-          <TextField
-            required
-            id="outlined-required-2"
-            placeholder='State'
-          type='text'
-            InputProps={{
-              style: { height: 50, borderRadius: 10 }
-            }}
-          />
-        </div>
-
-
-        <TextField
-          required
-          id="outlined-required-4"
-          placeholder='Home Address'
-          type='text'
-          fullWidth
-          InputProps={{
-            style: { height: 50,  borderRadius: 10 }
-          }}
-        />
-
-
-        <Button type='submit' variant="contained">Submit</Button>
-      </form>
-      <div className='mt-10'>
-               <div className='flex justify-center items-center'>
-                <span className='flex-grow h-px bg-[#e9ecef]'></span>
-                <span className='mx-2 text-gray-600 font-medium'>or continue with</span>
-                <span className='flex-grow h-px bg-[#e9ecef]'></span>
-              </div>
-             </div>
-             <article>
-             <SocialLogins />
-             </article>
-             <div>
-    </div>
-    </div>
+      
+    </main>
   )
 }
 
 export default Register
+

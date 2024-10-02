@@ -1,1 +1,1 @@
-export { default as goBck } from "./hooks";
+export { default as goBck } from "./customHooks";

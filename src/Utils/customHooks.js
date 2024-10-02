@@ -11,3 +11,9 @@ export const goBack = ()=>{
 
 export default ForgetPassWord;
 
+export const restrictInput = (e)=>{
+    if (e.target.value.length > 1) {  
+      e.target.value = e.target.value.slice(0, 1); 
+    }  
+ 
+}
