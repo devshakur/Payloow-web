@@ -72,7 +72,7 @@ const Navbar = () => {
 
             <div className="hidden md:flex space-x-6">
               <a
-                href="#"
+                href="/register"
                 className={`${
                   scrolled
                     ? "text-black-800 border-primary-500 hover:bg-primary-500"
@@ -93,7 +93,7 @@ const Navbar = () => {
               </a>
             </div>
 
-            <div className="md:hidden">
+            <div className="md:hidden z-40">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className={`${
@@ -102,51 +102,50 @@ const Navbar = () => {
               >
                 <MenuIcon />
               </button>
-
-              {isMobileMenuOpen && (
-                <div className="absolute top-16 left-0 px-5 py-5 bg-white w-full">
-                  <ul className="space-y-5">
-                    <li onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                      <a href="#home" className="">
-                        Home
-                      </a>
-                    </li>
-                    <li onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                      <a href="#about" className="">
-                        About Us
-                      </a>
-                    </li>
-                    <li onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                      <a href="#services" className="">
-                        Services
-                      </a>
-                    </li>
-                    <li onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                      <a href="#contact" className="">
-                        Contact
-                      </a>
-                    </li>
-                  </ul>
-                  <div className="flex space-x-5 mt-5">
-                    <a
-                      href="#"
-                      className="text-black-800 border-primary-500 hover:bg-primary-500 border-2 rounded-lg px-5 md:px-10 py-2 md:py-3 hover:text-white transition-all duration-300 ease-in-out w-full text-center"
-                    >
-                      Login
-                    </a>
-                    <a
-                      href="#"
-                      className="bg-primary-500 text-white px-5 py-3 rounded-lg w-full text-center"
-                    >
-                      Sign Up
-                    </a>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
       </motion.nav>
+      {isMobileMenuOpen && (
+        <div className="absolute top-16 left-0 px-5 py-5 bg-white w-full z-20">
+          <ul className="space-y-5">
+            <li onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              <a href="#home" className="">
+                Home
+              </a>
+            </li>
+            <li onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              <a href="#about" className="">
+                About Us
+              </a>
+            </li>
+            <li onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              <a href="#services" className="">
+                Services
+              </a>
+            </li>
+            <li onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              <a href="#contact" className="">
+                Contact
+              </a>
+            </li>
+          </ul>
+          <div className="flex space-x-5 mt-5">
+            <a
+              href="/register"
+              className="text-black-800 border-primary-500 hover:bg-primary-500 border-2 rounded-lg px-5 md:px-10 py-2 md:py-3 hover:text-white transition-all duration-300 ease-in-out w-full text-center"
+            >
+              Login
+            </a>
+            <a
+              href="/register"
+              className="bg-primary-500 text-white px-5 py-3 rounded-lg w-full text-center"
+            >
+              Sign Up
+            </a>
+          </div>
+        </div>
+      )}
     </>
   );
 };

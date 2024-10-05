@@ -37,3 +37,16 @@
 body {
   @apply bg-[#f8f9fc]
 }
+
+.slick-prev:before,
+.slick-next:before {
+  color: #000 !important;
+}
+
+.form-label {
+  @apply font-semibold
+}
+
+.form-input {
+  @apply w-full border p-4 rounded-md bg-transparent outline-none
+}
