@@ -37,3 +37,7 @@
 body {
   @apply bg-[#f8f9fc]
 }
+::-webkit-scrollbar {
+  width: 5px;
+}
+

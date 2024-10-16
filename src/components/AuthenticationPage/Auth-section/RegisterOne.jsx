@@ -114,7 +114,7 @@ const RegisterOne = ({formik, handleNextPage}) => {
                     <span className='flex-grow h-px bg-[#e9ecef]'></span>
                   </div>
                 </div>
-                <div className='flex justify-center font-medium text-[14px] leading-5'>Already have an account? <Link to={'/'}><span className='text-[#3369F4] ml-1'>Log in
+                <div className='flex justify-center font-medium text-[14px] leading-5'>Already have an account? <Link to={'/login'}><span className='text-[#3369F4] ml-1'>Log in
                 </span></Link></div>
                 </div>
                 </div>
