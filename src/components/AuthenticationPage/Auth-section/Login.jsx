@@ -7,6 +7,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../auth.css'
 import { Link } from 'react-router-dom'
+import Cookies from 'js-cookie'
+
 
 
 function Login() {
@@ -26,6 +28,9 @@ function Login() {
                 const response = await LoginUser(values)
                 if (response) {
                     toast.success('Logged in Successfully!')
+                    const token = response.data.data.auth
+                    console.log(token);
+                Cookies.set('authToken', token, { expires: 7 })
                     setTimeout(() => {
                         router.push('/dashboard'); //change later to dashboard
 
@@ -33,7 +38,7 @@ function Login() {
                 }
             } catch (error) {
                 if (error.response.status === 400) {
-                    toast.error('Invalid email or phone number input')
+                    toast.error('Wrong Password or Invalid email')
                 }
             }
             setSubmitting(false);
@@ -44,11 +49,11 @@ function Login() {
     return (
         <main className='bg h-screen w-screen overflow-y-auto'>
             <div className='vectors'>
-                <div className='flex justify-center p-6 items-center'>
+                <div className='flex justify-center p-4 mt-9 items-center'>
                     <span><img src="images/pay.png" alt="" /></span>
+                    <span ><img  src="images/curve.png" className='h-9 relative right-8' alt="" /></span>
                     <span><img src="" alt="" /></span>
-                    <span><img src="" alt="" /></span>
-                    <span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3'>ayloow</span>
+                    <span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3 relative right-8'>ayloow</span>
                 </div>
                 <div className='bg-white w-[90vw] h-[550px] max-w-lg p-6 rounded-lg shadow-lg flex flex-col'>
                     <h4 className='flex justify-center font-poppins text-2xl font-semibold text-primary-text'>Log in to your account </h4>

@@ -41,6 +41,20 @@ const AuthProvider = ({ children }) => {
         }
     }
 
+    const RegisterTutors = async (data) => {
+        try {
+            const response = await axios.post(AuthEndPoints.tutor, data)
+
+            const user = response.data
+            dispatch({ type: 'REGISTER', payload: { user } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+
     const ForgetPswd = async (data)=> {
         try {
             const response = await axios.post(AuthEndPoints.forget, data)
@@ -54,8 +68,10 @@ const AuthProvider = ({ children }) => {
         } 
     }
 
-    const ResetPswd = async (data)=> {
+    const ResetPswd = async (email, token, password)=> {
         try {
+            const data = {email, token, password}
+            console.log(data);
             const response = await axios.post(AuthEndPoints.reset, data)
 
            const user = response.data

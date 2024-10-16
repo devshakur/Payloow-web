@@ -4,11 +4,16 @@ import { Loader } from "../AuthContext/Loader.jsx";
 import App from "../components/App.jsx";
 import ErrorPage from "../ErrorPage/ErrorPage.jsx";
 import DashboardHome from "../components/Dashboard/DashboardHome.jsx";
+import AirtimePurchase from "../components/Bills/Airtime/AirtimePurchase.jsx";
+import DataPurchase from '../components/Bills/Data/Data.jsx'
+import TvSub from "../components/Bills/TV/TvSub.jsx";
+import Electricity from "../components/Bills/Electricity/Electricity.jsx";
 const Regsiter = React.lazy(()=> import('../components/AuthenticationPage/Auth-section/Register.jsx'))
 const Login = React.lazy(()=> import('../components/AuthenticationPage/Auth-section/Login.jsx'))
 const ForgotPswd = React.lazy(()=>import('../components/AuthenticationPage/password-issues/ForgotPswd.jsx'))
-const Verification = React.lazy(()=>import('../components/AuthenticationPage/password-issues/Verification.jsx'))
+const ResetPswd = React.lazy(()=>import('../components/AuthenticationPage/password-issues/ResetPswd.jsx'))
 const Success = React.lazy(()=>import("../components/AuthenticationPage/password-issues/SuccessPage.jsx"))
+
 
 export const router = createBrowserRouter([
     {
@@ -41,10 +46,10 @@ export const router = createBrowserRouter([
       errorElement: <ErrorPage />,
     },
     {
-      path: "/Verification",
+      path: "/reset-password",
       element: 
       <Suspense fallback={<Loader />}>
-        <Verification />
+        <ResetPswd />
       </Suspense>,
       errorElement: <ErrorPage />,
     },
@@ -61,6 +66,38 @@ export const router = createBrowserRouter([
     element: 
       <Suspense fallback={<Loader />}>
         <DashboardHome />
+      </Suspense>,
+      errorElement: <ErrorPage />,
+  },
+  {
+    path: "/airtime",
+    element: 
+      <Suspense fallback={<Loader />}>
+        <AirtimePurchase />
+      </Suspense>,
+      errorElement: <ErrorPage />,
+  },
+  {
+    path: "/data",
+    element: 
+      <Suspense fallback={<Loader />}>
+        <DataPurchase />
+      </Suspense>,
+      errorElement: <ErrorPage />,
+  },
+  {
+    path: "/tv-sub",
+    element: 
+      <Suspense fallback={<Loader />}>
+        <TvSub />
+      </Suspense>,
+      errorElement: <ErrorPage />,
+  },
+  {
+    path: "/electricity",
+    element: 
+      <Suspense fallback={<Loader />}>
+        <Electricity />
       </Suspense>,
       errorElement: <ErrorPage />,
   },

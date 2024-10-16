@@ -13,7 +13,8 @@ import useAuth from '../../../hooks/useAuth'
 
 
 function Register() {
-  const { RegisterUser } = useAuth();
+  const { RegisterUser, RegisterTutors } = useAuth();
+
   const [formInput, setFormInput] = useState({
     firstName: '',
     lastName: '',
@@ -53,23 +54,32 @@ function Register() {
       address: Yup.string().required('Required'),
       identify: Yup.string().required('Required'),
     }),
-    
+
     onSubmit: async (values, { setSubmitting }) => {
       try {
         const { identify, ...payload } = values
-        const resp = await RegisterUser(payload)
+        let resp;
+        if (identify === 'User' || 'Tutor') {
+          console.log(identify);
+          resp = await RegisterUser(payload)
+          }  else if (identify === 'Tutor') {
+           resp = await RegisterTutors(payload)
+         } else {
+           throw new Error('Invalid identification');
+         }
         if (resp) {
           toast.success('Congratulation you have been successfully registered go to Login')
           setTimeout(() => {
-            router.push('/login') 
-        }, 6000);
+            router.push('/login')
+          }, 6000);
         }
       } catch (error) {
-        if (error) {
-          toast.error('Failed to Register User')
-          setTimeout(() => {
-            router.reload();
-        }, 6000);   
+        console.log(error)
+        if (error?.status === 400) {
+          toast.error(error?.response.data.message)
+          // setTimeout(() => {
+          //   // router.reload();
+          // }, 6000);
         }
       }
       setSubmitting(false);
@@ -78,22 +88,22 @@ function Register() {
   return (
     <main className='bg h-screen w-screen overflow-y-auto'>
       <div className='vector'>
-        <div className='flex justify-center p-6 items-center'>
+        <div className='flex justify-center  p-5 items-center'>
           <span><img src="images/pay.png" alt="" /></span>
+          <span className='relative right-8'><img src="images/curve.png" className='h-9' alt="curve" /></span>
           <span><img src="" alt="" /></span>
-          <span><img src="" alt="" /></span>
-          <span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3'>ayloow</span>
+          <span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3 relative right-8'>ayloow</span>
         </div>
-            <form onSubmit={formik.handleSubmit} className='flex flex-col'>
-              {currentIndex === 0 ?
-                <RegisterOne formik={formik} handleNextPage={handleNextPage} /> : <RegisterTwo formik={formik} />}
-            </form>
-            <ToastContainer
-              position='top-center' autoClose={5000} className='w-[100%]'
+        <form onSubmit={formik.handleSubmit} className='flex flex-col'>
+          {currentIndex === 0 ?
+            <RegisterOne formik={formik} handleNextPage={handleNextPage} /> : <RegisterTwo formik={formik} />}
+        </form>
+        <ToastContainer
+          position='top-center' autoClose={5000} className='w-[100%]'
 
-            />
-        </div>
-      
+        />
+      </div>
+
     </main>
   )
 }
