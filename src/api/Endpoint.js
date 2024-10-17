@@ -19,3 +19,12 @@ export const endpoints = {
   changeProfilePicture: `${BaseUrl}/add-profile-picture`,
   getAllCourses: `${BaseUrl}/get-all-courses`,
 };
+
+export const BillsEndpoints = {
+  airtime: `${BaseUrl}/buy-airtime-vtu`,
+  data: `${BaseUrl}/buy-data-vtu`,
+  electricity: `${BaseUrl}/buy-electricity-vtu`,
+  subscription: `${BaseUrl}/buy-cable-subscription-vtu`,
+  balance: `${BaseUrl}/get-vtu-providers-wallet-balance`,
+  confirm: `${BaseUrl}/confirm-pin`,
+};

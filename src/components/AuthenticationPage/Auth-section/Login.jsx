@@ -3,17 +3,20 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useAuth from '../../../hooks/useAuth'
 import { useRouter } from '../../../Routes/router'
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../auth.css'
 import { Link } from 'react-router-dom'
-import { endpoints } from '../../../api/Endpoint'
+import Cookies from 'js-cookie'
 import axios from 'axios'
+import { endpoints } from '../../../api/Endpoint'
+import { toast, Toaster } from 'react-hot-toast'
+
 
 
 function Login() {
 	const { LoginUser } = useAuth()
 	const router = useRouter();
+
 	const getUser = async () => {
 		try {
 			const token = JSON.parse(localStorage.getItem('auth')).auth;
@@ -30,6 +33,7 @@ function Login() {
 			toast.error('An error occured while fetching user data')
 		}
 	}
+
 	const formik = useFormik({
 		initialValues: {
 			phone: '',
@@ -44,17 +48,20 @@ function Login() {
 				const response = await LoginUser(values)
 				if (response) {
 					toast.success('Logged in Successfully!')
-					console.log(response.data)
+					const token = response.data.data.auth
+					console.log(token);
+					Cookies.set('authToken', token, { expires: 7 })
 					localStorage.setItem('auth', JSON.stringify(response.data.data));
 					localStorage.setItem('token', JSON.stringify(response.data.data.auth));
 					getUser();
 					setTimeout(() => {
-						router.push('/dashboard');
-					}, 1000);
+						router.push('/dashboard'); //change later to dashboard
+
+					}, 2000);
 				}
 			} catch (error) {
 				if (error.response.status === 400) {
-					toast.error('Invalid email or phone number input')
+					toast.error('Wrong Password or Invalid email')
 				}
 			}
 			setSubmitting(false);
@@ -65,11 +72,11 @@ function Login() {
 	return (
 		<main className='bg h-screen w-screen overflow-y-auto'>
 			<div className='vectors'>
-				<div className='flex justify-center p-6 items-center'>
+				<div className='flex justify-center p-4 mt-9 items-center'>
 					<span><img src="images/pay.png" alt="" /></span>
+					<span ><img src="images/curve.png" className='h-9 relative right-8' alt="" /></span>
 					<span><img src="" alt="" /></span>
-					<span><img src="" alt="" /></span>
-					<span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3'>ayloow</span>
+					<span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3 relative right-8'>ayloow</span>
 				</div>
 				<div className='bg-white w-[90vw] h-[550px] max-w-lg p-6 rounded-lg shadow-lg flex flex-col'>
 					<h4 className='flex justify-center font-poppins text-2xl font-semibold text-primary-text'>Log in to your account </h4>
@@ -113,10 +120,11 @@ function Login() {
 						</button>
 						<li className='flex justify-end font-poppins font-normal text-sm text-[#3369F4]'><a href="/forgot-password">forgot password</a></li>
 					</form>
-					<ToastContainer
-						position='top-center' autoClose={5000} className='w-[100%]'
+					{/* <ToastContainer
+						position='top-center' autoClose={5000}
 
-					/>
+					/> */}
+					<Toaster />
 					<div className='mt-5'>
 						<div className='flex justify-center items-center'>
 							<span className='flex-grow h-px bg-[#e9ecef]'></span>

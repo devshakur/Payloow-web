@@ -242,7 +242,7 @@ const DashboardHome = () => {
             <div className="grid md:grid-cols-4 grid-cols-3 gap-8">
               <div className="text-center flex flex-col items-center space-y-2">
                 <Link
-                  to={""}
+                  to={"/airtime"}
                   className="bg-[#F1F3F9] hover:bg-[#d6d9e1] transition-all duration-300 ease-in-out text-primary text-2xl h-20 w-20 flex items-center justify-center rounded-full"
                 >
                   <FaPhoneAlt />
@@ -251,7 +251,7 @@ const DashboardHome = () => {
               </div>
               <div className="text-center flex flex-col items-center space-y-2">
                 <Link
-                  to={""}
+                  to={"/data"}
                   className="bg-[#F1F3F9] hover:bg-[#d6d9e1] transition-all duration-300 ease-in-out text-primary text-2xl h-20 w-20 flex items-center justify-center rounded-full"
                 >
                   <GiNetworkBars />
@@ -260,7 +260,7 @@ const DashboardHome = () => {
               </div>
               <div className="text-center flex flex-col items-center space-y-2">
                 <Link
-                  to={""}
+                  to={"/electricity"}
                   className="bg-[#F1F3F9] hover:bg-[#d6d9e1] transition-all duration-300 ease-in-out text-primary text-2xl h-20 w-20 flex items-center justify-center rounded-full"
                 >
                   <FaBolt />
@@ -269,7 +269,7 @@ const DashboardHome = () => {
               </div>
               <div className="text-center flex flex-col items-center space-y-2">
                 <Link
-                  to={""}
+                  to={"/tv-sub"}
                   className="bg-[#F1F3F9] hover:bg-[#d6d9e1] transition-all duration-300 ease-in-out text-primary text-2xl h-20 w-20 flex items-center justify-center rounded-full"
                 >
                   <FaTv />

@@ -114,7 +114,10 @@ const CourseDetails = () => {
                   <span>${course.price}</span>
                 )}
               </div>
-              <button onClick={() => handleCourseClick(course._id)} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+              {/* <button onClick={() => handleCourseClick(course._id)} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                Edit Course
+              </button> */}
+              <button onClick={() => alert('Working on it')} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
                 Edit Course
               </button>
             </div>

@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { Button, Dialog, DialogPanel } from "@headlessui/react";
 import "slick-carousel/slick/slick.css";
@@ -13,8 +12,10 @@ import { useNavigate } from "react-router-dom";
 
 const CourseList = () => {
   const navigate = useNavigate();
-  const [courses, setCourses] = useState([])
+  const [courses, setCourses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   let [isOpen, setIsOpen] = useState(false);
+
   const goToCourses = () => {
     navigate('/e-learning/tutor/all-courses');
   };
@@ -30,6 +31,7 @@ const CourseList = () => {
   function close() {
     setIsOpen(false);
   }
+
   let settings = {
     dots: true,
     infinite: false,
@@ -65,7 +67,6 @@ const CourseList = () => {
     ],
   };
 
-
   const getAllCourses = async () => {
     try {
       const token = JSON.parse(localStorage.getItem('auth')).auth;
@@ -74,17 +75,17 @@ const CourseList = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      setCourses(response.data.data)
-
+      setCourses(response.data.data);
     } catch (error) {
-      toast.error('An error occured while fetching user data')
+      toast.error('An error occurred while fetching user data');
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     getAllCourses();
   }, []);
-
 
   return (
     <div className="my-10">
@@ -96,13 +97,39 @@ const CourseList = () => {
       </div>
       <div className="">
         <div className="slider-container md:px-0 px-5">
-          <Slider {...settings}>
-            {courses.slice(0, 3).map((course) => (
-              <div key={course._id} className="" onClick={() => handleCourseClick(course._id)}>
-                <CourseCard key={course.id} {...course} />
+          {isLoading ? (
+            <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 gap-8">
+              <div className="animate-pulse">
+                <CourseCard title="Loading..." description="Please wait while the courses are loading." />
               </div>
-            ))}
-          </Slider>
+            </div>
+          ) : (
+            courses.length < 3 ? (
+              courses.length === 1 ? (
+                <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 gap-8">
+                  <div onClick={() => handleCourseClick(courses[0]._id)}>
+                    <CourseCard key={courses[0]._id} {...courses[0]} />
+                  </div>
+                </div>
+              ) : (
+                <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 gap-8">
+                  {courses.map((course) => (
+                    <div key={course._id} onClick={() => handleCourseClick(course._id)}>
+                      <CourseCard key={course._id} {...course} />
+                    </div>
+                  ))}
+                </div>
+              )
+            ) : (
+              <Slider {...settings}>
+                {courses.map((course) => (
+                  <div key={course._id} className="" onClick={() => handleCourseClick(course._id)}>
+                    <CourseCard key={course._id} {...course} />
+                  </div>
+                ))}
+              </Slider>
+            )
+          )}
         </div>
       </div>
       <Dialog

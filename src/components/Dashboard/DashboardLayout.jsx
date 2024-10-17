@@ -31,8 +31,8 @@ import { Toaster } from "react-hot-toast";
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
   { name: "Easybuy", href: "/easybuy", icon: MoneyChange },
-  { name: "Bills", href: "/bills-payment", icon: TableDocument },
   { name: "E-Learning", href: "/e-learning/tutor/dashboard", icon: BookSaved },
+  { name: "Bills", href: "/airtime", icon: TableDocument },
   { name: "Investment", href: "/investment", icon: Chart },
 ];
 const action = [

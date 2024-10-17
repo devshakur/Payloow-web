@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { Button, Dialog, DialogPanel } from "@headlessui/react";
 import "slick-carousel/slick/slick.css";
@@ -10,10 +10,16 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { GiGraduateCap } from "react-icons/gi";
 import { CloseCircle } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { endpoints } from "../../../api/Endpoint";
+import toast from "react-hot-toast";
 
 const TutorDashboard = () => {
   const router = useNavigate();
+  const [courses, setCourses] = useState([])
   let [isOpen, setIsOpen] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
 
   function open() {
     setIsOpen(true);
@@ -56,64 +62,37 @@ const TutorDashboard = () => {
       },
     ],
   };
-  const user = {
-    name: "Mayowa Sunusi",
+
+
+  const handleCourseClick = (courseId) => {
+    router(`/e-learning/tutor/course/${courseId}`);
   };
+
+  const getAllCourses = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem('auth')).auth;
+      const response = await axios.get(endpoints.getAllCourses, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setCourses(response.data.data)
+    } catch (error) {
+      toast.error('An error occured while fetching user data')
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    getAllCourses();
+  }, []);
 
   const goToRegistration = () => {
     router("/e-learning/tutor/complete-profile");
   };
 
-  const courses = [
-    {
-      id: 1,
-      image: "/images/course-card-image.png",
-      courseTitle: "MTN AirtimeBeginner Guide to Backend Development",
-      progress: "completed",
-      tag: "Programming",
-      enrolledStudents: 200,
-    },
-    {
-      id: 2,
-      image: "/images/course-card-image.png",
-      courseTitle: "Advanced React Techniques",
-      progress: "in progress",
-      tag: "Web Development",
-      enrolledStudents: 150,
-    },
-    {
-      id: 3,
-      image: "/images/course-card-image.png",
-      courseTitle: "Introduction to Machine Learning",
-      progress: "not started",
-      tag: "Data Science",
-      enrolledStudents: 300,
-    },
-    {
-      id: 4,
-      image: "/images/course-card-image.png",
-      courseTitle: "UI/UX Design Fundamentals",
-      progress: "completed",
-      tag: "Design",
-      enrolledStudents: 120,
-    },
-    {
-      id: 5,
-      image: "/images/course-card-image.png",
-      courseTitle: "Digital Marketing Essentials",
-      progress: "in progress",
-      tag: "Marketing",
-      enrolledStudents: 180,
-    },
-    {
-      id: 6,
-      image: "/images/course-card-image.png",
-      courseTitle: "Cybersecurity Basics",
-      progress: "not started",
-      tag: "Security",
-      enrolledStudents: 220,
-    },
-  ];
+
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const isTutorVerified = currentUser?.isTutorVerified;
 
@@ -124,7 +103,7 @@ const TutorDashboard = () => {
           <div className="flex items-center justify-between">
             <h3 className="md:text-3xl text-3xl font-bold pb-3">
               Welcome Back,{" "}
-              <span className="md:hidden">{user.name}</span>
+              <span className="md:hidden">{currentUser ? currentUser.firstName : 'John Doe'}</span>
             </h3>
             <button
               onClick={() => {
@@ -164,15 +143,39 @@ const TutorDashboard = () => {
         </div>
         <div className="">
           <div className="slider-container md:px-0 px-5">
-            <Slider {...settings}>
-              {/* <div className="md:pr-5"></div> */}
-
-              {courses.map((course) => (
-                <div key={course.id} className="pr-5">
-                  <CourseCard key={course.id} {...course} />
+            {isLoading ? (
+              <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 gap-8">
+                <div className="animate-pulse">
+                  <CourseCard title="Loading..." description="Please wait while the courses are loading." />
                 </div>
-              ))}
-            </Slider>
+              </div>
+            ) : (
+              courses.length < 3 ? (
+                courses.length === 1 ? (
+                  <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 gap-8">
+                    <div onClick={() => handleCourseClick(courses[0]._id)}>
+                      <CourseCard key={courses[0]._id} {...courses[0]} />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 gap-8">
+                    {courses.map((course) => (
+                      <div key={course._id} onClick={() => handleCourseClick(course._id)}>
+                        <CourseCard key={course._id} {...course} />
+                      </div>
+                    ))}
+                  </div>
+                )
+              ) : (
+                <Slider {...settings}>
+                  {courses.map((course) => (
+                    <div key={course._id} className="" onClick={() => handleCourseClick(course._id)}>
+                      <CourseCard key={course._id} {...course} />
+                    </div>
+                  ))}
+                </Slider>
+              )
+            )}
           </div>
         </div>
       </section>
