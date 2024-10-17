@@ -3,47 +3,40 @@ import { SlOptionsVertical } from "react-icons/sl";
 
 const CourseCard = ({
   image,
-  courseTitle,
-  progress,
-  tag,
-  enrolledStudents,
+  category,
+  title,
+  discount_price,
+  price,
+  students_enrolled,
 }) => {
-  const getProgressColor = (progress) => {
-    switch (progress.toLowerCase()) {
-      case "completed":
-        return "text-green-500 bg-green-100";
-      case "in progress":
-        return "text-orange-500 bg-orange-100";
-      case "not started":
-        return "text-red-500 bg-red-100";
-      default:
-        return "text-gray-500 bg-gray-100";
-    }
-  };
+
 
   return (
-    <div className="bg-white shadow-lg rounded-lg">
-      <img src={image} alt={courseTitle} />
+    <div className="bg-white shadow-lg rounded-lg cursor-pointer">
+      <img src={image ? image : '/images/course-card-image.png'} alt={title} />
       <div className="p-5 h-44">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <p className="bg-[#C0D5FD] text-sm px-2 rounded py-1">{tag}</p>
+            <p className="bg-[#C0D5FD] text-sm px-2 rounded py-1">{category}</p>
           </div>
           <div className="flex items-center space-x-1 text-xs">
-            <img src="/images/students-icon.svg" alt="" />
-            <p>+ {enrolledStudents} enrolled</p>
+            <img src="/images/students-icon.svg" alt="" className="w-10" />
+            <p>{students_enrolled} enrolled</p>
           </div>
         </div>
         <div>
-          <h3 className="text-lg font-semibold pb-5">{courseTitle}</h3>
+          <h3 className="text-xl font-semibold pb-5">{title}</h3>
           <div className="flex items-center justify-between">
-            <p
-              className={`${getProgressColor(
-                progress
-              )} text-sm capitalize px-5 rounded py-1`}
-            >
-              {progress}
-            </p>
+            <div className="flex font-bold text-2xl">
+              {discount_price ? (
+                <div className="">
+                  <span className="line-through mr-2 text-red-500 text-xl">${price}</span>
+                  <span>${discount_price}</span>
+                </div>
+              ) : (
+                <div>${price}</div>
+              )}
+            </div>
             <SlOptionsVertical />
           </div>
         </div>

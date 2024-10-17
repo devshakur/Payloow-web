@@ -7,6 +7,14 @@ import DashboardHome from "../components/Dashboard/DashboardHome.jsx";
 import TutorDashboard from "../components/E-Learning/Tutor/Dashboard.jsx";
 import StudentDashboard from "../components/E-Learning/Student/Dashboard.jsx";
 import CompleteProfile from "../components/E-Learning/Tutor/CompleteProfile.jsx";
+import Courses from "../components/E-Learning/Tutor/Courses.jsx";
+import CreateCourse from "../components/E-Learning/Tutor/CreateCourse.jsx";
+import Settings from "../components/Dashboard/Settings.jsx";
+import Messages from "../components/E-Learning/Tutor/Messages.jsx";
+import CreateQuiz from "../components/E-Learning/Tutor/CreateQuiz.jsx";
+import AllCourses from "../components/E-Learning/Tutor/AllCourses.jsx";
+import CourseDetails from "../components/E-Learning/Tutor/CourseDetails.jsx";
+import EditCourse from "../components/E-Learning/Tutor/AddSectionsToCourse.jsx";
 const Regsiter = React.lazy(() =>
   import("../components/AuthenticationPage/Auth-section/Register.jsx")
 );
@@ -83,6 +91,15 @@ export const router = createBrowserRouter([
     ),
     errorElement: <ErrorPage />,
   },
+  {
+    path: "/settings",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Settings />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
 
   // E leanring routes
   // Tutor Routes
@@ -100,6 +117,69 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <CompleteProfile />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/e-learning/tutor/courses",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Courses />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/e-learning/tutor/all-courses",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <AllCourses />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/e-learning/tutor/course/:id",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <CourseDetails />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/e-learning/tutor/create-course",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <CreateCourse />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/e-learning/tutor/messages",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Messages />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/e-learning/tutor/create-quiz",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <CreateQuiz />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/e-learning/tutor/course/edit-course/:id",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <EditCourse />
       </Suspense>
     ),
     errorElement: <ErrorPage />,

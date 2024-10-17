@@ -114,6 +114,9 @@ const TutorDashboard = () => {
       enrolledStudents: 220,
     },
   ];
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const isTutorVerified = currentUser?.isTutorVerified;
+
   return (
     <Layout>
       <section>
@@ -121,13 +124,12 @@ const TutorDashboard = () => {
           <div className="flex items-center justify-between">
             <h3 className="md:text-3xl text-3xl font-bold pb-3">
               Welcome Back,{" "}
-              <span className="md:hidden">
-                <br />
-              </span>{" "}
-              {user?.name}
+              <span className="md:hidden">{user.name}</span>
             </h3>
             <button
-              onClick={open}
+              onClick={() => {
+                router("/e-learning/tutor/create-course");
+              }}
               className="bg-primary text-white flex items-center space-x-3 md:py-3 py-5 md:px-10 px-5 rounded"
             >
               <span>
@@ -176,54 +178,56 @@ const TutorDashboard = () => {
       </section>
 
       {/* Modal */}
-      <Dialog
-        open={isOpen}
-        as="div"
-        className="relative z-50 focus:outline-none"
-        onClose={close}
-      >
-        <div className="fixed inset-0 z-10 w-screen h-screen overflow-y-auto bg-black/50">
-          <div className="flex min-h-full items-center justify-center p-4">
-            <DialogPanel
-              transition
-              className="w-full max-w-2xl rounded-xl bg-white p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
-            >
-              <div className="flex items-center justify-end text-primary">
-                <button onClick={close}>
-                  <CloseCircle />
-                </button>
-              </div>
-              <div>
-                <h3 className="font-semibold md:text-3xl text-xl mt-4">
-                  Complete Your Tutor Profile
-                </h3>
-                <p className="mt-4">
-                  You're almost ready to start teaching! Set up your profile now
-                  to showcase your expertise, attract more students, and manage
-                  your classes seamlessly. It only takes a few minutes!
-                </p>
-              </div>
-              <div className="mt-10 flex items-center justify-end">
-                <div className="flex items-center space-x-6">
-                  <Button
-                    className="border border-primary px-7 py-3 rounded-md text-primary"
-                    onClick={close}
-                  >
-                    Skip for now
-                  </Button>
-
-                  <Button
-                    className="bg-primary border border-primary px-7 py-3 rounded-md text-white"
-                    onClick={goToRegistration}
-                  >
-                    Set Up Now
-                  </Button>
+      {!isTutorVerified &&
+        <Dialog
+          open={isOpen}
+          as="div"
+          className="relative z-50 focus:outline-none"
+          onClose={close}
+        >
+          <div className="fixed inset-0 z-10 w-screen h-screen overflow-y-auto bg-black/50">
+            <div className="flex min-h-full items-center justify-center p-4">
+              <DialogPanel
+                transition
+                className="w-full max-w-2xl rounded-xl bg-white p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
+              >
+                <div className="flex items-center justify-end text-primary">
+                  <button onClick={close}>
+                    <CloseCircle />
+                  </button>
                 </div>
-              </div>
-            </DialogPanel>
+                <div>
+                  <h3 className="font-semibold md:text-3xl text-xl mt-4">
+                    Complete Your Tutor Profile
+                  </h3>
+                  <p className="mt-4">
+                    You're almost ready to start teaching! Set up your profile now
+                    to showcase your expertise, attract more students, and manage
+                    your classes seamlessly. It only takes a few minutes!
+                  </p>
+                </div>
+                <div className="mt-10 flex items-center justify-end">
+                  <div className="flex items-center space-x-6">
+                    <Button
+                      className="border border-primary px-7 py-3 rounded-md text-primary"
+                      onClick={close}
+                    >
+                      Skip for now
+                    </Button>
+
+                    <Button
+                      className="bg-primary border border-primary px-7 py-3 rounded-md text-white"
+                      onClick={goToRegistration}
+                    >
+                      Set Up Now
+                    </Button>
+                  </div>
+                </div>
+              </DialogPanel>
+            </div>
           </div>
-        </div>
-      </Dialog>
+        </Dialog>
+      }
     </Layout>
   );
 };

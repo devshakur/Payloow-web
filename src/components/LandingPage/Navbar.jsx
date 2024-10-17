@@ -36,17 +36,15 @@ const Navbar = () => {
         <div className="max-w-[1440px] mx-auto">
           <div className="container mx-auto md:px-20 px-5 py-4 flex justify-between items-center font-plus-jakarta">
             <div
-              className={`${
-                scrolled ? "text-primary-500" : "text-white"
-              } text-3xl md:text-4xl font-extrabold uppercase`}
+              className={`${scrolled ? "text-primary-500" : "text-white"
+                } text-3xl md:text-4xl font-extrabold uppercase`}
             >
               revo
             </div>
 
             <ul
-              className={`${
-                scrolled ? "text-primary-500" : "text-white"
-              } hidden md:flex space-x-6`}
+              className={`${scrolled ? "text-primary-500" : "text-white"
+                } hidden md:flex space-x-6`}
             >
               <li>
                 <a href="#home" className="">
@@ -72,22 +70,20 @@ const Navbar = () => {
 
             <div className="hidden md:flex space-x-6">
               <a
-                href="/register"
-                className={`${
-                  scrolled
-                    ? "text-black-800 border-primary-500 hover:bg-primary-500"
-                    : "text-white border-white hover:bg-white hover:text-primary-500"
-                } border-2 rounded-xl px-5 md:px-10 py-2 md:py-3 hover:text-white transition-all duration-300 ease-in-out`}
+                href="/login"
+                className={`${scrolled
+                  ? "text-black-800 border-primary-500 hover:bg-primary-500"
+                  : "text-white border-white hover:bg-white hover:text-primary-500"
+                  } border-2 rounded-xl px-5 md:px-10 py-2 md:py-3 hover:text-white transition-all duration-300 ease-in-out`}
               >
                 Login
               </a>
               <a
-                href="/register" //added the path for redirecting to the signUP page
-                className={`${
-                  scrolled
-                    ? "bg-primary-500 text-white"
-                    : "bg-white text-primary-500 border-white"
-                } border-2 px-5 md:px-10 py-2 md:py-3 rounded-lg`}
+                href="/register"
+                className={`${scrolled
+                  ? "bg-primary-500 text-white"
+                  : "bg-white text-primary-500 border-white"
+                  } border-2 px-5 md:px-10 py-2 md:py-3 rounded-lg`}
               >
                 Sign Up
               </a>
@@ -96,9 +92,8 @@ const Navbar = () => {
             <div className="md:hidden z-40">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className={`${
-                  scrolled ? "text-primary-500" : "text-white"
-                } text-2xl`}
+                className={`${scrolled ? "text-primary-500" : "text-white"
+                  } text-2xl`}
               >
                 <MenuIcon />
               </button>
@@ -132,7 +127,7 @@ const Navbar = () => {
           </ul>
           <div className="flex space-x-5 mt-5">
             <a
-              href="/register"
+              href="/login"
               className="text-black-800 border-primary-500 hover:bg-primary-500 border-2 rounded-lg px-5 md:px-10 py-2 md:py-3 hover:text-white transition-all duration-300 ease-in-out w-full text-center"
             >
               Login

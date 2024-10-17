@@ -48,5 +48,14 @@ body {
 }
 
 .form-input {
-  @apply w-full border p-4 rounded-md bg-transparent outline-none
+  @apply w-full border p-4 rounded-md bg-transparent outline-none placeholder:text-sm
+}
+
+.settings-tab {
+  @apply flex md:p-5 p-2 md:text-base text-sm md:w-auto w-full md:text-left md:justify-start justify-center rounded-lg focus:outline-none hover:bg-primary hover:text-white data-[selected]:bg-primary data-[selected]:text-white data-[focus]:outline-1 data-[focus]:outline-white
+}
+
+.h-81 {
+  height: 80%;
+  background: #000;
 }

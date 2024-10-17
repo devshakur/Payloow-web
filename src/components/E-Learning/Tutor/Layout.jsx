@@ -29,10 +29,10 @@ import { Toaster } from "react-hot-toast";
 
 const navigation = [
   { name: "Dashboard", href: "/e-learning/tutor/dashboard", icon: Home },
-  { name: "Messages", href: "/e-learning/tutor/messages", icon: Message },
-  { name: "Quiz", href: "/e-learning/tutor/quiz", icon: TableDocument },
-  { name: "courses", href: "/e-learning/tutor/courses", icon: BookSaved },
+  { name: "Courses", href: "/e-learning/tutor/courses", icon: BookSaved },
   { name: "Analytics", href: "/e-learning/tutor/analytics", icon: Chart },
+  { name: "Quiz", href: "/e-learning/tutor/quiz", icon: TableDocument },
+  { name: "Messages", href: "/e-learning/tutor/messages", icon: Message },
 ];
 const action = [
   { name: "Support", href: "/support", icon: Headphone },
@@ -52,6 +52,8 @@ export default function Layout({ children }) {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isActive = (href) => location.pathname === href;
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
 
   return (
     <>
@@ -299,7 +301,7 @@ export default function Layout({ children }) {
                     <span className="sr-only">Open user menu</span>
                     <img
                       alt=""
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      src={currentUser ? currentUser.profilePicture : "/images/user.png"}
                       className="h-8 w-8 rounded-full bg-gray-50"
                     />
                     <span className="hidden lg:flex lg:items-center">
@@ -307,7 +309,7 @@ export default function Layout({ children }) {
                         aria-hidden="true"
                         className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                       >
-                        Mayowa Sunusi
+                        {currentUser ? currentUser.firstName : 'John Doe'}
                       </span>
                       <ArrowDown2
                         aria-hidden="true"
