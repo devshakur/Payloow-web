@@ -18,22 +18,21 @@ import {
   Headphone,
   Home,
   LogoutCurve,
-  MoneyChange,
+  Message,
   Notification,
   SearchNormal,
   Setting2,
   TableDocument,
 } from "iconsax-react";
 import { useLocation } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import { Toaster } from "react-hot-toast";
 
 const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Easybuy", href: "/easybuy", icon: MoneyChange },
-  { name: "E-Learning", href: "/e-learning/tutor/dashboard", icon: BookSaved },
-  { name: "Bills", href: "/airtime", icon: TableDocument },
-  { name: "Investment", href: "/investment", icon: Chart },
+  { name: "Dashboard", href: "/e-learning/student/dashboard", icon: Home },
+  { name: "Messages", href: "/e-learning/student/messages", icon: Message },
+  { name: "Quiz", href: "/e-learning/student/quiz", icon: TableDocument },
+  { name: "courses", href: "/e-learning/student/courses", icon: BookSaved },
+  { name: "Analytics", href: "/e-learning/student/analytics", icon: Chart },
 ];
 const action = [
   { name: "Support", href: "/support", icon: Headphone },
@@ -49,7 +48,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function DashboardLayout({ children }) {
+export default function Layout({ children }) {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isActive = (href) => location.pathname === href;
@@ -91,12 +90,17 @@ export default function DashboardLayout({ children }) {
                 </div>
               </TransitionChild>
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-                <div className="flex h-16 shrink-0 items-center">
+                <div className="flex flex-col shrink-0 items-center mt-8">
                   <img
-                    alt="Your Company"
+                    alt="Paylow Logo"
                     src="/images/logo.svg"
-                    className="h-10 w-auto"
+                    className="h-14 w-auto"
                   />
+                  <div className="flex items-center justify-center">
+                    <div className="md:text-sm text-xs bg-primary text-white px-5 py-1 rounded-full">
+                      E-Learning
+                    </div>
+                  </div>
                 </div>
                 <nav className="flex flex-1 flex-col">
                   <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -169,12 +173,17 @@ export default function DashboardLayout({ children }) {
 
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-            <div className="flex shrink-0 items-center mt-8">
+            <div className="flex flex-col shrink-0 items-center mt-8">
               <img
                 alt="Paylow Logo"
                 src="/images/logo.svg"
                 className="h-14 w-auto"
               />
+              <div className="flex items-center justify-center">
+                <div className="md:text-sm text-xs bg-primary text-white px-5 py-1 rounded-full">
+                  E-Learning
+                </div>
+              </div>
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
