@@ -8,6 +8,7 @@ import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { endpoints } from '../../../api/Endpoint';
 import Layout from './Layout';
+import { Loader } from '../../../AuthContext/Loader';
 
 const EditCourse = () => {
   const { id } = useParams();
@@ -168,14 +169,14 @@ const EditCourse = () => {
     }
   };
 
-  if (!course) return <div>Loading...</div>;
+  if (!course) return <Loader />;
 
   return (
     <Layout>
       <Toaster />
       <div className="container mx-auto px-4 py-8">
         <button
-          onClick={() => navigate(`/course/${id}`)}
+          onClick={() => navigate(`/e-learning/tutor/course/${id}`)}
           className="flex items-center text-blue-600 mb-6"
         >
           <IoIosReturnLeft className="mr-2" />

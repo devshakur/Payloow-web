@@ -14,9 +14,9 @@ const Settings = () => {
             Account Settings
           </h3>
           <div className="flex md:flex-col md:gap-5 gap-2">
-            <Tab className="settings-tab"><span className="md:block hidden">Change</span> Email</Tab>
-            <Tab className="settings-tab"><span className="md:block hidden">Change</span> Password</Tab>
-            <Tab className="settings-tab"><span className="md:block hidden">Add</span> Profile Picture</Tab>
+            <Tab className="settings-tab"><span className="md:block hidden pr-1">Change</span> Email</Tab>
+            <Tab className="settings-tab"><span className="md:block hidden pr-1">Change</span> Password</Tab>
+            <Tab className="settings-tab"><span className="md:block hidden pr-1">Add</span> Profile Picture</Tab>
           </div>
         </TabList>
         <TabPanels className="md:w-[80%] bg-white h-screen md:p-10 p-5 md:mt-0 mt-10">

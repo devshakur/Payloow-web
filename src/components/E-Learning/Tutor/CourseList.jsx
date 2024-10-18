@@ -96,7 +96,7 @@ const CourseList = () => {
         </button>
       </div>
       <div className="">
-        <div className="slider-container md:px-0 px-5">
+        <div className="slider-container md:px-0 px-5 py-5">
           {isLoading ? (
             <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 gap-8">
               <div className="animate-pulse">
@@ -123,7 +123,7 @@ const CourseList = () => {
             ) : (
               <Slider {...settings}>
                 {courses.map((course) => (
-                  <div key={course._id} className="" onClick={() => handleCourseClick(course._id)}>
+                  <div key={course._id} className="pr-5 mb-5" onClick={() => handleCourseClick(course._id)}>
                     <CourseCard key={course._id} {...course} />
                   </div>
                 ))}

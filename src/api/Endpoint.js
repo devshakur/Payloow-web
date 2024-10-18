@@ -18,6 +18,7 @@ export const endpoints = {
   changePassword: `${BaseUrl}/change-password`,
   changeProfilePicture: `${BaseUrl}/add-profile-picture`,
   getAllCourses: `${BaseUrl}/get-all-courses`,
+  uploadCourseThumbnail: `${BaseUrl}/add-course-thumbnail-image`,
 };
 
 export const BillsEndpoints = {
