@@ -13,6 +13,7 @@ import { Loader } from "../../../AuthContext/Loader";
 const AllCourses = () => {
   const [courses, setCourses] = useState([])
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleCourseClick = (courseId) => {
     navigate(`/e-learning/tutor/course/${courseId}`);
@@ -21,6 +22,7 @@ const AllCourses = () => {
   const getAllCourses = async () => {
     try {
       const token = JSON.parse(localStorage.getItem('auth')).auth;
+      setIsLoading(true)
       const response = await axios.get(endpoints.getAllCourses, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -29,6 +31,8 @@ const AllCourses = () => {
       setCourses(response.data.data)
     } catch (error) {
       toast.error('An error occured while fetching user data')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -36,7 +40,7 @@ const AllCourses = () => {
     getAllCourses();
   }, []);
 
-  if (!courses) return <div><Loader /></div>;
+  if (isLoading) return <div><Loader /></div>;
 
   return (
     <Layout>

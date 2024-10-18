@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { IoIosReturnLeft } from 'react-icons/io';
+import { IoIosArrowDown, IoIosArrowUp, IoIosReturnLeft } from 'react-icons/io';
 import { ImUsers } from "react-icons/im";
-import { CiClock2 } from "react-icons/ci";
+import { CiClock2, CiPlay1 } from "react-icons/ci";
+import { BsPatchQuestion } from "react-icons/bs";
 import { RiBookLine } from "react-icons/ri";
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -9,15 +10,23 @@ import axios from 'axios';
 import { endpoints } from '../../../api/Endpoint';
 import Layout from './Layout';
 import { Loader } from '../../../AuthContext/Loader';
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
+import { motion } from 'framer-motion';
+
 
 const CourseDetails = () => {
-
   const { id } = useParams();
   const [courses, setCourses] = useState([])
   const navigate = useNavigate();
+  const [openSectionId, setOpenSectionId] = useState(null);
 
   const handleCourseClick = (courseId) => {
     navigate(`/e-learning/tutor/course/edit-course/${courseId}`);
+  };
+
+  const sectionVariant = {
+    hidden: { opacity: 0, height: 0 },
+    visible: { opacity: 1, height: "auto" },
   };
 
   const getAllCourses = async () => {
@@ -40,86 +49,144 @@ const CourseDetails = () => {
     getAllCourses();
   }, []);
 
+  const backToCourses = () => {
+    navigate('/e-learning/tutor/all-courses');
+  }
+
   const course = courses.find(c => c._id === (id));
+
 
   if (!course) return <div><Loader /></div>;
   return (
     <Layout>
       <div className="">
-        <button className="flex items-center text-blue-600 mb-6">
+        <button onClick={backToCourses} className="flex items-center text-blue-600 mb-6">
           <IoIosReturnLeft className="mr-2" />
           Back to Courses
         </button>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="md:col-span-2">
-            <img
-              src={course.image || '/images/course-card-image.png'}
-              alt={course.title}
-              className="w-full h-64 object-cover rounded-lg mb-6"
-            />
+        <div className="grid md:grid-cols-5 gap-8">
+
+          <div className="md:col-span-3">
             <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
-            <p className="text-gray-600 mb-6">{course.description}</p>
-
-            <div className="flex flex-wrap gap-4 mb-6">
-              <div className="flex items-center">
-                <CiClock2 className="mr-2" />
-                <span>{course.duration} hrs</span>
-              </div>
-              <div className="flex items-center">
-                <ImUsers className="mr-2" />
-                <span>{course.students_enrolled} students</span>
-              </div>
-              <div className="flex items-center">
-                <RiBookLine className="mr-2" />
-                <span>{course.lessons} lessons</span>
-              </div>
+            <div className="h-44 max-h-64 overflow-hidden overflow-y-scroll">
+              <p className="text-gray-600 mb-6">{course.description}</p>
             </div>
 
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-2">Instructor</h2>
-              <p>{course.instructor}</p>
-            </div>
+            <TabGroup>
+              <TabList className="flex mb-6">
 
-            <div className="mt-10 mb-6">
-              <h2 className="text-xl font-semibold mb-2">Course Content</h2>
-              {course.sections?.map((section, index) => (
-                <div key={section._id} className="mb-4">
-                  <h3 className="font-semibold">{index + 1}. {section.title}</h3>
-                  <p className="text-sm text-gray-600">{section.description}</p>
-                  <ul className="list-disc list-inside ml-4">
-                    {section.lessons.map(lesson => (
-                      <li key={lesson._id}>{lesson.title}</li>
+                <Tab className="course-detail-card">
+                  Contents
+                </Tab>
+                <Tab className="course-detail-card">
+                  Quiz
+                </Tab>
+                <Tab className="course-detail-card">
+                  Announcements
+                </Tab>
+                <Tab className="course-detail-card">
+                  Q&A
+                </Tab>
+              </TabList>
+              <TabPanels className="mt-6">
+                <TabPanel>
+                  <div className="mt-10 mb-6">
+                    {course.sections?.map((section) => (
+                      <motion.div key={section._id}
+                        className="mb-4"
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                        variants={sectionVariant}
+                        transition={{ duration: 0.5 }}>
+                        <div
+                          className='bg-white flex items-center justify-between text-xl p-3 rounded-xl cursor-pointer'
+                          onClick={() => setOpenSectionId(openSectionId === section._id ? null : section._id)}
+                        >
+                          <span>{section.title}</span>
+                          <span>
+                            {openSectionId === section._id ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                          </span>
+                        </div>
+                        {openSectionId === section._id && (
+                          <motion.div className="space-y-5 pl-5 mt-5"
+                            initial="hidden"
+                            animate="visible"
+                            exit="hidden"
+                            variants={sectionVariant}
+                            transition={{ duration: 0.5 }}>
+                            {section.lessons.map(lesson => (
+                              <div key={lesson._id} className='flex items-center space-x-3'>
+                                <span><CiPlay1 /></span>
+                                <span>{lesson.title}</span>
+                              </div>
+                            ))}
+                          </motion.div>
+                        )}
+                      </motion.div>
                     ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+                  </div>
+                </TabPanel>
+                <TabPanel>
+                  No Quiz
+                </TabPanel>
+                <TabPanel>
+                  No Announcement
+                </TabPanel>
+                <TabPanel>
+                  No Q&A
+                </TabPanel>
+              </TabPanels>
+            </TabGroup>
           </div>
 
 
 
-          <div className="md:col-span-1">
+          <div className="md:col-span-2">
             <div className="bg-white shadow-lg rounded-lg p-6">
-              <div className="mb-4">
-                <span className="bg-[#C0D5FD] text-sm px-3 py-1 rounded">{course.category}</span>
+              <img
+                src={course.thumbnailUrl ? course.thumbnailUrl : '/images/course-img.png'}
+                alt={course.title}
+                className="w-full h-72 object-cover rounded-lg mb-6"
+              />
+              <div className="flex items-center justify-between">
+                <div className="mb-4">
+                  <span className="bg-[#C0D5FD] text-sm px-3 py-1 rounded">{course.category}</span>
+                </div>
+                <div className="text-3xl font-bold mb-4">
+                  {course.discount_price ? (
+                    <>
+                      <span>${course.discount_price}</span>
+                      <span className="line-through text-red-500 ml-2">${course.price}</span>
+                    </>
+                  ) : (
+                    <span>${course.price}</span>
+                  )}
+                </div>
               </div>
-              <div className="text-3xl font-bold mb-4">
-                {course.discount_price ? (
-                  <>
-                    <span>${course.discount_price}</span>
-                    <span className="line-through text-red-500 ml-2">${course.price}</span>
-                  </>
-                ) : (
-                  <span>${course.price}</span>
-                )}
-              </div>
-              {/* <button onClick={() => handleCourseClick(course._id)} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
-                Edit Course
-              </button> */}
-              <button onClick={() => alert('Working on it')} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+              <button onClick={() => handleCourseClick(course._id)} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
                 Edit Course
               </button>
+              {/* <button onClick={() => alert('Working on it')} className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+                Edit Course
+              </button> */}
+
+              <h3 className="font-bold text-xl mt-10">Course Includes</h3>
+              <div className="space-y-4 mt-5">
+                <div className="flex items-center space-x-3">
+                  <span><CiPlay1 /></span>
+                  <span>{course.duration} hours videos</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span><RiBookLine /></span>
+                  <span>{course.sections.length} sections</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span><BsPatchQuestion /></span>
+                  <span>{course.sections.length} quizzess</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
