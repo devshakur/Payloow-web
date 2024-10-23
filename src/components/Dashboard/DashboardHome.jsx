@@ -49,6 +49,8 @@ const DashboardHome = () => {
       },
     ],
   };
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
 
   const settings2 = {
     dots: true,
@@ -148,7 +150,7 @@ const DashboardHome = () => {
                   <Button
                     text="Fund Wallet"
                     className="bg-white text-primary font-medium"
-                    onClick={() => {}}
+                    onClick={() => { }}
                   />
                 </div>
               </div>
@@ -163,12 +165,12 @@ const DashboardHome = () => {
                     <Button
                       text="Make a payment"
                       className="bg-white text-[#0099FF] font-medium"
-                      onClick={() => {}}
+                      onClick={() => { }}
                     />
                     <Button
                       text="Apply for Loan"
                       className="bg-white text-[#0099FF] font-medium"
-                      onClick={() => {}}
+                      onClick={() => { }}
                     />
                   </div>
                 </div>
@@ -177,7 +179,7 @@ const DashboardHome = () => {
                 <div className="courses p-6 rounded-lg justify-between shadow-lg">
                   <p className="flex items-center justify-between">
                     <span className="font-medium text-2xl">Your Courses</span>
-                    <Link to={"#!"} className="text-sm text-primary">
+                    <Link to={currentUser?.role === 'Tutor' ? "/e-learning/tutor/all-courses" : "/e-learning/student/dashboard"} className="text-sm text-primary">
                       See all
                     </Link>
                   </p>
@@ -329,13 +331,12 @@ const DashboardHome = () => {
                       <div className="text-center">
                         <p>{transaction.amount}</p>
                         <p
-                          className={`font-medium ${
-                            transaction.status === "successful"
+                          className={`font-medium ${transaction.status === "successful"
                               ? "text-green-500 bg-green-100"
                               : transaction.status === "pending"
-                              ? "text-yellow-500 bg-yellow-100"
-                              : "text-red-500 bg-red-100"
-                          } capitalize p-1 rounded md:text-sm text-xs`}
+                                ? "text-yellow-500 bg-yellow-100"
+                                : "text-red-500 bg-red-100"
+                            } capitalize p-1 rounded md:text-sm text-xs`}
                         >
                           {transaction.status}
                         </p>

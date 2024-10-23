@@ -126,7 +126,7 @@ const TutorDashboard = () => {
             </div>
             <div className="text-center">
               <h4 className="md:text-lg">Your Courses</h4>
-              <p className="pt-3 text-3xl font-extrabold">6</p>
+              <p className="pt-3 text-3xl font-extrabold">{courses?.length}</p>
             </div>
             <SlOptionsVertical />
           </div>
