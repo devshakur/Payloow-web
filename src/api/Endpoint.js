@@ -19,6 +19,8 @@ export const endpoints = {
   changeProfilePicture: `${BaseUrl}/add-profile-picture`,
   getAllCourses: `${BaseUrl}/get-all-courses`,
   uploadCourseThumbnail: `${BaseUrl}/add-course-thumbnail-image`,
+  editCourse: `${BaseUrl}/add-to-existing-lessons`,
+  addQuiz: `${BaseUrl}/add-course-question`,
 };
 
 export const BillsEndpoints = {

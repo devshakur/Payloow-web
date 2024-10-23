@@ -12,23 +12,20 @@ import { Loader } from '../../../AuthContext/Loader';
 
 const EditCourse = () => {
   const { id } = useParams();
-
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [course, setCourse] = useState(null);
   const [courses, setCourses] = useState(null);
 
-  console.log('getting courses');
   const getAllCourses = async () => {
     try {
       const token = JSON.parse(localStorage.getItem('auth')).auth;
-      console.log(token);
       const response = await axios.get(endpoints.getAllCourses, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      console.log(response.data);
       setCourses(response.data.data);
     } catch (error) {
       toast.error('An error occurred while fetching user data');
@@ -62,6 +59,78 @@ const EditCourse = () => {
 
       return { ...prevCourse, sections: updatedSections };
     });
+  };
+
+  const handleFileChange = async (event, sectionIndex, lessonIndex) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("video", file);
+
+    try {
+      const token = JSON.parse(localStorage.getItem("auth")).auth;
+      const response = await axios.post(endpoints.uploadCourseVideo, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setCourse((prevData) => {
+            const updatedSections = [...prevData.sections];
+            updatedSections[sectionIndex].lessons[lessonIndex].uploadProgress =
+              percentCompleted;
+            return { ...prevData, sections: updatedSections };
+          });
+        },
+      });
+      toast.success("Video uploaded successfully");
+      setCourse((prevData) => {
+        const updatedSections = [...prevData.sections];
+        updatedSections[sectionIndex].lessons[lessonIndex].videoUrl =
+          response.data.data;
+        return { ...prevData, sections: updatedSections };
+      });
+    } catch (error) {
+      console.error("Error uploading video:", error);
+      toast.error("Failed to upload video");
+    }
+  };
+
+  const handleThumbnailUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const token = JSON.parse(localStorage.getItem("auth")).auth;
+      setIsUploading(true);
+      const response = await axios.post(
+        endpoints.uploadCourseThumbnail,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success("Thumbnail uploaded successfully");
+      setCourse((prevData) => ({
+        ...prevData,
+        thumbnailUrl: response.data.data,
+      }));
+    } catch (error) {
+      console.error("Error uploading thumbnail:", error);
+      toast.error("Failed to upload thumbnail");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const addSection = () => {
@@ -147,9 +216,10 @@ const EditCourse = () => {
       })),
     };
 
+    console.log(payload);
     try {
       const token = JSON.parse(localStorage.getItem('auth')).auth;
-      const response = await axios.put(endpoints.editCourse, payload, {
+      const response = await axios.patch(endpoints.editCourse, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -158,7 +228,7 @@ const EditCourse = () => {
 
       if (response.status === 200) {
         toast.success('Course updated successfully');
-        navigate(`/course/${course._id}`);
+        navigate(`/e-learning/tutor/course/${course._id}`);
       } else {
         toast.error('Failed to update course. Please try again.');
       }
@@ -174,7 +244,7 @@ const EditCourse = () => {
   return (
     <Layout>
       <Toaster />
-      <div className="container mx-auto px-4 py-8">
+      <div className="bg-white mx-auto md:px-20 md:py-10 rounded px-4 py-8">
         <button
           onClick={() => navigate(`/e-learning/tutor/course/${id}`)}
           className="flex items-center text-blue-600 mb-6"
@@ -195,7 +265,7 @@ const EditCourse = () => {
                 name="title"
                 value={course.title}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="form-input"
                 required
               />
             </div>
@@ -207,7 +277,7 @@ const EditCourse = () => {
                 name="category"
                 value={course.category}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="form-input"
                 required
               />
             </div>
@@ -221,12 +291,12 @@ const EditCourse = () => {
               value={course.description}
               onChange={handleChange}
               rows="4"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="form-input"
               required
             ></textarea>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
               <input
@@ -235,7 +305,7 @@ const EditCourse = () => {
                 name="price"
                 value={course.price}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="form-input"
                 required
               />
             </div>
@@ -247,7 +317,7 @@ const EditCourse = () => {
                 name="discount_price"
                 value={course.discount_price}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="form-input"
               />
             </div>
             <div>
@@ -258,9 +328,39 @@ const EditCourse = () => {
                 name="duration"
                 value={course.duration}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="form-input"
                 required
               />
+            </div>
+            <div>
+              <label htmlFor="thumbnail" className="block text-sm font-medium text-gray-700">Course Thumbnail</label>
+              <div className="flex items-center space-x-5">
+                <input
+                  type="text"
+                  name="course_thumbnail"
+                  id="course_thumbnail"
+                  value={course.thumbnailUrl}
+                  onChange={handleChange}
+                  className="form-input flex-grow"
+                  placeholder="Thumbnail URL"
+                  required
+                  disabled
+                />
+                <input
+                  type="file"
+                  id="thumbnail"
+                  name="thumbnail"
+                  accept="image/*"
+                  onChange={handleThumbnailUpload}
+                  style={{ display: "none" }}
+                />
+                <label
+                  htmlFor="thumbnail"
+                  className={`cursor-pointer bg-primary text-white px-5 py-4 rounded-lg md:text-base text-sm ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  {isUploading ? <div className="loader"></div> : "Upload"}
+                </label>
+              </div>
             </div>
           </div>
 
@@ -272,7 +372,7 @@ const EditCourse = () => {
                 className="border rounded-lg p-4 mb-4"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.5 }}
               >
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="text-xl font-semibold">Section {sectionIndex + 1}</h3>
@@ -287,7 +387,7 @@ const EditCourse = () => {
                 </div>
                 {!section.collapsed && (
                   <>
-                    <div className="mb-4">
+                    <div className="my-5">
                       <label htmlFor={`section-${sectionIndex}-title`} className="block text-sm font-medium text-gray-700">Section Title</label>
                       <input
                         type="text"
@@ -295,7 +395,7 @@ const EditCourse = () => {
                         name="title"
                         value={section.title}
                         onChange={(e) => handleChange(e, sectionIndex)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        className="form-input"
                         required
                       />
                     </div>
@@ -307,7 +407,7 @@ const EditCourse = () => {
                         value={section.description}
                         onChange={(e) => handleChange(e, sectionIndex)}
                         rows="3"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        className="form-input"
                         required
                       ></textarea>
                     </div>
@@ -315,10 +415,10 @@ const EditCourse = () => {
                     {section.lessons.map((lesson, lessonIndex) => (
                       <motion.div
                         key={lesson._id || lessonIndex}
-                        className="border rounded p-3 mb-2"
+                        className="border rounded p-3 mb-5"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.2 }}
+                        transition={{ duration: 0.5 }}
                       >
                         <div className="flex justify-between items-center mb-2">
                           <h5 className="font-medium">Lesson {lessonIndex + 1}</h5>
@@ -332,7 +432,7 @@ const EditCourse = () => {
                           </div>
                         </div>
                         {!lesson.collapsed && (
-                          <>
+                          <div className='space-y-5 mt-5'>
                             <div className="mb-2">
                               <label htmlFor={`lesson-${sectionIndex}-${lessonIndex}-title`} className="block text-sm font-medium text-gray-700">Lesson Title</label>
                               <input
@@ -341,21 +441,60 @@ const EditCourse = () => {
                                 name="title"
                                 value={lesson.title}
                                 onChange={(e) => handleChange(e, sectionIndex, lessonIndex)}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                className="form-input"
                                 required
                               />
                             </div>
                             <div className="mb-2">
                               <label htmlFor={`lesson-${sectionIndex}-${lessonIndex}-videoUrl`} className="block text-sm font-medium text-gray-700">Video URL</label>
-                              <input
-                                type="text"
-                                id={`lesson-${sectionIndex}-${lessonIndex}-videoUrl`}
-                                name="videoUrl"
-                                value={lesson.videoUrl}
-                                onChange={(e) => handleChange(e, sectionIndex, lessonIndex)}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                required
-                              />
+                              <div className="flex items-center space-x-5">
+                                <input
+                                  name="videoUrl"
+                                  id={`lesson-${sectionIndex}-${lessonIndex}-videoUrl`}
+                                  value={lesson.videoUrl}
+                                  onChange={(e) =>
+                                    handleChange(
+                                      e,
+                                      sectionIndex,
+                                      lessonIndex
+                                    )
+                                  }
+                                  className="form-input flex-grow text-sm"
+                                  placeholder="Video URL"
+                                  required
+                                  disabled
+                                />
+                                <input
+                                  type="file"
+                                  accept="video/*"
+                                  id={`${sectionIndex}-${lessonIndex}-videoUrl`}
+                                  name="lesson videoUrl"
+                                  onChange={(e) => handleFileChange(e, sectionIndex, lessonIndex)}
+                                  className="form-input"
+                                  style={{ display: "none" }}
+                                />
+                                <label
+                                  htmlFor={`${sectionIndex}-${lessonIndex}-videoUrl`}
+                                  className="cursor-pointer bg-primary text-white px-5 py-4 rounded-lg"
+                                >
+                                  Upload
+                                </label>
+                              </div>
+                              {lesson.uploadProgress && (
+                                <>
+                                  <div className="relative w-full bg-gray-400 rounded-full h-3 flex items-center justify-center mt-5">
+                                    <p className="text-[8px] z-10">
+                                      Uploading {lesson.uploadProgress}%
+                                    </p>
+                                    <div
+                                      className="absolute h-3 rounded-full bg-primary/70 left-0 top-0"
+                                      style={{
+                                        width: `${lesson.uploadProgress}%`,
+                                      }}
+                                    ></div>
+                                  </div>
+                                </>
+                              )}
                             </div>
                             <div className="grid grid-cols-2 gap-2">
                               <div>
@@ -366,7 +505,7 @@ const EditCourse = () => {
                                   name="duration"
                                   value={lesson.duration}
                                   onChange={((e) => handleChange(e, sectionIndex, lessonIndex))}
-                                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                  className="form-input"
                                   required
                                 />
                               </div>
@@ -378,19 +517,19 @@ const EditCourse = () => {
                                   name="order"
                                   value={lesson.order}
                                   onChange={(e) => handleChange(e, sectionIndex, lessonIndex)}
-                                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                  className="form-input"
                                   required
                                 />
                               </div>
                             </div>
-                          </>
+                          </div>
                         )}
                       </motion.div>
                     ))}
                     <button
                       type="button"
                       onClick={() => addLesson(sectionIndex)}
-                      className="flex items-center text-blue-600 mt-2"
+                      className="flex items-center justify-center space-x-3 bg-[#DBE7FE] border-2 border-[#DBE7FE] text-primary px-10 py-2 rounded-lg"
                     >
                       <GoPlus className="mr-2" />
                       Add Lesson

@@ -10,8 +10,9 @@ import axios from 'axios';
 import { endpoints } from '../../../api/Endpoint';
 import Layout from './Layout';
 import { Loader } from '../../../AuthContext/Loader';
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
+import { Dialog, DialogPanel, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { motion } from 'framer-motion';
+import CreateQuiz from './CreateQuiz';
 
 
 const CourseDetails = () => {
@@ -19,6 +20,7 @@ const CourseDetails = () => {
   const [courses, setCourses] = useState([])
   const navigate = useNavigate();
   const [openSectionId, setOpenSectionId] = useState(null);
+  const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
 
   const handleCourseClick = (courseId) => {
     navigate(`/e-learning/tutor/course/edit-course/${courseId}`);
@@ -54,6 +56,37 @@ const CourseDetails = () => {
   }
 
   const course = courses.find(c => c._id === (id));
+
+  const handleQuizSubmit = async (quizzes) => {
+    const payload = {
+      course_id: id,
+      section_id: openSectionId,
+      lesson_id: null, // Update this if you have a specific lesson ID
+      quiz_title: quizzes[0].title || "Sample Quiz",
+      questions: quizzes[0].questions.map((q) => ({
+        question_text: q.question,
+        options: q.options.map((option, index) => ({
+          option,
+          is_correct: q.correctOption === index,
+        })),
+      })),
+    };
+
+    console.log(payload);
+    // try {
+    //   const token = JSON.parse(localStorage.getItem('auth')).auth;
+    //   await axios.post(endpoints.createQuiz, payload, {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //       'Content-Type': 'application/json',
+    //     },
+    //   });
+    //   toast.success('Quiz created successfully');
+    //   setIsQuizModalOpen(false);
+    // } catch (error) {
+    //   toast.error('Failed to create quiz');
+    // }
+  };
 
 
   if (!course) return <div><Loader /></div>;
@@ -129,7 +162,12 @@ const CourseDetails = () => {
                   </div>
                 </TabPanel>
                 <TabPanel>
-                  No Quiz
+                  <button
+                    onClick={() => setIsQuizModalOpen(true)}
+                    className="bg-blue-600 text-white py-2 px-4 rounded-lg"
+                  >
+                    Create Quiz
+                  </button>
                 </TabPanel>
                 <TabPanel>
                   No Announcement
@@ -191,6 +229,23 @@ const CourseDetails = () => {
           </div>
         </div>
       </div>
+
+      <Dialog
+        open={isQuizModalOpen}
+        as="div"
+        className="relative z-50"
+        onClose={() => setIsQuizModalOpen(false)}
+      >
+        <div className="fixed inset-0 bg-black bg-opacity-50" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <DialogPanel className="w-full max-w-3xl bg-white rounded-lg p-6">
+            <CreateQuiz
+              onClose={() => setIsQuizModalOpen(false)}
+              onSubmit={handleQuizSubmit}
+            />
+          </DialogPanel>
+        </div>
+      </Dialog>
     </Layout>
   );
 };
