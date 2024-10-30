@@ -126,7 +126,7 @@ const TutorDashboard = () => {
             </div>
             <div className="text-center">
               <h4 className="md:text-lg">Your Courses</h4>
-              <p className="pt-3 text-3xl font-extrabold">6</p>
+              <p className="pt-3 text-3xl font-extrabold">{courses?.length}</p>
             </div>
             <SlOptionsVertical />
           </div>
@@ -169,7 +169,7 @@ const TutorDashboard = () => {
               ) : (
                 <Slider {...settings}>
                   {courses.map((course) => (
-                    <div key={course._id} className="" onClick={() => handleCourseClick(course._id)}>
+                    <div key={course._id} className="pr-5 pb-5" onClick={() => handleCourseClick(course._id)}>
                       <CourseCard key={course._id} {...course} />
                     </div>
                   ))}

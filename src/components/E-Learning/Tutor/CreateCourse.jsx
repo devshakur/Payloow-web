@@ -14,6 +14,7 @@ const CreateCourse = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const router = useNavigate();
 
@@ -46,8 +47,7 @@ const CreateCourse = () => {
     duration: "",
     price: "",
     discount_price: "",
-    course_thumbnail:
-      "https://res.cloudinary.com/hzxyensd5/image/upload/v1728902595/w6tkjck7ieteklkuefg7.png",
+    course_thumbnail: "",
     sections: [
       {
         title: "",
@@ -211,6 +211,7 @@ const CreateCourse = () => {
 
     try {
       const token = JSON.parse(localStorage.getItem("auth")).auth;
+      setIsUploading(true)
       const response = await axios.post(
         endpoints.uploadCourseThumbnail,
         formData,
@@ -222,6 +223,7 @@ const CreateCourse = () => {
         }
       );
       toast.success("Thumbnail uploaded successfully");
+      console.log(response)
       setFormData((prevData) => ({
         ...prevData,
         course_thumbnail: response.data.data,
@@ -229,6 +231,8 @@ const CreateCourse = () => {
     } catch (error) {
       console.error("Error uploading thumbnail:", error);
       toast.error("Failed to upload thumbnail");
+    } finally {
+      setIsUploading(false)
     }
   };
 
@@ -431,9 +435,9 @@ const CreateCourse = () => {
                     />
                     <label
                       htmlFor="thumbnailInput"
-                      className="cursor-pointer bg-primary text-white px-3 py-2 rounded-lg"
+                      className={`cursor-pointer bg-primary text-white px-5 py-4 rounded-lg ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
-                      Upload
+                      {isUploading ? <div className="loader"></div> : "Upload"}
                     </label>
                   </div>
                 </div>
@@ -744,7 +748,7 @@ const CreateCourse = () => {
                     className={`w-full md:py-4 py-3 rounded-lg md:text-base text-sm bg-primary text-white ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                       }`}
                   >
-                    {isSubmitting ? `Submitting...` : "Submit"}
+                    {isSubmitting ? <div className="loader"></div> : "Submit"}
                   </button>
                 </div>
               </>

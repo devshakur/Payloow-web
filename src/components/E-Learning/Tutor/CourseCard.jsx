@@ -2,7 +2,7 @@ import React from "react";
 import { SlOptionsVertical } from "react-icons/sl";
 
 const CourseCard = ({
-  image,
+  thumbnailUrl,
   category,
   title,
   discount_price,
@@ -13,9 +13,9 @@ const CourseCard = ({
 
   return (
     <div className="bg-white shadow-lg rounded-lg cursor-pointer">
-      <img src={image ? image : '/images/course-card-image.png'} alt={title} />
-      <div className="p-5 h-44">
-        <div className="flex items-center justify-between mb-3">
+      <img src={thumbnailUrl ? thumbnailUrl : '/images/course-img.png'} alt={title} className="h-40 w-full object-cover rounded-t-lg" />
+      <div className="p-5 h-52 flex flex-col justify-between">
+        <div className="flex items-center justify-between">
           <div>
             <p className="bg-[#C0D5FD] text-sm px-2 rounded py-1">{category}</p>
           </div>
@@ -24,21 +24,20 @@ const CourseCard = ({
             <p>{students_enrolled} enrolled</p>
           </div>
         </div>
-        <div>
-          <h3 className="text-xl font-semibold pb-5">{title}</h3>
-          <div className="flex items-center justify-between">
-            <div className="flex font-bold text-2xl">
-              {discount_price ? (
-                <div className="">
-                  <span className="line-through mr-2 text-red-500 text-xl">${price}</span>
-                  <span>${discount_price}</span>
-                </div>
-              ) : (
-                <div>${price}</div>
-              )}
-            </div>
-            <SlOptionsVertical />
+        <h3 className="text-xl font-semibold">{title}</h3>
+
+        <div className="flex items-center justify-between">
+          <div className="flex font-bold text-2xl">
+            {discount_price ? (
+              <div className="">
+                <span className="line-through mr-2 text-red-500 text-xl">${price}</span>
+                <span>${discount_price}</span>
+              </div>
+            ) : (
+              <div>${price}</div>
+            )}
           </div>
+          <SlOptionsVertical />
         </div>
       </div>
     </div>
