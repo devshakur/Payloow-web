@@ -61,10 +61,12 @@ const ResetPswd = () => {
     <div>
       <main className='bg h-screen w-screen overflow-y-auto flex items-center justify-center'>
         <div className='vector'>
-          <div className='flex justify-center p-6 items-center'>
-            <span><img src="images/pay.png" alt="" /></span>
-            <span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3'>ayloow</span>
-          </div>
+        <div className='flex justify-center p-6 items-center'>
+          <span><img src="images/pay.png" alt="pay" /></span>
+          <span><img src="images/curve.png" alt="curve" className='h-9 relative right-8' /></span>
+          <span><img src="images/angle.png" className='h-5 relative right-10 -top-8' alt="arrow" /></span>
+          <span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3 relative right-12'>ayloow</span>
+        </div>
           <div className='bg-white w-[90vw] h-[400px] max-w-lg p-6 rounded-lg shadow-lg flex flex-col items-center'>
             <header className='my-9'>
               <h4 className='flex justify-center font-poppins text-2xl font-semibold text-primary-text leading-9'>Verification</h4>

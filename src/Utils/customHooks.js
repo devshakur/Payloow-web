@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { endpoints } from "../api/Endpoint";
+import axios from 'axios'
 
  const ForgetPassWord = ()=> { //custom hooks
    const [isForget, setIsForget] = useState(true);  
@@ -18,3 +20,18 @@ export const restrictInput = (e)=>{
  
 }
 
+export const getUser = async () => {
+  try {
+    const token = JSON.parse(localStorage.getItem('auth')).auth;
+    console.log(token);
+    const response = await axios.get(endpoints.getCurrentUser, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response.data.data
+
+  } catch (error) {
+    console.error('Failed to fetch user data');
+  }
+}

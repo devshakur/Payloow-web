@@ -10,6 +10,7 @@ import * as Yup from 'yup'
 
 
 const AirtimePurchase = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const formik = useFormik({
         initialValues: {
             network_id: '',
@@ -43,7 +44,7 @@ const AirtimePurchase = () => {
     return (  
         <div className="w-screen h-[100vh] bg-gray-100 overflow-x-hidden overflow-y-auto flex flex-col lg:flex-row">  
         <div className="hidden lg:block">  
-            <BillsLayout active={active} />  
+            <BillsLayout active={active} isSidebarOpen={isSidebarOpen} />  
         </div>  
     
         {/* Main content */}  
