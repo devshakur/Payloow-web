@@ -12,6 +12,7 @@ import {
 import {
   ArrowDown2,
   BookSaved,
+  Category2,
   Chart,
   CloseCircle,
   HambergerMenu,
@@ -23,16 +24,18 @@ import {
   SearchNormal,
   Setting2,
   TableDocument,
+  VideoCircle,
 } from "iconsax-react";
 import { useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 const navigation = [
+  { name: "Main Menu", href: "/dashboard", icon: Category2 },
   { name: "Dashboard", href: "/e-learning/student/dashboard", icon: Home },
+  { name: "Courses", href: "/e-learning/student/all-courses", icon: VideoCircle },
+  { name: "My Courses", href: "/e-learning/student/courses", icon: BookSaved },
   { name: "Messages", href: "/e-learning/student/messages", icon: Message },
-  { name: "Quiz", href: "/e-learning/student/quiz", icon: TableDocument },
-  { name: "courses", href: "/e-learning/student/courses", icon: BookSaved },
-  { name: "Analytics", href: "/e-learning/student/analytics", icon: Chart },
+  // { name: "Analytics", href: "/e-learning/student/analytics", icon: Chart },
 ];
 const action = [
   { name: "Support", href: "/support", icon: Headphone },

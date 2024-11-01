@@ -19,6 +19,7 @@ import AirtimePurchase from "../components/Bills/Airtime/AirtimePurchase.jsx";
 import DataPurchase from '../components/Bills/Data/Data.jsx'
 import TvSub from "../components/Bills/TV/TvSub.jsx";
 import Electricity from "../components/Bills/Electricity/Electricity.jsx";
+import BuyCourse from "../components/E-Learning/Student/BuyCourse.jsx";
 // const Verification = React.lazy(() =>
 //   import("../components/AuthenticationPage/password-issues/Verification.jsx")
 // );
@@ -27,6 +28,9 @@ const Login = React.lazy(() => import('../components/AuthenticationPage/Auth-sec
 const ForgotPswd = React.lazy(() => import('../components/AuthenticationPage/password-issues/ForgotPswd.jsx'))
 const ResetPswd = React.lazy(() => import('../components/AuthenticationPage/password-issues/ResetPswd.jsx'))
 const Success = React.lazy(() => import("../components/AuthenticationPage/password-issues/SuccessPage.jsx"))
+const AllCoursesStudents = React.lazy(() => import("../components/E-Learning/Student/AllCourses.jsx"))
+const CourseListStudents = React.lazy(() => import("../components/E-Learning/Student/CourseList.jsx"))
+const CourseDetailsStudents = React.lazy(() => import("../components/E-Learning/Student/CourseDetails.jsx"))
 
 
 export const router = createBrowserRouter([
@@ -232,6 +236,42 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <StudentDashboard />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/e-learning/student/all-courses",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <AllCoursesStudents />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/e-learning/student/courses",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <CourseListStudents />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/e-learning/student/course/:id",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <CourseDetailsStudents />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/e-learning/student/course/buy/:id",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <BuyCourse />
       </Suspense>
     ),
     errorElement: <ErrorPage />,
