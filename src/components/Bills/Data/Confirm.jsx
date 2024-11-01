@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Wallet, ArrowRight2 } from "iconsax-react";
 import useBills from '../../../hooks/useBills';
 import { ToastContainer, toast } from 'react-toastify'
@@ -7,7 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Confirm = ({active, setActive, formik, selectedPlan}) => {
     const [ispin, setIspin] = useState('')
-    const [loading, setLoading] = useState(false); 
+    const [loading, setLoading] = useState(false);
+    const [image, setImage] = useState(""); 
     const [buttonDisabled, setbuttonDisabled] = useState(true)
     const {BuyData,  UserBalance, ConfirmPin } = useBills();
     
@@ -48,7 +49,24 @@ const Confirm = ({active, setActive, formik, selectedPlan}) => {
                  }, 6000);
         }
     };
- 
+    const switchImage = () => {
+        if (network_id === "MTN") {
+          setImage("./images/mtn.jpg");
+        } else if (network_id === "Airtel") {
+          setImage("./images/airtel.jpg");
+        } else if (network_id === "Glo") {
+          setImage("./images/usedglo.png");
+        } else if (network_id === "etisalat") {
+          setImage("./images/9mobile.png");
+        } else {
+          setImage(null);
+        }
+      };
+
+      useEffect(() => {
+        switchImage();
+      }, [network_id]);
+    
 
   return (
     <div>
@@ -56,21 +74,21 @@ const Confirm = ({active, setActive, formik, selectedPlan}) => {
         <div className='flex justify-center lg:-ml-[-20vw] xl:justify-center 2xl:ml-[-10vw]'>
             <div className='w-full mx-4 h-[550px] md:w-[430px] lg:h-[500px] lg:w-[600px] 2xl:w-[700px] bg-[#FFFFFF] pb-[20px]  shadow-md rounded-lg'>
                 <h4 className='flex justify-center text-lg leading-7 font-poppins font-bold my-4 text-[#000000]'>Confirm Data Purchase</h4>
-                <h6 className='flex justify-center font-medium text-[16px] text-[#1D2433] font-poppins leading-5 -mt-3'>{selectedPlan}</h6>
+                <h6 className='flex justify-center font-[500] text-[16px] text-[#1D2433] font-poppins leading-5 -mt-3'>{selectedPlan}</h6>
                 <section className='h-[97px] w-[95%]  mx-2 mt-9'>
                     <div className='flex'>
-                        <h6 className='text-sm w-[83%] font-poppins font-[400] text-[#1D2433CC]'>Product Name</h6>
+                        <h6 className='text-sm w-[83%] font-poppins font-[600] text-[#1D2433CC]'>Product Name</h6>
                         <div className='w-[70%] flex justify-end gap-3'>
-                            <img src="./images/airtel.jpg" className='w-6 h-6' alt="" />
-                            <p className='text-sm font-normal font-poppins leading-5 mt-1 text-[#1D2433CC]'>{network_id}</p></div>
+                            <img src={image} className='w-6 h-6' alt="" />
+                            <p className='text-sm font-semibold font-poppins leading-5 mt-1 text-[#1D2433CC]'>{network_id}_Bundles</p></div>
                     </div>
                     <div className='flex justify-between my-1'>
-                        <p className='text-[#1D2433CC]'>Package</p>
-                        <p className='font-normal text-sm font-poppins leading-5 mr-6 text-[#1D2433CC]'>{amount}</p>
+                        <p className='text-[#1D2433CC] font-[600]'>Package</p>
+                        <p className='font-semibold text-sm font-poppins leading-5 mr-6 text-[#1D2433CC]'>{amount}</p>
                     </div>
                     <div className=' flex justify-between'>
-                        <p className='font-normal text-sm font-poppins leading-5 text-[#1D2433CC]'>Beneficiary</p>
-                        <p className='font-normal text-sm font-poppins leading-5 text-[#1D2433CC]'>{phone}</p>
+                        <p className='text-sm font-poppins leading-5 text-[#1D2433CC] font-[600]'>Beneficiary</p>
+                        <p className='font-semibold text-sm font-poppins leading-5 text-[#1D2433CC]'>{phone}</p>
                     </div>
                     <div className='flex justify-center'>
                         <p className='w-[90%] border-2 mt-6 border-dashed'></p>

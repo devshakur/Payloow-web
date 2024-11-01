@@ -76,6 +76,17 @@ const BillsProvider = ({ children }) => {
             throw error;
         }
        }
+
+       const SetPins = async (data) => {
+        try {
+            const response = await axiosInstance.post(BillsEndpoints.setPin, data)
+            const result = response.data
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
    
        const ConfirmPin = async (data) =>{
         try{
@@ -90,7 +101,7 @@ const BillsProvider = ({ children }) => {
    
 
 
-    const object = { ...state, dispatch, BuyAirtime, BuyData, BuyElectricity, BuyTvSubscription, UserBalance, ConfirmPin  }
+    const object = { ...state, dispatch, BuyAirtime, BuyData, BuyElectricity, BuyTvSubscription, UserBalance, SetPins, ConfirmPin  }
 
     return <BillsContext.Provider value={object}>{children}</BillsContext.Provider>
 }

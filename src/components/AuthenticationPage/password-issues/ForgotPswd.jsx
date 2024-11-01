@@ -42,8 +42,8 @@ function ForgotPswd() {
         <div className='flex justify-center p-6 items-center'>
           <span><img src="images/pay.png" alt="pay" /></span>
           <span><img src="images/curve.png" alt="curve" className='h-9 relative right-8' /></span>
-          <span><img src="" alt="" /></span>
-          <span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3 relative right-8'>ayloow</span>
+          <span><img src="images/angle.png" className='h-5 relative right-10 -top-8' alt="arrow" /></span>
+          <span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3 relative right-12'>ayloow</span>
         </div>
             <div className='bg-white w-[90vw] h-[400px] max-w-lg p-6 rounded-lg shadow-lg flex flex-col'>
             <form onSubmit={formik.handleSubmit} className='w-[100%] flex flex-col justify-center gap-6'>

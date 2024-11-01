@@ -5,11 +5,11 @@ import RegisterHeaders from './RegisterHeaders'
 const RegisterOne = ({ formik, handleNextPage }) => {
   const validateField = () => {
     const { values } = formik
-    const { country, state, address, identify, ...others } = values
+    const { country, state, address, role, ...others } = values
     const val = Object.values(others).filter(v => v.length === 0)
     if (val.length > 0) {
       formik.submitForm()
-
+      
     } else {
       formik.setErrors({ errors: {} })
       handleNextPage();

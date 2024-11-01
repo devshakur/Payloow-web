@@ -28,6 +28,7 @@ function Login() {
 			});
 			console.log(response);
 			localStorage.setItem('currentUser', JSON.stringify(response.data.data));
+			return response.data.data
 
 		} catch (error) {
 			toast.error('An error occured while fetching user data')
@@ -47,25 +48,40 @@ function Login() {
 			try {
 				const response = await LoginUser(values)
 				if (response) {
-					toast.success('Logged in Successfully!')
+					toast.success('Login success! Your dashboard awaits.')
 					const token = response.data.data.auth
-					console.log(token);
 					Cookies.set('authToken', token, { expires: 7 })
 					localStorage.setItem('auth', JSON.stringify(response.data.data));
 					localStorage.setItem('token', JSON.stringify(response.data.data.auth));
-					getUser();
+					const userData = await getUser(); 
 					setTimeout(() => {
-						router.push('/dashboard'); //change later to dashboard
-
+						console.log(userData.pin);
+						const checkPin = userData.pin
+						if(checkPin === false){ 
+						 router.push('/set-pin'); 
+						}else{
+							router.push('/dashboard'); 
+						}
 					}, 2000);
 				}
 			} catch (error) {
-				if (error.response.status === 400) {
-					toast.error('Wrong Password or Invalid email')
+				if (error.response) {
+					if (error.response.status === 400) {
+						toast.error('Wrong Password or Invalid email');
+					} else {
+						toast.error('An unexpected error occurred: ' + error.message);
+					}
+				} else if (error.request) {
+					
+					toast.error('Network error. Check your internet connection.');
+				} else {
+					
+					toast.error('Error: ' + error.message);
 				}
 			}
 			setSubmitting(false);
-		},
+			}
+		
 	})
 
 
@@ -75,8 +91,8 @@ function Login() {
 				<div className='flex justify-center p-4 mt-9 items-center'>
 					<span><img src="images/pay.png" alt="" /></span>
 					<span ><img src="images/curve.png" className='h-9 relative right-8' alt="" /></span>
-					<span><img src="" alt="" /></span>
-					<span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3 relative right-8'>ayloow</span>
+					<span><img src="images/angle.png" className='h-5 relative right-10 -top-8' alt="arrow" /></span>
+					<span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3 relative right-12'>ayloow</span>
 				</div>
 				<div className='bg-white w-[90vw] h-[550px] max-w-lg p-6 rounded-lg shadow-lg flex flex-col'>
 					<h4 className='flex justify-center font-poppins text-2xl font-semibold text-primary-text'>Log in to your account </h4>

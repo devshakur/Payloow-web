@@ -22,7 +22,6 @@ const ConfirmElectricity = ({ setActive, formik }) => {
             const amountValue = parseFloat(data.amount)
              if (balance >= amountValue) {
                 const pinValue = {pin}
-                console.log(pinValue);
                 const pinResponse = await ConfirmPin(pinValue);   
                 if (pinResponse?.data.success) {
                     const response = await BuyElectricity(data);

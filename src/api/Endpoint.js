@@ -29,5 +29,6 @@ export const BillsEndpoints = {
   electricity: `${BaseUrl}/buy-electricity-vtu`,
   subscription: `${BaseUrl}/buy-cable-subscription-vtu`,
   balance: `${BaseUrl}/get-vtu-providers-wallet-balance`,
+  setPin:  `${BaseUrl}/set-transaction-pin`,
   confirm: `${BaseUrl}/confirm-pin`,
 };

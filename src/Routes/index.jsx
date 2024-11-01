@@ -19,11 +19,21 @@ import AirtimePurchase from "../components/Bills/Airtime/AirtimePurchase.jsx";
 import DataPurchase from '../components/Bills/Data/Data.jsx'
 import TvSub from "../components/Bills/TV/TvSub.jsx";
 import Electricity from "../components/Bills/Electricity/Electricity.jsx";
+import Investment from "../components/Investment/Investment.jsx";
+import DebtorDashboard from "../components/Investment/Debtor/DebtorDashboard.jsx";
+import BusinessParent from "../components/Investment/Debtor/Business/BusinessParent.jsx";
+import Loans from "../components/Investment/Loans/Loans.jsx";
+import Request from "../components/Investment/Request/Request.jsx";
+import Investor from "../components/Investment/Investor/Investor.jsx";
+import InvestorBusiness from "../components/Investment/Investor/InvestorBusiness.jsx";
+import MyInvestment from "../components/Investment/Investor/MyInvestment.jsx";
+
 // const Verification = React.lazy(() =>
 //   import("../components/AuthenticationPage/password-issues/Verification.jsx")
 // );
 const Regsiter = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Register.jsx'))
 const Login = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Login.jsx'))
+const Pin = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Pin/Pin.jsx'))
 const ForgotPswd = React.lazy(() => import('../components/AuthenticationPage/password-issues/ForgotPswd.jsx'))
 const ResetPswd = React.lazy(() => import('../components/AuthenticationPage/password-issues/ResetPswd.jsx'))
 const Success = React.lazy(() => import("../components/AuthenticationPage/password-issues/SuccessPage.jsx"))
@@ -77,6 +87,14 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <ResetPswd />
+      </Suspense>),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/set-pin",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Pin />
       </Suspense>),
     errorElement: <ErrorPage />,
   },
@@ -236,4 +254,80 @@ export const router = createBrowserRouter([
     ),
     errorElement: <ErrorPage />,
   },
+  //investment Routes
+  {
+    path: "/investment",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Investment />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/debtor/dashboard",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <DebtorDashboard />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/debtor/business",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <BusinessParent />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/debtor/loans",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Loans />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/debtor/request",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Request />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/investor/dashboard",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Investor />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/investor/business",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <InvestorBusiness />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/investor/investment",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <MyInvestment />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  
+  
 ]);
+
