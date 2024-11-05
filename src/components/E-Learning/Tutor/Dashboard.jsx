@@ -21,9 +21,9 @@ const TutorDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
 
 
-  function open() {
-    setIsOpen(true);
-  }
+  // function open() {
+  //   setIsOpen(true);
+  // }
 
   function close() {
     setIsOpen(false);
@@ -78,7 +78,8 @@ const TutorDashboard = () => {
       });
       setCourses(response.data.data)
     } catch (error) {
-      toast.error('An error occured while fetching user data')
+      console.error(error)
+      toast.error('An error occured while fetching tutor courses')
     } finally {
       setIsLoading(false);
     }
@@ -126,7 +127,7 @@ const TutorDashboard = () => {
             </div>
             <div className="text-center">
               <h4 className="md:text-lg">Your Courses</h4>
-              <p className="pt-3 text-3xl font-extrabold">6</p>
+              <p className="pt-3 text-3xl font-extrabold">{courses?.length}</p>
             </div>
             <SlOptionsVertical />
           </div>
@@ -169,7 +170,7 @@ const TutorDashboard = () => {
               ) : (
                 <Slider {...settings}>
                   {courses.map((course) => (
-                    <div key={course._id} className="" onClick={() => handleCourseClick(course._id)}>
+                    <div key={course._id} className="pr-5 pb-5" onClick={() => handleCourseClick(course._id)}>
                       <CourseCard key={course._id} {...course} />
                     </div>
                   ))}
@@ -204,7 +205,7 @@ const TutorDashboard = () => {
                     Complete Your Tutor Profile
                   </h3>
                   <p className="mt-4">
-                    You're almost ready to start teaching! Set up your profile now
+                    You&apos;re almost ready to start teaching! Set up your profile now
                     to showcase your expertise, attract more students, and manage
                     your classes seamlessly. It only takes a few minutes!
                   </p>

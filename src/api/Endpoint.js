@@ -1,8 +1,6 @@
-//Base-URL
-// export const BaseUrl = "https://revo-p3jw.onrender.com/api/v1"; old
+
 export const BaseUrl = "https://revo-xbt9.onrender.com/api/v1";
 const investmentApiBaseUrl = "https://revo-backend.onrender.com/"
-
 
 export const AuthEndPoints = {
   login: `${BaseUrl}/login`,
@@ -21,6 +19,13 @@ export const endpoints = {
   changePassword: `${BaseUrl}/change-password`,
   changeProfilePicture: `${BaseUrl}/add-profile-picture`,
   getAllCourses: `${BaseUrl}/get-all-courses`,
+  uploadCourseThumbnail: `${BaseUrl}/add-course-thumbnail-image`,
+  editCourse: `${BaseUrl}/add-to-existing-lessons`,
+  addQuiz: `${BaseUrl}/add-course-question`,
+  addToCart: `${BaseUrl}/enroll-course`,
+  getCartCourses: `${BaseUrl}/get-course-in-cart`,
+  removeCourseFromCart: (courseId) =>
+    `${BaseUrl}/delete-course-in-cart/${courseId}`,
 };
 
 export const BillsEndpoints = {
@@ -29,7 +34,7 @@ export const BillsEndpoints = {
   electricity: `${BaseUrl}/buy-electricity-vtu`,
   subscription: `${BaseUrl}/buy-cable-subscription-vtu`,
   balance: `${BaseUrl}/get-vtu-providers-wallet-balance`,
-  setPin:  `${BaseUrl}/set-transaction-pin`,
+  setPin: `${BaseUrl}/set-transaction-pin`,
   confirm: `${BaseUrl}/confirm-pin`,
 };
 

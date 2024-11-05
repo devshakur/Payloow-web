@@ -27,18 +27,24 @@ import {
 import { useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { Toaster } from "react-hot-toast";
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
   { name: "Easybuy", href: "/easybuy", icon: MoneyChange },
-  { name: "E-Learning", href: "/e-learning/tutor/dashboard", icon: BookSaved },
+
   { name: "Bills", href: "/dashboard", icon: TableDocument },
+  {
+    name: "E-Learning",
+    href: currentUser?.role === 'Tutor' ? "/e-learning/tutor/dashboard" : "/e-learning/student/dashboard",
+    icon: BookSaved,
+  },
   { name: "Investment", href: "/investment", icon: Chart },
 ];
 const action = [
   { name: "Support", href: "/support", icon: Headphone },
   { name: "Settings ", href: "/settings", icon: Setting2 },
-  { name: "Logout", href: "/", icon: LogoutCurve },
+  { name: "Logout", href: "/", icon: LogoutCurve, onclick: () => localStorage.clear() },
 ];
 const userNavigation = [
   { name: "Your profile", href: "#" },
@@ -144,6 +150,7 @@ export default function DashboardLayout({ children }) {
                                   : "hover:bg-primary hover:text-white",
                                 "group flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6"
                               )}
+                              onClick={item.onclick}
                             >
                               <item.icon
                                 aria-hidden="true"
@@ -218,6 +225,7 @@ export default function DashboardLayout({ children }) {
                               : "hover:bg-primary hover:text-white",
                             "group flex gap-x-3 rounded-md p-5 text-sm font-semibold leading-6"
                           )}
+                          onClick={item.onclick}
                         >
                           <item.icon
                             aria-hidden="true"

@@ -7,6 +7,7 @@ import CourseCard from "./CourseCard";
 import { LuBook } from "react-icons/lu";
 import { SlOptionsVertical } from "react-icons/sl";
 import { GiGraduateCap } from "react-icons/gi";
+import LearningCard from "./LearningCard";
 
 const StudentDashboard = () => {
   let settings = {
@@ -50,51 +51,120 @@ const StudentDashboard = () => {
   const courses = [
     {
       id: 1,
-      image: "/images/course-card-image.png",
-      courseTitle: "MTN AirtimeBeginner Guide to Backend Development",
+      thumbnailUrl: "/images/course-card-image.png",
+      title: "MTN AirtimeBeginner Guide to Backend Development",
       progress: "completed",
       tag: "Programming",
       enrolledStudents: 200,
+      percentageCompleted: 100
     },
     {
       id: 2,
-      image: "/images/course-card-image.png",
-      courseTitle: "Advanced React Techniques",
+      thumbnailUrl: "/images/course-card-image.png",
+      title: "Advanced React Techniques",
       progress: "in progress",
       tag: "Web Development",
       enrolledStudents: 150,
+      percentageCompleted: 70
     },
     {
       id: 3,
-      image: "/images/course-card-image.png",
-      courseTitle: "Introduction to Machine Learning",
+      thumbnailUrl: "/images/course-card-image.png",
+      title: "Introduction to Machine Learning",
       progress: "not started",
       tag: "Data Science",
       enrolledStudents: 300,
+      percentageCompleted: 0
     },
     {
       id: 4,
-      image: "/images/course-card-image.png",
-      courseTitle: "UI/UX Design Fundamentals",
+      thumbnailUrl: "/images/course-card-image.png",
+      title: "UI/UX Design Fundamentals",
       progress: "completed",
       tag: "Design",
       enrolledStudents: 120,
+      percentageCompleted: 100
     },
     {
       id: 5,
-      image: "/images/course-card-image.png",
-      courseTitle: "Digital Marketing Essentials",
+      thumbnailUrl: "/images/course-card-image.png",
+      title: "Digital Marketing Essentials",
       progress: "in progress",
       tag: "Marketing",
       enrolledStudents: 180,
+      percentageCompleted: 50
     },
     {
       id: 6,
-      image: "/images/course-card-image.png",
-      courseTitle: "Cybersecurity Basics",
+      thumbnailUrl: "/images/course-card-image.png",
+      title: "Cybersecurity Basics",
       progress: "not started",
       tag: "Security",
       enrolledStudents: 220,
+      percentageCompleted: 0
+    },
+  ];
+
+  const recommendedCourses = [
+    {
+      id: 1,
+      thumbnailUrl: "/images/course-card-image.png",
+      title: "MTN AirtimeBeginner Guide to Backend Development",
+      category: "Programming",
+      enrolledStudents: 200,
+      price: 50,
+      discount_price: 40,
+      details: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    },
+    {
+      id: 2,
+      thumbnailUrl: "/images/course-card-image.png",
+      title: "Advanced React Techniques",
+      category: "Web Development",
+      enrolledStudents: 150,
+      price: 50,
+      discount_price: 40,
+      details: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    },
+    {
+      id: 3,
+      thumbnailUrl: "/images/course-card-image.png",
+      title: "Introduction to Machine Learning",
+      category: "Data Science",
+      enrolledStudents: 300,
+      price: 50,
+      discount_price: 40,
+      details: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    },
+    {
+      id: 4,
+      thumbnailUrl: "/images/course-card-image.png",
+      title: "UI/UX Design Fundamentals",
+      category: "Design",
+      enrolledStudents: 120,
+      price: 50,
+      discount_price: 40,
+      details: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    },
+    {
+      id: 5,
+      thumbnailUrl: "/images/course-card-image.png",
+      title: "Digital Marketing Essentials",
+      category: "Marketing",
+      enrolledStudents: 180,
+      price: 50,
+      discount_price: 40,
+      details: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    },
+    {
+      id: 6,
+      thumbnailUrl: "/images/course-card-image.png",
+      title: "Cybersecurity Basics",
+      category: "Security",
+      enrolledStudents: 220,
+      price: 50,
+      discount_price: 40,
+      details: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
     },
   ];
   return (
@@ -110,34 +180,25 @@ const StudentDashboard = () => {
           </h3>
           <p>This is your learning dashboard</p>
         </div>
-        <div className="my-10 grid md:grid-cols-4 gap-8">
-          <div className="md:p-4 p-8 bg-white rounded-lg shadow-md flex items-center justify-between">
-            <div className="bg-[#F1F3F9] flex items-center justify-center text-xl w-14 h-14 rounded-full text-primary">
-              <LuBook />
-            </div>
-            <div className="text-center">
-              <h4 className="md:text-lg">Your Courses</h4>
-              <p className="pt-3 text-3xl font-extrabold">6</p>
-            </div>
-            <SlOptionsVertical />
-          </div>
-          <div className="md:p-4 p-8 bg-white rounded-lg shadow-md flex items-center justify-between">
-            <div className="bg-[#F1F3F9] flex items-center justify-center text-xl w-14 h-14 rounded-full text-primary">
-              <GiGraduateCap />
-            </div>
-            <div className="text-center">
-              <h4 className="md:text-lg">Students Enrolled</h4>
-              <p className="pt-3 text-3xl font-extrabold">200</p>
-            </div>
-            <SlOptionsVertical />
-          </div>
-        </div>
-        <div className="">
+
+        <div className="mt-10 space-y-5">
+          <p className="font-normal text-xl">Let's keep learning</p>
           <div className="slider-container md:px-0 px-5">
             <Slider {...settings}>
-              {/* <div className="md:pr-5"></div> */}
-
               {courses.map((course) => (
+                <div key={course.id} className="pr-5">
+                  <LearningCard key={course.id} {...course} />
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </div>
+
+        <div className="mt-16 space-y-5">
+          <p className="font-semibold text-2xl">Recommended For you</p>
+          <div className="slider-container md:px-0 px-5">
+            <Slider {...settings}>
+              {recommendedCourses.map((course) => (
                 <div key={course.id} className="pr-5">
                   <CourseCard key={course.id} {...course} />
                 </div>
