@@ -1,11 +1,63 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Button, Dialog, DialogPanel, DialogTitle, Field, Input, Label } from '@headlessui/react';
 import { CloseCircle } from "iconsax-react";
 import clsx from 'clsx';
 import '../investment.css';
+import useInvestment from '../../../hooks/useInvetment';
+import { Toaster, toast } from 'react-hot-toast';
+import { useRouter } from '../../../Routes/router';
 
 
 const FormModal = ({ isOpen, onClose, onRegister }) => {
+    const { CreateDebtorAccount} = useInvestment();
+    const router = useRouter();
+
+    const [debtorDetails, setDebtorDetails] = useState({
+        contact_email: '',
+        contact_phone_number: '',
+        credit_profile: {
+            credit_score: 0, 
+            proof_of_credit_score: '',
+          },
+    })
+
+      const handleChange = (e) => {
+        const { name, value } = e.target;
+      
+        if (name === 'proof_of_credit_score') {
+            setDebtorDetails({
+            ...debtorDetails,
+            credit_profile: { ...debtorDetails.credit_profile, [name]: value },
+          });
+        } else {
+            setDebtorDetails({ ...debtorDetails, [name]: value });
+        }
+      };
+      
+
+      const registerDebtor = async () => {
+        try {
+            const resp = await CreateDebtorAccount(debtorDetails);
+            if (resp && resp.data && resp.data.success) {
+                toast.success('Your Profile has been created successfully' + response.data.message);
+                onRegister();
+            } else {
+                toast.error(resp.data.message);
+            }
+            
+            console.log(resp);
+        } catch (error) {
+            console.error(error.message);
+            toast.error('An error occurred: ' + error.response.data.message);
+            if(error.response.data.message === 'Debtor Profile Already Created'){
+                setTimeout(() => {
+                  
+               router.push('/debtor/dashboard')  
+                }, 3000);
+            }
+        }
+    };
+    
     return (
         <Dialog open={isOpen} onClose={onClose} className="relative z-10 focus:outline-none">
             <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
@@ -21,11 +73,14 @@ const FormModal = ({ isOpen, onClose, onRegister }) => {
                             </DialogTitle>
                             <CloseCircle size="30" color="black" onClick={onClose} />
                         </div>
-                        <form action="">
+                        <form>
                             <Field>
                                 <Label className='text-sm font-medium'>Email</Label>
                                 <Input
                                     type='email'
+                                    name='contact_email'
+                                    onChange={handleChange}
+                                    value={debtorDetails.contact_email}
                                     placeholder='Enter your email address'
                                     className={clsx(
                                         'border border-gray-400 block w-full rounded-lg py-4 px-3 text-sm font-semibold cursor-pointer mb-3',
@@ -34,6 +89,9 @@ const FormModal = ({ isOpen, onClose, onRegister }) => {
                                 <Label className='text-sm font-medium'>Phone Number</Label>
                                 <Input
                                     type='tel'
+                                    name='contact_phone_number'
+                                    onChange={handleChange}
+                                    value={debtorDetails.contact_phone_number}
                                     placeholder='+12345678923'
                                     className={clsx(
                                         'block w-full rounded-lg py-4 px-3 text-sm font-semibold cursor-pointer mb-3 border border-gray-400',
@@ -41,19 +99,22 @@ const FormModal = ({ isOpen, onClose, onRegister }) => {
                                 />
                                 <Label className='text-sm font-medium'>Proof of Credit Score</Label>
                                 <Input
-                                    type='file'
+                                   type='text'
+                                    name='proof_of_credit_score'
+                                    onChange={handleChange}
+                                    value={debtorDetails.credit_profile.proof_of_credit_score}
                                     placeholder='Upload your credit score'
                                     className={clsx(
                                         'block w-full rounded-lg py-4 px-3 text-sm font-semibold cursor-pointer mb-3 border border-gray-400',
                                     )}
                                 />
                             </Field>
-                        </form>
+                     
 
                         <div className='w-full flex flex-col lg:flex-row lg:gap-4'>
                             <Button
                                 onClick={() => {
-                                    onRegister(); // Call the onRegister function to open the success modal
+                                   registerDebtor();
                                     onClose(); // Close the FormModal
                                 }}
                                 className="w-full lg:w-[200px] rounded-lg bg-[#3369F4] py-2 px-2 text-md text-white mt-6 data-[hover]:bg-sky-500 data-[active]:bg-sky-700 data-[disabled]:bg-gray-500"
@@ -64,6 +125,8 @@ const FormModal = ({ isOpen, onClose, onRegister }) => {
                                 Cancel
                             </Button>
                         </div>
+                        </form>
+                        <Toaster />
                     </DialogPanel>
                 </div>
             </div>

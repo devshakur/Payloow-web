@@ -22,7 +22,7 @@ const Investor = () => {
     }, []);
    
 
-    function open() {
+  function open() {
       setIsOpen(true)
     }
   

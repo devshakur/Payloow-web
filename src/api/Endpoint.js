@@ -1,5 +1,8 @@
 //Base-URL
-export const BaseUrl = "https://revo-p3jw.onrender.com/api/v1";
+// export const BaseUrl = "https://revo-p3jw.onrender.com/api/v1"; old
+export const BaseUrl = "https://revo-xbt9.onrender.com/api/v1";
+const investmentApiBaseUrl = "https://revo-backend.onrender.com/"
+
 
 export const AuthEndPoints = {
   login: `${BaseUrl}/login`,
@@ -29,3 +32,12 @@ export const BillsEndpoints = {
   setPin:  `${BaseUrl}/set-transaction-pin`,
   confirm: `${BaseUrl}/confirm-pin`,
 };
+
+//Investment Endpoints
+export const InvestmentEndpoints = {
+  createDebtor: `${investmentApiBaseUrl}debtor/`,
+  createInvestor: `${investmentApiBaseUrl}investor/`,
+  createBusiness: `${investmentApiBaseUrl}debtor/business/`,
+  getIndustries: `${investmentApiBaseUrl}user/business-industries`,
+  viewBusiness: `${investmentApiBaseUrl}debtor/business/`
+}
