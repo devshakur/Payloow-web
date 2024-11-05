@@ -21,9 +21,9 @@ const TutorDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
 
 
-  function open() {
-    setIsOpen(true);
-  }
+  // function open() {
+  //   setIsOpen(true);
+  // }
 
   function close() {
     setIsOpen(false);
@@ -78,7 +78,8 @@ const TutorDashboard = () => {
       });
       setCourses(response.data.data)
     } catch (error) {
-      toast.error('An error occured while fetching user data')
+      console.error(error)
+      toast.error('An error occured while fetching tutor courses')
     } finally {
       setIsLoading(false);
     }
@@ -204,7 +205,7 @@ const TutorDashboard = () => {
                     Complete Your Tutor Profile
                   </h3>
                   <p className="mt-4">
-                    You're almost ready to start teaching! Set up your profile now
+                    You&apos;re almost ready to start teaching! Set up your profile now
                     to showcase your expertise, attract more students, and manage
                     your classes seamlessly. It only takes a few minutes!
                   </p>

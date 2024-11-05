@@ -32,12 +32,13 @@ const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
   { name: "Easybuy", href: "/easybuy", icon: MoneyChange },
+
+  { name: "Bills", href: "/dashboard", icon: TableDocument },
   {
     name: "E-Learning",
     href: currentUser?.role === 'Tutor' ? "/e-learning/tutor/dashboard" : "/e-learning/student/dashboard",
     icon: BookSaved,
   },
-  { name: "Bills", href: "/airtime", icon: TableDocument },
   { name: "Investment", href: "/investment", icon: Chart },
 ];
 const action = [

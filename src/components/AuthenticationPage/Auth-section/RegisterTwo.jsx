@@ -20,7 +20,7 @@ function RegisterTwo({ formik }) {
     { value: 'Lagos', label: 'Lagos' }
   ]
   const register = [
-    { value: 'User', label: 'User' },
+    { value: 'user', label: 'User' },
     { value: 'Tutor', label: 'Tutor' },
   
   ]
@@ -98,15 +98,15 @@ function RegisterTwo({ formik }) {
           </div>
 
           <div className='mb-7'>
-            <label htmlFor="identify" className='text-primary-text text-[16px] font-medium'>Register as</label>
+            <label htmlFor="role" className='text-primary-text text-[16px] font-medium'>Register as</label>
             <Select
-              id="identify"
-              name="identify"
+              id="role"
+              name="role"
               options={register}
               getOptionValue={(option) => option.value}
               getOptionLabel={(option) => option.label}
               value={register.find((option) => option.value === formik.values.register)}
-              onChange={(option) => formik.setFieldValue('identify', option.value)}
+              onChange={(option) => formik.setFieldValue('role', option.value)}
               placeholder="Register as"
               styles={{
                 control: (provided) => ({
@@ -117,8 +117,8 @@ function RegisterTwo({ formik }) {
                 }),
               }}
             />
-            {formik.touched.identify && formik.errors.identify ? (
-              <div style={{ color: 'red', marginTop: "1vh" }}>{formik.errors.identify}</div>
+            {formik.touched.role && formik.errors.role ? (
+              <div style={{ color: 'red', marginTop: "1vh" }}>{formik.errors.role}</div>
             ) : null}
           </div>
           <div className='w-full -mt-4'>

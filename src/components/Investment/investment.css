@@ -1,0 +1,15 @@
+.blur-md {
+    filter: blur(8px);
+    transition: filter 0.2s ease-in-out;
+}
+.focus:focus{
+    background-color: blue;
+    color: white;
+    border: none;
+}
+
+.active:active{
+    background-color: blue;
+    color: white;
+    border: none; 
+}
