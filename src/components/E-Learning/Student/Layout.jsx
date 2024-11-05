@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -12,6 +12,7 @@ import {
 import {
   ArrowDown2,
   BookSaved,
+  Category2,
   Chart,
   CloseCircle,
   HambergerMenu,
@@ -19,20 +20,24 @@ import {
   Home,
   LogoutCurve,
   Message,
-  Notification,
+  ShoppingCart,
   SearchNormal,
   Setting2,
   TableDocument,
+  VideoCircle,
 } from "iconsax-react";
-import { useLocation } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+import { useLocation, useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
+import { endpoints } from "../../../api/Endpoint";
 
 const navigation = [
+  { name: "Main Menu", href: "/dashboard", icon: Category2 },
   { name: "Dashboard", href: "/e-learning/student/dashboard", icon: Home },
+  { name: "Courses", href: "/e-learning/student/all-courses", icon: VideoCircle },
+  { name: "My Courses", href: "/e-learning/student/courses", icon: BookSaved },
   { name: "Messages", href: "/e-learning/student/messages", icon: Message },
-  { name: "Quiz", href: "/e-learning/student/quiz", icon: TableDocument },
-  { name: "courses", href: "/e-learning/student/courses", icon: BookSaved },
-  { name: "Analytics", href: "/e-learning/student/analytics", icon: Chart },
+  // { name: "Analytics", href: "/e-learning/student/analytics", icon: Chart },
 ];
 const action = [
   { name: "Support", href: "/support", icon: Headphone },
@@ -50,9 +55,44 @@ function classNames(...classes) {
 
 export default function Layout({ children }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isActive = (href) => location.pathname === href;
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const cart = JSON.parse(localStorage.getItem("cart"));
+  const [cartCount, setCartCount] = useState(0);
+
+  const getCartCourses = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem('auth')).auth;
+      const response = await axios.get(endpoints.getCartCourses, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      localStorage.setItem('cart', JSON.stringify(response.data.data.length))
+      const cartCount = JSON.parse(localStorage.getItem('cart'))
+      setCartCount(cartCount)
+    } catch (error) {
+      toast.error('An error occured while fetching cart')
+    }
+  }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getCartCourses();
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const goToCart = () => {
+    navigate('/e-learning/student/cart')
+  }
+
+  // useEffect(() => {
+  //   getCartCourses();
+  // }, []);
 
 
   return (
@@ -281,12 +321,15 @@ export default function Layout({ children }) {
                 />
               </form>
               <div className="flex items-center gap-x-4 lg:gap-x-6">
+
                 <button
                   type="button"
-                  className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
+                  onClick={goToCart}
+                  className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500 relative"
                 >
-                  <span className="sr-only">View notifications</span>
-                  <Notification aria-hidden="true" className="h-6 w-6" />
+                  <span className="sr-only">View cart</span>
+                  <ShoppingCart aria-hidden="true" className="h-6 w-6" />
+                  <div className="absolute bg-red-500 text-white text-xs h-5 w-5 flex items-center justify-center rounded-full top-0 right-0">{cart ? cart : 0}</div>
                 </button>
 
                 {/* Separator */}
