@@ -37,7 +37,7 @@ const navigation = [
 const action = [
   { name: "Support", href: "/support", icon: Headphone },
   { name: "Settings ", href: "/settings", icon: Setting2 },
-  { name: "Logout", href: "/", icon: LogoutCurve },
+  { name: "Logout", href: "/", icon: LogoutCurve, onClick: () => { localStorage.clear(); window.location.href = '/login' } },
 ];
 const userNavigation = [
   { name: "Your profile", href: "#" },
@@ -139,7 +139,7 @@ export default function Layout({ children }) {
                     <li className="mt-auto">
                       <ul role="list" className="-mx-2 space-y-1">
                         {action.map((item) => (
-                          <li key={item.name}>
+                          <li key={item.name} onClick={item.onClick}>
                             <a
                               href={item.href}
                               className={classNames(
@@ -218,7 +218,7 @@ export default function Layout({ children }) {
                 <li className="mt-auto">
                   <ul role="list" className="-mx-2 space-y-1">
                     {action.map((item) => (
-                      <li key={item.name}>
+                      <li key={item.name} onClick={item.onClick}>
                         <a
                           href={item.href}
                           className={classNames(

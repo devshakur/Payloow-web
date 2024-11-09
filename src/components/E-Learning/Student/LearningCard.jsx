@@ -10,7 +10,7 @@ const LearningCard = ({
   percentageCompleted
 }) => {
   const getProgressColor = (progress) => {
-    switch (progress.toLowerCase()) {
+    switch (progress?.toLowerCase()) {
       case "completed":
         return "text-green-500 bg-green-100";
       case "in progress":

@@ -20,7 +20,10 @@ export const endpoints = {
   getAllCourses: `${BaseUrl}/get-all-courses`,
   uploadCourseThumbnail: `${BaseUrl}/add-course-thumbnail-image`,
   editCourse: `${BaseUrl}/add-to-existing-lessons`,
+  getCourseQuiz: (id) => `${BaseUrl}/get-course-quiz/${id}`,
+  getCourseById: (id) => `${BaseUrl}/get-course-by-id/${id}`,
   addQuiz: `${BaseUrl}/add-course-question`,
+  getCourseContent: `${BaseUrl}/get-course-content`,
   addToCart: `${BaseUrl}/enroll-course`,
   getCartCourses: `${BaseUrl}/get-course-in-cart`,
   removeCourseFromCart: (courseId) =>

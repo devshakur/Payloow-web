@@ -89,6 +89,9 @@ const CourseDetails = () => {
   };
 
 
+
+
+
   if (!course) return <div><Loader /></div>;
   return (
     <Layout>

@@ -53,7 +53,8 @@ const Cart = () => {
       });
       setCart(response.data.data)
     } catch (error) {
-      toast.error('An error occured while fetching cart')
+      console.error(error)
+      // toast.error('An error occured while fetching cart')
     }
   }
 
@@ -61,9 +62,9 @@ const Cart = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
+      const token = JSON.parse(localStorage.getItem('token'));
+      console.log(token);
       const response = await axios.delete(endpoints.removeCourseFromCart(courseId), {
-      }, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -139,60 +140,67 @@ const Cart = () => {
                 <p className="text-sm">Total Items: {cart.length}</p>
               </div>
               <div className="mt-5">
-                {cart.map((course, index) => (
-                  <motion.div
-                    key={index}
-                    initial="hidden"
-                    animate="visible"
-                    variants={cartVariant}
-                    transition={{ duration: 0.5 }}
-                    className="bg-white shadow-md rounded-lg my-3 p-3 flex flex-col group cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 space-y-3">
-                    <div className="flex items-center justify-between w-full">
-                      <div className="flex items-center">
-                        <img src={course.course_id.thumbnailUrl ? course.course_id.thumbnailUrl : '/images/course-img.png'} alt="course" className="md:h-32 h-20 md:w-32 w-20 rounded-lg" />
-                        <div className="ml-5">
-                          <p className="font-bold md:text-lg text-base lg:w-[24rem] md:w-[20rem]">{course.course_id.title}</p>
-                          <div className="flex space-x-2 mt-5 text-xs">
-                            <div className="flex items-center space-x-1">
-                              <span className='md:block hidden'><CiPlay1 /></span>
-                              <span>{course.course_id.duration} hours</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <span className='md:block hidden'><RiBookLine /></span>
-                              <span>{course.course_id.sections.length} sections</span>
-                            </div>
-                            <div className="flex md:flex-auto flex-1 items-center space-x-1">
-                              <span className='md:block hidden'><BsPatchQuestion /></span>
-                              <span>{course.course_id.sections.length} quizzess</span>
+                {cart.length === 0 ?
+                  <div className="flex items-center justify-center h-96">
+                    <p className="text-lg">No item in cart</p>
+                  </div>
+                  :
+
+                  cart.map((course, index) => (
+                    <motion.div
+                      key={index}
+                      initial="hidden"
+                      animate="visible"
+                      variants={cartVariant}
+                      transition={{ duration: 0.5 }}
+                      className="bg-white shadow-md rounded-lg my-3 p-3 flex flex-col group cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 space-y-3">
+                      <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center">
+                          <img src={course.course_id.thumbnailUrl ? course.course_id.thumbnailUrl : '/images/course-img.png'} alt="course" className="md:h-32 h-20 md:w-32 w-20 rounded-lg" />
+                          <div className="ml-5">
+                            <p className="font-bold md:text-lg text-base lg:w-[24rem] md:w-[20rem]">{course.course_id.title}</p>
+                            <div className="flex space-x-2 mt-5 text-xs">
+                              <div className="flex items-center space-x-1">
+                                <span className='md:block hidden'><CiPlay1 /></span>
+                                <span>{course.course_id.duration} hours</span>
+                              </div>
+                              <div className="flex items-center space-x-1">
+                                <span className='md:block hidden'><RiBookLine /></span>
+                                <span>{course.course_id.sections.length} sections</span>
+                              </div>
+                              <div className="flex md:flex-auto flex-1 items-center space-x-1">
+                                <span className='md:block hidden'><BsPatchQuestion /></span>
+                                <span>{course.course_id.sections.length} quizzess</span>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="flex justify-start">
-                        <div className="md:text-lg text-base font-bold mb-4">
-                          {course.course_id.discount_price ? (
-                            <>
-                              <span>${course.course_id.discount_price}</span>
-                              <span className="line-through text-red-500 ml-2">${course.course_id.price}</span>
-                            </>
-                          ) : (
-                            <span>${course.course_id.price}</span>
-                          )}
+                        <div className="flex justify-start">
+                          <div className="md:text-lg text-base font-bold mb-4">
+                            {course.course_id.discount_price ? (
+                              <>
+                                <span>${course.course_id.discount_price}</span>
+                                <span className="line-through text-red-500 ml-2">${course.course_id.price}</span>
+                              </>
+                            ) : (
+                              <span>${course.course_id.price}</span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className=''>
-                      <button
-                        type='button'
-                        onClick={() => open(course._id)}
-                        className='text-red-500 flex items-center space-x-2 uppercase md:text-sm text-xs'
-                      >
-                        <MdDeleteOutline size={24} />
-                        <span>Remove</span>
-                      </button>
-                    </div>
-                  </motion.div>
-                ))}
+                      <div className=''>
+                        <button
+                          type='button'
+                          onClick={() => open(course.course_id._id)}
+                          className='text-red-500 flex items-center space-x-2 uppercase md:text-sm text-xs'
+                        >
+                          <MdDeleteOutline size={24} />
+                          <span>Remove</span>
+                        </button>
+                      </div>
+                    </motion.div>
+                  ))
+                }
               </div>
             </div>
           </div>
