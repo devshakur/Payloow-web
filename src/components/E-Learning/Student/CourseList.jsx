@@ -10,92 +10,93 @@ import Layout from "./Layout";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../../../AuthContext/Loader";
 import LearningCard from "./LearningCard";
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 
 const CourseList = () => {
-  // const [courses, setCourses] = useState([])
-  const courses = [
-    {
-      id: 1,
-      thumbnailUrl: "/images/course-card-image.png",
-      title: "MTN AirtimeBeginner Guide to Backend Development",
-      progress: "completed",
-      tag: "Programming",
-      enrolledStudents: 200,
-      percentageCompleted: 100
-    },
-    {
-      id: 2,
-      thumbnailUrl: "/images/course-card-image.png",
-      title: "Advanced React Techniques",
-      progress: "in progress",
-      tag: "Web Development",
-      enrolledStudents: 150,
-      percentageCompleted: 70
-    },
-    {
-      id: 3,
-      thumbnailUrl: "/images/course-card-image.png",
-      title: "Introduction to Machine Learning",
-      progress: "not started",
-      tag: "Data Science",
-      enrolledStudents: 300,
-      percentageCompleted: 0
-    },
-    {
-      id: 4,
-      thumbnailUrl: "/images/course-card-image.png",
-      title: "UI/UX Design Fundamentals",
-      progress: "completed",
-      tag: "Design",
-      enrolledStudents: 120,
-      percentageCompleted: 100
-    },
-    {
-      id: 5,
-      thumbnailUrl: "/images/course-card-image.png",
-      title: "Digital Marketing Essentials",
-      progress: "in progress",
-      tag: "Marketing",
-      enrolledStudents: 180,
-      percentageCompleted: 50
-    },
-    {
-      id: 6,
-      thumbnailUrl: "/images/course-card-image.png",
-      title: "Cybersecurity Basics",
-      progress: "not started",
-      tag: "Security",
-      enrolledStudents: 220,
-      percentageCompleted: 0
-    },
-  ];
+  const [courses, setCourses] = useState([])
+  // const courses = [
+  //   {
+  //     id: 1,
+  //     thumbnailUrl: "/images/course-card-image.png",
+  //     title: "MTN AirtimeBeginner Guide to Backend Development",
+  //     progress: "completed",
+  //     tag: "Programming",
+  //     enrolledStudents: 200,
+  //     percentageCompleted: 100
+  //   },
+  //   {
+  //     id: 2,
+  //     thumbnailUrl: "/images/course-card-image.png",
+  //     title: "Advanced React Techniques",
+  //     progress: "in progress",
+  //     tag: "Web Development",
+  //     enrolledStudents: 150,
+  //     percentageCompleted: 70
+  //   },
+  //   {
+  //     id: 3,
+  //     thumbnailUrl: "/images/course-card-image.png",
+  //     title: "Introduction to Machine Learning",
+  //     progress: "not started",
+  //     tag: "Data Science",
+  //     enrolledStudents: 300,
+  //     percentageCompleted: 0
+  //   },
+  //   {
+  //     id: 4,
+  //     thumbnailUrl: "/images/course-card-image.png",
+  //     title: "UI/UX Design Fundamentals",
+  //     progress: "completed",
+  //     tag: "Design",
+  //     enrolledStudents: 120,
+  //     percentageCompleted: 100
+  //   },
+  //   {
+  //     id: 5,
+  //     thumbnailUrl: "/images/course-card-image.png",
+  //     title: "Digital Marketing Essentials",
+  //     progress: "in progress",
+  //     tag: "Marketing",
+  //     enrolledStudents: 180,
+  //     percentageCompleted: 50
+  //   },
+  //   {
+  //     id: 6,
+  //     thumbnailUrl: "/images/course-card-image.png",
+  //     title: "Cybersecurity Basics",
+  //     progress: "not started",
+  //     tag: "Security",
+  //     enrolledStudents: 220,
+  //     percentageCompleted: 0
+  //   },
+  // ];
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false)
 
   const handleCourseClick = (courseId) => {
-    navigate(`/e-learning/student/course/${courseId}`);
+    navigate(`/e-learning/student/my-course/${courseId}`);
   };
 
-  // const getAllCourses = async () => {
-  //   try {
-  //     const token = JSON.parse(localStorage.getItem('auth')).auth;
-  //     setIsLoading(true)
-  //     const response = await axios.get(endpoints.getAllCourses, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`
-  //       }
-  //     });
-  //     setCourses(response.data.data)
-  //   } catch (error) {
-  //     toast.error('An error occured while fetching user data')
-  //   } finally {
-  //     setIsLoading(false)
-  //   }
-  // }
+  const getAllCourses = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem('auth')).auth;
+      setIsLoading(true)
+      const response = await axios.get(endpoints.getAllCourses, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setCourses(response.data.data)
+    } catch (error) {
+      toast.error('An error occured while fetching user data')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
-  // useEffect(() => {
-  //   getAllCourses();
-  // }, []);
+  useEffect(() => {
+    getAllCourses();
+  }, []);
 
   if (isLoading) return <div><Loader /></div>;
 
@@ -105,13 +106,32 @@ const CourseList = () => {
         <h3 className="font-semibold md:text-3xl text-xl my-5">
           My Courses ({courses.length})
         </h3>
-        <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 gap-8">
-          {courses.map((course) => (
-            <div key={course._id} className="" onClick={() => handleCourseClick(course._id)}>
-              <LearningCard key={course.id} {...course} />
-            </div>
-          ))}
-        </div>
+        <TabGroup>
+          <TabList className="flex mb-6">
+
+            <Tab className="course-detail-card">
+              Ongoing Courses
+            </Tab>
+            <Tab className="course-detail-card">
+              Completed Courses
+            </Tab>
+          </TabList>
+          <TabPanels className="mt-6">
+            <TabPanel>
+              <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 gap-8">
+                {courses.map((course) => (
+                  <div key={course._id} className="" onClick={() => handleCourseClick(course._id)}>
+                    <LearningCard key={course.id} {...course} />
+                  </div>
+                ))}
+              </div>
+            </TabPanel>
+            <TabPanel>
+              No Completed Course
+            </TabPanel>
+          </TabPanels>
+        </TabGroup>
+
       </div>
     </Layout>
   );

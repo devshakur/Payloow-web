@@ -29,6 +29,7 @@ import Investor from "../components/Investment/Investor/Investor.jsx";
 import InvestorBusiness from "../components/Investment/Investor/InvestorBusiness.jsx";
 import MyInvestment from "../components/Investment/Investor/MyInvestment.jsx";
 import Cart from "../components/E-Learning/Student/Cart.jsx";
+import MyCourse from "../components/E-Learning/Student/MyCourse.jsx";
 
 // const Verification = React.lazy(() =>
 //   import("../components/AuthenticationPage/password-issues/Verification.jsx")
@@ -291,6 +292,15 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <BuyCourse />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/e-learning/student/my-course/:id",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <MyCourse />
       </Suspense>
     ),
     errorElement: <ErrorPage />,

@@ -21,6 +21,8 @@ const CourseDetails = () => {
   const navigate = useNavigate();
   const [openSectionId, setOpenSectionId] = useState(null);
   const [isLoading, setIsLoading] = useState(false)
+  const [courseQuiz, setCourseQuiz] = useState([]);
+
 
   const handleCourseClick = (courseId) => {
     navigate(`/e-learning/tutor/course/edit-course/${courseId}`);
@@ -44,6 +46,39 @@ const CourseDetails = () => {
       toast.error('An error occured while fetching user data')
     }
   }
+
+  // const getCourseById = async () => {
+  //   try {
+  //     const token = JSON.parse(localStorage.getItem('auth')).auth;
+  //     const response = await axios.get(endpoints.getCourseById(id), {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`
+  //       }
+  //     })
+  //     const data = await response.json();
+  //     // setCourseQuiz(data.data);
+  //     console.log(data);
+  //   } catch (error) {
+  //     console.error("Error fetching course:", error);
+  //   }
+  // }
+
+
+  const fetchQuiz = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem('auth')).auth;
+      const response = await axios.get(endpoints.getCourseQuiz(id), {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      const data = await response.json();
+      setCourseQuiz(data.data);
+      console.log(courseQuiz);
+    } catch (error) {
+      console.error("Error fetching course:", error);
+    }
+  };
 
   const addToCart = async (e) => {
     e.preventDefault();
@@ -69,6 +104,8 @@ const CourseDetails = () => {
 
   useEffect(() => {
     getAllCourses();
+    fetchQuiz();
+    // getCourseById();
   }, []);
 
   const backToCourses = () => {
