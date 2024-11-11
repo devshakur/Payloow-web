@@ -3,7 +3,7 @@ import Layout from "./Layout";
 // import Sidebar from "./Sidebar";
 // import ChatArea from "./ChatArea";
 
-export default function Messages() {
+export default function StudentMessages() {
   const user = {
     name: "Mayowa Sunusi",
   };
@@ -105,7 +105,7 @@ function ChatArea({ user }) {
 function ChatHeader({ user }) {
   return (
     <div className="flex-3">
-      <h2 className="text-xl py-1 mb-8 border-b-2 border-gray-200"><b>{user.name}</b></h2>
+      <h2 className="text-xl py-1 mb-8 border-b-2 border-gray-200">Chatting with <b>{user.name}</b></h2>
     </div>
   );
 }

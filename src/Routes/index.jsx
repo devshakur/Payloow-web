@@ -30,6 +30,7 @@ import InvestorBusiness from "../components/Investment/Investor/InvestorBusiness
 import MyInvestment from "../components/Investment/Investor/MyInvestment.jsx";
 import Cart from "../components/E-Learning/Student/Cart.jsx";
 import MyCourse from "../components/E-Learning/Student/MyCourse.jsx";
+import StudentMessages from "../components/E-Learning/Student/StudentMessages.jsx";
 
 // const Verification = React.lazy(() =>
 //   import("../components/AuthenticationPage/password-issues/Verification.jsx")
@@ -310,6 +311,15 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <Cart />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/e-learning/student/messages",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <StudentMessages />
       </Suspense>
     ),
     errorElement: <ErrorPage />,
