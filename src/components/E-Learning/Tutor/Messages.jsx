@@ -93,7 +93,7 @@ export default function Messages() {
   )
 }
 
-ffunction Sidebar({ chatEntries, activeChat, setActiveChat }) {
+function Sidebar({ chatEntries, activeChat, setActiveChat }) {
   return (
     <div className="w-1/3 flex flex-col border-r bg-white shadow-md">
       <div className="p-4 border-b">
