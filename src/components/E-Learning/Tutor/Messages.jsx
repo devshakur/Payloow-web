@@ -1,183 +1,247 @@
-import React from "react";
-import Layout from "./Layout";
-// import Sidebar from "./Sidebar";
-// import ChatArea from "./ChatArea";
+import React, { useState } from "react"
+import { FiSearch, FiSmile, FiPaperclip, FiSend } from "react-icons/fi"
+import Layout from "./Layout"
 
 export default function Messages() {
-  const user = {
-    name: "Mayowa Sunusi",
-  };
+  const [activeChat, setActiveChat] = useState(null)
+
+  const chatEntries = [
+    {
+      id: 1,
+      name: "Wisdom",
+      lastMessage: "Yea, Sure!",
+      time: "11:30am",
+      unread: 23,
+      online: true,
+      image: '/images/user1.jpg',
+      messages: [
+        { id: 1, content: "Hey, how's the project going?", time: "11:00am", isSelf: false },
+        { id: 2, content: "I've made some progress on the frontend.", time: "11:15am", isSelf: true },
+        { id: 3, content: "That's great! Can you show me?", time: "11:20am", isSelf: false },
+        { id: 4, content: "Sure, I'll send you a screenshot.", time: "11:25am", isSelf: true },
+        { id: 5, content: "Yea, Sure!", time: "11:30am", isSelf: false },
+      ]
+    },
+    {
+      id: 2,
+      name: "Naomi Vehance",
+      lastMessage: "Let's discuss the design.",
+      time: "10:45am",
+      unread: 10,
+      online: false,
+      image: '/images/user2.png',
+      messages: [
+        { id: 1, content: "Hi Naomi, do you have a moment?", time: "10:30am", isSelf: true },
+        { id: 2, content: "Sure, what's up?", time: "10:35am", isSelf: false },
+        { id: 3, content: "I wanted to talk about the new design.", time: "10:40am", isSelf: true },
+        { id: 4, content: "Let's discuss the design.", time: "10:45am", isSelf: false },
+      ]
+    },
+    {
+      id: 3,
+      name: "Mayowa Sunusi",
+      lastMessage: "I've fixed the bug!",
+      time: "09:15am",
+      unread: 0,
+      online: false,
+      image: '/images/user1.jpg',
+      messages: [
+        { id: 1, content: "I've been working on that bug you mentioned.", time: "09:00am", isSelf: false },
+        { id: 2, content: "Any progress?", time: "09:05am", isSelf: true },
+        { id: 3, content: "Yes, I think I've found the issue.", time: "09:10am", isSelf: false },
+        { id: 4, content: "I've fixed the bug!", time: "09:15am", isSelf: false },
+      ]
+    },
+    {
+      id: 4,
+      name: "Marvellous",
+      lastMessage: "Meeting at 2 PM?",
+      time: "08:50am",
+      unread: 0,
+      online: false,
+      image: '/images/user3.png',
+      messages: [
+        { id: 1, content: "Good morning! Are we still on for the meeting?", time: "08:45am", isSelf: false },
+        { id: 2, content: "Yes, I believe so. What time was it again?", time: "08:48am", isSelf: true },
+        { id: 3, content: "Meeting at 2 PM?", time: "08:50am", isSelf: false },
+      ]
+    },
+    {
+      id: 5,
+      name: "Yusuf",
+      lastMessage: "I'll send the report soon.",
+      time: "Yesterday",
+      unread: 0,
+      online: false,
+      image: '/images/user1.png',
+      messages: [
+        { id: 1, content: "How's the quarterly report coming along?", time: "Yesterday", isSelf: true },
+        { id: 2, content: "I'm almost done with it.", time: "Yesterday", isSelf: false },
+        { id: 3, content: "Great, when can I expect it?", time: "Yesterday", isSelf: true },
+        { id: 4, content: "I'll send the report soon.", time: "Yesterday", isSelf: false },
+      ]
+    },
+  ]
 
   return (
     <Layout>
-      <section className="h-[90vh]">
-        <div className="main flex-1 flex flex-col">
-          <div className="hidden lg:block heading flex-2">
-            <h1 className="text-3xl text-gray-700 mb-4">Messages</h1>
-          </div>
-
-          <div className="flex-1 flex h-full">
-            <Sidebar />
-            <ChatArea user={user} />
-          </div>
-        </div>
-      </section>
+      <div className="flex h-screen bg-gray-100">
+        <Sidebar chatEntries={chatEntries} activeChat={activeChat} setActiveChat={setActiveChat} />
+        <ChatArea activeChat={activeChat ? chatEntries.find(chat => chat.id === activeChat) : null} />
+      </div>
     </Layout>
-  );
+  )
 }
 
-function Sidebar() {
+ffunction Sidebar({ chatEntries, activeChat, setActiveChat }) {
   return (
-    <div className="sidebar hidden lg:flex w-1/3 flex-2 flex-col pr-6">
-      <SearchInput />
-      <ChatList />
+    <div className="w-1/3 flex flex-col border-r bg-white shadow-md">
+      <div className="p-4 border-b">
+        <h1 className="text-2xl font-bold">Messages</h1>
+      </div>
+      <div className="p-4">
+        <SearchInput />
+      </div>
+      <div className="flex-1 overflow-y-auto">
+        <ChatList chatEntries={chatEntries} activeChat={activeChat} setActiveChat={setActiveChat} />
+      </div>
     </div>
-  );
+  )
 }
 
 function SearchInput() {
   return (
-    <div className="search flex-2 pb-6 px-2">
+    <div className="relative">
+      <FiSearch className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
       <input
         type="text"
-        className="outline-none py-2 block w-full bg-transparent border-b-2 border-gray-200"
         placeholder="Search"
+        className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
     </div>
-  );
+  )
 }
 
-function ChatList() {
-  const chatEntries = [
-    { name: "Wisdom", message: "Yea, Sure!", time: "11:30am", unread: 23, online: true, image: '/images/user1.jpg' },
-    { name: "Naomi Vehance", message: "Yea, Sure!", time: "11:30am", unread: 10, online: false, image: '/images/user2.png' },
-    { name: "Mayowa Sunusi", message: "Yea, Sure!", time: "11:30am", unread: 0, online: false, active: true, image: '/images/user1.jpg' },
-    { name: "Marvellous", message: "Yea, Sure!", time: "11:30am", unread: 0, online: false, image: '/images/user3.png' },
-    { name: "Yusuf", message: "Yea, Sure!", time: "11:30am", unread: 0, online: false, image: '/images/user1.png' },
-  ];
-
+function ChatList({ chatEntries, activeChat, setActiveChat }) {
   return (
-    <div className="flex-1 h-full overflow-auto px-2">
-      {chatEntries.map((entry, index) => (
-        <ChatEntry key={index} {...entry} />
+    <div className="space-y-2 p-4">
+      {chatEntries.map((entry) => (
+        <ChatEntry
+          key={entry.id}
+          {...entry}
+          active={activeChat === entry.id}
+          onClick={() => setActiveChat(entry.id)}
+        />
       ))}
     </div>
-  );
+  )
 }
 
-function ChatEntry({ name, message, time, unread, online, active, image }) {
+function ChatEntry({ id, name, lastMessage, time, unread, online, image, active, onClick }) {
   return (
-    <div className={`entry cursor-pointer transform hover:scale-105 duration-300 transition-transform bg-white mb-4 rounded p-4 flex shadow-md ${active ? 'border-l-4 border-red-500' : ''}`}>
-      <div className="flex-2">
-        <div className="w-12 h-12 relative">
-          <img className="w-12 h-12 rounded-full mx-auto" src={image} alt="chat-user" />
-          <span className={`absolute w-4 h-4 ${online ? 'bg-green-400' : 'bg-gray-400'} rounded-full right-0 bottom-0 border-2 border-white`}></span>
-        </div>
-      </div>
-      <div className="flex-1 px-2">
-        <div className="truncate w-32"><span className="text-gray-800">{name}</span></div>
-        <div><small className="text-gray-600">{message}</small></div>
-      </div>
-      <div className="flex-2 text-right">
-        <div><small className="text-gray-500">{time}</small></div>
-        {unread > 0 && (
-          <div>
-            <small className="text-xs bg-red-500 text-white rounded-full h-6 w-6 leading-6 text-center inline-block">
-              {unread}
-            </small>
-          </div>
+    <div
+      className={`flex items-center space-x-4 rounded-lg p-2 transition-colors hover:bg-gray-100 cursor-pointer ${active ? "bg-gray-100" : ""
+        }`}
+      onClick={onClick}
+    >
+      <div className="relative">
+        <img src={image} alt={name} className="w-12 h-12 rounded-full" />
+        {online && (
+          <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-green-500" />
         )}
       </div>
-    </div>
-  );
-}
-
-function ChatArea({ user }) {
-  return (
-    <div className="chat-area flex-1 flex flex-col h-[80vh]">
-      <ChatHeader user={user} />
-      <MessageList />
-      <MessageInput />
-    </div>
-  );
-}
-
-function ChatHeader({ user }) {
-  return (
-    <div className="flex-3">
-      <h2 className="text-xl py-1 mb-8 border-b-2 border-gray-200"><b>{user.name}</b></h2>
-    </div>
-  );
-}
-
-function MessageList() {
-  const messages = [
-    { sender: "Mayowa Sunusi", content: "I have been able to fix the bug, thank you sir!", time: "11:30am", isSelf: false },
-    { sender: "Mayowa Sunusi", content: "One more thing!", time: "11:30am", isSelf: false },
-    { sender: "You", content: "What is that?", time: "11:45am", isSelf: true },
-    { sender: "You", content: "Hope it is not much of a problem!", time: "11:45am", isSelf: true },
-    { sender: "Mayowa Sunusi", content: "I am having issues with deployment!", time: "03:30pm", isSelf: false },
-  ];
-
-  return (
-    <div className="messages flex-1 overflow-auto">
-      {messages.map((message, index) => (
-        <Message key={index} {...message} />
-      ))}
-    </div>
-  );
-}
-
-function Message({ sender, content, time, isSelf }) {
-  return (
-    <div className={`message mb-4 flex ${isSelf ? 'text-right' : ''}`}>
-      {!isSelf && (
-        <div className="flex-2">
-          <div className="w-12 h-12 relative">
-            <img className="w-12 h-12 rounded-full mx-auto" src="/images/user1.jpg" alt="chat-user" />
-            <span className="absolute w-4 h-4 bg-gray-400 rounded-full right-0 bottom-0 border-2 border-white"></span>
-          </div>
+      <div className="flex-1 space-y-1">
+        <div className="flex items-center justify-between">
+          <p className="font-medium">{name}</p>
+          <p className="text-xs text-gray-500">{time}</p>
+        </div>
+        <p className="text-sm text-gray-500 truncate">{lastMessage}</p>
+      </div>
+      {unread > 0 && (
+        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600">
+          <span className="text-xs font-medium text-white">{unread}</span>
         </div>
       )}
-      <div className="flex-1 px-2">
-        <div className={`inline-block ${isSelf ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-700'} rounded-full p-2 px-6`}>
-          <span>{content}</span>
+    </div>
+  )
+}
+
+function ChatArea({ activeChat }) {
+  return (
+    <div className="flex-1 flex flex-col bg-white">
+      {activeChat ? (
+        <>
+          <ChatHeader name={activeChat.name} image={activeChat.image} online={activeChat.online} />
+          <div className="flex-1 overflow-y-auto p-4">
+            <MessageList messages={activeChat.messages} />
+          </div>
+          <MessageInput />
+        </>
+      ) : (
+        <div className="flex flex-1 items-center justify-center">
+          <p className="text-lg text-gray-500">Select a chat to start messaging</p>
         </div>
-        <div className={isSelf ? 'pr-4' : 'pl-4'}><small className="text-gray-500">{time}</small></div>
+      )}
+    </div>
+  )
+}
+
+function ChatHeader({ name, image, online }) {
+  return (
+    <div className="flex items-center justify-between border-b p-4">
+      <div className="flex items-center space-x-4">
+        <div className="relative">
+          <img src={image} alt={name} className="w-10 h-10 rounded-full" />
+          {online && (
+            <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-green-500" />
+          )}
+        </div>
+        <h2 className="text-lg font-semibold">{name}</h2>
       </div>
     </div>
-  );
+  )
+}
+
+function MessageList({ messages }) {
+  return (
+    <div className="space-y-4">
+      {messages.map((message) => (
+        <Message key={message.id} {...message} />
+      ))}
+    </div>
+  )
+}
+
+function Message({ content, time, isSelf }) {
+  return (
+    <div className={`flex ${isSelf ? "justify-end" : "justify-start"}`}>
+      <div className={`rounded-lg p-4 max-w-xs ${isSelf ? "bg-blue-500 text-white" : "bg-gray-100"}`}>
+        <p className="text-sm">{content}</p>
+        <p className={`"mt-1 text-xs" ${isSelf ? "text-white text-xs" : "text-gray-500 text-xs"}`}>{time}</p>
+      </div>
+    </div>
+  )
 }
 
 function MessageInput() {
   return (
-    <div className="flex-2 pt-4 pb-10">
-      <div className="write bg-white shadow flex rounded-lg">
-        <div className="flex-3 flex content-center items-center text-center p-4 pr-0">
-          <span className="block text-center text-gray-400 hover:text-gray-800">
-            <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24" className="h-6 w-6"><path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          </span>
-        </div>
-        <div className="flex-1">
-          <textarea name="message" className="w-full block outline-none py-4 px-4 bg-transparent" rows="1" placeholder="Type a message..." autoFocus></textarea>
-        </div>
-        <div className="flex-2 w-32 p-2 flex content-center items-center">
-          <div className="flex-1 text-center">
-            <span className="text-gray-400 hover:text-gray-800">
-              <span className="inline-block align-text-bottom">
-                <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24" className="w-6 h-6"><path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-              </span>
-            </span>
-          </div>
-          <div className="flex-1">
-            <button className="bg-blue-400 w-10 h-10 rounded-full inline-block">
-              <span className="inline-block align-text-bottom">
-                <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4 text-white"><path d="M5 13l4 4L19 7"></path></svg>
-              </span>
-            </button>
-          </div>
-        </div>
+    <div className="border-t p-4">
+      <div className="flex items-center space-x-2">
+        <textarea
+          className="flex-1 resize-none border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Type a message..."
+          rows={1}
+        />
+        <button className="p-2 text-gray-500 hover:text-gray-700" aria-label="Add emoji">
+          <FiSmile className="h-6 w-6" />
+        </button>
+        <button className="p-2 text-gray-500 hover:text-gray-700" aria-label="Attach file">
+          <FiPaperclip className="h-6 w-6" />
+        </button>
+        <button className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" aria-label="Send message">
+          <FiSend className="h-4 w-4" />
+        </button>
       </div>
     </div>
-  );
+  )
 }
