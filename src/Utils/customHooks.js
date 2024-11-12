@@ -35,3 +35,6 @@ export const getUser = async () => {
     console.error('Failed to fetch user data');
   }
 }
+export const capitalizeAndJoin = (arr) => {
+  return arr.map((item) => item.charAt(0).toUpperCase() + item.slice(1)).join(', ');
+};

@@ -12,27 +12,23 @@ const BusinessParent = () => {
     const { CreateBusiness } = useInvestment();
 
     const initialValues = {
-        business_name: '',
-        business_description: '',
-        founding_date: '',
-        business_stage: '',
-        customer_model: '',
-        industry: [],
-        online: {
-            website: '',
-            twitter_url: '',
-            linkedIn_url: '',
-            facebook_url: '',
-            youTube_url: '',
-            instagram_url: '',
-            tikTok_url: '',
-        },
-        business_details: {
-            financialStatements: [],  // Changed to match your dropzone keys
-            growthPlans: [],
-            loanRequirements: [],
-        },
-    };
+        "business_name": "",
+        "founding_date": "",
+        "instagram_url": "",
+        "twitter_url": "",
+        "customer_model": "",
+        "tikTok_url": "",
+        "linkedIn_url": "",
+        "youTube_url": "",
+        "facebook_url": "",
+        "website": "",
+        "business_description": "",
+        "industry": [],
+        "business_stage": "",
+        "growth_plans": [],
+        "financial_statements": [],
+        "loan_requirements": [],
+    }
 
     const validationSchema = Yup.object({
         business_name: Yup.string().required('Required'),
@@ -51,15 +47,15 @@ const BusinessParent = () => {
             tikTok_url: Yup.string().url('Invalid URL').nullable(),
         }),
         business_details: Yup.object({
-            financialStatements: Yup.array().of(Yup.mixed()).required('At least one financial statement is required'),
-            growthPlans: Yup.array().of(Yup.mixed()).required('At least one growth plan is required'),
-            loanRequirements: Yup.array().of(Yup.mixed()).required('At least one loan requirement is required'),
+            financial_statements: Yup.array().of(Yup.mixed()).required('At least one financial statement is required'),
+            growth_plans: Yup.array().of(Yup.mixed()).required('At least one growth plan is required'),
+            loan_requirements: Yup.array().of(Yup.mixed()).required('At least one loan requirement is required'),
         }),
     });
 
     const onSubmit = async (values) => {
         console.log('Form data', values);
-       await CreateBusiness(values);  // Use the form values instead of initialValues
+        await CreateBusiness(values);  // Use the form values instead of initialValues
     };
 
     const formik = useFormik({

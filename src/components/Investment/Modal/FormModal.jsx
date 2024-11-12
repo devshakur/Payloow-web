@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Button, Dialog, DialogPanel, DialogTitle, Field, Input, Label } from '@headlessui/react';
 import { CloseCircle } from "iconsax-react";
 import clsx from 'clsx';
@@ -9,55 +9,78 @@ import { useRouter } from '../../../Routes/router';
 
 
 const FormModal = ({ isOpen, onClose, onRegister }) => {
-    const { CreateDebtorAccount} = useInvestment();
+    const { CreateDebtorAccount } = useInvestment();
     const router = useRouter();
 
     const [debtorDetails, setDebtorDetails] = useState({
         contact_email: '',
         contact_phone_number: '',
         credit_profile: {
-            credit_score: 0, 
+            credit_score: 0,
             proof_of_credit_score: '',
-          },
+        },
     })
 
-      const handleChange = (e) => {
-        const { name, value } = e.target;
-      
-        if (name === 'proof_of_credit_score') {
+    const handleChange = (e) => {
+        const { name, value, type, files } = e.target;
+    
+        if (type === 'file' && files) {
             setDebtorDetails({
-            ...debtorDetails,
-            credit_profile: { ...debtorDetails.credit_profile, [name]: value },
-          });
+                ...debtorDetails,
+                credit_profile: { ...debtorDetails.credit_profile, [name]: files[0] }, 
+            });
         } else {
-            setDebtorDetails({ ...debtorDetails, [name]: value });
+            setDebtorDetails({
+                ...debtorDetails,
+                [name]: value, // Handle text input as usual
+            });
         }
-      };
-      
+    };
+    
 
-      const registerDebtor = async () => {
+
+    const registerDebtor = async () => {
         try {
-            const resp = await CreateDebtorAccount(debtorDetails);
+            // Create a new FormData object to send the form data
+            const formData = new FormData();
+
+            // Append the text fields to the FormData object
+            formData.append('contact_email', debtorDetails.contact_email);
+            formData.append('contact_phone_number', debtorDetails.contact_phone_number);
+
+            if (debtorDetails.credit_profile.proof_of_credit_score) {
+                formData.append('proof_of_credit_score', debtorDetails.credit_profile.proof_of_credit_score);
+            }
+
+            // Add any other fields if necessary, e.g., credit score
+            formData.append('credit_score', debtorDetails.credit_profile.credit_score);
+
+            // Make the API request using FormData
+            const resp = await CreateDebtorAccount(formData);
+
             if (resp && resp.data && resp.data.success) {
-                toast.success('Your Profile has been created successfully' + response.data.message);
+                toast.success('Your Profile has been created successfully' + resp.data.message);
+                onClose();
                 onRegister();
             } else {
                 toast.error(resp.data.message);
             }
-            
+
             console.log(resp);
         } catch (error) {
             console.error(error.message);
-            toast.error('An error occurred: ' + error.response.data.message);
-            if(error.response.data.message === 'Debtor Profile Already Created'){
+            toast.error('An error occurred: ' + error.response?.data?.message);
+
+            if (error.response?.data?.message === 'Debtor Profile Already Created') {
                 setTimeout(() => {
-                  
-               router.push('/debtor/dashboard')  
+                    router.push('/debtor/dashboard');
                 }, 3000);
             }
         }
     };
-    
+
+
+
     return (
         <Dialog open={isOpen} onClose={onClose} className="relative z-10 focus:outline-none">
             <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
@@ -99,32 +122,31 @@ const FormModal = ({ isOpen, onClose, onRegister }) => {
                                 />
                                 <Label className='text-sm font-medium'>Proof of Credit Score</Label>
                                 <Input
-                                   type='text'
+                                    type="file"
                                     name='proof_of_credit_score'
-                                    onChange={handleChange}
-                                    value={debtorDetails.credit_profile.proof_of_credit_score}
+                                    onChange={handleChange} 
                                     placeholder='Upload your credit score'
                                     className={clsx(
                                         'block w-full rounded-lg py-4 px-3 text-sm font-semibold cursor-pointer mb-3 border border-gray-400',
                                     )}
                                 />
                             </Field>
-                     
 
-                        <div className='w-full flex flex-col lg:flex-row lg:gap-4'>
-                            <Button
-                                onClick={() => {
-                                   registerDebtor();
-                                    onClose(); // Close the FormModal
-                                }}
-                                className="w-full lg:w-[200px] rounded-lg bg-[#3369F4] py-2 px-2 text-md text-white mt-6 data-[hover]:bg-sky-500 data-[active]:bg-sky-700 data-[disabled]:bg-gray-500"
-                            >
-                                Register
-                            </Button>
-                            <Button onClick={onClose} className="w-full lg:w-[200px] rounded-lg bg-white border text-blue-500 border-gray-300 py-2 px-2 text-md mt-6 data-[hover]:bg-sky-500 data-[active]:bg-sky-700 data-[disabled]:bg-gray-500">
-                                Cancel
-                            </Button>
-                        </div>
+
+                            <div className='w-full flex flex-col lg:flex-row lg:gap-4'>
+                                <Button
+                                    onClick={() => {
+                                        registerDebtor();
+                                        // onClose();  Close the FormModal
+                                    }}
+                                    className="w-full lg:w-[200px] rounded-lg bg-[#3369F4] py-2 px-2 text-md text-white mt-6 data-[hover]:bg-sky-500 data-[active]:bg-sky-700 data-[disabled]:bg-gray-500"
+                                >
+                                    Register
+                                </Button>
+                                <Button onClick={onClose} className="w-full lg:w-[200px] rounded-lg bg-white border text-blue-500 border-gray-300 py-2 px-2 text-md mt-6 data-[hover]:bg-sky-500 data-[active]:bg-sky-700 data-[disabled]:bg-gray-500">
+                                    Cancel
+                                </Button>
+                            </div>
                         </form>
                         <Toaster />
                     </DialogPanel>

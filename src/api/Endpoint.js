@@ -44,5 +44,14 @@ export const InvestmentEndpoints = {
   createInvestor: `${investmentApiBaseUrl}investor/`,
   createBusiness: `${investmentApiBaseUrl}debtor/business/`,
   getIndustries: `${investmentApiBaseUrl}user/business-industries`,
-  viewBusiness: `${investmentApiBaseUrl}debtor/business/`
+  viewBusiness: `${investmentApiBaseUrl}debtor/business/`,
+  getLoanBusiness: `${investmentApiBaseUrl}browse/`,
+  getFilteredLoanBusiness: `${investmentApiBaseUrl}browse/`,
+  getBusinessInfo: (business_id)=> `${investmentApiBaseUrl}debtor/business/${business_id}/`,
+  addLoan: (businessId)=> `${investmentApiBaseUrl}debtor/business/${businessId}/loan/`,
+ investInBusiness:`${investmentApiBaseUrl}investor/invest/`,
+  getInvestmentRequest: (business_id)=> `${investmentApiBaseUrl}debtor/business/${business_id}/investment/`,
+  getBusinessStages: `${investmentApiBaseUrl}debtor/business-stages/`,
+  getModels: `${investmentApiBaseUrl}debtor/models/`,
+  getUser: `${investmentApiBaseUrl}user/`,
 }

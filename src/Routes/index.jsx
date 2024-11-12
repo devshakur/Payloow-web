@@ -305,10 +305,6 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
 
-
-
-
-
   //investment Routes
   {
     path: "/investment",

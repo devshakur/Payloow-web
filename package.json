@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 3000 --host --open",
     "build": "vite build",
-    "start": "vite --port 3000 --host --open",
+    "start": "vite",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -25,6 +25,7 @@
     "iconsax-react": "^0.0.8",
     "js-cookie": "^3.0.5",
     "react": "^18.3.1",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.10",
     "react-hot-toast": "^2.4.1",

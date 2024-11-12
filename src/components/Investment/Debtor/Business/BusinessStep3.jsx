@@ -26,105 +26,119 @@ const BusinessStep3 = ({ stepFour, formik }) => {
                 <section className='flex justify-center'>
                     <div className='bg-white w-full lg:w-1/2 mx-4 rounded-lg shadow-md'>
                         <form onSubmit={formik.handleSubmit} className='flex flex-col'>
+                            {/* Website */}
                             <label htmlFor="website" className='mt-4 mx-6 font-semibold text-lg'>Website</label>
                             <input 
                                 type="text" 
                                 id="website"
-                                name="online.website"
+                                name="website"
                                 className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2'
                                 placeholder='Website link...'
                                 onChange={formik.handleChange}
-                                value={formik.values.online.website}
+                                value={formik.values.website}
                             />
-                            {formik.touched.online?.website && formik.errors.online?.website ? (
-                                <div className="text-red-500">{formik.errors.online.website}</div>
-                            ) : null}
+                            {formik.touched.website && formik.errors.website && (
+                                <div className="text-red-500">{formik.errors.website}</div>
+                            )}
 
+                            {/* Twitter URL */}
                             <label htmlFor="twitter_url" className='mt-4 mx-6 font-semibold text-lg'>Twitter</label>
                             <input 
                                 type="text" 
                                 id="twitter_url"
-                                name="online.twitter_url"
+                                name="twitter_url"
                                 className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2'
                                 placeholder='Twitter handle'
                                 onChange={formik.handleChange}
-                                value={formik.values.online.twitter_url}
+                                value={formik.values.twitter_url}
                             />
-                            {formik.touched.online?.twitter_url && formik.errors.online?.twitter_url ? (
-                                <div className="text-red-500">{formik.errors.online.twitter_url}</div>
-                            ) : null}
+                            {formik.touched.twitter_url && formik.errors.twitter_url && (
+                                <div className="text-red-500">{formik.errors.twitter_url}</div>
+                            )}
 
+                            {/* LinkedIn URL */}
                             <label htmlFor="linkedIn_url" className='mt-4 mx-6 font-semibold text-lg'>LinkedIn</label>
                             <input 
                                 type="text" 
                                 id="linkedIn_url"
-                                name="online.linkedIn_url"
+                                name="linkedIn_url"
                                 className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2'
                                 placeholder='LinkedIn link...'
                                 onChange={formik.handleChange}
-                                value={formik.values.online.linkedIn_url}
+                                value={formik.values.linkedIn_url}
                             />
-                            {formik.touched.online?.linkedIn_url && formik.errors.online?.linkedIn_url ? (
-                                <div className="text-red-500">{formik.errors.online.linkedIn_url}</div>
-                            ) : null}
+                            {formik.touched.linkedIn_url && formik.errors.linkedIn_url && (
+                                <div className="text-red-500">{formik.errors.linkedIn_url}</div>
+                            )}
 
+                            {/* Facebook URL */}
                             <label htmlFor="facebook_url" className='mt-4 mx-6 font-semibold text-lg'>Facebook</label>
                             <input 
                                 type="text" 
                                 id="facebook_url"
-                                name="online.facebook_url"
+                                name="facebook_url"
                                 className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2'
                                 placeholder='Facebook username'
                                 onChange={formik.handleChange}
-                                value={formik.values.online.facebook_url}
+                                value={formik.values.facebook_url}
                             />
-                            {formik.touched.online?.facebook_url && formik.errors.online?.facebook_url ? (
-                                <div className="text-red-500">{formik.errors.online.facebook_url}</div>
-                            ) : null}
+                            {formik.touched.facebook_url && formik.errors.facebook_url && (
+                                <div className="text-red-500">{formik.errors.facebook_url}</div>
+                            )}
 
+                            {/* YouTube URL */}
                             <label htmlFor="youTube_url" className='mt-4 mx-6 font-semibold text-lg'>YouTube</label>
                             <input 
                                 type="text" 
                                 id="youTube_url"
-                                name="online.youTube_url"
+                                name="youTube_url"
                                 className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2'
                                 placeholder='YouTube link'
                                 onChange={formik.handleChange}
-                                value={formik.values.online.youTube_url}
+                                value={formik.values.youTube_url}
                             />
-                            {formik.touched.online?.youTube_url && formik.errors.online?.youTube_url ? (
-                                <div className="text-red-500">{formik.errors.online.youTube_url}</div>
-                            ) : null}
+                            {formik.touched.youTube_url && formik.errors.youTube_url && (
+                                <div className="text-red-500">{formik.errors.youTube_url}</div>
+                            )}
 
+                            {/* Instagram URL */}
                             <label htmlFor="instagram_url" className='mt-4 mx-6 font-semibold text-lg'>Instagram</label>
                             <input 
                                 type="text" 
                                 id="instagram_url"
-                                name="online.instagram_url"
+                                name="instagram_url"
                                 className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2'
                                 placeholder='Instagram link'
                                 onChange={formik.handleChange}
-                                value={formik.values.online.instagram_url}
+                                value={formik.values.instagram_url}
                             />
-                            {formik.touched.online?.instagram_url && formik.errors.online?.instagram_url ? (
-                                <div className="text-red-500">{formik.errors.online.instagram_url}</div>
-                            ) : null}
+                            {formik.touched.instagram_url && formik.errors.instagram_url && (
+                                <div className="text-red-500">{formik.errors.instagram_url}</div>
+                            )}
 
+                            {/* TikTok URL */}
                             <label htmlFor="tikTok_url" className='mt-4 mx-6 font-semibold text-lg'>TikTok</label>
                             <input 
                                 type="text" 
                                 id="tikTok_url"
-                                name="online.tikTok_url"
+                                name="tikTok_url"
                                 className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2'
                                 placeholder='TikTok username'
                                 onChange={formik.handleChange}
-                                value={formik.values.online.tikTok_url}
+                                value={formik.values.tikTok_url}
                             />
-                            {formik.touched.online?.tikTok_url && formik.errors.online?.tikTok_url ? (
-                                <div className="text-red-500">{formik.errors.online.tikTok_url}</div>
-                            ) : null}
+                            {formik.touched.tikTok_url && formik.errors.tikTok_url && (
+                                <div className="text-red-500">{formik.errors.tikTok_url}</div>
+                            )}
 
-                            <button type="button" onClick={stepFour} className='w-[90%] py-2 mx-8 my-5 bg-blue-600 text-white rounded-lg'>NEXT</button>
+                            {/* Next Button */}
+                            <button 
+                                type="button" 
+                                onClick={stepFour} 
+                                className='w-[90%] py-2 mx-8 my-5 bg-blue-600 text-white rounded-lg'
+                            >
+                                NEXT
+                            </button>
                         </form>
                     </div>
                 </section>

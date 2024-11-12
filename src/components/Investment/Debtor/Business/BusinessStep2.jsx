@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useInvestment from '../../../../hooks/useInvetment';
-import { useEffect } from 'react';
+import { toast,  Toaster } from 'react-hot-toast';
 
 const BusinessStep2 = ({ stepThree, formik }) => {
-    const { GetIndustries } = useInvestment();
+    const { GetIndustries, GetBusinessStages, GetModels } = useInvestment();
     const [industries, setIndustries] = useState([]);
+    const [stages, setStages] = useState([]);
+    const [models, setModels] = useState([]);
 
     useEffect(() => {
         const getIndustries = async () => {
@@ -13,47 +15,55 @@ const BusinessStep2 = ({ stepThree, formik }) => {
                 console.log(resp);
                 const data = resp.data.data.industries;
                 setIndustries(data);
+                toast.success('Industries Fetched')
             } catch (error) {
-                console.error("Failed to fetch industries:", error);
+                toast.error("Failed to fetch industries:", error);
             }
         };
 
-        getIndustries();
-    }, []);
-    const handleStageClick = (stage) => {
-        const currentIndex = formik.values.business_stage.indexOf(stage);
-        const newStages = [...formik.values.business_stage];
+        const getStages = async ()=>{
+            try {
+                const resp = await GetBusinessStages();
+                const data = resp.data.data.business_stages
+                setStages(data)
+                toast.success('Business Stages Fetched')
+            } catch (error) {
+                toast.error("Failed to fetch Stages:", error);
+            }
+        }
+      
 
-        if (currentIndex === -1) {
-            newStages.push(stage);
-        } else {
-            newStages.splice(currentIndex, 1);
+        const getModels = async ()=>{
+            try {
+                const resp = await GetModels();
+                const data = resp.data.data.industries
+               setModels(data)
+               toast.success('Business Models Fetched')
+            } catch (error) {
+                toast.error("Failed to fetch Stages:", error);
+            }
         }
 
-        formik.setFieldValue('business_stage', newStages);
+        getIndustries();
+        getStages();
+        getModels();
+    }, []);
+
+    const handleStageClick = (stage) => {
+        formik.setFieldValue('business_stage', stage);
     };
 
     const isStageSelected = (stage) => {
-        return formik.values.business_stage.includes(stage);
+        return formik.values.business_stage === stage;
     };
 
     const handleModelClick = (model) => {
-        const currentIndex = formik.values.customer_model.indexOf(model);
-        const newModels = [...formik.values.customer_model];
-
-        if (currentIndex === -1) {
-            newModels.push(model);
-        } else {
-            newModels.splice(currentIndex, 1);
-        }
-
-        formik.setFieldValue('customer_model', newModels);
+        formik.setFieldValue('customer_model', model);
     };
 
     const isModelSelected = (model) => {
-        return formik.values.customer_model.includes(model);
+        return formik.values.customer_model === model;
     };
-
 
     return (
         <div>
@@ -94,6 +104,22 @@ const BusinessStep2 = ({ stepThree, formik }) => {
                                 <div className="text-red-500">{formik.errors.business_name}</div>
                             ) : null}
 
+                            <div className='flex flex-col mt-4'>
+                                <label htmlFor="founding_date" className=' mx-6 font-semibold text-lg'>Founding Date</label>
+                                <input
+                                    type="date"
+                                    name='founding_date'
+                                    id='founding_date'
+                                    className='py-4 mx-6 border-2 border-[#D0D5DD] rounded-md mb-4 px-2'
+                                    placeholder='Founding Date'
+                                    onChange={formik.handleChange}
+                                    value={formik.values.founding_date}
+                                />
+                                {formik.touched.founding_date && formik.errors.founding_date ? (
+                                    <div className="text-red-500">{formik.errors.founding_date}</div>
+                                ) : null}
+                            </div>
+
                             <label htmlFor="business_description" className='mt-4 mx-6 font-semibold'>Description</label>
                             <textarea
                                 className='py-1 mx-6 border-2 border-[#D0D5DD] rounded-md mb-4 px-2'
@@ -109,7 +135,8 @@ const BusinessStep2 = ({ stepThree, formik }) => {
                             <div className='my-8 mx-5'>
                                 <h4 className='font-semibold text-lg font-poppins'>Stage</h4>
                                 <div className='flex flex-col lg:flex-row gap-4 my-3'>
-                                    {["idea/concept stage", "Startup stage", "Growth stage"].map((stage) => (
+                                    {stages && stages.length > 0 ?
+                                    stages.map((stage) => (
                                         <div
                                             key={stage}
                                             className={`flex bg-[#F8F9FC] py-4 ${isStageSelected(stage) ? 'rounded-lg' : ''}`}
@@ -127,15 +154,17 @@ const BusinessStep2 = ({ stepThree, formik }) => {
                                             </div>
                                             <span className='ml-2'>{stage}</span>
                                         </div>
-                                    ))}
+                                    )) : <p className='font-bold text-green-500 font-poppins text-lg'>Loading Stages......</p> }
                                 </div>
                                 {formik.touched.business_stage && formik.errors.business_stage ? (
                                     <div className="text-red-500">{formik.errors.business_stage}</div>
                                 ) : null}
                             </div>
 
+                            <h4 className='font-semibold text-lg mx-4 font-poppins'>Customer Model</h4>
                             <div className='mx-5 flex flex-col lg:flex-row gap-4 flex-wrap'>
-                                {["B2B", "B2B2B", "B2B2C", "B2B2G", "B2C", "C2C", "Governmental (G2G)", "Non Profit"].map((model) => (
+                                {models && models.length > 0 ?
+                                models.map((model) => (
                                     <div
                                         key={model}
                                         className={`flex bg-[#F8F9FC] py-4 ${isModelSelected(model) ? 'bg-blue-500 rounded-lg' : ''}`}
@@ -155,7 +184,7 @@ const BusinessStep2 = ({ stepThree, formik }) => {
                                             {model}
                                         </label>
                                     </div>
-                                ))}
+                                )) : <p className='text-lg font-poppins text-green-500 font-bold'>Loading Business Models</p>}
                             </div>
                             {formik.touched.customer_model && formik.errors.customer_model ? (
                                 <div className="text-red-500">{formik.errors.customer_model}</div>
@@ -169,7 +198,6 @@ const BusinessStep2 = ({ stepThree, formik }) => {
                                     className="block appearance-none w-[95%] mb-8 bg-white rounded-lg py-4 mx-6 px-4 pr-8 border-2 border-[#D0D5DD] text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
                                     onChange={formik.handleChange}
                                     value={formik.values.industry}
-                                    
                                 >
                                     {industries && industries.length > 0 ? (
                                         industries.map((industry, index) => (
@@ -180,14 +208,11 @@ const BusinessStep2 = ({ stepThree, formik }) => {
                                     ) : (
                                         <option disabled>Loading industries...</option>
                                     )}
-
-                                    {/* <option value="">Select an option</option>
-                                    <option value="oil">Oil</option>
-                                    <option value="agriculture">Agriculture</option> */}
                                 </select>
                                 {formik.touched.industry && formik.errors.industry ? (
                                     <div className="text-red-500">{formik.errors.industry}</div>
                                 ) : null}
+
                                 <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center px-2 text-gray-700">
                                     <svg
                                         className="w-8 h-8"
@@ -203,6 +228,7 @@ const BusinessStep2 = ({ stepThree, formik }) => {
 
                             <button type="button" onClick={stepThree} className='w-[90%] py-2 mx-8 mb-5 bg-blue-600 text-white rounded-lg'>NEXT</button>
                         </form>
+                        <Toaster />
                     </div>
                 </section>
             </main>
