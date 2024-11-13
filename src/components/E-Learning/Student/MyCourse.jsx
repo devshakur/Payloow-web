@@ -6,7 +6,6 @@ import { CiPlay1 } from "react-icons/ci"
 import { FaCheckCircle } from "react-icons/fa"
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
-import { endpoints } from '../../../api/Endpoint'
 import Layout from './Layout'
 import { Loader } from '../../../AuthContext/Loader'
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react'
@@ -14,10 +13,13 @@ import { motion } from 'framer-motion'
 import toast, { Toaster } from 'react-hot-toast'
 import ReactPlayer from 'react-player'
 import QuizTab from './QuizTab'
+import TutorInfo from './TutorInfo'
+import { endpoints } from '../../../api/Endpoint'
 
 const MyCourse = () => {
   const { id } = useParams()
-  const [courses, setCourses] = useState([])
+  const [course, setCourse] = useState({})
+  const [tutor, setTutor] = useState({})
   const navigate = useNavigate()
   const [openSectionId, setOpenSectionId] = useState(null)
   const [courseQuiz, setCourseQuiz] = useState([])
@@ -32,23 +34,34 @@ const MyCourse = () => {
     return url.trim().replace(/\s+/g, '%20')
   }
 
-  const getAllCourses = async () => {
+  const getCourseById = async (courseId) => {
     try {
       const token = JSON.parse(localStorage.getItem('auth')).auth
-      const response = await axios.get(endpoints.getAllCourses, {
+      const response = await axios.get(endpoints.getCourseById(courseId), {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
-      setCourses(response.data.data)
-
-      // Find the current course by id and set the first lesson as the default video URL
-      const currentCourse = response.data.data.find(course => course._id === id)
-      if (currentCourse && currentCourse.sections.length > 0 && currentCourse.sections[0].lessons.length > 0) {
-        setCurrentVideoUrl(removeAllWhitespace(currentCourse.sections[0].lessons[0].videoUrl))
-      }
+      console.log('Course:', response.data.data)
+      setCourse(response.data.data)
+      await getTutorProfileById(response.data.data.tutor_id)
     } catch (error) {
-      toast.error('An error occurred while fetching user data')
+      console.error("Error fetching course:", error)
+    }
+  }
+
+  const getTutorProfileById = async (id) => {
+    try {
+      const token = JSON.parse(localStorage.getItem('auth')).auth
+      const response = await axios.get(endpoints.getTutorProfileById(id), {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      console.log('Tutor:', response.data.data)
+      setTutor(response.data.data)
+    } catch (error) {
+      console.error("Error fetching course:", error)
     }
   }
 
@@ -69,15 +82,13 @@ const MyCourse = () => {
   }
 
   useEffect(() => {
-    getAllCourses()
     fetchQuiz()
+    getCourseById(id)
   }, [])
 
   const backToCourses = () => {
     navigate('/e-learning/student/courses')
   }
-
-  const course = courses.find(c => c._id === id)
 
   const handleLessonClick = (videoUrl) => {
     const cleanedUrl = removeAllWhitespace(videoUrl)
@@ -177,16 +188,11 @@ const MyCourse = () => {
                   <Tab className={({ selected }) => `px-4 py-2 font-medium ${selected ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}>Overview</Tab>
                   <Tab className={({ selected }) => `px-4 py-2 font-medium ${selected ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}>Quiz</Tab>
                   <Tab className={({ selected }) => `px-4 py-2 font-medium ${selected ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}>Announcements</Tab>
-                  <Tab className={({ selected }) => `px-4 py-2 font-medium ${selected ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}>Q&A</Tab>
+                  <Tab className={({ selected }) => `px-4 py-2 font-medium ${selected ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}>Messages</Tab>
                 </TabList>
                 <TabPanels className="mt-6">
                   <TabPanel>
-                    <div>
-                      <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
-                      <div className="h-44 max-h-64 overflow-hidden overflow-y-auto">
-                        <p className="text-gray-600 mb-6">{course.description}</p>
-                      </div>
-                    </div>
+                    <TutorInfo course={course} tutor={tutor} courseId={id} />
                   </TabPanel>
                   <TabPanel>
                     {courseQuiz.length > 0 ? (
@@ -200,7 +206,7 @@ const MyCourse = () => {
                     <p className="text-gray-600">No Announcements at this time.</p>
                   </TabPanel>
                   <TabPanel>
-                    <p className="text-gray-600">No Q&A sessions scheduled.</p>
+                    <p className="text-gray-600">No Messages for this course yet ....</p>
                   </TabPanel>
                 </TabPanels>
               </TabGroup>

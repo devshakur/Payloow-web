@@ -33,6 +33,13 @@ const Cart = () => {
     setIsOpen(false);
   }
 
+  // First add this state near your other state declarations
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+
+  // Add these helper functions
+  const openCheckout = () => setIsCheckoutOpen(true);
+  const closeCheckout = () => setIsCheckoutOpen(false);
+
 
   const handleCourseClick = (courseId) => {
     navigate(`/e-learning/student/course/${courseId}`);
@@ -222,7 +229,9 @@ const Cart = () => {
                   <span>${summary.discountTotal}</span>
                 </div>
               </div>
-              <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+              <button
+                onClick={openCheckout}
+                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
                 Proceed to Checkout
               </button>
             </div>
@@ -260,6 +269,52 @@ const Cart = () => {
                   onClick={close}
                 >
                   Keep in cart
+                </Button>
+              </div>
+            </DialogPanel>
+          </div>
+        </div>
+      </Dialog>
+
+      {/* Checkout Modal */}
+      <Dialog open={isCheckoutOpen} as="div" className="relative z-10 focus:outline-none" onClose={closeCheckout}>
+        <div className="fixed inset-0 z-10 w-screen bg-black/50 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4">
+            <DialogPanel
+              transition
+              className="w-full max-w-lg rounded-xl bg-white p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
+            >
+              <DialogTitle as="h3" className="text-xl font-bold mb-4">
+                Select Payment Method
+              </DialogTitle>
+              <div className="space-y-4">
+                <button
+                  className="w-full flex items-center justify-between p-4 border rounded-lg hover:bg-primary hover:text-white"
+                  onClick={() => console.log("Wallet payment")}
+                >
+                  <div className="flex items-center">
+                    <span className="text-lg">Pay ${summary.discountTotal} with Wallet</span>
+                  </div>
+                  <span className="">Balance: $0.00</span>
+                </button>
+
+                <button
+                  className="w-full flex items-center justify-between p-4 border rounded-lg hover:bg-primary hover:text-white"
+                  onClick={() => console.log("Card payment")}
+                >
+                  <div className="flex items-center">
+                    <span className="text-lg">Pay ${summary.discountTotal} with Card</span>
+                  </div>
+                  <span>→</span>
+                </button>
+              </div>
+
+              <div className="mt-6 flex gap-4">
+                <Button
+                  className="w-full py-2 px-4 border rounded-lg"
+                  onClick={closeCheckout}
+                >
+                  Cancel
                 </Button>
               </div>
             </DialogPanel>

@@ -32,6 +32,7 @@ import Cart from "../components/E-Learning/Student/Cart.jsx";
 import MyCourse from "../components/E-Learning/Student/MyCourse.jsx";
 import StudentMessages from "../components/E-Learning/Student/StudentMessages.jsx";
 import Support from "../components/Dashboard/Support.jsx";
+import SingleCourse from "../components/E-Learning/Student/SingleCourse.jsx";
 
 // const Verification = React.lazy(() =>
 //   import("../components/AuthenticationPage/password-issues/Verification.jsx")
@@ -312,7 +313,8 @@ export const router = createBrowserRouter([
     path: "/e-learning/student/my-course/:id",
     element: (
       <Suspense fallback={<Loader />}>
-        <MyCourse />
+        {/* <MyCourse /> */}
+        <SingleCourse />
       </Suspense>
     ),
     errorElement: <ErrorPage />,
