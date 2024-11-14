@@ -20,13 +20,13 @@ function Login() {
 	const getUser = async () => {
 		try {
 			const token = JSON.parse(localStorage.getItem('auth')).auth;
-			console.log(token);
+			
 			const response = await axios.get(endpoints.getCurrentUser, {
 				headers: {
 					Authorization: `Bearer ${token}`
 				}
 			});
-			console.log(response);
+			
 			localStorage.setItem('currentUser', JSON.stringify(response.data.data));
 			return response.data.data
 

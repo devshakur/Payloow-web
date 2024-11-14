@@ -11,15 +11,17 @@ import { Toaster, toast } from 'react-hot-toast';
 import InvestModal from './InvestModal';
 
 const Investor = () => {
-    const { GetLoanBusiness, InvestInBusiness, getUserDetails } = useInvestment();
+    const { GetLoanBusiness, InvestInBusiness, getUserDetails, InvestorsInvestment } = useInvestment();
     const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 768);
     const [isOpen, setIsOpen] = useState(false);
     const [data, setData] = useState([]);
+    const [progressData, setProgressData] = useState([]);
     const [verifying, setVerifying] = useState(false);
+    const [investment, setInvestment] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState({});
     const [wallet, setWallet] = useState({});
-    const [getId, setGetId] = useState(''); // Holds the business ID selected
+    const [getId, setGetId] = useState(''); 
     const [formData, setFormData] = useState({
         business_id: '',
         investment_amount: 0,
@@ -43,8 +45,11 @@ const Investor = () => {
             try {
                 const resp = await GetLoanBusiness();
                 let info = resp.data.data.businesses;
-                console.log(info);
-                setData(info);
+                let lastTwoBusinesses = info.slice(-2).reverse();
+                let progressInfo = info.slice(-4).reverse()
+                console.log(progressInfo);
+                setData(lastTwoBusinesses);
+                setProgressData(progressInfo)
                 setIsLoading(false);
             } catch (error) {
                 console.error("Failed to fetch information on business:", error);
@@ -59,12 +64,12 @@ const Investor = () => {
         const userDetails = async () => {
             try {
                 const resp = await getUserDetails();
-                let info = resp.data.data;
+                let info = resp?.data?.data?.user;
+              
                 let balance = resp.data.data.wallet
                 if(info){
                     setUser(info)
                     setWallet(balance)
-
                 }
             } catch (error) {
                 console.error("Failed to fetch information on User:", error);
@@ -74,12 +79,42 @@ const Investor = () => {
         userDetails();
     }, []);
 
+    useEffect(() => {
+        const getInvestment = async () => {
+          try {
+            const resp = await InvestorsInvestment();
+            const investmentInfo = resp?.data.data.investments
+            if (investmentInfo) {
+              setInvestment(investmentInfo);
+             
+            }
+          } catch (error) {
+            console.error('Failed to fetch investment information:', error);
+          }
+        };
+        getInvestment();
+      }, []);
+
+      const totalInvested = investment.reduce((accum, investment) => {
+        return accum + investment.investment_amount;
+      }, 0);
+      
+      const formattedTotalInvested = totalInvested.toLocaleString();
+      
+      const totalProfits = investment.reduce((accum, investment) => {
+        return accum + investment.total_profit;
+      }, 0);
+      
+      const netProfit = totalProfits - totalInvested;
+      const formattedNetProfits = netProfit.toLocaleString();
+
+
     // Function to open the modal and set the selected business ID
     const handleGetId = (id) => {
         console.log('Selected business ID:', id);
         open();
         setGetId(id);
-        setFormData((prevData) => ({ ...prevData, business_id: id })); // Update business_id in formData
+        setFormData((prevData) => ({ ...prevData, business_id: id })); 
     };
 
     // Handle form input changes
@@ -97,7 +132,7 @@ const Investor = () => {
             const resp = await InvestInBusiness(formData);
             if (resp?.data?.data) {
                 toast.success('Investment successful');
-                close(); // Close the modal
+                close(); 
             }
         } catch (error) {
             console.error("Error investing:", error);
@@ -134,7 +169,7 @@ const Investor = () => {
 
     return (
         <InvestorLayoutPage>
-            <h4 className='font-poppins text-2xl font-medium'>Welcome, Mayowa</h4>
+            <h4 className='font-poppins text-2xl font-medium'>Welcome, {user.first_name}</h4>
             <div className='flex justify-between'>
                 <p className='font-poppins text-lg font-normal my-3 text-[#000000]'>Explore and Invest in Growing Businesses!</p>
                 <Button className='px-8 h-12 rounded-lg text-lg text-white bg-[#3369F4]'>
@@ -173,7 +208,7 @@ const Investor = () => {
                         <a href="#">
                             <h5 className="-mt-2 mb-3 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Available Balance</h5>
                         </a>
-                        <p className="mb-4 font-medium text-2xl text-white">₦{wallet.balance}</p>
+                        <p className="mb-4 font-medium text-2xl text-white">{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : 'Loading...'}</p>
                         <div className='flex items-center gap-1'>
                             <p className='text-white font-medium text-sm my-3'>Wema bank: 4054673854</p>
                             <Copy size="17" color="white" />
@@ -191,14 +226,14 @@ const Investor = () => {
                                 <span className='bg-white w-6 h-6 flex justify-center items-center rounded-[50%]'><Briefcase size="12" color="blue" /></span>
                                 <p className='font-normal text-lg font-poppins text-[#1D2433]'>Total Investment</p>
                             </div>
-                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦0</p>
+                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦{formattedTotalInvested}</p>
                         </div>
                         <div className='bg-[#D6F7FF] md:w-[47%] my-5 py-5 rounded-md'>
                             <div className='flex items-center gap-2 mx-2'>
                                 <span className='bg-white w-6 h-6 flex justify-center items-center rounded-[50%]'><Briefcase size="12" color="blue" /></span>
                                 <p className='font-normal text-lg font-poppins text-[#1D2433]'>Returns</p>
                             </div>
-                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦0</p>
+                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦{formattedNetProfits}</p>
                         </div>
                     </div>
 
@@ -218,7 +253,7 @@ const Investor = () => {
                         {isLoading ? (
                             <SkeletonLoader />
                         ) : (
-                            data.map((item) => (
+                            progressData.map((item) => (
                                 <div key={item.id} className='flex justify-between gap-7 mx-4 mb-4 border-b border-gray-200'>
                                     <p className=''>{item.business_name}</p>
                                     <img src='/images/Progress-bar.png' className='w-auto h-3' alt="bar" />

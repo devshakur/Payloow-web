@@ -20,17 +20,17 @@ const InvestmentProvider = ({ children }) => {
         try {
             // Make the POST request with FormData (data will be a FormData object)
             const response = await axiosInstance.post(InvestmentEndpoints.createDebtor, data);
-    
+
             const result = response.data;
             dispatch({ type: 'CREATEDEBTOR', payload: { user: result } });
-    
+
             return response; // Return the response for further handling
         } catch (error) {
             console.error(error);
             throw error; // Propagate the error to handle it elsewhere if needed
         }
     };
-    
+
 
     const CreateInvestorAccount = async (data) => {
         try {
@@ -120,7 +120,6 @@ const InvestmentProvider = ({ children }) => {
     const ViewBusiness = async () => {
         try {
             const response = await axiosInstance.get(InvestmentEndpoints.viewBusiness)
-
             const result = response.data
             dispatch({ type: 'VIEWBUSINESS', payload: { user: result } })
             return response;
@@ -145,7 +144,7 @@ const InvestmentProvider = ({ children }) => {
     }
     const getUserDetails = async () => {
         try {
-            const response = await axiosInstance.get( InvestmentEndpoints.getUser)
+            const response = await axiosInstance.get(InvestmentEndpoints.getUser)
 
             const result = response.data
             dispatch({ type: 'GETUSER', payload: { user: result } })
@@ -195,7 +194,7 @@ const InvestmentProvider = ({ children }) => {
         }
     }
 
-    
+
     const GetLoanBusiness = async () => {
         try {
             const response = await axiosInstance.get(InvestmentEndpoints.getLoanBusiness)
@@ -211,22 +210,62 @@ const InvestmentProvider = ({ children }) => {
 
     const GetFilteredLoanBusiness = async (industry) => {
         try {
-         
+
             const response = await axiosInstance.get(`${InvestmentEndpoints.getLoanBusiness}?industry=${industry}`);
 
             const result = response.data;
-    
+
             dispatch({ type: 'GETLOANBUSINESS', payload: { user: result } });
-    
-            return response; 
+
+            return response;
         } catch (error) {
             console.error(error);
             throw error;
         }
     }
-    
 
-    const object = { ...state, dispatch, CreateDebtorAccount, CreateInvestorAccount, CreateBusiness, GetIndustries, getBusinessInfo, ViewBusiness, AddLoan,  GetBusinessStages, GetModels, InvestInBusiness, GetInvestmentRequest, GetLoanBusiness, getUserDetails, GetFilteredLoanBusiness, }
+    const InvestorsInvestment = async () => {
+        try {
+            const response = await axiosInstance.get(InvestmentEndpoints.getInvestorsInvestment)
+            const result = response.data
+            dispatch({ type: 'INVESTORINVESTMENT', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    const AcceptInvestmentRequest = async (investment_id) => {
+        try {
+            const url = InvestmentEndpoints.acceptRequest(investment_id)
+            const response = await axiosInstance.patch(url)
+
+            const result = response.data
+            dispatch({ type: 'ACCEPTREQUEST', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+
+    const DeclineInvestmentRequest = async (investment_id) => {
+        try {
+            const url = InvestmentEndpoints.declineRequest(investment_id)
+            const response = await axiosInstance.patch(url)
+
+            const result = response.data
+            dispatch({ type: 'DECLINEREQUEST', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    const object = { ...state, dispatch, CreateDebtorAccount, CreateInvestorAccount, CreateBusiness, GetIndustries, getBusinessInfo, ViewBusiness, AddLoan, GetBusinessStages, GetModels, InvestInBusiness, GetInvestmentRequest, GetLoanBusiness, getUserDetails, GetFilteredLoanBusiness, InvestorsInvestment, AcceptInvestmentRequest, DeclineInvestmentRequest, }
 
     return <InvestmentContext.Provider value={object}>{children}</InvestmentContext.Provider>
 

@@ -27,7 +27,7 @@ const BusinessStep3 = ({ stepFour, formik }) => {
                     <div className='bg-white w-full lg:w-1/2 mx-4 rounded-lg shadow-md'>
                         <form onSubmit={formik.handleSubmit} className='flex flex-col'>
                             {/* Website */}
-                            <label htmlFor="website" className='mt-4 mx-6 font-semibold text-lg'>Website</label>
+                            <label htmlFor="website" className='mt-4 mx-6 font-semibold text-lg'>Website***</label>
                             <input 
                                 type="text" 
                                 id="website"

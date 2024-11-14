@@ -38,7 +38,7 @@ const BusinessParent = () => {
         customer_model: Yup.string().required('Required'),
         industry: Yup.array().of(Yup.string().required('Industry is required')).min(3, 'At least three industries are required'),
         online: Yup.object({
-            website: Yup.string().url('Invalid URL').nullable(),
+            website: Yup.string().url('Invalid URL').nullable().required('Website is required'),
             twitter_url: Yup.string().url('Invalid URL').nullable(),
             linkedIn_url: Yup.string().url('Invalid URL').nullable(),
             facebook_url: Yup.string().url('Invalid URL').nullable(),
@@ -55,19 +55,20 @@ const BusinessParent = () => {
 
     const onSubmit = async (values) => {
         console.log('Form data', values);
-        await CreateBusiness(values);  // Use the form values instead of initialValues
+        await CreateBusiness(values);  
     };
 
     const formik = useFormik({
         initialValues,
-        // validationSchema,
         onSubmit,
     });
 
     const nextStep = () => setStep('step2');
-    const stepThree = () => setStep('step3');
+     const stepThree = () => setStep('step3');
     const stepFour = () => setStep('step4');
-
+    
+  
+   
     return (
         <>
             {step === 'step1' && <Business nextStep={nextStep} />}
@@ -79,3 +80,4 @@ const BusinessParent = () => {
 };
 
 export default BusinessParent;
+

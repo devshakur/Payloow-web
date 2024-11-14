@@ -5,7 +5,7 @@ import clsx from 'clsx';
 const InvestModal = ({ formData, handleInputChange, handleInvest, close, verifying, }) => {
   return (
     <form action="">
-      {/* Investment Amount Field */}
+     
       <div className="mb-4">
         <Label className="text-md ml-4 font-medium">Investment Amount</Label>
         <Input
@@ -20,7 +20,7 @@ const InvestModal = ({ formData, handleInputChange, handleInvest, close, verifyi
         />
       </div>
 
-      {/* Expected ROI Field */}
+
       <div className="mb-4">
         <Label className="text-md font-medium ml-4">Expected ROI</Label>
         <Input
@@ -35,7 +35,6 @@ const InvestModal = ({ formData, handleInputChange, handleInvest, close, verifyi
         />
       </div>
 
-      {/* Repayment Term Field */}
       <div className="mb-4">
         <Label className="text-md font-medium ml-4">Repayment Term</Label>
         <Input
@@ -71,10 +70,9 @@ const InvestModal = ({ formData, handleInputChange, handleInvest, close, verifyi
   );
 };
 
-// Label Component (for encapsulating the label)
+
 const Label = ({ children, className }) => <label className={className}>{children}</label>;
 
-// Input Component (for reusable input fields)
 const Input = ({ type, name, value, onChange, placeholder, className }) => (
   <input
     type={type}
@@ -86,7 +84,6 @@ const Input = ({ type, name, value, onChange, placeholder, className }) => (
   />
 );
 
-// Button Component (for reusable buttons)
 const Button = ({ children, onClick, className, type }) => (
   <button type={type || 'button'} onClick={onClick} className={className}>
     {children}

@@ -12,7 +12,7 @@ const BusinessStep2 = ({ stepThree, formik }) => {
         const getIndustries = async () => {
             try {
                 const resp = await GetIndustries();
-                console.log(resp);
+            
                 const data = resp.data.data.industries;
                 setIndustries(data);
                 toast.success('Industries Fetched')

@@ -13,7 +13,7 @@ const BusinessStep4 = ({ formik }) => {
     const open = () => setIsOpen(true);
     const close = () => setIsOpen(false);
 
-    // Handler for file drop (for each of the fields)
+    
     const handleFileDrop = (fieldName) => (acceptedFiles) => {
         setFieldValue(fieldName, acceptedFiles);
     };
@@ -31,28 +31,25 @@ const BusinessStep4 = ({ formik }) => {
    
     const handleSubmit = async (event) => {
         event.preventDefault();
-   
-        try {
+      
+       
             const formData = new FormData();
     
             // Appending each of the fields with files to FormData
             values.financial_statements?.forEach(file => formData.append('financial_statements', file));
             values.growth_plans?.forEach(file => formData.append('growth_plans', file));
             values.loan_requirements?.forEach(file => formData.append('loan_requirements', file));
-    
-            // Wait for formik.handleSubmit to complete
-            await formik.handleSubmit();
-    
-            // If form submission is successful, trigger open() function
-            setTimeout(()=>{
-                open();
-            }, 4000)
-          router.push('/debtor/dashboard')
-        } catch (error) {
            
-            console.error('Error during form submission:', error);
-            toast.error(error.message || 'An error occurred while submitting the form.');
-        }
+            await formik.handleSubmit();
+            
+            setTimeout(() => {
+                open();
+            }, 2000);
+
+            setTimeout(() => {
+                router.push('/debtor/dashboard');
+              
+            }, 4000);
     };
     
 

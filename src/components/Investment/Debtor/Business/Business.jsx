@@ -7,6 +7,7 @@ import StageTwo from './BusinessModal/StageTwo';
 import Loan from './BusinessModal/Loan';
 import useInvestment from '../../../../hooks/useInvetment';
 import SkeletonLoader from '../../../Skeleton/SkeletalLoading';
+import { useRouter } from '../../../../Routes/router';
 
 
 const Business = ({ nextStep }) => {
@@ -22,12 +23,15 @@ const Business = ({ nextStep }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const selectedId = getid;
+ const router = useRouter();
 
 
+ const handleInvestment = ()=>{
+  router.push('/debtor/request')
+ }
   useEffect(() => {
     const businessInfo = async () => {
       try {
-        console.log(selectedId);
         const resp = await getBusinessInfo(selectedId); // get detailed info about a particular business
         const info = resp.data?.data?.business; 
         const SocialLinks = info.online
@@ -37,7 +41,6 @@ const Business = ({ nextStep }) => {
         if (info) {
           setBusinessData(info); 
           setUser(users)
-          console.log(documentLinks);
           setLinks(SocialLinks)
           setBusinessLinks(documentLinks)
         } else {
@@ -119,7 +122,7 @@ useEffect(()=>{
                     <p className='font-semibold font-poppins text-xl'>{startup.loan === null ?  <p className='text-gray-400 font-plus-jakarta text-lg'>No Available Loan </p> : startup.loan.loan_amount }</p>
                   </div>
                   <div className='mx-4 mt-9 flex gap-4 flex-col lg:-mb-[3rem]'>
-                    <button className='w-full bg-[#3369F4] py-3 rounded-md text-white font-semibold'>See Investments</button>
+                    <button onClick={handleInvestment} className='w-full bg-[#3369F4] py-3 rounded-md text-white font-semibold'>See Investments</button>
                     <Button onClick={() => handleView(startup.business_id)} className='w-full border border-blue-300 py-3 rounded-md text-blue-500 font-semibold'>View Business</Button>
                   </div>
              {active === 'one' && <Modal isOpen={isOpen} setIsOpen={setIsOpen} user={user} businessData={businessData} setIsActive={setIsActive} /> } 

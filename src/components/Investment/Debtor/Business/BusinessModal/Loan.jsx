@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
+import { Button,  Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
+import { format } from 'date-fns';
 
 const Loan = ({ isOpen, setIsOpen, setIsActive, user, businessData }) => {
   const { customer_model, } = businessData
@@ -16,6 +17,7 @@ const Loan = ({ isOpen, setIsOpen, setIsActive, user, businessData }) => {
   function stageTwo() {
     setIsActive('two')
   }
+
   return (
     <div>
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
@@ -38,8 +40,8 @@ const Loan = ({ isOpen, setIsOpen, setIsActive, user, businessData }) => {
                     <p className='font-poppins font-semibold text-lg text-[#1D2433CC]'>{
                       businessData.loan === null
                         ? 'No Available Loan'
-                        : new Date(businessData.loan.created_at).toISOString().replace(/T/, ' ').replace(/\..+/, '')
-                    }</p>
+                        : format(new Date(businessData.loan.created_at), 'dd/MM/yyyy')}                       
+                    </p>
                   </div>
                   <div className='flex justify-between'>
                     <p className='font-poppins font-medium text-lg text-[#1D2433CC]'>Collateral</p>
