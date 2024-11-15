@@ -20,13 +20,13 @@ function Login() {
 	const getUser = async () => {
 		try {
 			const token = JSON.parse(localStorage.getItem('auth')).auth;
-			console.log(token);
+			
 			const response = await axios.get(endpoints.getCurrentUser, {
 				headers: {
 					Authorization: `Bearer ${token}`
 				}
 			});
-			console.log(response);
+			
 			localStorage.setItem('currentUser', JSON.stringify(response.data.data));
 			return response.data.data
 
@@ -136,10 +136,7 @@ function Login() {
 						</button>
 						<li className='flex justify-end font-poppins font-normal text-sm text-[#3369F4]'><a href="/forgot-password">forgot password</a></li>
 					</form>
-					{/* <ToastContainer
-						position='top-center' autoClose={5000}
-
-					/> */}
+				
 					<Toaster />
 					<div className='mt-5'>
 						<div className='flex justify-center items-center'>

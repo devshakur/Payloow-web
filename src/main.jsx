@@ -6,6 +6,7 @@ import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import { BillsProvider } from "./AuthContext/BillsContext/billsContext.jsx";
 import { VariationsProvider } from "./AuthContext/VariationsContext.jsx";
+import { InvestmentProvider } from "./AuthContext/InvestmentContext/InvestmentContext.jsx";
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -13,7 +14,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <VariationsProvider>
     <AuthProvider>
       <BillsProvider>
+        <InvestmentProvider>
   <RouterProvider router={router} /> 
+  </InvestmentProvider>
   </BillsProvider>
     </AuthProvider>
   </VariationsProvider>

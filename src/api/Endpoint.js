@@ -1,5 +1,6 @@
-//Base-URL
+
 export const BaseUrl = "https://revo-xbt9.onrender.com/api/v1";
+const investmentApiBaseUrl = "https://revo-backend.onrender.com/"
 
 export const AuthEndPoints = {
   login: `${BaseUrl}/login`,
@@ -69,3 +70,24 @@ export const BillsEndpoints = {
   setPin: `${BaseUrl}/set-transaction-pin`,
   confirm: `${BaseUrl}/confirm-pin`,
 };
+
+//Investment Endpoints
+export const InvestmentEndpoints = {
+  createDebtor: `${investmentApiBaseUrl}debtor/`,
+  createInvestor: `${investmentApiBaseUrl}investor/`,
+  createBusiness: `${investmentApiBaseUrl}debtor/business/`,
+  getIndustries: `${investmentApiBaseUrl}user/business-industries`,
+  viewBusiness: `${investmentApiBaseUrl}debtor/business/`,
+  getLoanBusiness: `${investmentApiBaseUrl}browse/`,
+  getFilteredLoanBusiness: `${investmentApiBaseUrl}browse/`,
+  getBusinessInfo: (business_id)=> `${investmentApiBaseUrl}debtor/business/${business_id}/`,
+  addLoan: (businessId)=> `${investmentApiBaseUrl}debtor/business/${businessId}/loan/`,
+ investInBusiness: `${investmentApiBaseUrl}investor/invest/`,
+  getInvestmentRequest: (business_id)=> `${investmentApiBaseUrl}debtor/business/${business_id}/investment/`,
+  getInvestorsInvestment:`${investmentApiBaseUrl}investor/investments/`,
+  getBusinessStages:`${investmentApiBaseUrl}debtor/business-stages/`,
+  getModels: `${investmentApiBaseUrl}debtor/models/`,
+  getUser: `${investmentApiBaseUrl}user/`,
+  acceptRequest: (investment_id)=> `${investmentApiBaseUrl}debtor/investment/${investment_id}/accept/`,
+  declineRequest: (investment_id)=> `${investmentApiBaseUrl}debtor/investment/${investment_id}/decline/`,
+}

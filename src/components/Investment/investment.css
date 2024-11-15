@@ -13,3 +13,19 @@
     color: white;
     border: none; 
 }
+
+/* Ensure the select dropdown shows correctly for multiple selections */
+select[multiple] {
+    height: 120px; /* Make sure there’s enough space for multiple items */
+    min-height: 120px; /* Prevent it from being too small */
+    width: 100%; /* Ensure it’s wide enough */
+    overflow-y: auto; /* Allow scrolling if needed */
+  }
+  
+  /* Optional: Mobile specific styles to make sure it's still usable on smaller screens */
+  @media (max-width: 768px) {
+    select[multiple] {
+      height: auto; /* Allow the mobile select box to expand as needed */
+    }
+  }
+  

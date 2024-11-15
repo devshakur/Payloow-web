@@ -4,10 +4,9 @@ import Cookies from 'js-cookie';
 
 // Create an Axios instance
 const axiosInstance = axios.create({
-  baseURL: 'https://revo-p3jw.onrender.com/api/v1', // Replace with your API base URL
+  baseURL: 'https://revo-backend.onrender.com/', // Replace with your API base URL
 });
   
-
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {

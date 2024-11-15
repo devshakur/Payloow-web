@@ -9,6 +9,7 @@ import SuccessModal from './Modal/SuccessModal';
 import InvestorSuccessModal from './Modal/InvestorSuccessModal';
 import InvestorFormModal from './Modal/InvestorFormModal';
 
+
 const Investment = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -39,6 +40,8 @@ const Investment = () => {
     };
     const closeSuccessModal = () => setIsSuccessModalOpen(false);
     const closeInvestorSuccessModal = () => setIsInvestorSuccessModalOpen(false);
+
+ 
 
     return (
         <InvestmentLayout className={clsx('h-[100vh] w-[100vw] bg-blue-50 font-poppins p-4', { 'blur-md': isOpen || isFormModalOpen || isSuccessModalOpen })}>
