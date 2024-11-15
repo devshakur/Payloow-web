@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { FiSearch, FiSmile, FiPaperclip, FiSend } from "react-icons/fi"
 import Layout from "./Layout"
 
-export default function Messages() {
+export default function StudentMessages() {
   const [activeChat, setActiveChat] = useState(null)
 
   const chatEntries = [

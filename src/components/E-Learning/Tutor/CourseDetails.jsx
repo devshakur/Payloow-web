@@ -5,7 +5,7 @@ import { CiClock2, CiPlay1 } from "react-icons/ci";
 import { BsPatchQuestion } from "react-icons/bs";
 import { RiBookLine } from "react-icons/ri";
 import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
+
 import axios from 'axios';
 import { endpoints } from '../../../api/Endpoint';
 import Layout from './Layout';
@@ -13,6 +13,7 @@ import { Loader } from '../../../AuthContext/Loader';
 import { Dialog, DialogPanel, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { motion } from 'framer-motion';
 import CreateQuiz from './CreateQuiz';
+import toast from 'react-hot-toast';
 
 
 const CourseDetails = () => {
@@ -21,6 +22,14 @@ const CourseDetails = () => {
   const navigate = useNavigate();
   const [openSectionId, setOpenSectionId] = useState(null);
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
+  const [isAnnouncementModalOpen, setIsAnnouncementModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [formData, setFormData] = useState({
+    courseId: id,
+    title: '',
+    description: ''
+  })
 
   const handleCourseClick = (courseId) => {
     navigate(`/e-learning/tutor/course/edit-course/${courseId}`);
@@ -44,6 +53,25 @@ const CourseDetails = () => {
       setCourses(response.data.data)
     } catch (error) {
       toast.error('An error occured while fetching user data')
+    }
+  }
+
+  const addAnnouncement = async () => {
+    setIsLoading(true);
+    try {
+      const token = JSON.parse(localStorage.getItem('auth')).auth;
+      const response = await axios.post(endpoints.createAnnouncement, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log(response.data);
+      toast.success('Announcement created successfully');
+    } catch (error) {
+      toast.error('Failed to create announcement');
+    } finally {
+      setIsLoading(false);
+      setIsAnnouncementModalOpen(false);
     }
   }
 
@@ -73,19 +101,6 @@ const CourseDetails = () => {
     };
 
     console.log(payload);
-    // try {
-    //   const token = JSON.parse(localStorage.getItem('auth')).auth;
-    //   await axios.post(endpoints.createQuiz, payload, {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //       'Content-Type': 'application/json',
-    //     },
-    //   });
-    //   toast.success('Quiz created successfully');
-    //   setIsQuizModalOpen(false);
-    // } catch (error) {
-    //   toast.error('Failed to create quiz');
-    // }
   };
 
 
@@ -173,7 +188,12 @@ const CourseDetails = () => {
                   </button>
                 </TabPanel>
                 <TabPanel>
-                  No Announcement
+                  <button
+                    onClick={() => setIsAnnouncementModalOpen(true)}
+                    className="bg-blue-600 text-white py-2 px-4 rounded-lg"
+                  >
+                    Add Announcement
+                  </button>
                 </TabPanel>
                 <TabPanel>
                   No Q&A
@@ -249,7 +269,59 @@ const CourseDetails = () => {
           </DialogPanel>
         </div>
       </Dialog>
-    </Layout>
+
+
+      <Dialog
+        open={isAnnouncementModalOpen}
+        as="div"
+        className="relative z-50"
+        onClose={() => setIsAnnouncementModalOpen(false)}
+      >
+        <div className="fixed inset-0 bg-black bg-opacity-50" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <DialogPanel className="w-full max-w-3xl bg-white rounded-lg p-6">
+            <h2 className="text-2xl font-bold mb-4">Add Announcement</h2>
+
+            {/* Title Input */}
+            <div className="mb-4">
+              <label htmlFor="title" className="block text-lg font-medium text-gray-700">
+                Title
+              </label>
+              <input
+                type="text"
+                id="title"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
+
+            {/* Description Input */}
+            <div className="mb-4">
+              <label htmlFor="description" className="block text-lg font-medium text-gray-700">
+                Description
+              </label>
+              <textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button
+              onClick={addAnnouncement}
+              className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Adding Announcement...' : 'Add Announcement'}
+            </button>
+          </DialogPanel>
+        </div>
+      </Dialog>
+
+    </Layout >
   );
 };
 
