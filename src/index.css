@@ -68,6 +68,18 @@ body {
   @apply pb-1 border-b border-b-gray-200 focus:outline-none data-[selected]:border-b-primary data-[selected]:text-primary data-[hover]:bg-white/5 data-[selected]:data-[hover]:bg-white/10 data-[focus]:outline-1 data-[focus]:outline-white px-5 cursor-pointer
 }
 
+.faq-question {
+  @apply w-full text-left py-5 hover:bg-gray-100 px-5 transition-all duration-300 ease-in-out font-semibold text-2xl
+}
+
+.faq-answer {
+  @apply origin-top transition duration-200 ease-out data-[closed]:-translate-y-6 data-[closed]:opacity-0 mt-5 max-w-4xl px-5
+}
+
+.faq-container {
+  @apply w-full border-y py-5
+}
+
 /* Loaders */
 .loader {
   width: 24px;
@@ -101,5 +113,35 @@ body {
 
   100% {
     transform: rotate(360deg);
+  }
+}
+
+.dots-5 {
+  width: 15px;
+  height: 15px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  animation: d5 1s infinite linear alternate;
+}
+
+@keyframes d5 {
+  0% {
+    box-shadow: 20px 0 #000, -20px 0 #0002;
+    background: #000
+  }
+
+  33% {
+    box-shadow: 20px 0 #000, -20px 0 #0002;
+    background: #0002
+  }
+
+  66% {
+    box-shadow: 20px 0 #0002, -20px 0 #000;
+    background: #0002
+  }
+
+  100% {
+    box-shadow: 20px 0 #0002, -20px 0 #000;
+    background: #000
   }
 }

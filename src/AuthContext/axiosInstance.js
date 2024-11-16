@@ -6,11 +6,12 @@ import Cookies from 'js-cookie';
 const axiosInstance = axios.create({
   baseURL: 'https://revo-p3jw.onrender.com/api/v1', // Replace with your API base URL
 });
+  
 
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    // Get the auth token from local storage or state management
+    // Get the auth token from cookies
     const token = Cookies.get('authToken'); // Adjust this as needed
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`; // Add the token to headers

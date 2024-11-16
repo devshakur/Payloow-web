@@ -29,7 +29,10 @@ import Investor from "../components/Investment/Investor/Investor.jsx";
 import InvestorBusiness from "../components/Investment/Investor/InvestorBusiness.jsx";
 import MyInvestment from "../components/Investment/Investor/MyInvestment.jsx";
 import Cart from "../components/E-Learning/Student/Cart.jsx";
-import MyCourse from "../components/E-Learning/Student/MyCourse.jsx";
+// import MyCourse from "../components/E-Learning/Student/MyCourse.jsx";
+import StudentMessages from "../components/E-Learning/Student/StudentMessages.jsx";
+import Support from "../components/Dashboard/Support.jsx";
+import SingleCourse from "../components/E-Learning/Student/SingleCourse.jsx";
 
 // const Verification = React.lazy(() =>
 //   import("../components/AuthenticationPage/password-issues/Verification.jsx")
@@ -161,6 +164,16 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <Settings />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+
+  {
+    path: "/support",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Support />
       </Suspense>
     ),
     errorElement: <ErrorPage />,
@@ -300,7 +313,8 @@ export const router = createBrowserRouter([
     path: "/e-learning/student/my-course/:id",
     element: (
       <Suspense fallback={<Loader />}>
-        <MyCourse />
+        {/* <MyCourse /> */}
+        <SingleCourse />
       </Suspense>
     ),
     errorElement: <ErrorPage />,
@@ -314,10 +328,15 @@ export const router = createBrowserRouter([
     ),
     errorElement: <ErrorPage />,
   },
-
-
-
-
+  {
+    path: "/e-learning/student/messages",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <StudentMessages />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
 
   //investment Routes
   {

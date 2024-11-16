@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import DebtorLayoutPage from './DebtorLayoutPage';
 import { Copy, Briefcase } from 'iconsax-react';
+import useInvestment from '../../../hooks/useInvetment';
+import { Toaster, toast } from 'react-hot-toast';
 
 const DebtorDashboard = () => {
+    const { getUserDetails, GetInvestmentRequest, ViewBusiness, AcceptInvestmentRequest, DeclineInvestmentRequest } = useInvestment();
     const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 768);
-
+    const [user, setUser] = useState({});
+    const [wallet, setWallet] = useState({});
+    const [currentPage, setCurrentPage] = useState(0);
+    const [data, setData] = useState([]);
+    const [businesses, setBusinesses] = useState([]);
+    const [investment, setInvestment] = useState([]);
     const handleResize = () => {
         setIsLargeScreen(window.innerWidth >= 768);
     };
@@ -16,9 +24,129 @@ const DebtorDashboard = () => {
         };
     }, []);
 
+    useEffect(() => {
+        // Fetch business details
+        const fetchBusinessDetails = async () => {
+            try {
+                const resp = await ViewBusiness();
+                const businessData = resp?.data?.data?.businesses || [];
+                setBusinesses(businessData);
+                console.log('Businesses:', businessData);
+            } catch (error) {
+                toast.error('Failed to fetch business data:', error);
+            }
+        };
+
+        fetchBusinessDetails();
+    }, []);
+
+    useEffect(() => {
+        // Fething investment request for each business_id
+        const fetchInvestmentRequests = async () => {
+            try {
+                const allRequests = [];
+    
+                for (let business of businesses) {
+                    if (business.has_loan === true) {
+                        const businessId = business.business_id; 
+                        const resp = await GetInvestmentRequest(businessId);
+                        const investmentRequests = resp?.data?.data?.investments?.investments || [];
+                        
+                        // Filter for only 'pending' investment requests
+                        const pendingRequests = investmentRequests.filter(investment => investment.investment_status === 'pending');
+                        
+                        // Sort the filtered requests by recent created_at (most recent first)
+                        const sortedRequests = pendingRequests.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                        
+                        allRequests.push(...sortedRequests.slice(0, 2));
+                    }
+                }
+    
+                setData(allRequests); // Update `data` once
+                console.log('Combined Investment Requests:', allRequests);
+            } catch (error) {
+                console.error('Failed to fetch investment requests:', error);
+            }
+        };
+    
+        if (businesses.length > 0) {
+            fetchInvestmentRequests();
+        }
+    }, [businesses]);
+    
+
+    useEffect(() => {
+        const userDetails = async () => {
+            try {
+                const resp = await getUserDetails();
+                let info = resp?.data?.data?.user;
+                let balance = resp.data.data.wallet;
+                if (info) {
+                    setUser(info);
+                    setWallet(balance);
+                }
+            } catch (error) {
+                console.error("Failed to fetch information on User:", error);
+            }
+        };
+
+        userDetails();
+    }, []);
+
+    const acceptRequest = async (investmentId) => {
+        try {
+            
+            const resp = await AcceptInvestmentRequest(investmentId);
+            if (resp?.data?.success === true) {
+                toast.success('Investment request accepted successfully!');
+               
+            } else {
+             
+                toast.error('Failed to accept investment request.');
+            }
+        } catch (error) {
+        
+            if (error?.response?.data?.success === false) {
+               
+                const errorMessage = error?.response?.data?.message;
+                toast.error(errorMessage || 'An error occurred while accepting the investment request.');
+            } else {
+               
+                toast.error('An unexpected error occurred. Please try again.');
+            }
+        }
+    };
+    
+
+    const declineRequest = async (investmentId) => {
+        try {
+            
+            const resp = await DeclineInvestmentRequest(investmentId);
+    
+            
+            if (resp?.data?.success === true) {
+                toast.success('Investment request declined successfully!');
+                
+            } else {
+             
+                toast.error('Failed to accept investment request.');
+            }
+        } catch (error) {
+           
+            if (error?.response?.data?.success === false) {
+             
+                const errorMessage = error?.response?.data?.message;
+                toast.error(errorMessage || 'An error occurred while accepting the investment request.');
+            } else {
+                
+                toast.error('An unexpected error occurred. Please try again.');
+            }
+        }
+    };
+    
     return (
         <DebtorLayoutPage>
-            <h4 className='font-poppins text-2xl font-medium'>Welcome, Mayowa</h4>
+            <h4 className='font-poppins text-2xl font-medium'>Welcome {user.first_name}</h4>
             <div className='flex justify-between'>
                 <p className='font-poppins text-lg font-normal my-3'>This is your Investment dashboard</p>
                 <button className='px-8 h-12 rounded-lg text-xl text-white bg-blue-800'>
@@ -31,9 +159,9 @@ const DebtorDashboard = () => {
                         <a href="#">
                             <h5 className="-mt-2 mb-3 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Loan Wallet Balance</h5>
                         </a>
-                        <p className="mb-4 font-medium text-2xl text-white">₦2,000,000.00</p>
+                        <p className="mb-4 font-medium text-2xl text-white">₦{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : 'Loading...'}</p>
                         <div className='flex items-center gap-1'>
-                            <p className='text-white font-medium text-sm my-3'>Wema bank: 4054673854</p>
+                            <p className='text-white font-medium text-sm my-3'> bank: {user.account_disabled}</p>
                             <Copy size="17" color="white" />
                         </div>
                         <div className='flex flex-col gap-4 md:flex-row w-full'>
@@ -52,14 +180,14 @@ const DebtorDashboard = () => {
                                 <span className='bg-white w-6 h-6 flex justify-center items-center rounded-[50%]'><Briefcase size="12" color="blue" /></span>
                                 <p className='font-normal text-lg font-poppins text-[#1D2433]'>Total Loan Amount</p>
                             </div>
-                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦5,000,000.00</p>
+                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : 'Loading...'}</p>
                         </div>
                         <div className='bg-[#D6F7FF] md:w-[47%] my-5 py-5 rounded-md'>
                             <div className='flex items-center gap-2 mx-2'>
                                 <span className='bg-white w-6 h-6 flex justify-center items-center rounded-[50%]'><Briefcase size="12" color="blue" /></span>
                                 <p className='font-normal text-lg font-poppins text-[#1D2433]'>Loan Balance</p>
                             </div>
-                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦2,000,000.00</p>
+                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : 'Loading...'}</p>
                         </div>
                     </div>
 
@@ -76,83 +204,64 @@ const DebtorDashboard = () => {
                                 <span className='bg-white w-6 h-6 flex justify-center items-center rounded-[50%]'><Briefcase size="12" color="blue" /></span>
                                 <p className='font-normal px-6 text-lg font-poppins text-[#1D2433]'>Investment Requests</p>
                             </div>
-                            <p className='text-3xl mx-8 my-3 text-center font-poppins font-[600]'>4</p>
+                            <p className='text-3xl mx-8 my-3 text-center font-poppins font-[600]'>{data.length}</p>
                         </div>
                     </div>
                 </section>
 
-                <article className='bg-white shadow-md p-5 rounded-md md:h-auto'>
-                   <header className='flex justify-between items-center'>
-                    <h4 className='font-poppins lg:font-medium lg:text-xl md:text-sm md:font-semibold'>Investment Requests</h4>
-                    <a href="#" className='text-blue-500 lg:text-lg md:text-sm md:font-semibold'>See all</a>
-                   </header>
-                   <div className='bg-[#F8F9FC] mt-3 rounded-lg'>
-                   <div className='flex justify-between py-4 mx-3'>
-                    <img src="/images/thumbsup.png" alt="thumbsup" />
-                    <p className='font-poppins font-bold text-lg text-black'>
-                        John Doe
-                    </p>
-                    <img src="/images/pending.png" alt="pending" />
-                   </div>
-                   <p className='text-center relative -top-[3rem] font-semibold text-lg -ml-6 md:-top-[1.6rem] md:ml-3 xl:-top-[3rem]'>Investor</p>
-                   <div className='flex gap-5 flex-col'>
-                  <div className='flex md:flex-col xl:flex-row justify-between mx-6 font-semibold text-md'>
-                    <p>Business Name</p>
-                    <span>Vehance Tech Limited</span>
-                  </div>
-                  <div className='flex md:flex-col xl:flex-row justify-between mx-6 font-semibold text-md'>
-                    <p>Loan Amount</p>
-                    <span className='mx-14 md:mx-0 xl:mx-14'>₦2,000,000.00</span>
-                  </div>
-                  <div className='flex md:flex-col xl:flex-row justify-between  mx-6 font-semibold text-md'>
-                    <p className='xl:text-[15px]'>Interest Rate</p>
-                    <span className='mx-[8rem] md:mx-0 xl:mx-[7rem]'>30%</span>
-                  </div>
-                  <div className='flex md:flex-col xl:flex-row justify-between   mx-6 font-semibold text-md'>
-                    <p>Repayment Period</p>
-                    <span className='mx-[5rem] md:mx-0 xl:mx-16'>12 Months</span>
-                  </div>
-                  <div className='mt-12 flex flex-col xl:flex-row mx-5 mb-5 gap-4 justify-between'>
-                  <button className='border border-blue-400 py-2 px-12 font-poppins font-medium text-blue-400 rounded-md'>Decline</button>
-                  <button className='bg-blue-600 py-2 px-12 font-poppins font-medium text-white rounded-md'>Accept</button>
-                  </div>
-                   </div>
-                   </div>
+                {data && data.length > 0 ? 
+                    data.map((user, index) => (
+                        <article key={index} className='bg-white shadow-md p-5 rounded-md md:h-auto'>
+                            <header className='flex justify-between items-center'>
+                                <h4 className='font-poppins lg:font-medium lg:text-xl md:text-sm md:font-semibold'>Investment Requests</h4>
+                                <a href="#" className='text-blue-500 lg:text-lg md:text-sm md:font-semibold'>See all</a>
+                            </header>
 
-                   <div className='bg-[#F8F9FC] mt-3 rounded-lg'>
-                   <div className='flex justify-between py-4 mx-3'>
-                    <img src="/images/thumbsup.png" alt="thumbsup" />
-                    <p className='font-poppins font-bold text-lg text-black'>
-                        Mark Zukerberg
-                    </p>
-                    <img src="/images/pending.png" alt="pending" />
-                   </div>
-                   <p className='text-center relative -top-[3rem] xl:-top-[3rem] md:-top-[1.6rem] md:ml-3 font-semibold text-lg -ml-6'>Investor</p>
-                   <div className='flex gap-5 flex-col'>
-                  <div className='flex md:flex-col xl:flex-row justify-between mx-6 font-semibold text-md'>
-                    <p>Business Name</p>
-                    <span className='mx-[6rem] md:mx-0 xl:mx-[6rem]'>Payloow</span>
-                  </div>
-                  <div className='flex md:flex-col xl:flex-row justify-between mx-6 font-semibold text-md'>
-                    <p>Loan Amount</p>
-                    <span className='mx-14 md:mx-0 xl:mx-14'>₦2,000,000.00</span>
-                  </div>
-                  <div className='flex md:flex-col xl:flex-row justify-between  mx-6 font-semibold text-md'>
-                    <p className='xl:text-[15px]'>Interest Rate</p>
-                    <span className='mx-[8rem] md:mx-0 xl:mx-[7rem]'>30%</span>
-                  </div>
-                  <div className='flex md:flex-col xl:flex-row justify-between   mx-6 font-semibold text-md'>
-                    <p>Repayment Period</p>
-                    <span className='mx-[5rem] md:mx-0 xl:mx-16'>12 Months</span>
-                  </div>
-                  <div className='mt-12 flex flex-col xl:flex-row mx-5 mb-5 gap-4 justify-between'>
-                  <button className='border border-blue-400 py-2 px-12 font-poppins font-medium text-blue-400 rounded-md'>Decline</button>
-                  <button className='bg-blue-600 py-2 px-12 font-poppins font-medium text-white rounded-md'>Accept</button>
-                  </div>
-                   </div>
-                   </div>
-                </article>
+                            <div className='bg-[#F8F9FC] mt-3 rounded-lg'>
+                                <div className='flex justify-between py-4 mx-3'>
+                                    <img src="/images/thumbsup.png" alt="thumbsup" />
+                                    <p className='font-poppins font-bold text-lg text-black'>
+                                        {user.investor.first_name} {user.investor.last_name}
+                                    </p>
+                                    <p style={{
+                                        color: user.investment_status === 'pending' ? 'orange' :
+                                        user.investment_status === 'accepted' ? 'green' :
+                                        user.investment_status === 'declined' ? 'red' : 'black'
+                                    }}>
+                                        {user.investment_status}
+                                    </p>
+                                </div>
+                                <p className='text-center relative -top-[3rem] font-semibold text-lg -ml-6 md:-top-[1.6rem] md:ml-3 xl:-top-[3rem]'>Investor</p>
+                                <div className='flex gap-5 flex-col'>
+                                    <div className='flex md:flex-col xl:flex-row justify-between mx-6 font-semibold text-md'>
+                                        <p>Business Name</p>
+                                        <span className='lg:truncate lg:w-[9vw]'>{user.Business.business_name}</span>
+                                    </div>
+                                    <div className='flex md:flex-col xl:flex-row justify-between mx-6 font-semibold text-md'>
+                                        <p>Loan Amount</p>
+                                        <span className='md:mx-0 xl:mx-[6rem]'>₦{user.investment_amount.toLocaleString()}</span>
+                                    </div>
+                                    <div className='flex md:flex-col xl:flex-row justify-between mx-6 font-semibold text-md'>
+                                        <p className='xl:text-[15px]'>Interest Rate</p>
+                                        <span className='md:mx-0 xl:mx-[7rem]'>{user.expected_roi}%</span>
+                                    </div>
+                                    <div className='flex md:flex-col xl:flex-row justify-between mx-6 font-semibold text-md'>
+                                        <p>Repayment Period</p>
+                                        <span className='md:mx-0 xl:mx-16'>{user.repayment_term} Months</span>
+                                    </div>
+                                    <div className='mt-12 flex flex-col xl:flex-row mx-5 mb-5 gap-4 justify-between'>
+                                        <button onClick={() =>declineRequest(user.investment_id)} className='border border-blue-400 py-2 px-12 font-poppins font-medium text-blue-400 rounded-md'>Decline</button>
+                                        <button onClick={() => acceptRequest(user.investment_id)} className='bg-blue-600 py-2 px-12 font-poppins font-medium text-white rounded-md'>Accept</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    )) : 
+                    <p className='text-lg font-semibold'>No Investment on your Business currently..</p>
+                }
+
             </main>
+            <Toaster />
         </DebtorLayoutPage>
     );
 };
