@@ -57,4 +57,5 @@ export const InvestmentEndpoints = {
   getUser: `${investmentApiBaseUrl}user/`,
   acceptRequest: (investment_id)=> `${investmentApiBaseUrl}debtor/investment/${investment_id}/accept/`,
   declineRequest: (investment_id)=> `${investmentApiBaseUrl}debtor/investment/${investment_id}/decline/`,
+  repayInvestment: (investment_id)=> `${investmentApiBaseUrl}debtor/investment/${investment_id}/repayment/`,
 }
