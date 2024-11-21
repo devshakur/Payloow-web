@@ -265,7 +265,22 @@ const InvestmentProvider = ({ children }) => {
         }
     }
 
-    const object = { ...state, dispatch, CreateDebtorAccount, CreateInvestorAccount, CreateBusiness, GetIndustries, getBusinessInfo, ViewBusiness, AddLoan, GetBusinessStages, GetModels, InvestInBusiness, GetInvestmentRequest, GetLoanBusiness, getUserDetails, GetFilteredLoanBusiness, InvestorsInvestment, AcceptInvestmentRequest, DeclineInvestmentRequest, }
+    const RepayInvestmentRequest = async (investment_id) => {
+        try {
+            const url = InvestmentEndpoints.repayInvestment(investment_id)
+            const response = await axiosInstance.post(url)
+
+            const result = response.data
+            dispatch({ type: 'REPAYREQUEST', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+
+    const object = { ...state, dispatch, CreateDebtorAccount, CreateInvestorAccount, CreateBusiness, GetIndustries, getBusinessInfo, ViewBusiness, AddLoan, GetBusinessStages, GetModels, InvestInBusiness, GetInvestmentRequest, GetLoanBusiness, getUserDetails, GetFilteredLoanBusiness, InvestorsInvestment, AcceptInvestmentRequest, DeclineInvestmentRequest, RepayInvestmentRequest,  }
 
     return <InvestmentContext.Provider value={object}>{children}</InvestmentContext.Provider>
 
