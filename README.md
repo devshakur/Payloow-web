@@ -25,7 +25,7 @@ A streamlined e-commerce module facilitating seamless purchases and transactions
 
 My Contributions
 
-As a key member of the development team, I was responsible for designing, implementing, and integrating the Bills and Investment modules, as well as the Easy Buy feature.
+As a key member of the development team, I was responsible for designing, implementing, and integrating the Authentication, Bills and Investment modules, as well as the Easy Buy feature.
 
 Technologies Used
 
