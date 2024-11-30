@@ -1,47 +1,64 @@
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react'
 import { Wallet, ArrowRight2 } from "iconsax-react";
 import useBills from '../../../hooks/useBills';
-import { ToastContainer, toast } from 'react-toastify';
+import { Toaster, toast } from 'react-hot-toast';
 import 'react-toastify/dist/ReactToastify.css';
 
-const ConfirmTvSub = ({ handleThirdPage, formik, setActive }) => {
-    const [ispin, setIspin] = useState('')
-    const [buttonDisabled, setbuttonDisabled] = useState(true)
-    const [loading, setLoading] = useState(false); 
-    const { BuyTvSubscription, ConfirmPin } = useBills();
+const ConfirmTvSub = ({formik, setActive }) => {
+    const [loading, setLoading] = useState(false);
+    const { BuyTvSubscription, UserBalance, ConfirmPin } = useBills();
 
     const { phone, service_id, smartcard_number, variation_id, pin } = formik.values;
+
+
+    const [balance, setBalance] = useState(0);
+
+    useEffect(() => {
+        const fetchBalance = async () => {
+            const response = await UserBalance();
+            const fetchedBalance = response.data.data.data.balance;
+            setBalance(fetchedBalance);  
+        };
+
+        fetchBalance();
+    }, []);  
+
+
 
     const handleBuySub = async (e) => {
         e.preventDefault();
         setLoading(true)
         try {
-                const data = { phone, service_id, smartcard_number, variation_id, pin };
-                const pinValue = {pin}
-                console.log(pinValue);
-                const pinResponse = await ConfirmPin(pinValue);   
-                if (pinResponse?.data.success) {
-                    const response = await BuyTvSubscription(data);
-                    console.log(response);
-                    if (response?.data.success) {
-                        setActive('page3')
-        
-                    }else {
-                        toast.error('Invalid PIN. Please try again.');
-                    }
-                }else {
+            const data = { phone, service_id, smartcard_number, variation_id, pin };
+            const pinValue = { pin }
+            const pinResponse = await ConfirmPin(pinValue);
+            if (pinResponse?.data.success) {
+                const response = await BuyTvSubscription(data);
+                if (response?.data.success) {
+                    setActive('page3')
 
-                } 
-          
-            } catch (error) {
-                toast.error('error Occurred during Purchase:', error);
+                } else {
+                    toast.error('Invalid PIN. Please try again.');
+                    setLoading(false);
+                }
+            } else {
+                toast.error('Something went wrong. Please try again.');
+                setLoading(false);
                 setTimeout(() => {
                     setActive('page4');
-                }, 6000);
-            } finally{
-                setLoading(false)
+                }, 2000);
             }
+
+        } catch (error) {
+            toast.error('error Occurred during Purchase:', error);
+            setLoading(false);
+            setTimeout(() => {
+                setActive('page4');
+            }, 2000);
+        } finally {
+            setLoading(false)
         }
+    }
 
 
 
@@ -81,7 +98,7 @@ const ConfirmTvSub = ({ handleThirdPage, formik, setActive }) => {
                                         <div className='bg-[#F1F3F9] rounded-[50%] p-4'>
                                             <Wallet size="24" color="#1D2433CC" />
                                         </div>
-                                        <p className='mt-5 font-poppins font-normal text-sm leading-5'>Wallet (₦2000)</p>
+                                        <p className='mt-5 font-poppins font-normal text-sm leading-5'>Wallet (₦{balance || 0})</p>
                                     </div>
                                     <div className='mt-1 flex items-center gap-1'>
                                         <p className='font-poppins font-normal text-[#1E3DD7] text-sm leading-5'>Fund wallet</p>
@@ -94,7 +111,7 @@ const ConfirmTvSub = ({ handleThirdPage, formik, setActive }) => {
                                 <input
                                     id="outlined-required-5"
                                     placeholder='Enter pin'
-                                    type='text'
+                                    type='password'
                                     name='pin'
                                     autoComplete='off'
                                     {...formik.getFieldProps('pin')}
@@ -102,14 +119,14 @@ const ConfirmTvSub = ({ handleThirdPage, formik, setActive }) => {
                                 />
 
                                 <div className='flex justify-center w-[100%] my-5'>
-                                <button type='submit' className='h-[46px] w-[95%] font-poppins my-3 rounded-lg bg-blue-500 text-white'>
-                                   {loading ? 'Loading...' : 'Confirm & pay'}
-                                </button>
+                                    <button type='submit' className='h-[46px] w-[95%] font-poppins my-3 rounded-lg bg-blue-500 text-white'>
+                                        {loading ? 'Loading...' : 'Confirm & pay'}
+                                    </button>
                                 </div>
 
                             </form>
-                            
-                        <ToastContainer position='top-center' autoClose={5000} className='w-[100%]' />
+
+                            <Toaster />
                         </section>
                     </div>
                 </div>

@@ -56,7 +56,7 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
-function InvestorLayoutPage({ children }) {
+function DebtorLayoutPage({ children }) {
     const [clickedStates, setClickedStates] = useState({ "Investment": true }); 
     const [activeItem, setActiveItem] = useState(null);
     const location = useLocation();
@@ -366,7 +366,7 @@ function InvestorLayoutPage({ children }) {
     );
 }
 
-export default InvestorLayoutPage;
+export default DebtorLayoutPage;
 
 
 

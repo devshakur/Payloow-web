@@ -22,7 +22,6 @@ const MyInvestment = () => {
         const investmentInfo = resp?.data.data.investments
         if (investmentInfo) {
           setInvestment(investmentInfo);
-          console.log('InvestmentInfo:', investmentInfo);
         }
       } catch (error) {
         console.error('Failed to fetch investment information:', error);
@@ -39,8 +38,6 @@ const MyInvestment = () => {
         const info = resp.data.data;
         const balance = resp.data.data.wallet;
         if (info) {
-          // console.log('User Info:', info);
-          // console.log('Wallet Balance:', balance);
           setUser(info);
           setWallet(balance);
         }
@@ -177,11 +174,8 @@ const formattedNetProfit = netProfit.toLocaleString();
                   }}>
                     {user.investment_status}
                   </p>
-                  {/* <img src={user.investment_status} className="my-2" alt="status" /> */}
+                 
                 </div>
-                {/* <div className="flex-1 mt-2">
-                  <More size="24" color="gray" />
-                </div> */}
               </div>
             </div>
           ))

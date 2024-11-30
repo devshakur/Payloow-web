@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Copy, Briefcase } from 'iconsax-react';
 import InvestorLayoutPage from './InvestorLayoutPage';
 import { SliderVertical1 } from 'iconsax-react';
-import { Button, Dialog, DialogPanel, DialogTitle, Field, Input, Label } from '@headlessui/react';
+import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { CloseCircle } from "iconsax-react";
-import clsx from 'clsx';
 import useInvestment from '../../../hooks/useInvetment';
 import SkeletonLoader from '../../Skeleton/SkeletalLoading';
 import { Toaster, toast } from 'react-hot-toast';
@@ -47,7 +46,6 @@ const Investor = () => {
                 let info = resp.data.data.businesses;
                 let lastTwoBusinesses = info.slice(-2).reverse();
                 let progressInfo = info.slice(-4).reverse()
-                console.log(progressInfo);
                 setData(lastTwoBusinesses);
                 setProgressData(progressInfo)
                 setIsLoading(false);
@@ -254,7 +252,7 @@ const Investor = () => {
                             <SkeletonLoader />
                         ) : (
                             progressData.map((item) => (
-                                <div key={item.id} className='flex justify-between gap-7 mx-4 mb-4 border-b border-gray-200'>
+                                <div key={item.business_id} className='flex justify-between gap-7 mx-4 mb-4 border-b border-gray-200'>
                                     <p className=''>{item.business_name}</p>
                                     <img src='/images/Progress-bar.png' className='w-auto h-3' alt="bar" />
                                     <p className='text-md font-normal font-poppins text-[#F37426]'>Active</p>
@@ -275,7 +273,7 @@ const Investor = () => {
                         <SkeletonLoader />
                     ) : (
                         data.map((item) => (
-                            <div className='bg-[#F8F9FC] mt-3 rounded-lg' key={item.id}>
+                            <div className='bg-[#F8F9FC] mt-3 rounded-lg' key={item.business_id}>
                                 <div className='flex justify-between py-4 mx-3'>
                                     <p className='font-bold font-poppins'>Businesses</p>
                                     <p className='text-blue-500 font-medium'>Explore</p>

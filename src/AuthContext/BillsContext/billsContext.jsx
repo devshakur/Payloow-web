@@ -98,10 +98,21 @@ const BillsProvider = ({ children }) => {
             throw error;
         }
        }
+
+       const UserDetails = async()=>{
+        try {
+            const response = await axiosInstance.get(BillsEndpoints.getUserDetails)
+            const result = response.data
+            return response
+        } catch (error) {
+            console.error(error)
+            throw error;
+        }
+       }
    
 
 
-    const object = { ...state, dispatch, BuyAirtime, BuyData, BuyElectricity, BuyTvSubscription, UserBalance, SetPins, ConfirmPin  }
+    const object = { ...state, dispatch, BuyAirtime, BuyData, BuyElectricity, BuyTvSubscription, UserBalance, SetPins, ConfirmPin, UserDetails,  }
 
     return <BillsContext.Provider value={object}>{children}</BillsContext.Provider>
 }

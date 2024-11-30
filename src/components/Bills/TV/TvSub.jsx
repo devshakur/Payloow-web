@@ -55,7 +55,7 @@ const TvSub = () => {
     <BillsHeader active={active} />
     {active === 'page1' && <PurchaseTvSub active={active} formik={formik} handleNext={handleNextPage} />}  
     {active === 'page2' && <ConfirmTvSub setActive={SetActive} formik={formik} handleThirdPage={handleThirdPage} />}  
-    {active === 'page3' && <ApprovedTvSub active={active} handleErrorPage={handleErrorPage} />} 
+    {active === 'page3' && <ApprovedTvSub active={active}  />} 
     {active === 'page4' && <FailedTvSub active={active} handleErrorPage={handleErrorPage} />} 
     </div>
     </div>

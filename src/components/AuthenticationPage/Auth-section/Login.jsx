@@ -55,7 +55,6 @@ function Login() {
 					localStorage.setItem('token', JSON.stringify(response.data.data.auth));
 					const userData = await getUser(); 
 					setTimeout(() => {
-						console.log(userData.pin);
 						const checkPin = userData.pin
 						if(checkPin === false){ 
 						 router.push('/set-pin'); 

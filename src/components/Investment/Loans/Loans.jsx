@@ -267,7 +267,7 @@ const openAddLoan = ()=>{
           <div className="flex flex-wrap justify-center lg:justify-start">
             {business && business.length > 0 ? (
               business.map((startup) => (
-                <article key={startup.id} className="flex lg:flex-row justify-center my-4 lg:mx-4 w-full lg:w-[30%]">
+                <article key={startup.business_id} className="flex lg:flex-row justify-center my-4 lg:mx-4 w-full lg:w-[30%]">
                   <div className="bg-white w-full lg:py-[5rem] py-3 rounded-lg shadow-lg">
                     <div className="flex justify-between mx-3 lg:-mt-12">
                       <div className="h-10 w-10 flex justify-center items-center bg-gray-300 rounded-[50%]">

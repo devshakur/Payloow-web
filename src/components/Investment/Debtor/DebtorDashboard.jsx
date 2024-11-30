@@ -25,13 +25,11 @@ const DebtorDashboard = () => {
     }, []);
 
     useEffect(() => {
-        // Fetch business details
         const fetchBusinessDetails = async () => {
             try {
                 const resp = await ViewBusiness();
                 const businessData = resp?.data?.data?.businesses || [];
                 setBusinesses(businessData);
-                console.log('Businesses:', businessData);
             } catch (error) {
                 toast.error('Failed to fetch business data:', error);
             }
@@ -41,7 +39,6 @@ const DebtorDashboard = () => {
     }, []);
 
     useEffect(() => {
-        // Fething investment request for each business_id
         const fetchInvestmentRequests = async () => {
             try {
                 const allRequests = [];
@@ -52,18 +49,18 @@ const DebtorDashboard = () => {
                         const resp = await GetInvestmentRequest(businessId);
                         const investmentRequests = resp?.data?.data?.investments?.investments || [];
                         
-                        // Filter for only 'pending' investment requests
+                      
                         const pendingRequests = investmentRequests.filter(investment => investment.investment_status === 'pending');
                         
-                        // Sort the filtered requests by recent created_at (most recent first)
+                       
                         const sortedRequests = pendingRequests.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
                         
                         allRequests.push(...sortedRequests.slice(0, 2));
                     }
                 }
     
-                setData(allRequests); // Update `data` once
-                console.log('Combined Investment Requests:', allRequests);
+                setData(allRequests); 
+             
             } catch (error) {
                 console.error('Failed to fetch investment requests:', error);
             }
@@ -235,7 +232,7 @@ const DebtorDashboard = () => {
                                 <div className='flex gap-5 flex-col'>
                                     <div className='flex md:flex-col xl:flex-row justify-between mx-6 font-semibold text-md'>
                                         <p>Business Name</p>
-                                        <span className='lg:truncate lg:w-[9vw]'>{user.Business.business_name}</span>
+                                        <span className='ml-[6rem] lg:truncate lg:w-[9vw]'>{user.Business.business_name}</span>
                                     </div>
                                     <div className='flex md:flex-col xl:flex-row justify-between mx-6 font-semibold text-md'>
                                         <p>Loan Amount</p>

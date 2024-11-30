@@ -2,6 +2,7 @@
 export const BaseUrl = "https://revo-xbt9.onrender.com/api/v1";
 const investmentApiBaseUrl = "https://revo-backend.onrender.com/"
 
+//registration
 export const AuthEndPoints = {
   login: `${BaseUrl}/login`,
   register: `${BaseUrl}/register`,
@@ -60,7 +61,7 @@ export const endpoints = {
   getCourseAnnouncements: (courseId) =>
     `${BaseUrl}/course-announcement/${courseId}`,
 };
-
+//Bills
 export const BillsEndpoints = {
   airtime: `${BaseUrl}/buy-airtime-vtu`,
   data: `${BaseUrl}/buy-data-vtu`,
@@ -68,7 +69,8 @@ export const BillsEndpoints = {
   subscription: `${BaseUrl}/buy-cable-subscription-vtu`,
   balance: `${BaseUrl}/get-vtu-providers-wallet-balance`,
   setPin: `${BaseUrl}/set-transaction-pin`,
-  confirm: `${BaseUrl}/confirm-pin`,
+  confirm: `${BaseUrl}/verify-transaction-pin`,
+  getUserDetails: `${BaseUrl}/get-current-user`
 };
 
 //Investment Endpoints
