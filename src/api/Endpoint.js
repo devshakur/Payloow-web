@@ -1,6 +1,5 @@
-
-export const BaseUrl = "https://revo-xbt9.onrender.com/api/v1";
-const investmentApiBaseUrl = "https://revo-backend.onrender.com/"
+export const BaseUrl = "https://revo-1cxp.onrender.com/api/v1";
+const investmentApiBaseUrl = "https://revo-backend.onrender.com/";
 
 export const AuthEndPoints = {
   login: `${BaseUrl}/login`,
@@ -80,14 +79,19 @@ export const InvestmentEndpoints = {
   viewBusiness: `${investmentApiBaseUrl}debtor/business/`,
   getLoanBusiness: `${investmentApiBaseUrl}browse/`,
   getFilteredLoanBusiness: `${investmentApiBaseUrl}browse/`,
-  getBusinessInfo: (business_id)=> `${investmentApiBaseUrl}debtor/business/${business_id}/`,
-  addLoan: (businessId)=> `${investmentApiBaseUrl}debtor/business/${businessId}/loan/`,
- investInBusiness: `${investmentApiBaseUrl}investor/invest/`,
-  getInvestmentRequest: (business_id)=> `${investmentApiBaseUrl}debtor/business/${business_id}/investment/`,
-  getInvestorsInvestment:`${investmentApiBaseUrl}investor/investments/`,
-  getBusinessStages:`${investmentApiBaseUrl}debtor/business-stages/`,
+  getBusinessInfo: (business_id) =>
+    `${investmentApiBaseUrl}debtor/business/${business_id}/`,
+  addLoan: (businessId) =>
+    `${investmentApiBaseUrl}debtor/business/${businessId}/loan/`,
+  investInBusiness: `${investmentApiBaseUrl}investor/invest/`,
+  getInvestmentRequest: (business_id) =>
+    `${investmentApiBaseUrl}debtor/business/${business_id}/investment/`,
+  getInvestorsInvestment: `${investmentApiBaseUrl}investor/investments/`,
+  getBusinessStages: `${investmentApiBaseUrl}debtor/business-stages/`,
   getModels: `${investmentApiBaseUrl}debtor/models/`,
   getUser: `${investmentApiBaseUrl}user/`,
-  acceptRequest: (investment_id)=> `${investmentApiBaseUrl}debtor/investment/${investment_id}/accept/`,
-  declineRequest: (investment_id)=> `${investmentApiBaseUrl}debtor/investment/${investment_id}/decline/`,
-}
+  acceptRequest: (investment_id) =>
+    `${investmentApiBaseUrl}debtor/investment/${investment_id}/accept/`,
+  declineRequest: (investment_id) =>
+    `${investmentApiBaseUrl}debtor/investment/${investment_id}/decline/`,
+};
