@@ -51,7 +51,6 @@ const ResetPswd = () => {
   const router = useRouter();
   const verifyCode = (e) => {
     e.preventDefault();
-    //collect input value
     router.push('/success');
   };
 
@@ -81,7 +80,7 @@ const ResetPswd = () => {
                   placeholder='Enter new password'
                   type='password'
                   fullWidth
-                  className='border-b border-blue-300'
+                  className='border-b border-blue-300 focus:outline-none'
                   {...formik.getFieldProps('password')}
                 />
                 {formik.touched.password && formik.errors.password ? (
