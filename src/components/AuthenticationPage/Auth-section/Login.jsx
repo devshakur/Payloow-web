@@ -66,7 +66,7 @@ function Login() {
 			} catch (error) {
 				if (error.response) {
 					if (error.response.status === 400) {
-						toast.error('Wrong Password or Invalid email');
+						toast.error('Wrong Password or Invalid Phone Number');
 					} else {
 						toast.error('An unexpected error occurred: ' + error.message);
 					}

@@ -1,5 +1,5 @@
-
-export const BaseUrl = "https://revo-xbt9.onrender.com/api/v1";
+// export const BaseUrl = "https://revo-xbt9.onrender.com/api/v1" old;
+export const BaseUrl = "https://revo-1cxp.onrender.com/api/v1"; //new
 const investmentApiBaseUrl = "https://revo-backend.onrender.com/"
 
 //registration

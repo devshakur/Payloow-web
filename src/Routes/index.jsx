@@ -33,7 +33,22 @@ import Cart from "../components/E-Learning/Student/Cart.jsx";
 import StudentMessages from "../components/E-Learning/Student/StudentMessages.jsx";
 import Support from "../components/Dashboard/Support.jsx";
 import SingleCourse from "../components/E-Learning/Student/SingleCourse.jsx";
-
+import StepParent from "../components/Easybuy/EasyBuyRegistration/StepParent.jsx";
+import BuyersDashboard from "../components/Easybuy/Buyers/BuyersDashboard.jsx";
+import BuyersDashboardTwo from "../components/Easybuy/Buyers/BuyersDashboardTwo.jsx";
+import ProductDetails from "../components/Easybuy/Buyers/ProductDetails.jsx";
+import Carts from "../components/Easybuy/Buyers/Cart.jsx";
+import ComparePage1 from "../components/Easybuy/Buyers/ComparePage1.jsx";
+import DegreeView from "../components/Easybuy/Buyers/DegreeView.jsx";
+import Phones from "../components/Easybuy/Buyers/PhonesPage/Phones.jsx";
+import SolarDashboard from "../components/Easybuy/Buyers/SolarPage/SolarDashboard.jsx";
+import EnergyCalculator from "../components/Easybuy/Buyers/SolarPage/EnergyCalculator.jsx";
+import SolarDesign from "../components/Easybuy/Buyers/SolarPage/SolarDesign.jsx";
+import UserOrders from "../components/Easybuy/Buyers/Orders/UserOrders.jsx";
+import Payment from "../components/Easybuy/Buyers/Payment.jsx";
+import Swap from "../components/Easybuy/Buyers/Swap/Swap.jsx";
+import Installment from "../components/Easybuy/Buyers/Installment/Installment.jsx";
+import Checkout from "../components/Easybuy/Buyers/Checkout/Checkout.jsx";
 // const Verification = React.lazy(() =>
 //   import("../components/AuthenticationPage/password-issues/Verification.jsx")
 // );
@@ -413,6 +428,151 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
 
+//Easybuy
+{
+  path: "/easybuy/home",
+  element: (
+    <Suspense fallback={<Loader />}>
+  <StepParent />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/buyers/dashboard",
+  element: (
+    <Suspense fallback={<Loader />}>
+  <BuyersDashboard />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/buyers/two",
+  element: (
+    <Suspense fallback={<Loader />}>
+  <BuyersDashboardTwo />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/product-details",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <ProductDetails />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/user-cart",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <Carts />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/comapare-product",
+  element: (
+    <Suspense fallback={<Loader />}>
+   <ComparePage1 />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/product-view",
+  element: (
+    <Suspense fallback={<Loader />}>
+   <DegreeView />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/phones-page",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <Phones/>
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/swap-product",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <Swap/>
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/solar-page",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <SolarDashboard/>
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/energy-calculator",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <EnergyCalculator/>
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/design-solar",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <SolarDesign/>
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/my-orders",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <UserOrders/>
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/payment",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <Payment/>
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/installment",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <Installment/>
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/checkout-product",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <Checkout />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
 
 ]);
 

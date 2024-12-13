@@ -11,6 +11,7 @@ import { useRouter } from '../../../Routes/router';
 const FormModal = ({ isOpen, onClose, onRegister }) => {
     const { CreateDebtorAccount } = useInvestment();
     const router = useRouter();
+    const [loading, setLoading] = useState(false)
 
     const [debtorDetails, setDebtorDetails] = useState({
         contact_email: '',
@@ -41,10 +42,10 @@ const FormModal = ({ isOpen, onClose, onRegister }) => {
 
     const registerDebtor = async () => {
         try {
-            // Create a new FormData object to send the form data
+           
             const formData = new FormData();
 
-            // Append the text fields to the FormData object
+          
             formData.append('contact_email', debtorDetails.contact_email);
             formData.append('contact_phone_number', debtorDetails.contact_phone_number);
 
@@ -52,25 +53,25 @@ const FormModal = ({ isOpen, onClose, onRegister }) => {
                 formData.append('proof_of_credit_score', debtorDetails.credit_profile.proof_of_credit_score);
             }
 
-            // Add any other fields if necessary, e.g., credit score
+            
             formData.append('credit_score', debtorDetails.credit_profile.credit_score);
 
             // Make the API request using FormData
             const resp = await CreateDebtorAccount(formData);
-
+            setLoading(true)
             if (resp && resp.data && resp.data.success) {
                 toast.success('Your Profile has been created successfully' + resp.data.message);
+                setLoading(false)
                 onClose();
                 onRegister();
             } else {
                 toast.error(resp.data.message);
             }
 
-            console.log(resp);
+          
         } catch (error) {
-            console.error(error.message);
             toast.error('An error occurred: ' + error.response?.data?.message);
-
+              setLoading(false)
             if (error.response?.data?.message === 'Debtor Profile Already Created') {
                 setTimeout(() => {
                     router.push('/debtor/dashboard');
@@ -136,12 +137,13 @@ const FormModal = ({ isOpen, onClose, onRegister }) => {
                             <div className='w-full flex flex-col lg:flex-row lg:gap-4'>
                                 <Button
                                     onClick={() => {
+                                        setLoading(true)
                                         registerDebtor();
                                         // onClose();  Close the FormModal
                                     }}
                                     className="w-full lg:w-[200px] rounded-lg bg-[#3369F4] py-2 px-2 text-md text-white mt-6 data-[hover]:bg-sky-500 data-[active]:bg-sky-700 data-[disabled]:bg-gray-500"
                                 >
-                                    Register
+                                    {loading ? 'Registering User' : 'Register'}
                                 </Button>
                                 <Button onClick={onClose} className="w-full lg:w-[200px] rounded-lg bg-white border text-blue-500 border-gray-300 py-2 px-2 text-md mt-6 data-[hover]:bg-sky-500 data-[active]:bg-sky-700 data-[disabled]:bg-gray-500">
                                     Cancel

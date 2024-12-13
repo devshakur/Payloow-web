@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "../../../Routes/router";
-import { ToastContainer, toast } from "react-toastify";
+import { Toaster, toast } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
 import "@fontsource/fira-sans";
 import "../auth.css";
@@ -63,7 +63,7 @@ function Register() {
           toast.success("Registration done! Log in to access your dashboard.");
           setTimeout(() => {
             router.push("/login");
-          }, 6000);
+          }, 2000);
         }
       } catch (error) {
         if (error.response) {
@@ -77,7 +77,7 @@ function Register() {
 					toast.error('Network error. Check your internet connection.');
 				} else {
 					
-					toast.error('Error: ' + error.message);
+					toast.error('Error: ' + 'An unexpected error occurred please try again');
 				}
 			}
 			setSubmitting(false);
@@ -111,10 +111,7 @@ function Register() {
             <RegisterTwo formik={formik} />
           )}
         </form>
-        <ToastContainer
-          position="top-center"
-          autoClose={5000}
-          className="w-[100%]"
+        <Toaster
         />
       </div>
     </main>
