@@ -66,9 +66,7 @@ function BuyersLayout({ children }) {
   const isActive = (href) => location.pathname === href;
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-  const handleCart = ()=>{
-  router.push('/user-cart')
-  }
+ 
 
   return (
     <>
@@ -240,7 +238,6 @@ function BuyersLayout({ children }) {
 
         <button
           type="button"
-          onClick={handleCart}
           className="-m-2.5 p-1.5 bg-[#F1F3F9] rounded-[50%] text-[#1D2433CC] hover:text-gray-500 lg:block hidden"
         >
          <IoCartOutline className="w-5 h-5" />

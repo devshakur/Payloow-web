@@ -8,7 +8,7 @@ import { IoIosArrowForward } from "react-icons/io";
 const Header0ne = () => {
   return (
     <div>
-       <section className='hidden w-full lg:grid lg:grid-cols-3  gap-5'>
+       <section className=' w-full lg:grid lg:grid-cols-3  gap-5'>
       <div className='bg-[#1E3DD7] w-full  rounded-lg p-6 lg:p-8 lg:h-[300px]'>
         <h3 className='font-poppins font-medium text-2xl text-white'>Available Balance</h3>
         <h4 className='font-poppins font-medium text-4xl text-white mt-3'>₦2,000.00</h4>

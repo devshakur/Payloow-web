@@ -1,0 +1,11 @@
+#focus:focus{
+    background-color: blue;
+    color: white;
+    border: none;
+}
+
+#focus:active{
+    background-color: blue;
+    color: white;
+    border: none; 
+}
