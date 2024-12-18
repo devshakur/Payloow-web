@@ -1,10 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import axiosInstance from '../../../AuthContext/axiosInstance';
+import useBills from '../../../hooks/useBills';
 
 const DataBundles = ({ handleNext, formik, selectedPlan, setSelectedPlan }) => {
 
     const [showAll, setShowAll] = useState(false);
+    const [info, setInfo] = useState([])
+    const { UserDetails, } = useBills();
+
+    const getUser = async () => {
+        try {
+            const details = await UserDetails();
+            const userDetails = details.data.data.previousReference;
+            setInfo(userDetails);
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
+    useEffect(() => {
+        getUser()
+    }, [])
 
     const handleShowMore = () => {
         setShowAll(true); // Show all variations when clicked
@@ -70,18 +86,37 @@ const DataBundles = ({ handleNext, formik, selectedPlan, setSelectedPlan }) => {
                 <div className='w-screen md:-mt-12 flex justify-center lg:-ml-[-10vw]  xl:justify-center'>
                     <div className='h-auto w-[95%] md:w-[500px] lg:w-[650px] bg-[#FFFFFF] pb-4 shadow-md rounded-xl'>
                         <h4 className='flex justify-center text-xl leading-5 font-poppins font-[600] my-4 text-[#212121]'>Buy Data Bundles</h4>
-                        <article className='mx-3 py-2'>
-                            <h4 className='text-lg leading-5 font-poppins text-[#000000] font-[550] mx-1'>Most recent</h4>
-                            <section className='flex flex-row gap-6 my-4'>
-                                <div className='flex flex-col gap-2'>
-                                    <img src="./images/airtel.jpg" className='w-[40px] h-[40px] ml-4' alt="mtn" />
-                                    <span className='text-[14px] text-[#141e31] font-normal font-poppins leading-5'>2.5GB For 2da..</span>
-                                    <span className='text-[13px] ml-1 text-[#081123] font-medium font-poppins'>07083175021</span>
-                                </div>
-                            </section>
+                        <h4 className='text-lg leading-5 font-poppins text-[#000000] font-[550] mx-1'>Most recent</h4>
+                        <article className='flex gap-3 mx-2'>
+                            {Array.isArray(info) && info.length > 0 ? (
+                                info.filter(user => user.title === 'Data') // Filter without slice
+                                    .map((user) => (
+                                        <section key={user.code} className="flex flex-row gap-6 my-4">
+                                            <div className="flex flex-col gap-2">
+                                                <img
+                                                    src={
+                                                        user.body === 'airtel' ? './images/airtel.jpg' :
+                                                            user.body === 'mtn' ? './images/mtn.jpg' :
+                                                                user.body === 'glo' ? './images/glos.png' :
+                                                                    user.body === 'etisalat' ? './images/img4.jpg' :
+                                                                        './images/default.jpg'
+                                                    }
+                                                    className="w-[40px] h-[40px] ml-4"
+                                                    alt={user.title}
+                                                />
+                                                <span className="text-[13px] ml-5 font-medium font-poppins leading-5">{user.title}</span>
+                                                <span className="text-[13px] ml-1 font-medium font-poppins leading-5">{user.code}</span>
+                                            </div>
+                                        </section>
+                                    ))
+                            ) : (
+                                <div className='ml-8 my-5 text-lg text-green-500'>No recent Purchase</div>
+                            )}
+
                         </article>
-                        <form className='mx-4 overflow-y-auto flex flex-col gap-3'>
-                            <label htmlFor="package" className='text-[#101928] text-[14px] font-[800]'>Package</label>
+
+                        <form className='mx-4 overflow-y-auto my-6 flex flex-col gap-3'>
+                            <label htmlFor="package" className='text-[#484c52] text-[14px] font-[800]'>Package</label>
                             <Select
                                 id="package"
                                 name="package"

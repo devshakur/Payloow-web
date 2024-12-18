@@ -55,8 +55,7 @@ const InvestorBusiness = () => {
             try {
                 const resp = await getUserDetails();
                 let info = resp?.data?.data?.user;
-                console.log(info);
-             
+    
                 if(info){
                     setUsers(info)
                 }
@@ -232,7 +231,7 @@ const InvestorBusiness = () => {
                 ) : (
                     <div className="flex flex-wrap justify-center lg:justify-start">
                         {displayStartups.length > 0 ? displayStartups.map((startup) => (
-                            <article key={startup.id} className="flex lg:flex-row justify-center my-4 lg:mx-1 w-full lg:w-[30%]">
+                            <article key={startup.business_id} className="flex lg:flex-row justify-center my-4 lg:mx-1 w-full lg:w-[30%]">
                                 <div className="bg-white w-full lg:py-[5rem] py-3 rounded-lg shadow-lg flex flex-col justify-between">
                                     <div>
                                         <div className="flex justify-between mx-3 lg:-mt-12">

@@ -104,8 +104,8 @@ useEffect(()=>{
         ): (
           <div className='flex flex-wrap justify-center lg:justify-start'>
             {data && data.length > 0 ?
-            data.map((startup) => (
-              <article key={startup.id} className='flex lg:flex-row justify-center my-4 lg:mx-4 w-full lg:w-[30%]'>
+            data.map((startup) => ( 
+              <article key={startup.business_id} className='flex lg:flex-row justify-center my-4 lg:mx-4 w-full lg:w-[30%]'>
                 <div className='bg-white w-full lg:py-[5rem] py-3 rounded-lg shadow-lg'>
                   <div className='flex justify-between mx-3 lg:-mt-12'>
                     <div className='h-9 w-9 flex justify-center items-center bg-gray-300 rounded-[50%]'>

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Wallet, ArrowRight2 } from "iconsax-react";
 import useBills from "../../../hooks/useBills";
-import { ToastContainer, toast } from "react-toastify";
+import { Toaster, toast } from 'react-hot-toast';
 import "react-toastify/dist/ReactToastify.css";
 
 const ConfirmPurchase = ({ active, setActive, formik }) => {
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
-  const { BuyAirtime, UserBalance, ConfirmPin } = useBills();
+  const [balances, setBalances] = useState(0)
+  const { BuyAirtime, UserBalance, ConfirmPin, UserDetails, } = useBills();
 
   const { phone, network_id, amount, pin } = formik.values;
 
@@ -24,31 +25,59 @@ const ConfirmPurchase = ({ active, setActive, formik }) => {
     try {
       const response = await UserBalance();
       const balance = response.data.data.data.balance;
-      const amountValue = parseFloat(data.amount);
 
+      setBalances(balance);
+
+      const amountValue = parseFloat(data.amount);
       if (balance >= amountValue) {
         const pinValue = { pin };
-        console.log(pinValue);
-        const pinResponse = await ConfirmPin(pinValue);
-        if (pinResponse?.data.success) {
-          const airtimeResponse = await BuyAirtime(data);
-          if (airtimeResponse?.data.success) {
-            setActive("page3");
+
+        try {
+          const pinResponse = await ConfirmPin(pinValue);
+
+          if (pinResponse?.data?.success) {
+            try {
+              const airtimeResponse = await BuyAirtime(data);
+
+              if (airtimeResponse?.data?.success) {
+                setActive("page3");
+              } else {
+                toast.error("Airtime purchase failed. Please try again.");
+                setLoading(false)
+                setTimeout(() => {
+                  setActive("page4");
+                }, 2000);
+              }
+            } catch (airtimeError) {
+              // Handle errors during airtime purchase
+              console.error('Airtime purchase error:', airtimeError);
+              toast.error("Airtime purchase failed. Please try again.");
+              setTimeout(() => {
+                setActive("page4");
+              }, 2000);
+            }
           } else {
-            toast.error("Airtime purchase failed. Please try again.");
+            toast.error("Invalid PIN. Please try again.");
+            setLoading(false)
           }
-        } else {
-          toast.error("Invalid PIN. Please try again.");
+        } catch (pinError) {
+          // Handle errors during PIN confirmation
+          console.error('PIN confirmation error:', pinError);
+          toast.error("Unable to confirm PIN. Please try again.");
+          setLoading(false)
         }
       } else {
-        toast.error("Insufficient amount. Kindly fund your wallet.");
+        toast.error("Insufficient balance. Kindly fund your wallet.");
+        setLoading(false)
       }
     } catch (error) {
-      toast.error("Invalid PIN. Please try again.");
+      toast.error("An error occurred. Please try again.")
+      setLoading(false)
       setTimeout(() => {
         setActive("page4");
-      }, 6000);
+      }, 2000);
     }
+
   };
 
   const switchImage = () => {
@@ -117,7 +146,7 @@ const ConfirmPurchase = ({ active, setActive, formik }) => {
                     <Wallet size="24" color="#1D2433CC" />
                   </div>
                   <p className="mt-5 font-poppins font-normal text-sm leading-5">
-                    Wallet (₦2000)
+                    Wallet (₦{balances || 0})
                   </p>
                 </div>
                 <div className="mt-1 flex items-center gap-1">
@@ -138,7 +167,7 @@ const ConfirmPurchase = ({ active, setActive, formik }) => {
               <input
                 id="outlined-required-5"
                 placeholder="Enter pin"
-                type="text"
+                type="password"
                 name="pin"
                 required
                 autoComplete="off"
@@ -154,10 +183,7 @@ const ConfirmPurchase = ({ active, setActive, formik }) => {
                 </button>
               </div>
             </form>
-            <ToastContainer
-              position="top-center"
-              autoClose={5000}
-              className="w-[100%]"
+            <Toaster
             />
           </section>
         </div>
@@ -167,3 +193,4 @@ const ConfirmPurchase = ({ active, setActive, formik }) => {
 };
 
 export default ConfirmPurchase;
+

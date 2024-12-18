@@ -50,7 +50,7 @@ const Data = () => {
     <BillsHeader active={active} />
     {active === 'page1' && <DataBundles active={active} selectedPlan={selectedPlan} setSelectedPlan={setSelectedPlan} formik={formik} handleNext={handleNextPage} />}  
     {active === 'page2' && <Confirm selectedPlan={selectedPlan} setActive={setActive} formik={formik} handleThirdPage={handleThirdPage} />}
-    {active === 'page3' && <ApprovedData active={active} handleErrorPage={handleErrorPage} />} 
+    {active === 'page3' && <ApprovedData active={active}  />} 
     {active === 'page4' && <DataPurchaseFailed />}   
     </div>
     </div>

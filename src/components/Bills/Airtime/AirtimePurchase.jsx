@@ -25,7 +25,6 @@ const AirtimePurchase = () => {
             pin: Yup.string().required('required')
         }),
         onSubmit: async (values, { setSubmitting }) => {
-            console.log('Form values on submit:', values);
                 setSubmitting(false);
         },
     })

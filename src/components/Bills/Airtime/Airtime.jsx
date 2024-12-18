@@ -1,8 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
+import useBills from '../../../hooks/useBills';
+
 
 
 const Airtime = ({ handleNext, formik }) => {
+    const [info, setInfo] = useState([])
+    const { UserDetails, } = useBills();
+
+    const getUser = async () => {
+        try {
+            const details = await UserDetails();
+            const userDetails = details.data.data.previousReference;
+            setInfo(userDetails);
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
+    useEffect(() => {
+        getUser()
+    }, [])
     const Networks = [
         { value: 'MTN', label: 'MTN' },
         { value: 'Airtel', label: 'Airtel' },
@@ -19,9 +36,9 @@ const Airtime = ({ handleNext, formik }) => {
         const { values } = formik;
         const { network_id, amount, phone } = values;
 
-        
+
         if (network_id && amount && phone) {
-            handleNext(); 
+            handleNext();
         } else {
             formik.setFieldTouched('network_id', true);
             formik.setFieldTouched('amount', true);
@@ -35,18 +52,32 @@ const Airtime = ({ handleNext, formik }) => {
                 <div className='w-[100vw] xl:-mt-12 flex justify-center lg:-ml-[-10vw] xl:justify-center'>
                     <div className='w-[95%] md:w-[500px] lg:w-[650px] bg-[#FFFFFF] pb-4 shadow-md rounded-xl overflow-hidden'>
                         <h4 className='flex justify-center text-xl leading-5 font-poppins font-bold my-4'>Buy Airtime</h4>
-                        <article className='mx-3 my-12'>
-                            <h4 className='text-lg leading-5 font-poppins text-[#000000] font-[550] mx-1'>Most recent</h4>
-                            <section className='flex flex-row gap-6 my-4'>
-                                <div className='flex flex-col gap-2'>
-                                    <img src="./images/mtn.jpg" className='w-[40px] h-[40px] ml-4' alt="mtn" />
-                                    <span className='text-[13px] ml-1 font-medium font-poppins leading-5'>07083175021</span>
-                                </div>
-                                <div className='flex flex-col gap-2'>
-                                    <img src="./images/airtel.jpg" alt="airtel" className='w-[40px] h-[40px] ml-4' />
-                                    <span className='text-[13px] ml-1 font-medium font-poppins leading-5'>07083175021</span>
-                                </div>
-                            </section>
+                        <h4 className='text-lg mx-2 leading-5 font-poppins text-[#000000] font-[550]'>Most recent</h4>
+                        <article className='flex gap-3 mx-2'>
+                            {Array.isArray(info) && info.length > 0 ? (
+                                info.slice(-2).map((user) => (
+                                    <section key={user.code} className="flex flex-row gap-6 my-4">
+                                        <div className="flex flex-col gap-2">
+                                            <img src={
+                                                user.body === 'airtel' ? './images/airtel.jpg' :
+                                                    user.body === 'mtn' ? './images/mtn.jpg' :
+                                                        user.body === 'glo' ? './images/glos.png' :
+                                                            user.body === 'etisalat' ? './images/img4.jpg' :
+                                                                './images/default.jpg' 
+                                            }
+                                                className="w-[40px] h-[40px] ml-4"
+                                                alt={user.title}
+
+                                                 />
+                                                   <span className="text-[13px] ml-5 font-medium font-poppins leading-5">{user.title}</span>
+                                            <span className="text-[13px] ml-1 font-medium font-poppins leading-5">{user.code}</span>
+                                        </div>
+                                    </section>
+
+                                ))
+                            ) : (
+                                <div className='ml-8 my-5 text-lg text-green-500'>No recent Purchase</div>
+                            )}
                         </article>
                         <form className='w-[95%] mt-5 mx-2 overflow-y-auto'>
                             <label htmlFor="network_id" className='text-[#101928] text-[14px] font-bold mb-2'>Choose Network</label>
@@ -72,9 +103,9 @@ const Airtime = ({ handleNext, formik }) => {
                             />
                             <div className='flex flex-row gap-2 py-3'>
                                 {amounts.map((item, index) => (
-                                    <span 
-                                        key={index} 
-                                        onClick={() => handlePick(item)} 
+                                    <span
+                                        key={index}
+                                        onClick={() => handlePick(item)}
                                         className='p-4 rounded-lg leading-5 text-[#000000] flex justify-center items-center text-[16px] font-bold bg-blue-100'
                                     >
                                         {item}

@@ -55,7 +55,6 @@ function Login() {
 					localStorage.setItem('token', JSON.stringify(response.data.data.auth));
 					const userData = await getUser(); 
 					setTimeout(() => {
-						console.log(userData.pin);
 						const checkPin = userData.pin
 						if(checkPin === false){ 
 						 router.push('/set-pin'); 
@@ -67,7 +66,7 @@ function Login() {
 			} catch (error) {
 				if (error.response) {
 					if (error.response.status === 400) {
-						toast.error('Wrong Password or Invalid email');
+						toast.error('Wrong Password or Invalid Phone Number');
 					} else {
 						toast.error('An unexpected error occurred: ' + error.message);
 					}

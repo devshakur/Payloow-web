@@ -3,7 +3,7 @@ import '../auth.css'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useAuth from '../../../hooks/useAuth';
-import { ToastContainer, toast } from 'react-toastify';
+import { Toaster, toast } from 'react-hot-toast';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from '../../../Routes/router';
 
@@ -23,13 +23,14 @@ function ForgotPswd() {
         try {  
           const response = await ForgetPswd(values)
           if (response) {
-            toast.success('Check Your Email')
-            setTimeout(() => {
-            }, 6000);
+            toast.success('We sent you a message on yourEmail')
+  
         }
         } catch (error) {  
           if(error.response.status === 400){
             toast.error('Email not Found')
+          }else{
+            toast.error('An error Occured')
           }
         }  
         setSubmitting(false);  
@@ -67,9 +68,7 @@ function ForgotPswd() {
                         {formik.isSubmitting ? 'Sending...' : 'Send Code'}
                     </button>
               </form>
-              <ToastContainer
-                    position='top-center' autoClose={5000} className='w-[100%]'
-                />
+              <Toaster/>
             </div>
             </div>
             </main>

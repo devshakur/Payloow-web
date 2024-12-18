@@ -1,6 +1,8 @@
 import React from 'react'
+import { useRouter } from '../../../Routes/router'
 
 const DataPurchaseFailed = () => {
+    const router = useRouter();
   return (
     <div className='md:-mt-12 flex items-end md:items-center justify-center lg:-ml-[-14vw]'>  
     <div className='flex justify-center'>  
@@ -13,10 +15,10 @@ const DataPurchaseFailed = () => {
                     <p className='font-poppins text-lg font-[550] leading-6 text-[#1D2433]'>Data Bundle Purchase Failed!</p>  
                 </div>  
                 <div className='flex justify-center flex-col lg:flex-row lg:gap-3 py-2'>
-                <button type='button' className="h-[55px] w-[95%] font-poppins text-sm font-semibold leading-5 my-3 rounded-lg border border-[#6196F9] text-[#6196F9]">  
+                <button onClick={()=>router.reload()} type='button' className="h-[55px] w-[95%] font-poppins text-sm font-semibold leading-5 my-3 rounded-lg border border-[#6196F9] text-[#6196F9]">  
                     Cancel  
                 </button>  
-                <button type='button' className="h-[55px] w-[95%] font-poppins my-3 rounded-lg bg-blue-500 text-white">  
+                <button onClick={()=>router.back()} type='button' className="h-[55px] w-[95%] font-poppins my-3 rounded-lg bg-blue-500 text-white">  
                     Retry
                 </button>  
 

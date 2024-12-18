@@ -8,6 +8,9 @@ export default {
         poppins: ["Poppins", "sans-serif"],
         sans: ["Fira Sans", "sans-serif"],
       },
+      screens: {
+        'xs': '390px', 
+      },
       colors: {
         background: "#f2f7f8",
         primary: "#3369F4",

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import {
     Dialog,
     DialogBackdrop,
@@ -71,7 +71,7 @@ function InvestorLayoutPage({ children }) {
 
     const handleNavigationClick = (item) => {
         setActiveItem(item.name);
-        navigate(item.href); // Navigate to the desired page
+        navigate(item.href); 
     };
 
     return (

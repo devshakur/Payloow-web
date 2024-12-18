@@ -1,18 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import axiosInstance from '../../../AuthContext/axiosInstance';
+import useBills from '../../../hooks/useBills';
 
 const PurchaseTvSub = ({ handleNext, formik }) => {
   const [variations, setVariations] = useState({});
   const [selectedProvider, setSelectedProvider] = useState('');
   const [subscriptionOptions, setSubscriptionOptions] = useState([]);
+  const [info, setInfo] = useState([])
+    const { UserDetails } = useBills();
+
+    const getUser = async () => {
+        try {
+            const details = await UserDetails();
+            const userDetails = details.data.data.previousReference;
+            setInfo(userDetails);
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
+    useEffect(() => {
+        getUser()
+    }, [])
 
   const TvPlan = [
     { value: 'DStv', label: 'DSTV' },
-    { value: 'gotv', label: 'GOTV' },
-    { value: 'AMAZON', label: 'AMAZON' },
-    { value: 'NETFLIX', label: 'NETFLIX' },
-    { value: 'GOTV', label: 'GOTV' },
   ];
 
   const fetchVariations = async () => {
@@ -45,14 +57,14 @@ const PurchaseTvSub = ({ handleNext, formik }) => {
 
   const handleProviderChange = (option) => {
     setSelectedProvider(option.value);
-    formik.setFieldValue('service_id', option.value); // Set Formik field value
+    formik.setFieldValue('service_id', option.value); 
   };
 
   const validateFields = () => {
     const { values } = formik;
     const {  phone, service_id, smartcard_number, variation_id } = values;
 
-    // Check if all required fields are filled
+    
     if (phone && service_id && smartcard_number && variation_id ) {
         handleNext(); 
     } else {
@@ -69,19 +81,38 @@ const PurchaseTvSub = ({ handleNext, formik }) => {
         <div className="w-[100vw] md:-mt-14 flex justify-center lg:-ml-[-10vw] xl:justify-center">
           <div className="h-auto w-[95%] md:w-[400px] lg:w-[650px] bg-[#FFFFFF] pb-4 mx-4 shadow-md rounded-xl lg:p-8">
             <h4 className="flex justify-center text-xl leading-5 font-poppins font-[600] my-4 text-[#212121]">
-              Pay Electricity Bills
+              Pay Tv Subcription
             </h4>
-            <article className="mx-3 my-3">
               <h4 className="text-lg leading-5 font-poppins text-[#000000] font-[550] mx-1">
                 Most recent
               </h4>
+            <article className="mx-3 my-3">
               <section className="flex flex-row gap-6 my-4">
-                <div className="flex flex-col gap-2">
-                  <img src="./images/dstv.png" className="w-[70px] h-[30px] ml-4" alt="mtn" />
-                  <span className="text-[13px] ml-1 text-[#081123] font-bold font-poppins">
-                    Compact Plus
-                  </span>
-                </div>
+              {Array.isArray(info) && info.length > 0 ? (
+                                    info.filter(user => user.title === 'DStv').length > 0 ? (
+                                        info.filter(user => user.title === 'DStv') 
+                                            .map((user) => (
+                                                <section key={user.code} className="flex flex-row gap-6 my-4">
+                                                    <div className="flex flex-col gap-2">
+                                                        <img
+                                                            src={
+                                                                user.body === 'dstv' ? './images/dstv.png' : './images/dstv.png'
+                                                                   
+                                                            }
+                                                            className="w-[40px] h-[40px] ml-4"
+                                                            alt={user.title}
+                                                        />
+                                                        <span className="text-[13px] ml-5 font-medium font-poppins leading-5">{user.title}</span>
+                                                        <span className="text-[13px] ml-1 font-medium font-poppins leading-5">{user.code}</span>
+                                                    </div>
+                                                </section>
+                                            ))
+                                    ) : (
+                                        <div className='ml-8 my-5 text-lg text-green-500'>No recent Purchase...</div> 
+                                    )
+                                ) : (
+                                    <div className='ml-8 my-5 text-lg text-green-500'>No recent Purchase...</div> 
+                                )}
               </section>
             </article>
             <form className="mx-2">
