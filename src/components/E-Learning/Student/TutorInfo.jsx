@@ -18,7 +18,7 @@ const TutorInfo = ({ course, tutor, courseId, }) => {
                 <div className="font-bold text-2xl">{course?.averageRating}</div>
                 <FaStar color='#FF9529' size={24} />
               </div>
-              <p className='text-sm'>{course?.numOfReviews} ratings</p>
+              <p className='text-sm'>{course?.numberOfReviews} ratings</p>
             </div>
             <div>
               <div className='flex items-center space-x-1'>

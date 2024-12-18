@@ -32,6 +32,7 @@ export const endpoints = {
   getCourseContent: `${BaseUrl}/get-course-content`,
   uploadCourseVideo: `${BaseUrl}/upload-course-video-document`,
   createCourseContent: `${BaseUrl}/create-course-content`,
+  addCourseRating: `${BaseUrl}/add-course-rating`,
 
   // General
   getCurrentUser: `${BaseUrl}/get-current-user`,
@@ -55,7 +56,6 @@ export const endpoints = {
   createAnnouncement: `${BaseUrl}/make-course-announcement`,
   getAnnouncements: (courseId) =>
     `${BaseUrl}/get-all-course-announcements/${courseId}`,
-
   getCourseAnnouncements: (courseId) =>
     `${BaseUrl}/course-announcement/${courseId}`,
 };
@@ -94,4 +94,6 @@ export const InvestmentEndpoints = {
     `${investmentApiBaseUrl}debtor/investment/${investment_id}/accept/`,
   declineRequest: (investment_id) =>
     `${investmentApiBaseUrl}debtor/investment/${investment_id}/decline/`,
+  repayInvestment: (investment_id) =>
+    `${investmentApiBaseUrl}debtor/investment/${investment_id}/repayment/`,
 };

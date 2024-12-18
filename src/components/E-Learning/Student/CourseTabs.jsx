@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react'
 import QuizTab from './QuizTab'
 import TutorInfo from './TutorInfo'
 import MessageTab from './MessageTab'
 import AnnouncementTab from './AnnouncementTab'
+import RatingModal from './RatingModal'
 
 const CourseTabs = ({ course, tutor, courseId, courseQuiz, courseMessages, announcements }) => {
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false)
+
   return (
     <TabGroup>
       <TabList className="flex mb-6 border-b">
@@ -29,6 +32,11 @@ const CourseTabs = ({ course, tutor, courseId, courseQuiz, courseMessages, annou
         }>
           Messages
         </Tab>
+        <Tab className={({ selected }) =>
+          `px-4 py-2 font-medium ${selected ? 'text-blue-600 border-b-2 border-b-blue-600 outline-none' : 'text-gray-500'}`
+        }>
+          Review
+        </Tab>
       </TabList>
       <TabPanels className="mt-6">
         <TabPanel>
@@ -47,7 +55,19 @@ const CourseTabs = ({ course, tutor, courseId, courseQuiz, courseMessages, annou
         <TabPanel>
           <MessageTab courseMessages={courseMessages} courseId={courseId} />
         </TabPanel>
+        <TabPanel>
+          <button
+            onClick={() => setIsRatingModalOpen(true)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Rate this Course
+          </button>        </TabPanel>
       </TabPanels>
+      <RatingModal
+        isOpen={isRatingModalOpen}
+        onClose={() => setIsRatingModalOpen(false)}
+        courseId={courseId}
+      />
     </TabGroup>
   )
 }
