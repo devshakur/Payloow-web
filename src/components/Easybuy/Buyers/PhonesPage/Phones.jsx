@@ -90,18 +90,18 @@ const Phones = () => {
   );
   return (
     <BuyersLayoutGen>
-    <div className='h-[211px] w-full bg-[#FFFFFF] shadow-md flex justify-center'>
-     <h3 className='font-poppins font-medium text-[100px]'>Ads Here</h3>
+    <div className='h-[211px] w-full bg-[#FFFFFF] shadow-md flex justify-center items-center'>
+     <h3 className='font-poppins text-[50px] font-medium lg:text-[100px]'>Ads Here</h3>
     </div>
    <main className='my-9'>
     <h3 className='font-poppins font-medium text-xl text-[#00000]'>Phones Deals</h3>
     <div className='grid lg:grid-cols-3 justify-center gap-x-6 sm:grid-cols-2 gap-y-8'>
             {displayedItems.map((item) => (
-              <div key={item.id}>
+              <div key={item.id} className='w-full'>
                 <div className='w-full h-[300px]'>
                   <img src={item.img} alt={item.id} className='w-auto h-auto' />
                 </div>
-                <div className='lg:w-[80%] w-[50%] lg:-mt-6 flex justify-between md:w-[70%]'>
+                <div className='lg:w-[80%] w-[100%] lg:-mt-6 flex justify-between md:w-[70%]'>
                   <p className='font-poppins font-medium text-[#101928] text-lg'>{item.name}</p>
                   <p className='font-poppins font-[450] text-[#101928] text-xl'>{item.amount}</p>
                 </div>
@@ -120,7 +120,7 @@ const Phones = () => {
           </div>
           
           {/* Pagination Section */}
-          <div className="flex text-center justify-between">
+          <div className="flex text-center justify-between ">
             <ReactPaginate
               previousLabel={'←'}
               nextLabel={'→'}
@@ -139,7 +139,7 @@ const Phones = () => {
               activeClassName={'bg-blue-600 text-white'}
               disabledClassName={'opacity-50 cursor-not-allowed'}
             />
-            <div className='px-6 py-1 text-white bg-blue-700 flex items-center gap-3 rounded-lg'><IoIosArrowBack className='w-6 h-6'/> <IoIosArrowForward className='w-6 h-6'/></div>
+            <div className='px-6 py-1 text-white mt-4 bg-blue-700 flex items-center gap-3 rounded-lg'><IoIosArrowBack className='w-6 h-6'/> <IoIosArrowForward className='w-6 h-6'/></div>
           </div>
    </main>
     </BuyersLayoutGen>

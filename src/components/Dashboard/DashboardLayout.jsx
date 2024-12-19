@@ -24,6 +24,7 @@ import {
   Setting2,
   TableDocument,
 } from "iconsax-react";
+import { RiStockLine } from "react-icons/ri";
 import { useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { Toaster } from "react-hot-toast";
@@ -31,7 +32,10 @@ const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Easybuy", href: "/easybuy/home", icon: MoneyChange },
+  { name: "Easybuy", 
+  href: currentUser?.role === 'Buyer'  ? "/buyers/dashboard"  : currentUser?.role === 'Partner' ? "/partners/dashboard" : "/easybuy/home", 
+  icon: MoneyChange
+},
 
   { name: "Bills", href: "/dashboard", icon: TableDocument },
   {
@@ -39,7 +43,12 @@ const navigation = [
     href: currentUser?.role === 'Tutor' ? "/e-learning/tutor/dashboard" : "/e-learning/student/dashboard",
     icon: BookSaved,
   },
-  { name: "Investment", href: "/investment", icon: Chart },
+  {
+    name: "Investment", href: "/investment",
+    href: currentUser?.role === 'Debtor' ? "/debtor/dashboard" : currentUser?.role === 'Investor' ? "/investor/dashboard" : '/investment',
+    icon: Chart
+  },
+  { name: "Shares", href: "/shares/dashboard", icon: RiStockLine },
 ];
 const action = [
   { name: "Support", href: "/support", icon: Headphone },

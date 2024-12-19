@@ -202,7 +202,7 @@ function BuyersLayoutGen({ children}) {
 
         {/* Main Layout (Header with search, icons, and profile dropdown) */}
         <div className="lg:pl-72">
-  <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+  <div className="sticky top-0 z-40 bg-[#F8F9FC] flex h-16 shrink-0 items-center gap-x-4 px-4 shadow-md sm:gap-x-6 sm:px-6 lg:px-8">
     {/* Menu Icon (Only visible on small screens) */}
     <button
       type="button"
@@ -254,12 +254,12 @@ function BuyersLayoutGen({ children}) {
         >
          <IoCartOutline className="w-5 h-5" />
         </button>
-        <p className="absolute right-[14.7rem] top-4 bg-red-500 shadow-md w-5 h-5 flex justify-center items-center rounded-[50%]"><span className="text-white text-[14px] font-medium">2</span></p>
+        <p className="hidden absolute right-[14.7rem] top-4 bg-red-500 shadow-md w-5 h-5 lg:flex justify-center items-center rounded-[50%]"><span className="text-white text-[14px] font-medium">2</span></p>
 
          {/* Notification Icon (Visible on all screens) */}
          <button
           type="button"
-          className="-m-2.5 p-1.5 bg-[#F1F3F9] rounded-[50%] text-[#1D2433CC] hover:text-gray-500"
+          className="-m-2.5 p-1.5 ml-1 bg-[#F1F3F9] rounded-[50%] text-[#1D2433CC] hover:text-gray-500"
         >
           <span className="sr-only">View notifications</span>
           <Notification aria-hidden="true" className="h-5 w-5" />
@@ -305,7 +305,7 @@ function BuyersLayoutGen({ children}) {
       </div>
     </div>
   </div>
-  <main className="py-10 bg-[#f8f9fc]">
+  <main className="py-10 bg-[#f8f9fC]">
     <div className="px-4 sm:px-6 lg:px-8">{children}</div>
   </main>
 </div>

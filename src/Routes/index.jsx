@@ -33,25 +33,8 @@ import Cart from "../components/E-Learning/Student/Cart.jsx";
 import StudentMessages from "../components/E-Learning/Student/StudentMessages.jsx";
 import Support from "../components/Dashboard/Support.jsx";
 import SingleCourse from "../components/E-Learning/Student/SingleCourse.jsx";
-import StepParent from "../components/Easybuy/EasyBuyRegistration/StepParent.jsx";
-import BuyersDashboard from "../components/Easybuy/Buyers/BuyersDashboard.jsx";
-import BuyersDashboardTwo from "../components/Easybuy/Buyers/BuyersDashboardTwo.jsx";
-import ProductDetails from "../components/Easybuy/Buyers/ProductDetails.jsx";
-import Carts from "../components/Easybuy/Buyers/Cart.jsx";
-import ComparePage1 from "../components/Easybuy/Buyers/ComparePage1.jsx";
-import DegreeView from "../components/Easybuy/Buyers/DegreeView.jsx";
-import Phones from "../components/Easybuy/Buyers/PhonesPage/Phones.jsx";
-import SolarDashboard from "../components/Easybuy/Buyers/SolarPage/SolarDashboard.jsx";
-import EnergyCalculator from "../components/Easybuy/Buyers/SolarPage/EnergyCalculator.jsx";
-import SolarDesign from "../components/Easybuy/Buyers/SolarPage/SolarDesign.jsx";
-import UserOrders from "../components/Easybuy/Buyers/Orders/UserOrders.jsx";
-import Payment from "../components/Easybuy/Buyers/Payment.jsx";
-import Swap from "../components/Easybuy/Buyers/Swap/Swap.jsx";
-import Installment from "../components/Easybuy/Buyers/Installment/Installment.jsx";
-import Checkout from "../components/Easybuy/Buyers/Checkout/Checkout.jsx";
-// const Verification = React.lazy(() =>
-//   import("../components/AuthenticationPage/password-issues/Verification.jsx")
-// );
+
+//Registration
 const Regsiter = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Register.jsx'))
 const Login = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Login.jsx'))
 const Pin = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Pin/Pin.jsx'))
@@ -61,6 +44,34 @@ const Success = React.lazy(() => import("../components/AuthenticationPage/passwo
 const AllCoursesStudents = React.lazy(() => import("../components/E-Learning/Student/AllCourses.jsx"))
 const CourseListStudents = React.lazy(() => import("../components/E-Learning/Student/CourseList.jsx"))
 const CourseDetailsStudents = React.lazy(() => import("../components/E-Learning/Student/CourseDetails.jsx"))
+//EasyBuy
+const StepParent = React.lazy(() => import("../components/Easybuy/EasyBuyRegistration/StepParent.jsx"))
+const BuyersDashboard = React.lazy(()=> import("../components/Easybuy/Buyers/BuyersDashboard.jsx"))
+const BuyersDashboardTwo = React.lazy(()=> import("../components/Easybuy/Buyers/BuyersDashboardTwo.jsx"))
+const ProductDetails = React.lazy(()=>import("../components/Easybuy/Buyers/ProductDetails.jsx"))
+const Carts = React.lazy(()=>import("../components/Easybuy/Buyers/Cart.jsx"))
+const ComparePage1 = React.lazy(()=>import("../components/Easybuy/Buyers/ComparePage1.jsx"))
+const DegreeView  = React.lazy(()=>import("../components/Easybuy/Buyers/DegreeView.jsx"))
+const Phones = React.lazy(()=>import("../components/Easybuy/Buyers/PhonesPage/Phones.jsx"))
+const SolarDashboard = React.lazy(()=>import("../components/Easybuy/Buyers/SolarPage/SolarDashboard.jsx"))
+const EnergyCalculator = React.lazy(()=>import("../components/Easybuy/Buyers/SolarPage/EnergyCalculator.jsx"))
+const SolarDesign = React.lazy(()=>import("../components/Easybuy/Buyers/SolarPage/SolarDesign.jsx"))
+const UserOrders = React.lazy(()=>import("../components/Easybuy/Buyers/Orders/UserOrders.jsx"))
+const Payment = React.lazy(()=>import("../components/Easybuy/Buyers/Payment.jsx"))
+const Swap = React.lazy(()=>import("../components/Easybuy/Buyers/Swap/Swap.jsx"))
+const Installment = React.lazy(()=>import("../components/Easybuy/Buyers/Installment/Installment.jsx"))
+const Checkout = React.lazy(()=>import("../components/Easybuy/Buyers/Checkout/Checkout.jsx"))
+//Partners
+const PartnersDashboard = React.lazy(()=>import("../components/Easybuy/Partners/PartnersDashboard.jsx"))
+const Commission = React.lazy(()=>import("../components/Easybuy/Partners/Commission.jsx"))
+const Service = React.lazy(()=>import("../components/Easybuy/Partners/Service.jsx"))
+const ParentCustomer = React.lazy(()=>import("../components/Easybuy/Partners/ParentCustomer.jsx"))
+const Inventory = React.lazy(()=>import("../components/Easybuy/Buyers/Inventory/Inventory.jsx"))
+//Shares
+const SharesDashboard = React.lazy(()=>import("../components/Shares/SharesDashboard.jsx"))
+const Portfolio = React.lazy(()=>import("../components/Shares/Portfolio.jsx"))
+const Transaction = React.lazy(()=>import("../components/Shares/Transaction.jsx"))
+const Analysis = React.lazy(()=>import("../components/Shares/Analysis.jsx"))
 
 
 export const router = createBrowserRouter([
@@ -573,6 +584,88 @@ export const router = createBrowserRouter([
   ),
   errorElement: <ErrorPage />,
 },
-
+//Partners
+{
+  path: "/partners/dashboard",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <PartnersDashboard/>
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/partners/commission",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <Commission />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/partners/service-center",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <Service />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/partners/customers",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <ParentCustomer/>
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/partners/inventory",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <Inventory />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+//Shares
+{
+  path: "/shares/dashboard",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <SharesDashboard />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/shares/analytics",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <Analysis/>
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/shares/portfolio",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <Portfolio />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/shares/transaction",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <Transaction />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
 ]);
 

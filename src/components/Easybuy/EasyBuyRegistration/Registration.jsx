@@ -4,6 +4,7 @@ import { IoCartOutline } from "react-icons/io5";
 import {  Dialog, DialogBackdrop, DialogPanel, DialogTitle, Field, Input, Button, } from '@headlessui/react'
 import { CloseCircle } from "iconsax-react";
 import clsx from 'clsx';
+import { useRouter } from '../../../Routes/router';
 
 
 
@@ -62,9 +63,13 @@ const items = [
 
 const Registration = ({openStepTwo}) => {
     let [isOpen, setIsOpen] = useState(true)
+    const router = useRouter()
 
     const closeDialog = ()=>{
       setIsOpen(false)  
+    }
+    const handlePartner = ()=>{
+        router.push('/partners/dashboard')
     }
    
 
@@ -77,7 +82,7 @@ const Registration = ({openStepTwo}) => {
                         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
                             <DialogPanel className="max-w-xl space-y-6 border bg-white p-12">
                                 <div className='flex justify-between items-start gap-x-[10rem]'>
-                                    <DialogTitle className="-mt-7 -ml-7 font-bold font-poppins text-md lg:text-xl text-[#1D2433]">Who do you want to Register as?</DialogTitle>
+                                    <DialogTitle className="-mt-7 -ml-7 font-bold font-poppins text-sm md:text-md lg:text-lg text-[#1D2433]"> Register as?</DialogTitle>
                                     <div className="-mt-7">
                                             <CloseCircle size="30" color="black"   />
                                         </div>
@@ -95,7 +100,7 @@ const Registration = ({openStepTwo}) => {
                                         <Input
                                             defaultValue={'Partner'}
                                             readOnly
-                                          //  onClick={openInvestorModal}  Open FormModal on click
+                                           onClick={handlePartner} 
                                             className={clsx(
                                                 'focus mt-3 block w-full rounded-lg bg-[#F1F3F9] py-6 px-5 text-xl font-bold cursor-pointer focus:outline-none',
                                             )}

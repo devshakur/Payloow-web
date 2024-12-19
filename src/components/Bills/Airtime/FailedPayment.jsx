@@ -10,7 +10,7 @@ const FailedPayment = () => {
         <main className='w-full md:w-[600px] bg-[#FFFFFF]  shadow-md rounded-lg'>  
             <section className='mx-3 my-6'>  
                 <div className='w-[100%] flex justify-center md:justify-center'>  
-                    <img src="./images/failed.png" alt="success-logo" />  
+                    <img src="/images/failed.png" alt="success-logo" />  
                 </div>  
                 <div className='flex justify-center'>  
                     <p className='font-poppins text-lg font-[550] leading-6 text-[#1D2433] my-4'>Airtime Purchase Failed!</p>  

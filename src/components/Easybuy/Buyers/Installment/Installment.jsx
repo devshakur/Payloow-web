@@ -114,7 +114,7 @@ const displayedOrders = orders.slice(currentPage * itemsPerPage, (currentPage + 
                     <p className='font-poppins font-medium text-lg text-[#1D2433CC]'>11 Hours, 40 mins</p>
                 </div>
                 <div className=''><img src="/images/Progress-circle.png" alt="progress-bar" />
-                <p className='relative left-14 -top-24 font-poppins font-semibold text-[32px] text-[#000]'>6 : 11 : 40</p>
+                <p className='relative left-6 lg:left-14 -top-24 font-poppins font-semibold text-[32px] text-[#000]'>6 : 11 : 40</p>
                 </div>
             </div>
         </div>
@@ -126,7 +126,7 @@ const displayedOrders = orders.slice(currentPage * itemsPerPage, (currentPage + 
                  {items.map((item)=>(
                  <div key={item.id} className='flex justify-between mt-3'>
                     <div className="flex gap-3">
-                  <div className='w-11 h-11 rounded-[50%] border border-gray-600 flex justify-center items-center'><img className='w-[30px] h-[30px]' src={item.img} alt={item.name} />
+                  <div className='w-11 h-11 rounded-[50%] border border-gray-200 flex justify-center items-center'><img className='w-[30px] h-[30px]' src={item.img} alt={item.name} />
                   </div>
                   <p>{item.name}</p> 
                   </div>  
@@ -163,7 +163,7 @@ const displayedOrders = orders.slice(currentPage * itemsPerPage, (currentPage + 
                         </ul>
 
                         {displayedOrders.map(item => (
-                            <div key={item.ProductId} className=" rounded-lg p-4 mb-4 shadow-sm">
+                            <div key={item.ProductId} className=" rounded-lg p-4 mb-4 shadow-md lg:shadow-sm">
                                 <div className="flex justify-center lg:justify-between lg:items-center flex-col lg:flex-row">
                                     <div className="flex justify-between w-full lg:w-[12%] mt-3">
                                         <p className="font-poppins text-lg font-semibold lg:hidden">Product:</p>

@@ -9,7 +9,7 @@ const DataPurchaseFailed = () => {
         <main className='w-full md:w-[600px] md:mt-[6rem] h-auto bg-[#FFFFFF] pb-[20px] shadow-md rounded-lg'>  
             <section className='h-auto w-auto mx-5'>  
                 <div className='w-[100%] h-auto py-4 flex justify-center md:justify-center'>  
-                    <img src="./images/failed.png" alt="success-logo" />  
+                    <img src="/images/failed.png" alt="success-logo" />  
                 </div>  
                 <div className='flex justify-center my-5'>  
                     <p className='font-poppins text-lg font-[550] leading-6 text-[#1D2433]'>Data Bundle Purchase Failed!</p>  

@@ -152,7 +152,7 @@ const Payment = () => {
                         </ul>
 
                         {displayedOrders.map(item => (
-                            <div key={item.ProductId} className=" rounded-lg p-4 mb-4 shadow-sm">
+                            <div key={item.ProductId} className="rounded-lg p-4 mb-4 shadow-md lg:shadow-sm">
                                 <div className="flex justify-center lg:justify-between lg:items-center flex-col lg:flex-row">
                                     <div className="flex justify-between w-full lg:w-[12%] mt-3">
                                         <p className="font-poppins text-lg font-semibold lg:hidden">Product ID:</p>
