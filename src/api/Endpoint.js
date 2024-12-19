@@ -1,6 +1,6 @@
-// export const BaseUrl = "https://revo-xbt9.onrender.com/api/v1" old;
-export const BaseUrl = "https://revo-1cxp.onrender.com/api/v1"; //new
+export const BaseUrl = "https://revo-1cxp.onrender.com/api/v1";
 const investmentApiBaseUrl = "https://revo-backend.onrender.com/"
+
 
 //registration
 export const AuthEndPoints = {
@@ -34,6 +34,7 @@ export const endpoints = {
   getCourseContent: `${BaseUrl}/get-course-content`,
   uploadCourseVideo: `${BaseUrl}/upload-course-video-document`,
   createCourseContent: `${BaseUrl}/create-course-content`,
+  addCourseRating: `${BaseUrl}/add-course-rating`,
 
   // General
   getCurrentUser: `${BaseUrl}/get-current-user`,
@@ -57,7 +58,6 @@ export const endpoints = {
   createAnnouncement: `${BaseUrl}/make-course-announcement`,
   getAnnouncements: (courseId) =>
     `${BaseUrl}/get-all-course-announcements/${courseId}`,
-
   getCourseAnnouncements: (courseId) =>
     `${BaseUrl}/course-announcement/${courseId}`,
 };
@@ -82,15 +82,21 @@ export const InvestmentEndpoints = {
   viewBusiness: `${investmentApiBaseUrl}debtor/business/`,
   getLoanBusiness: `${investmentApiBaseUrl}browse/`,
   getFilteredLoanBusiness: `${investmentApiBaseUrl}browse/`,
-  getBusinessInfo: (business_id)=> `${investmentApiBaseUrl}debtor/business/${business_id}/`,
-  addLoan: (businessId)=> `${investmentApiBaseUrl}debtor/business/${businessId}/loan/`,
- investInBusiness: `${investmentApiBaseUrl}investor/invest/`,
-  getInvestmentRequest: (business_id)=> `${investmentApiBaseUrl}debtor/business/${business_id}/investment/`,
-  getInvestorsInvestment:`${investmentApiBaseUrl}investor/investments/`,
-  getBusinessStages:`${investmentApiBaseUrl}debtor/business-stages/`,
+  getBusinessInfo: (business_id) =>
+    `${investmentApiBaseUrl}debtor/business/${business_id}/`,
+  addLoan: (businessId) =>
+    `${investmentApiBaseUrl}debtor/business/${businessId}/loan/`,
+  investInBusiness: `${investmentApiBaseUrl}investor/invest/`,
+  getInvestmentRequest: (business_id) =>
+    `${investmentApiBaseUrl}debtor/business/${business_id}/investment/`,
+  getInvestorsInvestment: `${investmentApiBaseUrl}investor/investments/`,
+  getBusinessStages: `${investmentApiBaseUrl}debtor/business-stages/`,
   getModels: `${investmentApiBaseUrl}debtor/models/`,
   getUser: `${investmentApiBaseUrl}user/`,
-  acceptRequest: (investment_id)=> `${investmentApiBaseUrl}debtor/investment/${investment_id}/accept/`,
-  declineRequest: (investment_id)=> `${investmentApiBaseUrl}debtor/investment/${investment_id}/decline/`,
-  repayInvestment: (investment_id)=> `${investmentApiBaseUrl}debtor/investment/${investment_id}/repayment/`,
-}
+  acceptRequest: (investment_id) =>
+    `${investmentApiBaseUrl}debtor/investment/${investment_id}/accept/`,
+  declineRequest: (investment_id) =>
+    `${investmentApiBaseUrl}debtor/investment/${investment_id}/decline/`,
+  repayInvestment: (investment_id) =>
+    `${investmentApiBaseUrl}debtor/investment/${investment_id}/repayment/`,
+};

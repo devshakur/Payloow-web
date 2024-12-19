@@ -14,62 +14,6 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 
 const CourseList = () => {
   const [courses, setCourses] = useState([])
-  // const courses = [
-  //   {
-  //     id: 1,
-  //     thumbnailUrl: "/images/course-card-image.png",
-  //     title: "MTN AirtimeBeginner Guide to Backend Development",
-  //     progress: "completed",
-  //     tag: "Programming",
-  //     enrolledStudents: 200,
-  //     percentageCompleted: 100
-  //   },
-  //   {
-  //     id: 2,
-  //     thumbnailUrl: "/images/course-card-image.png",
-  //     title: "Advanced React Techniques",
-  //     progress: "in progress",
-  //     tag: "Web Development",
-  //     enrolledStudents: 150,
-  //     percentageCompleted: 70
-  //   },
-  //   {
-  //     id: 3,
-  //     thumbnailUrl: "/images/course-card-image.png",
-  //     title: "Introduction to Machine Learning",
-  //     progress: "not started",
-  //     tag: "Data Science",
-  //     enrolledStudents: 300,
-  //     percentageCompleted: 0
-  //   },
-  //   {
-  //     id: 4,
-  //     thumbnailUrl: "/images/course-card-image.png",
-  //     title: "UI/UX Design Fundamentals",
-  //     progress: "completed",
-  //     tag: "Design",
-  //     enrolledStudents: 120,
-  //     percentageCompleted: 100
-  //   },
-  //   {
-  //     id: 5,
-  //     thumbnailUrl: "/images/course-card-image.png",
-  //     title: "Digital Marketing Essentials",
-  //     progress: "in progress",
-  //     tag: "Marketing",
-  //     enrolledStudents: 180,
-  //     percentageCompleted: 50
-  //   },
-  //   {
-  //     id: 6,
-  //     thumbnailUrl: "/images/course-card-image.png",
-  //     title: "Cybersecurity Basics",
-  //     progress: "not started",
-  //     tag: "Security",
-  //     enrolledStudents: 220,
-  //     percentageCompleted: 0
-  //   },
-  // ];
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false)
 

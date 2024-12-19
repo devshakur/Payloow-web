@@ -24,7 +24,7 @@ import {
   Setting2,
   TableDocument,
 } from "iconsax-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 const navigation = [
@@ -111,8 +111,8 @@ export default function Layout({ children }) {
                       >
                         {navigation.map((item) => (
                           <li key={item.name}>
-                            <a
-                              href={item.href}
+                            <Link
+                              to={item.href}
                               className={classNames(
                                 isActive(item.href)
                                   ? "bg-primary text-white"
@@ -130,7 +130,7 @@ export default function Layout({ children }) {
                                 )}
                               />
                               {item.name}
-                            </a>
+                            </Link>
                           </li>
                         ))}
                       </ul>
@@ -140,8 +140,8 @@ export default function Layout({ children }) {
                       <ul role="list" className="-mx-2 space-y-1">
                         {action.map((item) => (
                           <li key={item.name} onClick={item.onClick}>
-                            <a
-                              href={item.href}
+                            <Link
+                              to={item.href}
                               className={classNames(
                                 isActive(item.href)
                                   ? "bg-primary text-white"
@@ -159,7 +159,7 @@ export default function Layout({ children }) {
                                 )}
                               />
                               {item.name}
-                            </a>
+                            </Link>
                           </li>
                         ))}
                       </ul>
@@ -191,8 +191,8 @@ export default function Layout({ children }) {
                   <ul role="list" className="-mx-2 space-y-3">
                     {navigation.map((item) => (
                       <li key={item.name}>
-                        <a
-                          href={item.href}
+                        <Link
+                          to={item.href}
                           className={classNames(
                             isActive(item.href)
                               ? "bg-primary text-white"
@@ -210,7 +210,7 @@ export default function Layout({ children }) {
                             )}
                           />
                           {item.name}
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -219,8 +219,8 @@ export default function Layout({ children }) {
                   <ul role="list" className="-mx-2 space-y-1">
                     {action.map((item) => (
                       <li key={item.name} onClick={item.onClick}>
-                        <a
-                          href={item.href}
+                        <Link
+                          to={item.href}
                           className={classNames(
                             isActive(item.href)
                               ? "bg-primary text-white"
@@ -238,7 +238,7 @@ export default function Layout({ children }) {
                             )}
                           />
                           {item.name}
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -323,12 +323,12 @@ export default function Layout({ children }) {
                   >
                     {userNavigation.map((item) => (
                       <MenuItem key={item.name}>
-                        <a
-                          href={item.href}
+                        <Link
+                          to={item.href}
                           className="block px-3 py-1 text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50"
                         >
                           {item.name}
-                        </a>
+                        </Link>
                       </MenuItem>
                     ))}
                   </MenuItems>

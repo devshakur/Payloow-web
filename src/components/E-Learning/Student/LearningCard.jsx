@@ -5,8 +5,8 @@ const LearningCard = ({
   thumbnailUrl,
   title,
   progress,
-  tag,
-  enrolledStudents,
+  tags,
+  students_enrolled,
   percentageCompleted
 }) => {
   const getProgressColor = (progress) => {
@@ -29,11 +29,11 @@ const LearningCard = ({
       <div className="p-5 h-60 flex flex-col justify-between">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <p className="bg-[#C0D5FD] text-sm px-2 rounded py-1">{tag}</p>
+            <p className="bg-[#C0D5FD] text-sm px-2 rounded py-1 capitalize">{tags[0]}</p>
           </div>
           <div className="flex items-center space-x-1 text-xs">
             <img src="/images/students-icon.svg" alt="" />
-            <p>+ {enrolledStudents} enrolled</p>
+            <p> {students_enrolled} enrolled</p>
           </div>
         </div>
         <h3 className="text-lg font-semibold pb-5 h-2/6 place-items-start">{title}</h3>
@@ -43,7 +43,7 @@ const LearningCard = ({
             style={{ width: `${percentageCompleted}%` }}
           ></div>
         </div>
-        <div className="place-items-end w-full">
+        {/* <div className="place-items-end w-full">
           <div className="flex items-center justify-between">
             <p
               className={`${getProgressColor(
@@ -56,7 +56,7 @@ const LearningCard = ({
               <SlOptionsVertical />
             </span>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
