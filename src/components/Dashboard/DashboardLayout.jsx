@@ -44,7 +44,7 @@ const navigation = [
     icon: BookSaved,
   },
   {
-    name: "Investment", href: "/investment",
+    name: "Investment", 
     href: currentUser?.role === 'Debtor' ? "/debtor/dashboard" : currentUser?.role === 'Investor' ? "/investor/dashboard" : '/investment',
     icon: Chart
   },
