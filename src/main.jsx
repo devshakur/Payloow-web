@@ -11,14 +11,14 @@ import { InvestmentProvider } from "./AuthContext/InvestmentContext/InvestmentCo
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-      <VariationsProvider>
-    <AuthProvider>
-      <BillsProvider>
-        <InvestmentProvider>
-  <RouterProvider router={router} /> 
-  </InvestmentProvider>
-  </BillsProvider>
-    </AuthProvider>
-  </VariationsProvider>
+    <VariationsProvider>
+      <AuthProvider>
+        <BillsProvider>
+          <InvestmentProvider>
+            <RouterProvider router={router} />
+          </InvestmentProvider>
+        </BillsProvider>
+      </AuthProvider>
+    </VariationsProvider>
   </React.StrictMode>
 );

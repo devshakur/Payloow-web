@@ -3,27 +3,9 @@ import React from 'react'
 const StepTwo = ({openStepThree}) => {
   return (
     <div>
-      <header className='flex justify-between items-center mx-8 mt-8 border-b-4'>
-                <div className="flex shrink-0 items-center">
-                    <img
-                        alt="Paylow Logo"
-                        src="/images/logo.svg"
-                        className="h-14 w-auto"
-                    />
-                </div>
-                <div className='mt-2'>
-                    <p className='font-poppins font-medium text-2xl text-blue-600'>Exit</p>
-                </div>
-            </header>
-            <div className='flex justify-center'>
-                    <ul className='flex gap-4 my-4 border-b-2 border-blue-500 py-3 px-4'>
-                        <li className='font-poppins text-lg font-medium text-blue-600'>Personal Info</li>
-                        <li className='font-poppins text-lg font-medium'>Financial Info</li>
-                    </ul>
-                </div>
-                   <div className='flex justify-center'>
-                <div className='bg-white w-[90%] max-w-3xl rounded-xl shadow-lg pb-10'>
-                   <form className='my-3 flex flex-col gap-4'>
+                   <div className='flex justify-center pb-[3rem]'>
+                <div className='bg-white w-[80%] max-w-3xl rounded-xl shadow-lg pb-10'>
+                   <form className='my-3 flex flex-col gap-3'>
                     <div className='flex flex-col'>
                     <label htmlFor="fullname" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Full Name</label>
                     <input name='fullname' id='fullname' type="text" placeholder='full Name' className='border mx-5 p-2 rounded-md focus:outline-none' />
@@ -67,7 +49,7 @@ const StepTwo = ({openStepThree}) => {
                     <input name='referral' id='referrel' type="text" placeholder='Referral ID' className='border mx-5 p-2 rounded-md focus:outline-none' />
                     </div>
                     <div className='mx-5'>
-                        <button onClick={openStepThree} className='bg-blue-700 text-white w-full py-3 rounded-md'>Next</button>
+                        <button onClick={openStepThree} className='bg-blue-700 text-white mt-3 w-full py-3 rounded-md'>Next</button>
                     </div>
                    </form>
                    </div>

@@ -30,24 +30,6 @@ const StepThree = () => {
           </DialogPanel>
         </div>
       </Dialog>
-            <header className='flex justify-between items-center mx-8 mt-8 border-b-4'>
-                <div className="flex shrink-0 items-center">
-                    <img
-                        alt="Paylow Logo"
-                        src="/images/logo.svg"
-                        className="h-14 w-auto"
-                    />
-                </div>
-                <div className='mt-2'>
-                    <p className='font-poppins font-medium text-2xl text-blue-600'>Exit</p>
-                </div>
-            </header>
-            <div className='flex justify-center'>
-                <ul className='flex gap-4 my-4 border-b-2 border-blue-500 py-3 px-4'>
-                    <li className='font-poppins text-lg font-medium'>Personal Info</li>
-                    <li className='font-poppins text-lg font-medium  text-blue-600'>Financial Info</li>
-                </ul>
-            </div>
             <div className='flex justify-center'>
                 <div className='bg-white w-[90%] max-w-3xl rounded-xl shadow-lg pb-10'>
                     <form className='my-3 flex flex-col gap-4'>

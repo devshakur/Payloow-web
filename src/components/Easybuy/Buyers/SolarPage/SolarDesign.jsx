@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { GoPlus } from "react-icons/go";
 import { AiOutlineMinus } from "react-icons/ai";
+import { useRouter } from '../../../../Routes/router';
 
 
 const SolarDesign = () => {
   const [items, setItems] = useState([
     { id: 1, quantity: 1, power: '100w' },
   ]);
-  
+  const router = useRouter()
 
-  
+    //exit function
+    const handleExit = ()=>{
+      router.back()
+    }
 
   // Add a new item
   const addItem = () => {
@@ -53,7 +57,7 @@ const SolarDesign = () => {
           />
         </div>
         <div className='mt-2'>
-          <p className='font-poppins font-medium text-2xl text-blue-600'>Exit</p>
+          <p onClick={handleExit} className='font-poppins font-medium text-2xl text-blue-600 cursor-pointer'>Exit</p>
         </div>
       </header>
       <main>

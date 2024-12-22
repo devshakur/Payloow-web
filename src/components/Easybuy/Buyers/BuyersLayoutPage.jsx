@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -40,6 +40,7 @@ import { Toaster } from "react-hot-toast";
 import BuyersDashboardTwo from "./BuyersDashboardTwo";
 import Header0ne from "./Header0ne";
 import { useRouter } from "../../../Routes/router";
+import { items } from "./product";
 
 
 const navigation = [
@@ -72,20 +73,26 @@ function BuyersLayoutPage({ children}) {
   const location = useLocation();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isFocus, setIsFocus] = useState(false)
+  const [searchValue, setSearchValue] = useState("");
+
+
   const isActive = (href) => location.pathname === href;
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  const [isFocus, setIsFocus] = useState(false)
+
 
  const handleFocus = ()=>{
   setIsFocus(true)
  }
- const handleBlur = ()=>{
-  setIsFocus(false)
- }
+
  const handleCart = ()=>{
   router.push('/user-cart')
   }
- 
+
+  const handleSearchChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
   return (
     <>
       <Toaster />
@@ -238,8 +245,9 @@ function BuyersLayoutPage({ children}) {
           id="search-field"
           name="search"
           type="search"
+          value={searchValue}
           onFocus={handleFocus}
-          onBlur={handleBlur}
+          onChange={handleSearchChange}
           placeholder="Search..."
           className="block h-full w-full shadow-md py-3 focus:outline-none pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
         />

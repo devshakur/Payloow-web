@@ -1,53 +1,54 @@
-import React, { useState } from 'react'
-import BuyersLayoutGen from '../BuyersLayoutGen'
+import React, { useState } from 'react';
+import { motion } from 'framer-motion'; 
+import BuyersLayoutGen from '../BuyersLayoutGen';
 import { IoFilterOutline } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import ReactPaginate from 'react-paginate';
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 
-
-const orders = [{
-    img: '/images/iphon11-small.png',
-    productName: 'Iphone Xr',
-    ProductId: '#3097674',
-    productPrice: '$5,000',
-    orderDate: '04/10/2024',
-    productStatus: 'pending',
-},
-{
-    img: '/images/iPhone12.png',
-    productName: 'Iphone 12',
-    ProductId: '#0297214',
-    productPrice: '$8,000',
-    orderDate: '05/03/2022',
-    productStatus: 'Shipped',
-},
-{
-    img: '/images/iphon-green.png',
-    productName: 'Iphone 13',
-    ProductId: '#0457876',
-    productPrice: '$10,000',
-    orderDate: '24/11/2024',
-    productStatus: 'Pending',
-},
-{
-    img: '/images/iphon-yellow.png',
-    productName: 'Iphone 15',
-    ProductId: '#0409876',
-    productPrice: '$14,000',
-    orderDate: '14/03/2021',
-    productStatus: 'Shipped',
-},
-{
-    img: '/images/iphon-black.png',
-    productName: 'Iphone 13 pro max',
-    ProductId: '#0203476',
-    productPrice: '$17,000',
-    orderDate: '02/12/2024',
-    productStatus: 'Pending',
-},
-]
+const orders = [
+    {
+        img: '/images/iphon11-small.png',
+        productName: 'Iphone Xr',
+        ProductId: '#3097674',
+        productPrice: '$5,000',
+        orderDate: '04/10/2024',
+        productStatus: 'pending',
+    },
+    {
+        img: '/images/iPhone12.png',
+        productName: 'Iphone 12',
+        ProductId: '#0297214',
+        productPrice: '$8,000',
+        orderDate: '05/03/2022',
+        productStatus: 'Shipped',
+    },
+    {
+        img: '/images/iphon-green.png',
+        productName: 'Iphone 13',
+        ProductId: '#0457876',
+        productPrice: '$10,000',
+        orderDate: '24/11/2024',
+        productStatus: 'Pending',
+    },
+    {
+        img: '/images/iphon-yellow.png',
+        productName: 'Iphone 15',
+        ProductId: '#0409876',
+        productPrice: '$14,000',
+        orderDate: '14/03/2021',
+        productStatus: 'Shipped',
+    },
+    {
+        img: '/images/iphon-black.png',
+        productName: 'Iphone 13 pro max',
+        ProductId: '#0203476',
+        productPrice: '$17,000',
+        orderDate: '02/12/2024',
+        productStatus: 'Pending',
+    },
+];
 
 const UserOrders = () => {
     const [selectedStatus, setSelectedStatus] = useState('All');
@@ -128,8 +129,15 @@ const UserOrders = () => {
                             <li className="font-semibold text-lg lg:mr-7 relative xl:left-[-3.4rem]">Action</li>
                         </ul>
 
-                        {displayedOrders.map(item => (
-                            <div key={item.ProductId} className=" rounded-lg p-4 mb-4 shadow-sm">
+                        {/* Animate the list of orders */}
+                        {displayedOrders.map((item) => (
+                            <motion.div
+                                key={item.ProductId}
+                                className="rounded-lg p-4 mb-4 shadow-sm"
+                                initial={{ opacity: 0, x: -50 }}  // Start from left with 0 opacity
+                                animate={{ opacity: 1, x: 0 }}  // Slide in and fade in
+                                transition={{ duration: 0.6, ease: "easeOut" }}  // Smooth transition
+                            >
                                 <div className="flex justify-center lg:justify-between lg:items-center flex-col lg:flex-row">
                                     <div className="flex justify-between w-full lg:w-[12%] mt-3">
                                         <p className="font-poppins text-lg font-semibold lg:hidden">Product:</p>
@@ -155,8 +163,7 @@ const UserOrders = () => {
                                     <div className="flex justify-between w-full lg:w-auto mt-3">
                                         <p className="font-poppins text-lg font-semibold lg:hidden">Status:</p>
                                         <span
-                                            className={`text-sm font-poppins font-semibold lg:relative right-9 xl:right-20 ${item.productStatus.toLowerCase() === 'pending' ? 'text-red-500' : 'text-green-500'
-                                                }`}
+                                            className={`text-sm font-poppins font-semibold lg:relative right-9 xl:right-20 ${item.productStatus.toLowerCase() === 'pending' ? 'text-red-500' : 'text-green-500'}`}
                                         >
                                             {item.productStatus}
                                         </span>
@@ -167,7 +174,7 @@ const UserOrders = () => {
                                         <span className="font-poppins text-sm font-semibold lg:relative lg:right-9 xl:right-24">...</span>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
 
                         <div className="flex text-center justify-between">
@@ -189,13 +196,13 @@ const UserOrders = () => {
                                 activeClassName="bg-blue-600 text-white"
                                 disabledClassName="opacity-50 cursor-not-allowed"
                             />
-                                     <div className='px-6 h-8 mt-5 text-white bg-blue-700 flex items-center gap-3 rounded-lg'><IoIosArrowBack className='w-4 h-4'/> <IoIosArrowForward className='w-4 h-4'/></div>
+                            <div className='px-6 h-8 mt-5 text-white bg-blue-700 flex items-center gap-3 rounded-lg'><IoIosArrowBack className='w-4 h-4' /> <IoIosArrowForward className='w-4 h-4' /></div>
                         </div>
                     </article>
                 </div>
             </div>
         </BuyersLayoutGen>
-    )
-}
+    );
+};
 
 export default UserOrders;
