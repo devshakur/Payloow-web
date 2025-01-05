@@ -1,15 +1,17 @@
-import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
+import {
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  DialogTitle
+} from '@headlessui/react';
 import { useDropzone } from 'react-dropzone';
 import { useState } from 'react';
 
-
-const ImageUploadModal = ({ isOpen, setIsOpen, setActive, handleUploadSuccess }) => {
+const ImageUploadModal = ({ isOpen, setIsOpen, setActive, handleUploadSuccess, formik, onSubmit, submiting, setSubmiting }) => {
   // States for the selected files
-  const [deviceBoxFile, setDeviceBoxFile] = useState(null);
-  const [paymentReceiptFile, setPaymentReceiptFile] = useState(null);
-  const [deviceFrontViewFile, setDeviceFrontViewFile] = useState(null);
-  const [deviceBackViewFile, setDeviceBackViewFile] = useState(null);
   const [error, setError] = useState('');
+  
+ 
 
   // Handle closing the modal
   const handleClose = () => {
@@ -20,49 +22,43 @@ const ImageUploadModal = ({ isOpen, setIsOpen, setActive, handleUploadSuccess })
   // Handle image upload logic here
   const handleImageUpload = (file, type) => {
     if (file) {
-      switch (type) {
-        case 'deviceBox':
-          setDeviceBoxFile(file);
-          break;
-        case 'paymentReceipt':
-          setPaymentReceiptFile(file);
-          break;
-        case 'deviceFrontView':
-          setDeviceFrontViewFile(file);
-          break;
-        case 'deviceBackView':
-          setDeviceBackViewFile(file);
-          break;
-        default:
-          break;
-      }
+      formik.setFieldValue(type, file);
     }
   };
 
   // Use react-dropzone hook for each file input
   const { getRootProps: getDeviceBoxProps, getInputProps: getDeviceBoxInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => handleImageUpload(acceptedFiles[0], 'deviceBox'),
+    onDrop: (acceptedFiles) => handleImageUpload(acceptedFiles[0], 'box'),
     accept: '*/*',
     multiple: false,
   });
 
   const { getRootProps: getPaymentReceiptProps, getInputProps: getPaymentReceiptInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => handleImageUpload(acceptedFiles[0], 'paymentReceipt'),
+    onDrop: (acceptedFiles) => handleImageUpload(acceptedFiles[0], 'receipt'),
     accept: '*/*',
     multiple: false,
   });
 
   const { getRootProps: getDeviceFrontViewProps, getInputProps: getDeviceFrontViewInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => handleImageUpload(acceptedFiles[0], 'deviceFrontView'),
+    onDrop: (acceptedFiles) => handleImageUpload(acceptedFiles[0], 'front'),
     accept: '*/*',
     multiple: false,
   });
 
   const { getRootProps: getDeviceBackViewProps, getInputProps: getDeviceBackViewInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => handleImageUpload(acceptedFiles[0], 'deviceBackView'),
+    onDrop: (acceptedFiles) => handleImageUpload(acceptedFiles[0], 'back'),
     accept: '*/*',
     multiple: false,
   });
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    formik.handleSubmit(); // Trigger Formik's submit
+    onSubmit && onSubmit(); // Optional additional logic
+    // setActive('two');
+    handleUploadSuccess(); // Call handleUploadSuccess when the user uploads
+    setSubmiting(false)
+  };
 
   const renderFile = (file) => {
     if (file) {
@@ -74,6 +70,8 @@ const ImageUploadModal = ({ isOpen, setIsOpen, setActive, handleUploadSuccess })
     }
     return <p>No file selected</p>;
   };
+
+
 
   return (
     <Dialog open={isOpen} onClose={handleClose} className="relative z-50">
@@ -91,9 +89,10 @@ const ImageUploadModal = ({ isOpen, setIsOpen, setActive, handleUploadSuccess })
           </DialogTitle>
 
           {/* 4-Column Layout for Dropzone */}
+          <form onSubmit={handleSubmit} action="">
           <div className="flex flex-col gap-1">
             {/* First input: Device Box */}
-            <label htmlFor="device-box" className='font-medium font-poppins text-lg -mb-1'>Device Box</label>
+            <label htmlFor="box" className="font-medium font-poppins text-lg -mb-1">Device Box</label>
             <div
               {...getDeviceBoxProps()}
               className="w-full border-2 border-blue-600 bg-[#C0D5FD] border-dashed p-5 rounded-md text-center"
@@ -101,10 +100,13 @@ const ImageUploadModal = ({ isOpen, setIsOpen, setActive, handleUploadSuccess })
               <input {...getDeviceBoxInputProps()} />
               <p className="text-gray-500">Drop files to Upload....</p>
             </div>
-            {renderFile(deviceBoxFile)}
+            {renderFile(formik.values.box)}
+            {formik.touched.box && formik.errors.box && (
+              <div className="text-red-500">{formik.errors.box}</div>
+            )}
 
             {/* Second input: Device Payment Receipt */}
-            <label htmlFor="payment-receipt" className='font-medium font-poppins text-lg -mb-1'>Device Payment Receipt</label>
+            <label htmlFor="receipt" className="font-medium font-poppins text-lg -mb-1">Device Payment Receipt</label>
             <div
               {...getPaymentReceiptProps()}
               className="w-full border-2 border-blue-600 bg-[#C0D5FD] border-dashed p-5 rounded-md text-center"
@@ -112,10 +114,13 @@ const ImageUploadModal = ({ isOpen, setIsOpen, setActive, handleUploadSuccess })
               <input {...getPaymentReceiptInputProps()} />
               <p className="text-gray-500">Drop files to Upload....</p>
             </div>
-            {renderFile(paymentReceiptFile)}
+            {renderFile(formik.values.receipt)}
+            {formik.touched.receipt && formik.errors.receipt && (
+              <div className="text-red-500">{formik.errors.receipt}</div>
+            )}
 
             {/* Third input: Device Front View */}
-            <label htmlFor="device-front-view" className='font-medium font-poppins text-lg -mb-1'>Device Front View</label>
+            <label htmlFor="front" className="font-medium font-poppins text-lg -mb-1">Device Front View</label>
             <div
               {...getDeviceFrontViewProps()}
               className="w-full border-2 border-blue-600 bg-[#C0D5FD] border-dashed p-5 rounded-md text-center"
@@ -123,10 +128,13 @@ const ImageUploadModal = ({ isOpen, setIsOpen, setActive, handleUploadSuccess })
               <input {...getDeviceFrontViewInputProps()} />
               <p className="text-gray-500">Drop files to Upload....</p>
             </div>
-            {renderFile(deviceFrontViewFile)}
+            {renderFile(formik.values.front)}
+            {formik.touched.front && formik.errors.front && (
+              <div className="text-red-500">{formik.errors.front}</div>
+            )}
 
             {/* Fourth input: Device Back View */}
-            <label htmlFor="device-back-view" className='font-medium font-poppins text-lg -mb-1'>Device Back View</label>
+            <label htmlFor="back" className="font-medium font-poppins text-lg -mb-1">Device Back View</label>
             <div
               {...getDeviceBackViewProps()}
               className="w-full border-2 border-blue-600 bg-[#C0D5FD] border-dashed p-5 rounded-md text-center"
@@ -134,24 +142,23 @@ const ImageUploadModal = ({ isOpen, setIsOpen, setActive, handleUploadSuccess })
               <input {...getDeviceBackViewInputProps()} />
               <p className="text-gray-500">Drop files to Upload....</p>
             </div>
-            {renderFile(deviceBackViewFile)}
+            {renderFile(formik.values.back)}
+            {formik.touched.back && formik.errors.back && (
+              <div className="text-red-500">{formik.errors.back}</div>
+            )}
           </div>
-
           <div className="flex gap-4 mt-4 justify-end">
             <button onClick={handleClose} className="px-4 py-2 bg-gray-300 rounded-md">
               Cancel
             </button>
             <button
-              onClick={() => {
-                setActive('two');
-                handleUploadSuccess(); // Call handleUploadSuccess when the user uploads
-                handleClose(); // Close the modal after upload
-              }}
+            type='submit'
               className="px-4 py-2 bg-blue-600 text-white rounded-md"
             >
-              Upload
+              {submiting ? 'Submiting...' : 'Upload'}
             </button>
           </div>
+          </form>
         </DialogPanel>
       </div>
     </Dialog>
@@ -159,9 +166,3 @@ const ImageUploadModal = ({ isOpen, setIsOpen, setActive, handleUploadSuccess })
 };
 
 export default ImageUploadModal;
-
-
-
-
-
-

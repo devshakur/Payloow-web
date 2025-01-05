@@ -1,117 +1,169 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BuyersLayout from '../EasyBuyRegistration/BuyersLayout';
 import { GoPlus } from "react-icons/go";
 import { AiOutlineMinus } from "react-icons/ai";
 import { useRouter } from '../../../Routes/router';
-import { motion } from 'framer-motion'; 
-
-const items = [
-  {
-    id: 1,
-    img: '/images/iphon-green.png',
-    productName: 'Iphone 11',
-    price: "$80",
-    orginalPrice: "$100",
-    color: 'Green',
-  },
-  {
-    id: 2,
-    img: '/images/iphon-black.png',
-    productName: 'Iphone 11',
-    price: "$70",
-    orginalPrice: "$200",
-    color: 'Black',
-  }
-];
+import { motion } from 'framer-motion';
+import useInvestment from '../../../hooks/useInvetment';
+import { toast, Toaster } from 'react-hot-toast';
 
 const Cart = () => {
   const router = useRouter();
-  const [quantities, setQuantities] = useState({
-    1: 0,
-    2: 0,
-  });
+  const { GetCart, DeleteCart } = useInvestment();
+  const [quantities, setQuantities] = useState({});
+  const [cartItems, setCartItems] = useState([]);
+  const [productId, setProductId] = useState(null);
+ 
 
-  const handleCompare = () => {
-    router.push('/comapare-product');
+  const DeleteCartItem = async (_id) => {
+    try {
+      const resp = await DeleteCart({ productId: _id });
+      const info = resp?.data;
+      if (info?.success) {
+        toast.success(info?.message || 'Items removed from cart');
+        router.reload();
+      } else {
+        toast.error('Failed to remove Items from Cart');
+      }
+    } catch (error) {
+      toast.error('Failed to remove Items from Cart');
+    }
+  };
+
+  const handleDelete = (_id) => {
+    setProductId(_id);
+    DeleteCartItem(_id);
   };
 
   const handleIncrease = (id) => {
-    setQuantities(prev => ({ ...prev, [id]: prev[id] + 1 }));
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: (prev[id] || 0) + 1,
+    }));
   };
 
   const handleDecrease = (id) => {
-    setQuantities(prev => ({ ...prev, [id]: prev[id] - 1 }));
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: prev[id] > 1 ? prev[id] - 1 : 1,
+    }));
   };
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      try {
+        const resp = await GetCart();
+        const info = resp?.data?.data;
+        if (info) {
+          setCartItems(info);
+          const initialQuantities = info.reduce((acc, item) => {
+            acc[item._id] = item.quantity;
+            return acc;
+          }, {});
+          setQuantities(initialQuantities);
+        }
+      } catch (error) {
+        toast.error('Failed to fetch Cart Items');
+      }
+    };
+
+    fetchCartItems();
+  }, []);
 
   return (
     <BuyersLayout>
-      <div>
-        <header className='text-xl font-semibold font-plus-jakarta'>
+      <div className="container mx-auto py-8">
+        <header className="text-2xl font-semibold text-center mb-6">
           My Cart
         </header>
-        <main className='flex flex-col lg:grid lg:grid-cols-2'>
-          <section className='flex flex-col gap-6'>
-            {items.map((item) => {
-              return (
+
+        {cartItems && cartItems.length > 0 ? (
+          <div className="lg:grid lg:grid-cols-2 gap-8">
+            {/* Cart Items Section */}
+            <div className="space-y-6">
+              {cartItems.map((item) => (
                 <motion.div
-                  key={item.id}
-                  className="flex flex-row"
+                  key={item._id}
+                  className="flex flex-col lg:flex-row items-center bg-white p-4 rounded-lg shadow-md"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
                 >
-                  <div>
-                    <img className='w-full' src={item.img} alt={item.productName} />
+                  <div className="w-full lg:w-1/3">
+                    <img
+                      className="w-full h-full object-cover rounded-lg"
+                      src={item.product?.imageKey || '/images/iphon11-small.png'}
+                      alt={item.product?.name}
+                    />
                   </div>
-                  <div className='ml-4'>
-                    <h4 className='text-lg font-medium'>{item.productName}</h4>
-                    <p className='font-plus-jakarta font-medium text-lg text-black'>
-                      {item.price}
-                      <span className='text-red-400 line-through ml-3'>{item.orginalPrice}</span>
+                  <div className="ml-4 lg:ml-8 flex-1">
+                    <h4 className="text-lg font-medium">{item.product?.name}</h4>
+                    <p className="font-medium text-lg text-black mt-2">
+                      {item.product?.price.$numberDecimal}
                     </p>
-                    <p className='font-poppins text-[16px] font-normal text-black mt-1'>
+                    <p className="text-sm text-gray-600 mt-1">
                       Color: <span>{item.color}</span>
                     </p>
-                    <div className='justify-between px-2 mt-3 flex w-[7rem] py-1 gap-6 bg-[#DBE7FE] rounded-lg'>
-                      <button onClick={() => handleDecrease(item.id)} className='font-bold'>
-                        <AiOutlineMinus className='w-5 h-5 text-blue-700' />
+                    <div className="flex items-center gap-4 mt-3">
+                      <button onClick={() => handleDecrease(item._id)} className="text-blue-700">
+                        <AiOutlineMinus className="w-5 h-5" />
                       </button>
-                      <p className='font-bold font-plus-jakarta text-lg -ml-8 text-blue-800'>{quantities[item.id]}</p>
-                      <button onClick={() => handleIncrease(item.id)} className='font-bold -ml-7'>
-                        <GoPlus className='w-5 h-5 text-blue-800' />
+                      <p className="text-lg font-bold">{quantities[item._id] || 1}</p>
+                      <button onClick={() => handleIncrease(item._id)} className="text-blue-700">
+                        <GoPlus className="w-5 h-5" />
                       </button>
                     </div>
-                    <p className='text-blue-700 mt-3 text-[14px]'>Remove</p>
+                    <button
+                      onClick={() => handleDelete(item.product?._id)}
+                      className="text-red-500 mt-3"
+                    >
+                      Remove
+                    </button>
                   </div>
                 </motion.div>
-              );
-            })}
-          </section>
-
-          <article className='bg-white'>
-            <h3 className='text-xl font-semibold font-poppins mb-3 mx-2'>Total</h3>
-            <div className='flex justify-between p-3'>
-              <h3 className='font-semibold'>Original Price</h3>
-              <h5 className='font-semibold'>₦89,900</h5>
-            </div>
-            <p className='border-2 border-top border-dashed mt-5'></p>
-            <div className='flex justify-between mt-4 p-3'>
-              <h3 className='font-bold'>Total Price</h3>
-              <h5 className='font-bold'>₦89,900</h5>
+              ))}
             </div>
 
-            <motion.div
-              className='w-full my-5 flex justify-center'
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <button onClick={handleCompare} className='bg-blue-800 text-white w-[95%] py-2 rounded-lg'>
-                Proceed to Checkout
-              </button>
-            </motion.div>
-          </article>
-        </main>
+            {/* Checkout Summary Section */}
+            <div className="bg-white h-[18rem] p-6 rounded-lg shadow-md mt-6 lg:mt-0">
+              <h3 className="text-xl font-semibold mb-4">Checkout Summary</h3>
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span>{cartItems.reduce((total, item) => total + item.product?.price.$numberDecimal * quantities[item._id], 0).toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Shipping</span>
+                  <span>Free</span>
+                </div>
+                <div className="flex justify-between font-bold text-lg mt-4">
+                  <span>Total</span>
+                  <span>
+                    {cartItems.reduce((total, item) => total + item.product?.price.$numberDecimal * quantities[item._id], 0).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+              <motion.div
+                className="my-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                <button
+                  onClick={() => router.push('/product-view')}
+                  className="w-full py-3 bg-blue-800 text-white rounded-lg"
+                >
+                  Proceed to Checkout
+                </button>
+              </motion.div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex justify-center items-center h-[60vh]">
+            <p className="text-lg font-medium text-gray-700">No Items in Cart</p>
+          </div>
+        )}
+        <Toaster />
       </div>
     </BuyersLayout>
   );

@@ -7,6 +7,7 @@ import axios from 'axios'
    return [isForget, setIsForget];  
 } 
 
+
 export const goBack = ()=>{
   history.back();
 }
@@ -38,3 +39,7 @@ export const getUser = async () => {
 export const capitalizeAndJoin = (arr) => {
   return arr.map((item) => item.charAt(0).toUpperCase() + item.slice(1)).join(', ');
 };
+
+
+
+

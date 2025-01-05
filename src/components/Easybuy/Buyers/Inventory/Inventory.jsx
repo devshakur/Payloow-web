@@ -1,14 +1,114 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PartnersLayout from '../../Partners/PartnersLayout';
 import { IoFilterOutline } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import MyInventory from './MyInventory';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import Orders from './Orders';
 import Consignment from './Consignment';
 import { motion } from 'framer-motion';
+import {toast, Toaster} from 'react-hot-toast';
+import AddProductModal from './AddProductModal';
+import ImageUploadModal from './ImageUploadModal';
+import useInvestment from '../../../../hooks/useInvetment';
 
 const Inventory = () => {
+  const {GetEasyBuyCatgories, CreateProduct} = useInvestment();
   const [orders, setOrders] = useState('Inventory');
+  let [isOpen, setIsOpen] = useState(true)
+  const [category, setCategory] = useState(null)
+  const [active, setActive] = useState('zero')
+  let [isOpened, setIsOpened] = useState(true)
+
+  const initialValues = {
+    name: '',
+    category: '',
+    price: '',
+    stock: '',
+    description: '',
+    color: [],
+    image: null,
+    additionalimages: [],
+  };
+
+
+  const validationSchema = Yup.object({
+    name: Yup.string()
+      .required('Product Name is required'),
+    category: Yup.string()
+      .required('Category is required'),
+    price: Yup.number()
+      .required('Price is required')
+      .min(0, 'Price must be a positive number'),
+    stock: Yup.number()
+      .required('Quantity is required')
+      .min(1, 'Quantity must be at least 1'),
+    description: Yup.string()
+      .required('Description is required'),
+      color: Yup.array()
+        .of(Yup.string().required('Color is required'))
+        .min(1, 'At least one color is required')
+        .required('Colors are required'),
+    image: Yup.mixed()
+      .required('Main image is required'),
+    additionalimages: Yup.array()
+      .of(Yup.mixed().required('Each image is required'))
+      .required('Additional images are required'),
+  });
+  
+  const onSubmit = async (values) => {
+    console.log('Form data', values);
+    try {
+     const response = await CreateProduct(values);
+     if (response && response.status === 200) {
+
+      if (response.data?.message) {
+          toast.success(response.data.message);  
+          setIsOpened(false)
+      } else {
+          toast.success('Product Created Successfully');  // Fallback success message
+      }
+  } 
+    } catch (error) {
+      if(error?.response?.data?.msg){
+        toast.error(error?.response?.data?.msg)
+      }else{
+        toast.error('Failed to create product check your inputs')
+      }
+    }
+};
+
+  const formik = useFormik({
+    initialValues,
+   validationSchema,
+    onSubmit,
+  });
+
+
+  function opens() {
+    setIsOpened(true)
+  }
+
+  function closes() {
+    setIsOpened(false)
+    setIsOpen(true)
+    setActive('one')
+  }
+  function closeModal() {
+    setIsOpened(false)
+  }
+
+  function open() {
+    setIsOpen(true)
+    setActive('one')
+  }
+
+  function close() {
+    setIsOpen(false)
+    setIsOpened(true)
+    setActive('two')
+  }
 
   const handleInventory = () => {
     setOrders('Inventory');
@@ -20,6 +120,38 @@ const Inventory = () => {
     setOrders('consignment');
   };
 
+  useEffect(() => {
+    const productCategories = async () => {
+      try {
+        const resp = await GetEasyBuyCatgories();
+  
+        const message = resp?.data?.message; 
+        const productsData = resp?.data?.data; 
+  
+        if (productsData) {
+          setCategory(productsData); 
+          if (message) {
+            console.log('Success Message:', message); 
+            toast.success(message); 
+          } else {
+            console.warn('Message is empty'); 
+          }
+        } else {
+          setCategory([]);
+          toast.error('Failed to fetch products');
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error); 
+        const errorMsg = error?.response?.data?.msg || 'Failed to fetch products';
+        toast.error(errorMsg);
+      }
+    };
+  
+    productCategories();
+  }, []);
+  
+  
+
   return (
     <PartnersLayout>
       <div className='flex justify-between items-center'>
@@ -29,6 +161,7 @@ const Inventory = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
+          onClick={open}
         >
           Add Product
         </motion.button>
@@ -148,6 +281,9 @@ const Inventory = () => {
       {orders === 'Inventory' && <MyInventory />}
       {orders === 'order' && <Orders />}
       {orders === 'consignment' && <Consignment />}
+      {active === 'one'  && <AddProductModal isOpen={isOpen}  close={close} productId={category} formik={formik} />}
+      {active === 'two'  && <ImageUploadModal isOpened={isOpened} closes={closes} closeModal={closeModal} formik={formik} onSubmit={formik.handleSubmit} />}
+      <Toaster />
     </PartnersLayout>
   );
 };

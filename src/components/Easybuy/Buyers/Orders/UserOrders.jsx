@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion'; 
 import BuyersLayoutGen from '../BuyersLayoutGen';
 import { IoFilterOutline } from "react-icons/io5";
@@ -6,63 +6,58 @@ import { IoIosArrowDown } from "react-icons/io";
 import ReactPaginate from 'react-paginate';
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
+import {toast, Toaster} from 'react-hot-toast'
+import useInvestment from '../../../../hooks/useInvetment';
 
-const orders = [
-    {
-        img: '/images/iphon11-small.png',
-        productName: 'Iphone Xr',
-        ProductId: '#3097674',
-        productPrice: '$5,000',
-        orderDate: '04/10/2024',
-        productStatus: 'pending',
-    },
-    {
-        img: '/images/iPhone12.png',
-        productName: 'Iphone 12',
-        ProductId: '#0297214',
-        productPrice: '$8,000',
-        orderDate: '05/03/2022',
-        productStatus: 'Shipped',
-    },
-    {
-        img: '/images/iphon-green.png',
-        productName: 'Iphone 13',
-        ProductId: '#0457876',
-        productPrice: '$10,000',
-        orderDate: '24/11/2024',
-        productStatus: 'Pending',
-    },
-    {
-        img: '/images/iphon-yellow.png',
-        productName: 'Iphone 15',
-        ProductId: '#0409876',
-        productPrice: '$14,000',
-        orderDate: '14/03/2021',
-        productStatus: 'Shipped',
-    },
-    {
-        img: '/images/iphon-black.png',
-        productName: 'Iphone 13 pro max',
-        ProductId: '#0203476',
-        productPrice: '$17,000',
-        orderDate: '02/12/2024',
-        productStatus: 'Pending',
-    },
-];
 
 const UserOrders = () => {
     const [selectedStatus, setSelectedStatus] = useState('All');
     const [currentPage, setCurrentPage] = useState(0);
+    const {GetUserOrders} = useInvestment();
+   const [allOrders, setAllOrders] = useState([])
+
+       useEffect(() => {
+        const getAllOrders = async () => {
+            try {
+                const resp = await GetUserOrders();
+                const data = resp?.data?.data?.data; // Nested data structure from API response
+                const message = resp?.data?.message;
+
+                if (data) {
+                    const formattedOrders = data.map((order) => ({
+                        img: '/images/iphon-yellow.png', // Placeholder, adjust if `imageKey` is used
+                        productName: order.product.name,
+                        ProductId: order.transactionReference,
+                        productPrice: `$${order.price.toFixed(2)}`, // Format price
+                        orderDate: new Date(order.createdAt).toLocaleDateString(), // Format date
+                        productStatus: order.paymentStatus,
+                    }));
+
+                    setAllOrders(formattedOrders);
+                    toast.success(message || 'Fetched all orders');
+                } else {
+                    toast.success('No orders found');
+                }
+            } catch (error) {
+                const errorMessage = error?.response?.data?.msg || 'Failed to fetch products';
+                toast.error(errorMessage);
+            }
+        };
+
+        getAllOrders();
+    }, []);
 
     // Filter orders based on selected status
     const filteredOrders = selectedStatus === 'All'
-        ? orders
-        : orders.filter(order => order.productStatus.toLowerCase() === selectedStatus.toLowerCase());
+        ? allOrders
+        : allOrders.filter(order => order.productStatus.toLowerCase() === selectedStatus.toLowerCase());
 
     // Handle page change
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
     };
+
+   
 
     // Items per page for pagination
     const itemsPerPage = 4;
@@ -81,14 +76,14 @@ const UserOrders = () => {
                             All Orders
                         </li>
                         <li
-                            className={selectedStatus === 'Pending' ? 'text-blue-600' : ''}
-                            onClick={() => setSelectedStatus('Pending')}
+                            className={selectedStatus === 'pending' ? 'text-blue-600' : ''}
+                            onClick={() => setSelectedStatus('pending')}
                         >
                             Pending
                         </li>
                         <li
-                            className={selectedStatus === 'Shipped' ? 'text-blue-600' : ''}
-                            onClick={() => setSelectedStatus('Shipped')}
+                            className={selectedStatus === 'paid' ? 'text-blue-600' : ''}
+                            onClick={() => setSelectedStatus('paid')}
                         >
                             Shipped
                         </li>
@@ -122,10 +117,10 @@ const UserOrders = () => {
                     <article className="bg-white w-[100%] overflow-scroll mx-4 lg:mx-0 rounded-lg p-4">
                         <ul className="lg:flex justify-between bg-white shadow-lg hidden">
                             <li className="font-semibold text-lg lg:mr-5">Product</li>
-                            <li className="font-semibold text-lg relative lg:-left-2 xl:left-9">Product ID</li>
-                            <li className="font-semibold text-lg relative lg:-left-2 xl:left-9">Price</li>
-                            <li className="font-semibold text-lg lg:mr-7">Order Date</li>
-                            <li className="font-semibold text-lg lg:mr-7 relative xl:left-[-3rem]">Status</li>
+                            <li className="font-semibold text-lg relative lg:-left-2 xl:left-12">Product ID</li>
+                            <li className="font-semibold text-lg relative lg:left-3 xl:left-14">Price</li>
+                            <li className="font-semibold text-lg lg:-mr-2">Order Date</li>
+                            <li className="font-semibold text-lg lg:mr-3 relative xl:left-[-2rem]">Status</li>
                             <li className="font-semibold text-lg lg:mr-7 relative xl:left-[-3.4rem]">Action</li>
                         </ul>
 
@@ -154,11 +149,11 @@ const UserOrders = () => {
                                     </div>
                                     <div className="flex justify-between w-full lg:w-auto mt-3">
                                         <p className="font-poppins text-lg font-semibold lg:hidden">Price:</p>
-                                        <span className="font-poppins text-sm font-semibold lg:ml-[-2rem]">{item.productPrice}</span>
+                                        <span className="font-poppins text-sm font-semibold lg:ml-[-3.5rem]">{item.productPrice}</span>
                                     </div>
                                     <div className="flex justify-between w-full lg:w-auto mt-3">
                                         <p className="font-poppins text-lg font-semibold lg:hidden">Order Date:</p>
-                                        <span className="text-sm font-poppins font-semibold lg:relative lg:right-10">{item.orderDate}</span>
+                                        <span className="text-sm font-poppins font-semibold lg:relative lg:right-10 xl:right-14">{item.orderDate}</span>
                                     </div>
                                     <div className="flex justify-between w-full lg:w-auto mt-3">
                                         <p className="font-poppins text-lg font-semibold lg:hidden">Status:</p>
@@ -201,8 +196,12 @@ const UserOrders = () => {
                     </article>
                 </div>
             </div>
+            <Toaster/>
         </BuyersLayoutGen>
     );
 };
 
 export default UserOrders;
+
+
+

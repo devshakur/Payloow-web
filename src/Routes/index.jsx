@@ -33,7 +33,10 @@ import Cart from "../components/E-Learning/Student/Cart.jsx";
 import StudentMessages from "../components/E-Learning/Student/StudentMessages.jsx";
 import Support from "../components/Dashboard/Support.jsx";
 import SingleCourse from "../components/E-Learning/Student/SingleCourse.jsx";
-
+//Datas
+import { items } from "../components/Easybuy/Buyers/product.js";
+import { phonesItems } from "../components/Easybuy/Buyers/product.js";
+import { solarItems } from "../components/Easybuy/Buyers/product.js";
 //Registration
 const Regsiter = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Register.jsx'))
 const Login = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Login.jsx'))
@@ -72,6 +75,7 @@ const SharesDashboard = React.lazy(()=>import("../components/Shares/SharesDashbo
 const Portfolio = React.lazy(()=>import("../components/Shares/Portfolio.jsx"))
 const Transaction = React.lazy(()=>import("../components/Shares/Transaction.jsx"))
 const Analysis = React.lazy(()=>import("../components/Shares/Analysis.jsx"))
+
 
 
 export const router = createBrowserRouter([
@@ -468,10 +472,10 @@ export const router = createBrowserRouter([
   errorElement: <ErrorPage />,
 },
 {
-  path: "/product-details",
+  path: "/product-details/:id",
   element: (
     <Suspense fallback={<Loader />}>
-    <ProductDetails />
+    <ProductDetails/>
     </Suspense>
   ),
   errorElement: <ErrorPage />,
@@ -507,7 +511,7 @@ export const router = createBrowserRouter([
   path: "/phones-page",
   element: (
     <Suspense fallback={<Loader />}>
-    <Phones/>
+    <Phones phones={phonesItems} />
     </Suspense>
   ),
   errorElement: <ErrorPage />,
@@ -525,7 +529,7 @@ export const router = createBrowserRouter([
   path: "/solar-page",
   element: (
     <Suspense fallback={<Loader />}>
-    <SolarDashboard/>
+    <SolarDashboard solars={solarItems}/>
     </Suspense>
   ),
   errorElement: <ErrorPage />,

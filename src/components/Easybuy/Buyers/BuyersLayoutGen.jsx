@@ -40,6 +40,9 @@ import { Toaster } from "react-hot-toast";
 import BuyersDashboardTwo from "./BuyersDashboardTwo";
 import Header0ne from "./Header0ne";
 import { useRouter } from "../../../Routes/router";
+import { useContext } from "react";
+import { CartContext } from "./cartContext";
+
 
 
 const navigation = [
@@ -71,6 +74,7 @@ function classNames(...classes) {
 function BuyersLayoutGen({ children}) {
   const location = useLocation();
   const router = useRouter();
+  const { cartTotalQuantity } = useContext(CartContext) || {}; 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isActive = (href) => location.pathname === href;
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -246,7 +250,7 @@ function BuyersLayoutGen({ children}) {
         >
           <FiHeart className="w-5 h-5"  />
         </button>
-
+        <span className="hidden  absolute bg-slate-200 w-5 h-5 rounded-full lg:flex justify-center items-center right-[15.4rem] top-[14px]"><p className="text-red-700 font-poppins font-medium text-sm">{cartTotalQuantity}</p></span>
         <button
           type="button"
           onClick={handleCart}
@@ -254,7 +258,6 @@ function BuyersLayoutGen({ children}) {
         >
          <IoCartOutline className="w-5 h-5" />
         </button>
-        <p className="hidden absolute right-[14.7rem] top-4 bg-red-500 shadow-md w-5 h-5 lg:flex justify-center items-center rounded-[50%]"><span className="text-white text-[14px] font-medium">2</span></p>
 
          {/* Notification Icon (Visible on all screens) */}
          <button

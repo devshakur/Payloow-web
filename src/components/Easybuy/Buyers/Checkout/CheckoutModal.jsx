@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 
-const CheckoutModal = ({isOpen, setIsOpen, handleActive}) => {
+const CheckoutModal = ({isOpen, setIsOpen, handleActive, SubmitCheckOutWallet, loading, installmentPlan, handlePlanChange}) => {
    
   return (
     <div>
@@ -21,16 +21,22 @@ const CheckoutModal = ({isOpen, setIsOpen, handleActive}) => {
                 <form action="">
             <Description className='w-full'>
                     <label htmlFor="plans">Installment Plans</label>
-                    <select name="plans" id="plans" className='w-[95%] py-2 pl-3 border border-gray-300 focus:outline-none rounded-md'>
-                        <option value="full">Full</option>
-                        <option value="half">Half</option>
-                        <option value="quarter">Quarter</option>
+                    <select 
+                    name="plans" 
+                    id="plans"
+                    value={installmentPlan} // Bind state to the select element
+                      onChange={handlePlanChange} 
+                      className='w-[95%] py-2 pl-3 border border-gray-300 focus:outline-none rounded-md'>
+                        <option value="weekly">WEEKLY</option>
+                        <option value="monthly">MONTHLY</option>
+                        <option value="quarterly">QUARTERLY</option>
+                        <option value="annually">ANNUALLY</option>
                     </select>
             </Description>
                 </form>
            
             <div className="flex gap-4 w-full justify-end">
-              <button onClick={handleActive} className='bg-blue-700 text-white py-2 rounded-lg w-[6rem]'>Next</button>
+              <button onClick={SubmitCheckOutWallet}  className='bg-blue-700 text-white py-2 rounded-lg w-[6rem]'>{loading ? 'Please Wait...' : 'Proceed'}</button>
             </div>
           </DialogPanel>
         </div>

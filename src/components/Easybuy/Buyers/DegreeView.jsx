@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useRouter } from '../../../Routes/router';
 import { motion } from 'framer-motion'; // Import Framer Motion
-
+import useInvestment from '../../../hooks/useInvetment';
+import {toast, Toaster} from 'react-hot-toast'
 const DegreeView = () => {
     const router = useRouter();
+    const {GetCart} = useInvestment();
     const [selectedImage, setSelectedImage] = useState("/images/full-view.png");
+    const [cartItems, setCartItems] = useState()
 
     const handleCheckout = () => {
         router.push('/checkout-product');
@@ -13,7 +16,37 @@ const DegreeView = () => {
     const handleImageClick = (imageUrl) => {
         setSelectedImage(imageUrl);
     };
+    const handleCancel = ()=>{
+        router.push('buyers/dashboard')
+    }
 
+    useEffect(() => {
+        const fetchCartItems = async () => {
+          try {
+            const resp = await GetCart();
+            const info = resp?.data?.data;
+            const message = resp?.data?.message
+            if (info) {
+              setCartItems(info);
+              toast.success(message);
+              const initialQuantities = info.reduce((acc, item) => {
+                acc[item._id] = item.quantity; // Set the initial quantity for each item
+                return acc;
+              }, {});
+              setQuantities(initialQuantities); // Initialize quantities with the fetched data 
+            } else {
+                toast.error('No cart items found');
+            }
+          } catch (error) {
+            const errorMsg = error?.response?.data?.msg
+            toast.error(errorMsg);
+          }
+        };
+    
+        fetchCartItems();
+      }, []);
+
+      
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -32,16 +65,20 @@ const DegreeView = () => {
                     <h4 className='font-plus-jakarta font-normal text-lg text-[#000000]'>360-Degree Views</h4>
                 </div>
                 <div>
-                    <p className='text-blue-700'>Cancel</p>
+                    <button onClick={handleCancel} className='text-blue-700 cursor-pointer'>Cancel</button>
                 </div>
             </header>
 
-            <main className='flex flex-col lg:grid lg:grid-cols-2 bg-white mt-5 lg:gap-12'>
-                <div className='flex flex-col lg:flex-row justify-center lg:justify-start'>
+             {cartItems && cartItems.length > 0 ? (
+                cartItems.map((item)=>(
+                    <main className='flex flex-col lg:grid lg:grid-cols-2 bg-white mt-5 lg:gap-12'>
+                    <div 
+                    className='flex flex-col lg:flex-row justify-center lg:justify-start' 
+                    key={item._id}>
                     {/* Add motion.div to animate the image container */}
                     <motion.img
                         className='w-[70%] h-[90%]'
-                        src={selectedImage}
+                        src={item.product?.imageKey || selectedImage}
                         alt="full-view"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -90,36 +127,49 @@ const DegreeView = () => {
                         </div>
                     </div>
                 </div>
-
+                    
                 <article className='lg:mt-12 mx-2'>
                     <div className='flex justify-between'>
-                        <h4 className='font-plus-jakarta font-semibold text-lg'>Iphone11</h4>
-                        <p className='font-medium text-lg font-poppins'>$80
-                            <span className='ml-3 font-medium text-lg font-poppins text-red-500 line-through'>$100</span>
+                        <h4 className='font-plus-jakarta font-semibold text-lg'>{item.product?.name}</h4>
+                        <p className='font-medium text-lg font-poppins'>{item.product?.price.$numberDecimal}
+                            <span className='ml-3 font-medium text-lg font-poppins text-red-500 line-through'>{item.product?.price.$numberDecimal}</span>
                         </p>
                     </div>
                     <p className='text-[16px] font-plus-jakarta font-normal mt-5'>
-                        Experience the iPhone 11 in classic white—a seamless blend of style and functionality.
-                        This model features a stunning 6.1-inch Liquid Retina display, a powerful dual-camera system for capturing ultra-clear photos and 4K videos, and an efficient A13 Bionic chip for smooth performance.
+                        {item.product?.description}
                     </p>
                     <div className='flex mt-5 gap-3 items-center'>
                         <h5>Color:</h5>
                         <p className='w-12 h-12 rounded-[50%] bg-yellow-300'></p>
                     </div>
-                    <div className="w-full mt-8">
-                        <motion.button
-                            onClick={handleCheckout}
-                            className='w-full font-plus-jakarta text-white bg-blue-700 py-3 rounded-lg'
-                            whileHover={{ scale: 1.05 }} 
-                            transition={{ type: 'spring', stiffness: 300 }}
-                        >
-                            Buy Now
-                        </motion.button>
-                    </div>
+                   
+                
+                  
                 </article>
             </main>
+                ))
+             ) : (
+                <div>No product....</div>
+             )}
+             {cartItems && cartItems.length > 0 ? (
+             <div className="w-full  my-4 flex justify-center">
+             <motion.button
+                 onClick={handleCheckout}
+                 className='w-[80%] lg:w-[30%] font-plus-jakarta text-white bg-blue-700 py-3 rounded-lg'
+                 whileHover={{ scale: 1.05 }} 
+                 transition={{ type: 'spring', stiffness: 300 }}
+             >
+                 Buy Now
+             </motion.button>
+         </div> 
+             ): (
+                <div></div>
+             )}
+                
+           <Toaster />
         </motion.div>
     );
 };
 
 export default DegreeView;
+

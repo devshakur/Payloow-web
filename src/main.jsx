@@ -7,17 +7,20 @@ import { RouterProvider } from "react-router-dom";
 import { BillsProvider } from "./AuthContext/BillsContext/billsContext.jsx";
 import { VariationsProvider } from "./AuthContext/VariationsContext.jsx";
 import { InvestmentProvider } from "./AuthContext/InvestmentContext/InvestmentContext.jsx";
-
+import CartProvider from "./components/Easybuy/Buyers/cartContext.jsx";
+import useInvestment from "./hooks/useInvetment.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <VariationsProvider>
       <AuthProvider>
-        <BillsProvider>
           <InvestmentProvider>
+       <CartProvider>
+        <BillsProvider>
             <RouterProvider router={router} />
-          </InvestmentProvider>
         </BillsProvider>
+        </CartProvider>
+          </InvestmentProvider>
       </AuthProvider>
     </VariationsProvider>
   </React.StrictMode>

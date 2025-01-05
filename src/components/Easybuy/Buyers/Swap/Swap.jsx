@@ -2,15 +2,93 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import BuyersLayoutGen from '../BuyersLayoutGen';
 import { VscArrowSwap } from "react-icons/vsc";
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import ImageUploadModal from './ImageUploadModal';
+import {toast, Toaster} from 'react-hot-toast'
 import SwapModal from './SwapModal';
 import TradeSuccessModal from './TradeSuccessModal';
+import useInvestment from '../../../../hooks/useInvetment';
+import { useEffect } from 'react';
 
 const Swap = () => {
+  const { swapProduct } = useInvestment()
   const [selectedForm, setSelectedForm] = useState('phone');
-  const [isOpen, setIsOpen] = useState(false); 
-  const [active, setActive] = useState('one'); 
+  const [isOpen, setIsOpen] = useState(false);
+  const [active, setActive] = useState('one');
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
+  const [submiting, setSubmiting] = useState(false)
+
+const productToSwapId = localStorage.getItem('product_id') || ''
+
+  const initialValues = {
+    productToSwapId: productToSwapId,
+    productName: '',
+    productBrand: '',
+    productModel: '',
+    productDescription: '',
+    front: null,
+    back: null,
+    receipt: null,
+    box: null,
+  };
+
+
+  const validationSchema = Yup.object({
+    productName: Yup.string().required('Product Name is required'),
+    productBrand: Yup.string().required('Brand is required'),
+    productModel: Yup.number().required('Model is required').min(0, 'Model must be a positive number'),
+    productToSwapId: Yup.string().required('Swap ID is required').min(1, 'Swap ID must be at least 1'),
+    productDescription: Yup.string().required('Description is required'),
+    front: Yup.mixed().required('Front image is required'),
+    back: Yup.mixed().required('Back image is required'),
+    receipt: Yup.mixed().required('Receipt image is required'),
+    box: Yup.mixed().required('Box image is required'),
+  });
+
+  const onSubmit = async (values) => {
+    console.log('Form data', values);
+    setSubmiting(true)
+    try {
+      const response = await swapProduct(values);
+      if (response && response.status === 200) {
+        setSubmiting(false);
+        setIsOpen(false);
+        setActive('three')
+        if (response.data?.message) {
+          toast.success(response.data.message);
+
+        } else {
+          toast.success('Product Sent Successfully');  // Fallback success message
+        }
+      }
+    }catch (error) {
+     setSubmiting(false); // Ensure you're managing your loading state correctly
+    
+      // Check if the error response has the `msg` key
+      if (error?.response?.data?.msg) {
+        const errorMsg = error.response.data.msg; // Extract the error message
+        
+        toast.error(errorMsg); // Display it in the toast
+      } else {
+        // Fallback for unknown errors
+        toast.error('Failed to create product. Please check your inputs.');
+      }
+    }
+  };
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit,
+  });
+
+
+
+
+
+
+
 
   // Handle switching forms
   const handleSelection = (formType) => {
@@ -111,7 +189,18 @@ const Swap = () => {
                 transition={{ duration: 0.5 }}
               >
                 <label htmlFor="product Name" className='font-medium font-plus-jakarta'>Product Name</label>
-                <input placeholder='Product Name' className='w-[100%] border border-gray-300 focus:outline-none py-2 rounded-md px-3' type="text" />
+                <input
+                  placeholder='Product Name'
+                  className='w-[100%] border border-gray-300 focus:outline-none py-2 rounded-md px-3'
+                  type="text"
+                  name='productName'
+                  onChange={formik.handleChange}
+                  value={formik.values.productName}
+                  onBlur={formik.handleBlur}
+                />
+                {formik.touched.productName && formik.errors.productName ? (
+                  <div className="text-red-500">{formik.errors.productName}</div>
+                ) : null}
               </motion.div>
               <motion.div
                 className="w-full p-4"
@@ -120,10 +209,23 @@ const Swap = () => {
                 transition={{ duration: 0.5 }}
               >
                 <label htmlFor="Brand" className='font-medium font-plus-jakarta'>Brand</label>
-                <select name="brand" id="brand" className='w-[100%] border border-gray-300 focus:outline-none py-2 rounded-md px-3'>
-                  <option value="Iphone">Iphone</option>
+                <select
+                  name="productBrand"
+                  id="brand"
+                  className='w-[100%] border border-gray-300 focus:outline-none py-2 rounded-md px-3'
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.productBrand}
+                >
+                   <option value="choose">Choose a brand</option>
+                  <option value="Apple">Apple</option>
                   <option value="Samsung">Samsung</option>
+                  <option value="Hauwei">Hauwei</option>
+                  <option value="Others">Others</option>
                 </select>
+                {formik.touched.productBrand && formik.errors.productBrand ? (
+                  <div className="text-red-500">{formik.errors.productBrand}</div>
+                ) : null}
               </motion.div>
               <motion.div
                 className="w-full p-4"
@@ -131,8 +233,19 @@ const Swap = () => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
               >
-                <label htmlFor="product Name" className='font-medium font-plus-jakarta'>Model</label>
-                <input placeholder='Model' className='w-[100%] border border-gray-300 focus:outline-none py-2 rounded-md px-3' type="text" />
+                <label htmlFor="product Modal" className='font-medium font-plus-jakarta'>Model</label>
+                <input 
+                placeholder='productModel' 
+                name='productModel'
+                className='w-[100%] border border-gray-300 focus:outline-none py-2 rounded-md px-3' 
+                type="number" 
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.productModel}
+                />
+                 {formik.touched.productModel && formik.errors.productModel ? (
+                  <div className="text-red-500">{formik.errors.productModel}</div>
+                ) : null}
               </motion.div>
               <motion.div
                 className='w-full p-4'
@@ -143,13 +256,19 @@ const Swap = () => {
                 <label htmlFor="product-desc" className='font-medium font-plus-jakarta'>Product Description</label>
               </motion.div>
               <motion.textarea
-                name="desc" id="desc"
+                name="productDescription" id="desc"
                 className='border-2 rounded-md focus:outline-none border-gray-300 w-[95%] ml-4'
                 cols="30" rows="8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.productDescription}
               />
+               {formik.touched.productDescription && formik.errors.productDescription ? (
+                  <div className="text-red-500">{formik.errors.productDescription}</div>
+                ) : null}
               <div className='w-full flex justify-center mt-6 pb-5'>
                 <motion.button
                   type="button"
@@ -163,19 +282,27 @@ const Swap = () => {
               </div>
             </form>
           )}
-          
+
           {/* Modal Components */}
           {isOpen && (
             <ImageUploadModal
               isOpen={isOpen}
               setIsOpen={setIsOpen}
               setActive={setActive}
-              handleUploadSuccess={handleUploadSuccess} 
+              formik={formik}
+              onSubmit={formik.handleSubmit}
+              handleUploadSuccess={handleUploadSuccess}
+              submiting={submiting}
+              setSubmiting={setSubmiting}
               className="modal-slide-in"
             />
           )}
-          {active === 'two' && <SwapModal isNewModalOpen={isNewModalOpen} setIsNewModalOpen={setIsNewModalOpen} setActive={setActive} successModal={successModal} />}
-          {active === 'three' && <TradeSuccessModal />}
+           {/* {active === 'two' && <SwapModal
+            isNewModalOpen={isNewModalOpen}
+            setIsNewModalOpen={setIsNewModalOpen}
+            setActive={setActive}
+            successModal={successModal} />} */}
+          {active === 'three' && <TradeSuccessModal />} 
 
           {selectedForm === 'solar' && (
             <form action="">
@@ -233,6 +360,7 @@ const Swap = () => {
             </form>
           )}
         </motion.div>
+        <Toaster />
       </div>
     </BuyersLayoutGen>
   );

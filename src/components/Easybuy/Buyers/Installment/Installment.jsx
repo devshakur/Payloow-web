@@ -1,79 +1,128 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion'; 
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import BuyersLayoutGen from '../BuyersLayoutGen';
 import { IoFilterOutline } from "react-icons/io5";
 import { IoIosArrowDown, IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import ReactPaginate from 'react-paginate';
 import InstallmentModal from './InstallmentModal';
-
-const items = [
-  {
-    id: 1,
-    img: '/images/iphon-green.png',
-    name: 'Iphone Xr',
-    status: 'active',
-  },
-  {
-    id: 2,
-    img: '/images/iphon11-small.png',
-    name: 'Iphone 11',
-    status: 'Locked',
-  },
-  {
-    id: 3,
-    img: '/images/iphon-yellow.png',
-    name: 'Iphone 12',
-    status: 'active',
-  },
-];
-
-const orders = [
-  {
-    img: '/images/iphon11-small.png',
-    productName: 'Iphone Xr',
-    ProductDate: '10/11/2021',
-    productPrice: '$5,000',
-    orderDate: '04/10/2024',
-    productStatus: 'pending',
-  },
-  {
-    img: '/images/iPhone12.png',
-    productName: 'Iphone 12',
-    ProductDate: '09/02/2020',
-    productPrice: '$8,000',
-    orderDate: '05/03/2022',
-    productStatus: 'Shipped',
-  },
-  {
-    img: '/images/iphon-green.png',
-    productName: 'Iphone 13',
-    ProductDate: '10/05/2023',
-    productPrice: '$10,000',
-    orderDate: '24/11/2024',
-    productStatus: 'Pending',
-  },
-  {
-    img: '/images/iphon-yellow.png',
-    productName: 'Iphone 15',
-    ProductDate: '20/04/2021',
-    productPrice: '$14,000',
-    orderDate: '14/03/2021',
-    productStatus: 'Shipped',
-  },
-  {
-    img: '/images/iphon-black.png',
-    productName: 'Iphone 13 pro max',
-    ProductDate: '10/02/2021',
-    productPrice: '$17,000',
-    orderDate: '02/12/2024',
-    productStatus: 'Pending',
-  },
-];
+import useInvestment from '../../../../hooks/useInvetment';
+import { toast, Toaster } from 'react-hot-toast'
 
 const Installment = () => {
+  const { GetUInstallmentOrders } = useInvestment();
   const [currentPage, setCurrentPage] = useState(0);
+  const [orders, setOrders] = useState([])
+  const [totalAmount, setTotalAmount] = useState()
+  const [amountPaid, setAmountPaid] = useState(0)
+  const [balance, setBalance] = useState(0)
   let [isOpen, setIsOpen] = useState(false);
+
+
+ const formatDueDate = (dueDate) => {
+  const now = new Date();
+  const nextDueDate = new Date(dueDate); // Convert string to Date object
+  const timeDifference = nextDueDate - now; // Difference in milliseconds
+
+  console.log('Current Date:', now); // Log current date
+  console.log('Next Due Date:', nextDueDate); // Log due date
+
+  if (timeDifference > 0) {
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24)); // Calculate days
+    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // Calculate hours
+    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60)); // Calculate minutes
+
+    return {
+      formatted: `${days} Days`, // Display days
+      time: `${hours} : ${minutes}`, // Display time as "hours : minutes"
+    };
+  } else {
+    // If the due date is within the same day but past the current time, adjust logic
+    if (nextDueDate.getDate() === now.getDate()) {
+      return {
+        formatted: "Today", // Display 'Today' if it's the same day
+        time: "Past due",    // Indicate that it's overdue
+      };
+    }
+    return null; // Return null if the due date is in the past (from a previous day)
+  }
+};
+
+
+useEffect(() => {
+  const getInstallmentOrders = async () => {
+    try {
+      const resp = await GetUInstallmentOrders();
+      const message = resp?.data?.message;
+      const productsData = resp?.data?.data?.data;
+
+      if (productsData) {
+        let totalPaid = 0;
+        let totalBalance = 0;
+
+        const formattedOrders = productsData.map((order) => {
+          const installments = order?.installmentDetails?.installments || [];
+          const totalPaidAmount = installments.reduce((sum, inst) => {
+            return inst.status === "paid" ? sum + inst.amount : sum;
+          }, 0);
+
+          const remainingBalance = order?.totalAmount - totalPaidAmount;
+
+          // Add to the total paid and remaining balance
+          totalPaid += totalPaidAmount;
+          totalBalance += remainingBalance;
+
+          // Format due dates for the next installment
+          const nextDueDetails = installments.length > 0 ? formatDueDate(installments[0]?.dueDate) : null;
+
+          return {
+            productName: order?.cartItems[0]?.product?.name,
+            dueDates: installments.map((inst) => ({
+              dueDate: new Date(inst?.dueDate).toLocaleDateString(),
+              amount: `$${inst?.amount.toFixed(2)}`,
+              status: inst?.status,
+            })),
+            nextDueDetails, // Add the next due date details here
+            purchaseDate: new Date(order?.createdAt).toLocaleDateString(),
+            totalAmount: order?.totalAmount,
+            paymentStatus: order?.paymentStatus,
+            totalPaidAmount: `$${totalPaidAmount.toFixed(2)}`,
+            remainingBalance: `$${remainingBalance.toFixed(2)}`,
+          };
+        });
+
+        const totalAmount = formattedOrders.reduce(
+          (sum, order) => sum + order.totalAmount,
+          0
+        );
+
+        const formattedTotalAmount = `${totalAmount.toFixed(2)}`;
+
+        // Update state with the formatted data
+        setTotalAmount(formattedTotalAmount);
+        setAmountPaid(totalPaid.toFixed(2));
+        setBalance(totalBalance.toFixed(2));
+        setOrders(formattedOrders);
+        toast.success(message || 'Fetched all orders');
+      } else {
+        toast.success('No orders found');
+      }
+    } catch (error) {
+      if (error?.response?.data?.msg) {
+        toast.error(error.response.data.msg);
+      } else {
+        toast.error('Failed to fetch products');
+      }
+    }
+  };
+
+  getInstallmentOrders();
+}, []);
+
   
+  
+  
+
+
   const itemsPerPage = 4;
   const pageCount = Math.ceil(orders.length / itemsPerPage);
   const displayedOrders = orders.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
@@ -81,9 +130,9 @@ const Installment = () => {
   return (
     <BuyersLayoutGen>
       {/* Total Amount Section with Animation */}
-      <motion.div 
+      <motion.div
         className="flex flex-col md:grid md:grid-cols-3 gap-3"
-        initial={{ opacity: 0 }} 
+        initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
@@ -92,46 +141,59 @@ const Installment = () => {
             <h3 className="font-poppins font-normal text-[20px] text-[#1D2433]">Total Amount</h3>
             <p className="font-medium">...</p>
           </div>
-          <h3 className="font-poppins font-medium text-[28px] text-[#1D2433] py-2">₦50,000</h3>
+          <h3 className="font-poppins font-medium text-[28px] text-[#1D2433] py-2">₦{totalAmount || 0}</h3>
         </motion.div>
-        
+
         <motion.div className="bg-[#FFFFFF] shadow-md p-3" initial={{ x: -100 }} animate={{ x: 0 }} transition={{ duration: 0.7 }}>
           <div className="flex justify-between">
             <h3 className="font-poppins font-normal text-[20px] text-[#1D2433]">Amount Paid</h3>
             <p className="font-medium">...</p>
           </div>
-          <h3 className="font-poppins font-medium text-[28px] text-[#1D2433] py-2">₦50,000</h3>
+          <h3 className="font-poppins font-medium text-[28px] text-[#1D2433] py-2">₦{amountPaid}</h3>
         </motion.div>
-        
+
         <motion.div className="bg-[#FFFFFF] shadow-md p-3" initial={{ x: -100 }} animate={{ x: 0 }} transition={{ duration: 0.9 }}>
           <div className="flex justify-between">
             <h3 className="font-poppins font-normal text-[20px] text-[#1D2433]">Remaining Balance</h3>
             <p className="font-medium">...</p>
           </div>
-          <h3 className="font-poppins font-medium text-[28px] text-[#1D2433] py-2">₦50,000</h3>
+          <h3 className="font-poppins font-medium text-[28px] text-[#1D2433] py-2">₦{balance}</h3>
         </motion.div>
       </motion.div>
 
       {/* Next Due Date and Installment Purchases Section */}
-      <motion.div 
-        className="md:grid md:grid-cols-2 mt-4 gap-3" 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }} 
+      <motion.div
+        className="md:grid md:grid-cols-2 mt-4 gap-3"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
         <motion.div className="bg-[#FFFFFF] shadow-md p-3" initial={{ y: 100 }} animate={{ y: 0 }} transition={{ duration: 0.5 }}>
-          <h4 className="font-poppins font-medium text-[22px] text-[#1D2433]">Next Due Date</h4>
-          <div className="flex items-center justify-between mx-6">
-            <div>
-              <h4 className="font-poppins font-normal italic text-xl">In</h4>
-              <p className="font-poppins font-medium text-[28px] text-[#000]">6 Days</p>
-              <p className="font-poppins font-medium text-lg text-[#1D2433CC]">11 Hours, 40 mins</p>
-            </div>
-            <div>
-              <img src="/images/Progress-circle.png" alt="progress-bar" />
-              <p className="relative left-6 lg:left-14 -top-24 font-poppins font-semibold text-[32px] text-[#000]">6 : 11 : 40</p>
-            </div>
-          </div>
+        {orders.map((order) => (
+  <div key={order.productName}>
+    <h4 className="font-poppins font-medium text-[22px] text-[#1D2433]">Next Due Date</h4>
+    <div className="flex items-center justify-between mx-6">
+      <div>
+        <h4 className="font-poppins font-normal italic text-xl">In</h4>
+        {/* Check if nextDueDetails exists and display the formatted data */}
+        <p className="font-poppins font-medium text-[28px] text-[#000]">
+          {order.nextDueDetails ? order.nextDueDetails.formatted : "No due date"}
+        </p>
+        <p className="font-poppins font-medium text-lg text-[#1D2433CC]">
+          {order.nextDueDetails ? order.nextDueDetails.time : "N/A"}
+        </p>
+      </div>
+      <div>
+        <img src="/images/Progress-circle.png" alt="progress-bar" />
+        <p className="relative left-6 lg:left-14 -top-24 font-poppins font-semibold text-[32px] text-[#000]">
+          {/* Display the time remaining in the "hh : mm" format */}
+          {order.nextDueDetails ? order.nextDueDetails.time : "N/A"}
+        </p>
+      </div>
+    </div>
+  </div>
+))}
+
         </motion.div>
 
         {/* Installment Purchases List */}
@@ -140,44 +202,45 @@ const Installment = () => {
             <h3 className="font-poppins font-medium text-xl text-[#1D2433]">Installment Purchases</h3>
             <h5 className="font-poppins font-medium text-lg text-blue-600">View all</h5>
           </div>
-          {items.map((item) => (
-            <motion.div 
-              key={item.id} 
-              className="flex justify-between mt-3" 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              transition={{ duration: 0.5 }}
-            >
-              <div className="flex gap-3">
-                <div className="w-11 h-11 rounded-[50%] border border-gray-200 flex justify-center items-center">
-                  <img className="w-[30px] h-[30px]" src={item.img} alt={item.name} />
-                </div>
-                <p>{item.name}</p>
-              </div>
-              <button
-                onClick={() => setIsOpen(true)}
-                className={`px-4 h-8 rounded-md ${item.status === 'active' ? 'text-green-500 bg-green-200' : 'text-red-600 bg-red-100'}`}
+          {displayedOrders && displayedOrders.length > 0 ?
+            displayedOrders.map((item) => (
+              <motion.div
+                key={item._id}
+                className="flex justify-between mt-3"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
               >
-                {item.status}
-              </button>
-            </motion.div>
-          ))}
-          {isOpen && <InstallmentModal isOpen={isOpen} setIsOpen={setIsOpen} />}
+                <div className="flex gap-3">
+                  <div className="w-11 h-11 rounded-[50%] border border-gray-200 flex justify-center items-center">
+                    <img className="w-[30px] h-[30px]" src={item.img || '/images/iphon-green.png'} alt={item.name} />
+                  </div>
+                  <p>{item.productName}</p>
+                </div>
+                <button
+                  onClick={() => setIsOpen(true)}
+                  className={`px-4 h-8 rounded-md ${item.status === 'active' ? 'text-green-500 bg-green-200' : 'text-red-600 bg-red-100'}`}
+                >
+                  {item.status}
+                </button>
+              </motion.div>
+            )) : <div className='text-gray-700 font-medium text-lg font-plus-jakarta'>No Installment plan</div>}
+          {isOpen && <InstallmentModal isOpen={isOpen} setIsOpen={setIsOpen} orders={orders} />}
         </motion.div>
       </motion.div>
 
       {/* Filters and Orders List */}
-      <motion.div 
-        className="flex justify-between mt-3" 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }} 
+      <motion.div
+        className="flex justify-between mt-3"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
         <div className="lg:flex items-center gap-4">
-          <motion.button 
+          <motion.button
             className="border border-blue-800 px-2 lg:px-5 rounded-lg py-2 my-3 flex justify-start items-center gap-3"
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
             <IoFilterOutline className="text-blue-800 w-7 h-7" />
@@ -195,74 +258,85 @@ const Installment = () => {
       </motion.div>
 
       {/* Orders List with Pagination */}
-      <motion.div 
-        className="flex justify-center" 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }} 
+      <motion.div
+        className="flex justify-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
         <article className="bg-white w-[100%] overflow-scroll mx-4 lg:mx-0 rounded-lg p-4">
-          <ul className="lg:flex justify-between bg-white shadow-lg hidden">
-            <li className="font-semibold text-lg lg:mr-5">Product</li>
-            <li className="font-semibold text-lg relative lg:-left-2 xl:left-9">Product Date</li>
-            <li className="font-semibold text-lg relative lg:-left-2 xl:left-9">Price</li>
-            <li className="font-semibold text-lg lg:mr-7">Due Date</li>
-            <li className="font-semibold text-lg lg:mr-7 relative xl:left-[-3rem]">Status</li>
-            <li className="font-semibold text-lg lg:mr-7 relative xl:left-[-3.4rem]">Action</li>
-          </ul>
+            {displayedOrders && displayedOrders.length > 0 ? (
+  displayedOrders.map((item, index) => (
+    <motion.div
+      key={index}
+      className="rounded-lg p-4 mb-4 shadow-md bg-white"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Card Header: Product Image and Details */}
+      <div className="flex items-center gap-4 mb-4">
+        <div className="w-16 h-16 rounded-lg bg-gray-100 flex justify-center items-center">
+          <img
+            src={item.img || '/images/iphon-green.png'}
+            alt={item.productName}
+            className="w-12 h-12 object-cover"
+          />
+        </div>
+        <div className="flex-1">
+          <h3 className="text-lg font-poppins font-semibold text-gray-800">{item.productName}</h3>
+          <p className="text-sm font-poppins text-gray-500">Purchased: {item.purchaseDate}</p>
+        </div>
+        <button
+          onClick={() => setIsOpen(true)}
+          className="px-4 py-1 text-sm rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200"
+        >
+          View Details
+        </button>
+      </div>
 
-          {/* Display Orders */}
-          {displayedOrders.map(item => (
-            <motion.div 
-              key={item.ProductId} 
-              className="rounded-lg p-4 mb-4 shadow-md lg:shadow-sm"
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              transition={{ duration: 0.5 }}
+      {/* Installments Section */}
+      <div>
+        <h4 className="font-poppins font-medium text-gray-700 mb-2">Installment Details:</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {item.dueDates.map((dueDate, idx) => (
+            <div
+              key={idx}
+              className="p-3 rounded-md bg-gray-50 border border-gray-200 flex flex-col gap-2"
             >
-              <div className="flex justify-center lg:justify-between lg:items-center flex-col lg:flex-row">
-                <div className="flex justify-between w-full lg:w-[12%] mt-3">
-                  <p className="font-poppins text-lg font-semibold lg:hidden">Product:</p>
-                  <div className="text-sm flex gap-2 justify-start ml-[-1rem] font-poppins font-semibold lg:truncate">
-                    <img src={item.img} alt="phone" style={{ width: '30px', height: '30px' }} />
-                    <p>{item.productName}</p>
-                  </div>
-                </div>
-                <div className="flex justify-between lg:w-auto mt-3">
-                  <p className="font-poppins text-lg font-semibold lg:hidden">Product Date:</p>
-                  <span className="text-sm font-poppins font-semibold lg:ml-[-3rem] lg:max-w-[8rem] lg:truncate">
-                    {item.ProductDate}
-                  </span>
-                </div>
-                <div className="flex justify-between w-full lg:w-auto mt-3">
-                  <p className="font-poppins text-lg font-semibold lg:hidden">Price:</p>
-                  <span className="font-poppins text-sm font-semibold lg:ml-[-2rem]">{item.productPrice}</span>
-                </div>
-                <div className="flex justify-between w-full lg:w-auto mt-3">
-                  <p className="font-poppins text-lg font-semibold lg:hidden">Due Date Date:</p>
-                  <span className="text-sm font-poppins font-semibold lg:relative lg:right-10">{item.orderDate}</span>
-                </div>
-                <div className="flex justify-between w-full lg:w-auto mt-3">
-                  <p className="font-poppins text-lg font-semibold lg:hidden">Status:</p>
-                  <span
-                    className={`text-sm font-poppins font-semibold lg:relative right-9 xl:right-20 ${item.productStatus.toLowerCase() === 'pending' ? 'text-red-500' : 'text-green-500'}`}
-                  >
-                    {item.productStatus}
-                  </span>
-                </div>
-
-                <div className="flex justify-between w-full lg:w-auto mt-3">
-                  <p className="font-poppins text-lg font-semibold lg:hidden">Action:</p>
-                  <span className="font-poppins text-sm font-semibold lg:relative lg:right-9 xl:right-24">...</span>
-                </div>
+              <div className="flex justify-between">
+                <p className="text-sm font-poppins text-gray-600">Due Date:</p>
+                <p className="text-sm font-poppins text-gray-800">{dueDate.dueDate}</p>
               </div>
-            </motion.div>
+              <div className="flex justify-between">
+                <p className="text-sm font-poppins text-gray-600">Amount:</p>
+                <p className="text-sm font-poppins text-gray-800">{dueDate.amount}</p>
+              </div>
+              <div className="flex justify-between">
+                <p className="text-sm font-poppins text-gray-600">Status:</p>
+                <p
+                  className={`text-sm font-poppins font-semibold ${
+                    dueDate.status === 'pending' ? 'text-yellow-600' : 'text-green-600'
+                  }`}
+                >
+                  {dueDate.status}
+                </p>
+              </div>
+            </div>
           ))}
+        </div>
+      </div>
+    </motion.div>
+  ))
+) : (
+  <div className="text-gray-700 font-medium text-lg font-plus-jakarta">No Installment plan</div>
+)}
+
           {/* Pagination Controls */}
-          <motion.div 
-            className="flex text-center justify-between" 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
+          <motion.div
+            className="flex text-center justify-between"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
           >
             <ReactPaginate
@@ -285,6 +359,7 @@ const Installment = () => {
           </motion.div>
         </article>
       </motion.div>
+      <Toaster />
     </BuyersLayoutGen>
   );
 }

@@ -100,3 +100,20 @@ export const InvestmentEndpoints = {
   repayInvestment: (investment_id) =>
     `${investmentApiBaseUrl}debtor/investment/${investment_id}/repayment/`,
 };
+
+//EasyBuy
+export const EasyBuyEndpoints = {
+  createProfile: `${BaseUrl}/easybuy/profile`,
+  getCart: `${BaseUrl}/easybuy/buyer/cart/`,
+  createProduct: `${BaseUrl}/easybuy/partner/products/`,
+  getEasyBuyCategories: `${BaseUrl}/easybuy/categories/`,
+  addToCart: `${BaseUrl}/easybuy/buyer/cart/`,
+  deleteFromCart: `${BaseUrl}/easybuy/buyer/cart/`,
+  fetchAllProduct: `${BaseUrl}/easybuy/buyer/products/`,
+  checkCoupon: `${BaseUrl}/easybuy/buyer/check-coupon/`,
+  GetDeliveryInfo: `${BaseUrl}/easybuy/buyer/delivery-information/`,
+  checkOut:`${BaseUrl}/easybuy/buyer/checkout/`,
+  swapProduct: `${BaseUrl}/swap/product`,
+  getUserOrders: `${BaseUrl}/easybuy/buyer/orders/`,
+  getInstallmentOrders: `${BaseUrl}/easybuy/buyer/installment-orders/`
+}

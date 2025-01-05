@@ -1,75 +1,22 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';  // Import framer-motion for animations
 import BuyersLayoutGen from '../BuyersLayoutGen';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import { IoIosArrowForward } from "react-icons/io";
 import { IoCartOutline } from "react-icons/io5";
 import { IoIosArrowBack } from "react-icons/io";
 import { useRouter } from '../../../../Routes/router';
 
-const items = [
-  {
-    id: 1,
-    img: '/images/solar.png',
-    name: 'Solar Panel 100W',
-    amount: '₦80,499',
-    descrp: '7/ 5.8 Inches - Reliable power wherever ...',
-  },
-  {
-    id: 2,
-    img: '/images/inverter.png',
-    name: 'Rich Solar',
-    amount: '₦400,000',
-    descrp: '1000W 48V 120VAC Solar Cabin kit',
-  },
-  {
-    id: 3,
-    img: '/images/inverter-two.png',
-    name: 'UltraSolar Inverter 5kW',
-    amount: '₦100,000',
-    descrp: 'Solar Hybrid Inverter AC220V Pure Sine ...',
-  },
-  {
-    id: 4,
-    img: '/images/camera.png',
-    name: 'Solar Led Landscape',
-    amount: '₦60,000',
-    descrp: '1000W 48V 120VAC Solar Cabin kit',
-  },
-  {
-    id: 5,
-    img: '/images/inverter.png',
-    name: 'Rich Solar',
-    amount: '₦400,000',
-    descrp: '1000W 48V 120VAC Solar Cabin kit',
-  },
-  {
-    id: 6,
-    img: '/images/solar.png',
-    name: 'Solar Panel 100W',
-    amount: '₦80,499',
-    descrp: '7/ 5.8 Inches - Reliable power wherever ...',
-  },
-  {
-    id: 7,
-    img: '/images/inverter-two.png',
-    name: 'UltraSolar Inverter 5kW',
-    amount: '₦100,000',
-    descrp: 'Solar Hybrid Inverter AC220V Pure Sine ...',
-  },
-  // Add more items if needed
-];
 
-const SolarDashboard = () => {
+
+const SolarDashboard = ({solars}) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(6)
   const navigate = useNavigate();
   const router = useRouter();
 
-  const handleProduct = () => {
-    navigate('/product-details');
-  };
+ 
 
   const handleEnergy = () => {
     router.push('/energy-calculator');
@@ -79,10 +26,10 @@ const SolarDashboard = () => {
     router.push('/design-solar');
   };
 
-//  const itemsPerPage = 6;   Number of items per page
+
 
   // Calculate total pages
-  const totalPages = Math.ceil(items.length / itemsPerPage);
+  const totalPages = Math.ceil(solars.length / itemsPerPage);
 
   // Handle pagination page click
   const handlePageClick = (data) => {
@@ -90,10 +37,11 @@ const SolarDashboard = () => {
   };
 
   // Slice the items array to get the current page items
-  const displayedItems = items.slice(
+  const displayedItems = solars.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
   );
+
 
   return (
     <BuyersLayoutGen>
@@ -189,25 +137,25 @@ const SolarDashboard = () => {
           Solar Deals
         </motion.h3>
         <div className='grid lg:grid-cols-3 justify-center gap-x-4 sm:grid-cols-2 gap-y-8'>
-          {displayedItems.map((item) => (
+          {displayedItems.map((product) => (
             <motion.div
-              key={item.id}
+              key={product.id}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
+               <Link to={`/product-details/${product.id}`} >
               <div className='w-full h-[300px]'>
-                <img src={item.img} alt={item.id} className='w-auto h-auto' />
+                <img src={product.img} alt={product.id} className='w-auto h-auto' />
               </div>
               <div className='lg:w-[80%] w-[50%] lg:-mt-6 flex justify-between md:w-[70%]'>
-                <p className='font-poppins font-medium text-[#101928] text-lg'>{item.name}</p>
-                <p className='font-poppins font-[450] text-[#101928] text-xl'>{item.amount}</p>
+                <p className='font-poppins font-medium text-[#101928] text-lg'>{product.name}</p>
+                <p className='font-poppins font-[450] text-[#101928] text-xl'>{product.amount}</p>
               </div>
               <div>
-                <p className='font-poppins font-normal text-[14px] text-[#101928]'>{item.descrp}</p>
+                <p className='font-poppins font-normal text-[14px] text-[#101928]'>{product.descrp}</p>
               </div>
               <motion.button
-                onClick={handleProduct}
                 className='flex items-center gap-3 bg-white border rounded-md my-5 py-1 px-2'
                 initial={{ scale: 0.95 }}
                 whileHover={{ scale: 1.05 }}
@@ -216,6 +164,7 @@ const SolarDashboard = () => {
                 <span><IoCartOutline className='text-[#475367]' /></span>
                 <p className='text-[14px] text-[#475367] font-poppins font-semibold'> Add to Cart</p>
               </motion.button>
+              </Link>
             </motion.div>
           ))}
         </div>
