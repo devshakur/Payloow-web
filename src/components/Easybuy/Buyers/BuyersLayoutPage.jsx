@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -40,6 +40,10 @@ import { Toaster } from "react-hot-toast";
 import BuyersDashboardTwo from "./BuyersDashboardTwo";
 import Header0ne from "./Header0ne";
 import { useRouter } from "../../../Routes/router";
+import { items } from "./product";
+import { useContext } from "react";
+import { CartContext } from "./cartContext";
+
 
 
 const navigation = [
@@ -71,21 +75,51 @@ function classNames(...classes) {
 function BuyersLayoutPage({ children}) {
   const location = useLocation();
   const router = useRouter();
+  // const {} = useInvestment();
+  const {cartTotalQuantity } = useContext(CartContext) || {}; 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isFocus, setIsFocus] = useState(false)
+  const [searchValue, setSearchValue] = useState("");
+ const [totalQuantity, setTotalQuantity] = useState(0)
+
+  
+
+
+// useEffect(()=>{
+//   const fetchCartItems = async () => {
+//     try {
+//       const resp = await GetCart();
+//       const info = resp?.data?.data;
+
+//       if (info) {
+//         const total = info.reduce((sum, item) => sum + item.quantity, 0);
+//         setTotalQuantity(total);
+//       }
+//     } catch (error) {
+//       console.error("Failed to fetch cart items:", error);
+//     }
+//   };
+
+//   fetchCartItems();
+// },[GetCart])
+
+
   const isActive = (href) => location.pathname === href;
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  const [isFocus, setIsFocus] = useState(false)
+
 
  const handleFocus = ()=>{
   setIsFocus(true)
  }
- const handleBlur = ()=>{
-  setIsFocus(false)
- }
+
  const handleCart = ()=>{
   router.push('/user-cart')
   }
- 
+
+  const handleSearchChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
   return (
     <>
       <Toaster />
@@ -238,8 +272,9 @@ function BuyersLayoutPage({ children}) {
           id="search-field"
           name="search"
           type="search"
+          value={searchValue}
           onFocus={handleFocus}
-          onBlur={handleBlur}
+          onChange={handleSearchChange}
           placeholder="Search..."
           className="block h-full w-full shadow-md py-3 focus:outline-none pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
         />
@@ -255,7 +290,7 @@ function BuyersLayoutPage({ children}) {
         >
           <FiHeart className="w-5 h-5"  />
         </button>
-
+        <span className="hidden  absolute bg-slate-200 w-5 h-5 rounded-full lg:flex justify-center items-center right-[14.3rem] top-[14px]"><p className="text-red-700 font-poppins font-medium text-sm">{cartTotalQuantity}</p></span>
         <button
           type="button"
           onClick={handleCart}

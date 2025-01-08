@@ -1,7 +1,7 @@
 import { createContext, useReducer } from "react"
 import axiosInstance from "../axiosInterceptor"
 import { InvestmentHandler } from "./InvestmentHandler"
-import { InvestmentEndpoints } from "../../api/Endpoint"
+import { EasyBuyEndpoints, InvestmentEndpoints } from "../../api/Endpoint"
 
 
 const initial = {
@@ -279,8 +279,202 @@ const InvestmentProvider = ({ children }) => {
         }
     }
 
+    //EasyBuy
+    const GetCart = async () => {
+        try {
+            const response = await axiosInstance.get(EasyBuyEndpoints.getCart)
+            const result = response.data
+            dispatch({ type: 'GETCART', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const CreateBuyerProfile = async (data) => {
+        try {
+            const response = await axiosInstance.post(EasyBuyEndpoints.createProfile, data)
+            const result = response.data
+            dispatch({ type: 'BUYERPROFILE', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const AddToCart = async (data) => {
+        try {
+            const response = await axiosInstance.post(EasyBuyEndpoints.addToCart, data)
+            const result = response.data
+            dispatch({ type: 'ADDTOCART', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const DeleteCart = async (data) => {
+        try {
+            const response = await axiosInstance.delete(EasyBuyEndpoints.deleteFromCart, {data})
+            const result = response.data
+            dispatch({ type: 'ADDTOCART', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const FetchAllProduct = async () => {
+        try {
+            const response = await axiosInstance.get(EasyBuyEndpoints.fetchAllProduct)
+            const result = response.data
+            dispatch({ type: 'FETCHPRODUCTS', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const GetEasyBuyCatgories = async () => {
+        try {
+            const response = await axiosInstance.get(EasyBuyEndpoints.getEasyBuyCategories)
+            const result = response.data
+            dispatch({ type: 'GETCATEGORY', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
 
-    const object = { ...state, dispatch, CreateDebtorAccount, CreateInvestorAccount, CreateBusiness, GetIndustries, getBusinessInfo, ViewBusiness, AddLoan, GetBusinessStages, GetModels, InvestInBusiness, GetInvestmentRequest, GetLoanBusiness, getUserDetails, GetFilteredLoanBusiness, InvestorsInvestment, AcceptInvestmentRequest, DeclineInvestmentRequest, RepayInvestmentRequest,  }
+    const ValidateCoupon = async (data) => {
+        try {
+            const response = await axiosInstance.post(EasyBuyEndpoints.checkCoupon, data)
+            const result = response.data
+            dispatch({ type: 'VALIDATECOUPON', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const CreateProduct = async (data) => {
+        try {
+            const formData = new FormData();
+
+            Object.keys(data).forEach(key => {
+                if (Array.isArray(data[key])) {
+
+                    data[key].forEach(file => {
+                        formData.append(key, file);
+                    });
+                } else {
+
+                    formData.append(key, data[key]);
+                }
+            });
+
+            // Sending data as a multipart/form-data
+            const response = await axiosInstance.post(EasyBuyEndpoints.createProduct, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+
+            const result = response.data;
+            dispatch({ type: 'CREATEPRODUCT', payload: { user: result } });
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+    const GetDeliveryInfo = async () => {
+        try {
+            const response = await axiosInstance.get(EasyBuyEndpoints.GetDeliveryInfo)
+            const result = response.data
+            dispatch({ type: 'GETCATEGORY', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const checkOut = async (data) => {
+        try {
+            console.log(data);
+            const response = await axiosInstance.post(EasyBuyEndpoints.checkOut, data)
+            const result = response.data
+            console.log(result);
+            dispatch({ type: 'CHECKOUT', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const swapProduct = async (data) => {
+        try {
+            const formData = new FormData();
+
+            Object.keys(data).forEach(key => {
+                if (Array.isArray(data[key])) {
+
+                    data[key].forEach(file => {
+                        formData.append(key, file);
+                    });
+                } else {
+
+                    formData.append(key, data[key]);
+                }
+            });
+
+            // Sending data as a multipart/form-data
+            const response = await axiosInstance.post(EasyBuyEndpoints.swapProduct, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+
+            const result = response.data;
+            dispatch({ type: 'SWAPPRODUCT', payload: { user: result } });
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+    const GetUserOrders = async () => {
+        try {
+            const response = await axiosInstance.get(EasyBuyEndpoints.getUserOrders)
+            const result = response.data
+            dispatch({ type: 'GETORDERS', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const GetUInstallmentOrders = async () => {
+        try {
+            const response = await axiosInstance.get(EasyBuyEndpoints.getInstallmentOrders)
+            const result = response.data
+            dispatch({ type: 'GETINSTALLMENTORDERS', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    const object = {
+        ...state, dispatch, CreateDebtorAccount, CreateInvestorAccount, CreateBusiness, GetIndustries, getBusinessInfo,
+        ViewBusiness, AddLoan, GetBusinessStages, GetModels,
+        InvestInBusiness, GetInvestmentRequest, GetLoanBusiness, getUserDetails, GetFilteredLoanBusiness, InvestorsInvestment,
+        AcceptInvestmentRequest, DeclineInvestmentRequest, RepayInvestmentRequest, GetCart, CreateBuyerProfile, AddToCart,
+        FetchAllProduct, ValidateCoupon, DeleteCart, GetEasyBuyCatgories, CreateProduct, GetDeliveryInfo, checkOut, swapProduct,
+        GetUserOrders, GetUInstallmentOrders,
+    }
 
     return <InvestmentContext.Provider value={object}>{children}</InvestmentContext.Provider>
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -26,7 +26,6 @@ import {
   Card,
 } from "iconsax-react";
 import { useLocation } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import { FaCircleUser } from "react-icons/fa6";
 import { FiHeart } from "react-icons/fi";
 import { IoCartOutline } from "react-icons/io5";
@@ -35,13 +34,16 @@ import { LuStore } from "react-icons/lu";
 import { TbMessageStar } from "react-icons/tb";
 import { Toaster } from "react-hot-toast";
 import { useRouter } from "../../../Routes/router";
+import { useContext } from "react";
+import { CartContext } from "../Buyers/cartContext";
+
 
 const navigation = [
   { name: "Main Menu", href: "/easybuy/home", icon: Category2 },
-  { name: "Dashboard", href: "#", icon: LuStore  },
-  { name: "My Order", href: "#", icon: HiOutlineArchiveBox },
-  { name: "Payment", href: "#", icon: Card },
-  { name: "Installment", href: "#", icon: TbMessageStar },
+  { name: "Dashboard", href: "/buyers/dashboard", icon: LuStore  },
+  { name: "My Order", href: "/my-orders", icon: HiOutlineArchiveBox },
+  { name: "Payment", href: "/payment", icon: Card },
+  { name: "Installment", href: "/installment", icon: TbMessageStar },
 ];
 
 const action = [
@@ -62,12 +64,16 @@ function classNames(...classes) {
 function BuyersLayout({ children }) {
   const location = useLocation();
   const router = useRouter();
+ const { cartTotalQuantity } = useContext(CartContext) || {}; 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isActive = (href) => location.pathname === href;
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
- 
 
+  const handleCart = ()=>{
+    router.push('/user-cart')
+    }
+   
   return (
     <>
       <Toaster />
@@ -235,15 +241,16 @@ function BuyersLayout({ children }) {
         >
           <FiHeart className="w-5 h-5"  />
         </button>
-
+        <span className="hidden  absolute bg-slate-200 w-5 h-5 rounded-full lg:flex justify-center items-center right-[14.6rem] top-[14px]"><p className="text-red-700 font-poppins font-medium text-sm">{cartTotalQuantity }</p></span>
         <button
+        onClick={handleCart}
           type="button"
           className="-m-2.5 p-1.5 bg-[#F1F3F9] rounded-[50%] text-[#1D2433CC] hover:text-gray-500 lg:block hidden"
         >
          <IoCartOutline className="w-5 h-5" />
-       
+          
         </button>
-
+    
          {/* Notification Icon (Visible on all screens) */}
          <button
           type="button"

@@ -4,7 +4,7 @@ import { useRouter } from '../../../../Routes/router';
 const TradeSuccessModal = () => {
 const router = useRouter();
 const handleClick = ()=> {
-    router.reload()
+    router.push('/buyers/dashboard')
 }
 
   return (

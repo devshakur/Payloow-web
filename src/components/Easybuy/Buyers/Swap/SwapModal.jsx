@@ -17,7 +17,7 @@ const SwapModal = ({ isNewModalOpen, setIsNewModalOpen, setActive, successModal,
          <form  onSubmit={successModal} className='flex flex-col gap-4'>
           <div className="w-full">
           <label htmlFor="product-name" className='font-medium font-poppins'>Product Name</label>
-          <input type="text" placeholder='Phone Name' className='w-[95%] border border-gray-300 py-2 focus:outline-none pl-3 rounded-md text-[14px] font-normal' />
+          <input type="text" placeholder='Phone Namess' className='w-[95%] border border-gray-300 py-2 focus:outline-none pl-3 rounded-md text-[14px] font-normal' />
           </div>
           <div className="w-full">
           <label htmlFor="brand" className='font-medium font-poppins'>Brand</label>
