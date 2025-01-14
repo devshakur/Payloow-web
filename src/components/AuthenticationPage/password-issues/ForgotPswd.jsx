@@ -23,7 +23,7 @@ function ForgotPswd() {
         try {  
           const response = await ForgetPswd(values)
           if (response) {
-            toast.success('We sent you a message on yourEmail')
+            toast.success('We sent you a message on your Email')
   
         }
         } catch (error) {  

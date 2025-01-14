@@ -143,7 +143,7 @@ const FormModal = ({ isOpen, onClose, onRegister }) => {
                                     }}
                                     className="w-full lg:w-[200px] rounded-lg bg-[#3369F4] py-2 px-2 text-md text-white mt-6 data-[hover]:bg-sky-500 data-[active]:bg-sky-700 data-[disabled]:bg-gray-500"
                                 >
-                                    {loading ? 'Registering User' : 'Register'}
+                                    {loading ? 'Registering User...' : 'Register'}
                                 </Button>
                                 <Button onClick={onClose} className="w-full lg:w-[200px] rounded-lg bg-white border text-blue-500 border-gray-300 py-2 px-2 text-md mt-6 data-[hover]:bg-sky-500 data-[active]:bg-sky-700 data-[disabled]:bg-gray-500">
                                     Cancel

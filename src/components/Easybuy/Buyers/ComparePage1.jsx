@@ -1,78 +1,224 @@
-import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
-import { useState } from 'react'
-import BuyersLayout from '../EasyBuyRegistration/BuyersLayout'
+
+// import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
+// import { useState, useEffect } from 'react';
+// import BuyersLayout from '../EasyBuyRegistration/BuyersLayout';
+// import { IoCartOutline } from "react-icons/io5";
+// import { useRouter } from '../../../Routes/router';
+// import useInvestment from '../../../hooks/useInvetment';
+
+// const ComparePage1 = () => {
+//   const {FetchAllProduct} = useInvestment()
+//   let [isOpen, setIsOpen] = useState(false);
+//   const [selectedItems, setSelectedItems] = useState([]);
+//   const [productList, setProductList] = useState([])
+//   const router = useRouter();
+
+//   useEffect(() => {
+//     const productItems = async () => {
+//       try {
+//         const resp = await FetchAllProduct();
+//         const message = resp?.data?.data?.message; 
+//         const productsData = resp?.data?.data?.data;
+//         if (productsData) {
+//           setProductList(productsData)
+//           toast.success(message)
+//         } else {
+//           toast.error('No Products')
+//         }
+//       } catch (error) {
+//         if (error?.response?.data?.msg) {
+//           toast.error(error.response.data.msg);  
+//         } else {
+//           toast.error('Failed to fetch products'); 
+//         }
+//       }
+//     }
+//    productItems();
+//   }, [])
+
+//   // const compareProduct = [
+//   //   {
+//   //     id: 1,
+//   //     img: '/images/iphone.png',
+//   //     name: 'Apple IPhone XS',
+//   //     amount: '₦3,499',
+//   //     descrp: '5.8 Inches - 64GB ROM 4GB RAM - Space Grey',
+//   //   },
+//   //   {
+//   //     id: 2,
+//   //     img: '/images/iPhone11.png',
+//   //     name: 'iPhone11',
+//   //     amount: '₦300,000',
+//   //     descrp: '7/ 5.8 Inches - Reliable power wherever ...',
+//   //   },
+//   //   {
+//   //     id: 3,
+//   //     img: '/images/iPhone11.png',
+//   //     name: 'iPhone11',
+//   //     amount: '₦300,000',
+//   //     descrp: '7/ 5.8 Inches - Reliable power wherever ...',
+//   //   },
+//   //   {
+//   //     id: 4,
+//   //     img: '/images/iphone.png',
+//   //     name: 'Apple IPhone XS',
+//   //     amount: '₦3,499',
+//   //     descrp: '5.8 Inches - 64GB ROM 4GB RAM - Space Grey',
+//   //   },
+//   // ];
+
+//   const handleSelectItem = (itemId) => {
+//     // Toggle selection
+//     if (selectedItems.includes(itemId)) {
+//       setSelectedItems(selectedItems.filter((_id) => id !== itemId));
+//     } else {
+//       if (selectedItems.length < 2) {
+//         setSelectedItems([...selectedItems, itemId]);
+//       }
+//     }
+//   };
+
+//   const handleSave = () => {
+//     setIsOpen(false);
+//     // Selected items will be displayed below
+//   };
+
+//   return (
+//     <BuyersLayout>
+//       <div>
+//         <header>
+//           <h3 className="text-[15px] font-medium text-blue-600">
+//             Home / Search / Iphone11 / <span className="text-black">Compare</span>
+//           </h3>
+//         </header>
+//         <div className="mt-5 flex flex-col lg:flex-row justify-between">
+//           <div className="flex gap-2">
+//             {productList.map((itemId) => {
+//               const item = compareProduct.find((product) => product._id === itemId);
+//               return (
+//                 <button key={itemId} className="flex text-[14px] font-poppins font-medium border border-blue-500 w-[7rem] px-3 gap-3 justify-between rounded-lg items-center bg-blue-100">
+//                   <p>{item.name}</p>
+//                   <span>X</span>
+//                 </button>
+//               );
+//             })}
+//             <button
+//               onClick={() => setIsOpen(true)}
+//               className="flex  text-[14px] font-poppins font-medium border border-blue-500 w-[5rem] px-4 gap-3 justify-between rounded-lg items-center bg-blue-100"
+//             >
+//               <p>Click Me!</p>
+             
+//             </button>
+//           </div>
+//         </div>
+
+//         {/* Display selected items side-by-side */}
+//         <main className="flex flex-wrap gap-5 mt-6">
+//           {productList.map((itemId) => {
+//             const item = productList.find((product) => product.id === itemId);
+//             return (
+//               <div key={item.id} className="border p-4 w-full sm:w-[45%] lg:w-[30%] rounded-lg shadow-md">
+//                 <img src={item.img || '/images/iPhone12.png'} alt={item.name} className="w-full h-auto" />
+//                 <h4 className="font-poppins font-medium text-lg text-black">{item.name}</h4>
+//                 <p className="font-poppins text-gray-600 text-sm">{item.descrp}</p>
+//                 <p className="font-poppins font-semibold text-blue-500">{item.amount}</p>
+//               </div>
+//             );
+//           })}
+//         </main>
+
+//         {/* Modal */}
+//         <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
+//           <DialogBackdrop className="fixed inset-0 bg-black/30" />
+//           <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+//             <DialogPanel className="bg-white rounded-lg shadow-lg p-5 w-full max-w-md">
+//               <DialogTitle className="flex justify-between">
+//                 <h4 className="font-semibold text-lg">Choose product to Compare</h4>
+//                 <button onClick={() => setIsOpen(false)}>X</button>
+//               </DialogTitle>
+//               <Description>
+//                 <div className="grid grid-cols-2 gap-4 mt-4 max-h-[60vh] overflow-auto">
+//                   {productList.map((item) => (
+//                     <div
+//                       key={item.id}
+//                       onClick={() => handleSelectItem(item.id)}
+//                       className={`cursor-pointer p-4 border rounded-lg ${
+//                         selectedItems.includes(item.id) ? 'bg-blue-300' : ''
+//                       }`}
+//                     >
+//                       <img src={item.img} alt={item.name} className="w-full h-auto" />
+//                       <h5 className="font-medium">{item.name}</h5>
+//                       <p>{item.amount}</p>
+//                     </div>
+//                   ))}
+//                 </div>
+//                 <div className="flex justify-end mt-4">
+//                   <button onClick={handleSave} className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+//                     Save
+//                   </button>
+//                 </div>
+//               </Description>
+//             </DialogPanel>
+//           </div>
+//         </Dialog>
+//       </div>
+//     </BuyersLayout>
+//   );
+// };
+
+// export default ComparePage1;
+import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
+import { useState, useEffect } from 'react';
+import BuyersLayout from '../EasyBuyRegistration/BuyersLayout';
 import { IoCartOutline } from "react-icons/io5";
 import { useRouter } from '../../../Routes/router';
+import { Link, } from 'react-router-dom';
+import useInvestment from '../../../hooks/useInvetment';
 
 const ComparePage1 = () => {
-  let [isOpen, setIsOpen] = useState(false);
-  const [selectedItems, setSelectedItems] = useState([]); 
+  const { FetchAllProduct } = useInvestment();
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [productList, setProductList] = useState([]);
+  const [compareProducts, setCompareProducts] = useState([]);
   const router = useRouter();
-  const handleView = ()=>{
-  router.push('/product-view')
-  }
- const buttonFnt = ()=>{
-  handleView()
-  setIsOpen(false)
- }
-  const items = [
-    {
-      id: 1,
-      img: '/images/iPhone11.png',
-      name: 'iPhone11',
-      amount: '₦300,000',
-      descrp: '7/ 5.8 Inches - Reliable power wherever ...',
-    },
-    {
-      id: 2,
-      img: '/images/iPhone11.png',
-      name: 'iPhone11',
-      amount: '₦300,000',
-      descrp: ' 7/ 5.8 Inches - Reliable power wherever ...',
-    },
-  ];
 
-  const compareProduct = [
-    {
-      id: 1,
-      img: '/images/iphone.png',
-      name: 'Apple IPhone XS',
-      amount: '₦3,499',
-      descrp: '5.8 Inches - 64GB ROM 4GB RAM - Space Grey',
-    },
-    {
-      id: 2,
-      img: '/images/iPhone11.png',
-      name: 'iPhone11',
-      amount: '₦300,000',
-      descrp: '7/ 5.8 Inches - Reliable power wherever ...',
-    },
-    {
-      id: 3,
-      img: '/images/iPhone11.png',
-      name: 'iPhone11',
-      amount: '₦300,000',
-      descrp: ' 7/ 5.8 Inches - Reliable power wherever ...',
-    },
-    {
-      id: 4,
-      img: '/images/iphone.png',
-      name: 'Apple IPhone XS',
-      amount: '₦3,499',
-      descrp: '5.8 Inches - 64GB ROM 4GB RAM - Space Grey',
-    },
-  ];
+  useEffect(() => {
+    const productItems = async () => {
+      try {
+        const resp = await FetchAllProduct();
+        const productsData = resp?.data?.data?.data;
+
+        if (productsData) {
+          setProductList(productsData);
+          toast.success(resp?.data?.data?.message);
+        } else {
+          toast.error('No Products');
+        }
+      } catch (error) {
+        if (error?.response?.data?.msg) {
+          toast.error(error.response.data.msg);
+        } else {
+          toast.error('Failed to fetch products');
+        }
+      }
+    };
+    productItems();
+  }, []);
 
   const handleSelectItem = (itemId) => {
-    // If item is already selected, remove it
+    // Toggle selection
     if (selectedItems.includes(itemId)) {
       setSelectedItems(selectedItems.filter((id) => id !== itemId));
-    } else {
-      // If there are fewer than 3 items selected, add this item
-      if (selectedItems.length < 2) {
-        setSelectedItems([...selectedItems, itemId]);
-      }
+    } else if (selectedItems.length < 2) {
+      setSelectedItems([...selectedItems, itemId]);
     }
+  };
+
+  const handleSave = () => {
+    const selectedProducts = productList.filter((product) => selectedItems.includes(product._id));
+    setCompareProducts(selectedProducts);
+    setIsOpen(false);
   };
 
   return (
@@ -84,100 +230,62 @@ const ComparePage1 = () => {
           </h3>
         </header>
         <div className="mt-5 flex flex-col lg:flex-row justify-between">
-          <div className="flex gap-2">
-            <button className="flex text-[14px] font-poppins font-medium border border-blue-500 w-[7rem] px-3 gap-3 justify-between rounded-lg items-center bg-blue-100">
-              <p>iPhone11</p>
-              <span>X</span>
-            </button>
-            <button
-              onClick={() => setIsOpen(true)}
-              className="flex text-[14px] font-poppins font-medium border border-blue-500 w-[5rem] px-3 gap-3 justify-between rounded-lg items-center bg-blue-100"
-            >
-              <p>Add</p>
-              <span>X</span>
-            </button>
-          </div>
-          <div className="font-poppins font-normal text-lg text-black">Showing 1- 6 of 20 results</div>
+          <button
+            onClick={() => setIsOpen(true)}
+            className="flex text-[14px] font-poppins font-medium border border-blue-500 px-4 py-2 gap-3 justify-between rounded-lg items-center bg-blue-100"
+          >
+            <p className=''>Click Me!</p>
+          </button>
         </div>
-        <main className="flex flex-col sm:flex-row mt-6 gap-5">
-          {items.map((item) => (
-            <div key={item.id}>
-              <div className="w-full h-[300px]">
-                <img src={item.img} alt={item.id} className="w-auto h-auto" />
-              </div>
-              <div className="lg:w-[90%] w-[90%] lg:-mt-6 flex justify-between md:w-[70%]">
-                <p className="font-poppins font-medium text-[#101928] text-lg">{item.name}</p>
-                <p className="font-poppins font-[450] text-[#101928] text-xl">{item.amount}</p>
-              </div>
-              <div>
-                <p className="font-poppins font-normal text-[14px] text-[#101928]">{item.descrp}</p>
-              </div>
-              <button className="flex items-center gap-3 bg-white border rounded-md my-5 py-1 px-2">
-                <span>
-                  <IoCartOutline className="text-[#475367]" />
-                </span>
-                <p className="text-[14px] text-[#475367] font-poppins font-semibold"> Add to Cart</p>
-              </button>
+
+        {/* Display selected items side-by-side */}
+        <main className="flex flex-wrap gap-5 mt-6">
+          {compareProducts.map((item) => (
+             <Link to={`/product-details/${item._id}`}>
+            <div key={item._id} className="border p-4 w-full sm:w-[45%] lg:w-[30%] rounded-lg shadow-md">
+              <img src={item.imageKey || '/images/z-fold.jpeg'} alt={item.name} className="w-full h-auto" />
+              <h4 className="font-poppins font-medium text-lg text-black">{item.name}</h4>
+              <p className="font-poppins text-gray-600 text-sm">{item.description}</p>
+              <p className="font-poppins font-semibold text-blue-500">₦{item.price.$numberDecimal}</p>
             </div>
+            </Link>
           ))}
         </main>
-        <>
-          <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
-            {/* The backdrop, rendered as a fixed sibling to the panel container */}
-            <DialogBackdrop className="fixed inset-0 bg-black/30" />
 
-            {/* Full-screen container to center the panel */}
-            <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-              {/* The actual dialog panel */}
-              <DialogPanel className=" space-y-[1rem] bg-white rounded-lg shadow-lg">
-                <DialogTitle className="flex justify-between p-5">
-                  <h4 className="font-semibold text-lg font-poppins">Choose product to Compare</h4>
-                  <span>X</span>
-                </DialogTitle>
-                <Description>
-                  <main className="lg:grid lg:grid-cols-2 flex flex-col max-h-[60vh] overflow-scroll mt-6 gap-5">
-                    {compareProduct.map((item) => (
-                      <ul key={item.id}>
-                        <div
-                          onClick={() => handleSelectItem(item.id)}
-                          className={` focus:bg-blue-400 ${
-                            selectedItems.includes(item.id) ? 'bg-blue-300' : ''
-                          }`}
-                        >
-                          <li className="p-5">
-                            <img src={item.img} alt={item.id} className="w-auto h-auto cursor-pointer" />
-                          </li>
-                          <div className="lg:w-[90%] w-[90%] lg:-mt-4 flex justify-between md:w-[70%] mx-2">
-                            <p className="font-poppins font-medium text-[#101928] text-lg mx-4">{item.name}</p>
-                            <p className="font-poppins font-[450] text-[#101928] text-xl">{item.amount}</p>
-                          </div>
-                          <div>
-                            <p className="font-poppins font-normal text-[14px] text-[#101928] mx-6">{item.descrp}</p>
-                          </div>
-                     
-                        <button className="flex items-center gap-3 bg-white border rounded-md my-5 py-1 px-2 mx-4">
-                          <span>
-                            <IoCartOutline className="text-[#475367]" />
-                          </span>
-                          <p className="text-[14px] text-[#475367] font-poppins font-semibold"> Add to Cart</p>
-                        </button>
-                        </div>
-                      </ul>
-                    ))}
-                  </main>
-                  <div className="w-full flex justify-end">
-                    <button
-                      className="py-2 w-[8rem] bg-blue-900 rounded-lg p-5 m-6 text-white"
-                      onClick={buttonFnt}
+        {/* Modal */}
+        <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
+          <DialogBackdrop className="fixed inset-0 bg-black/30" />
+          <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+            <DialogPanel className="bg-white rounded-lg shadow-lg p-5 w-full max-w-xl">
+              <DialogTitle className="flex justify-between">
+                <h4 className="font-semibold text-lg">Choose products to compare</h4>
+                <button onClick={() => setIsOpen(false)}>X</button>
+              </DialogTitle>
+              <Description>
+                <div className="grid grid-cols-2 gap-4 mt-4 max-h-[60vh] overflow-auto">
+                  {productList.map((item) => (
+                    <div
+                      key={item._id}
+                      onClick={() => handleSelectItem(item._id)}
+                      className={`cursor-pointer p-4 border rounded-lg ${
+                        selectedItems.includes(item._id) ? 'bg-blue-300' : ''
+                      }`}
                     >
-                      Save
-                    </button>
-                  </div>
-                </Description>
-              </DialogPanel>
-            </div>
-          </Dialog>
-        </>
+                      <img src={item.imageKey || '/images/z-fold.jpeg'} alt={item.name} className="w-full h-auto" />
+                      <h5 className="font-medium">{item.name}</h5>
+                      <p>₦{item.price.$numberDecimal}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-end mt-4">
+                  <button onClick={handleSave} className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                    Save
+                  </button>
+                </div>
+              </Description>
+            </DialogPanel>
+          </div>
+        </Dialog>
       </div>
     </BuyersLayout>
   );

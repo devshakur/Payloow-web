@@ -466,14 +466,112 @@ const InvestmentProvider = ({ children }) => {
             throw error;
         }
     }
-
+    const GetSolarStock = async () => {
+        try {
+            const response = await axiosInstance.get(EasyBuyEndpoints.getTotalSolarStock)
+            const result = response.data
+            dispatch({ type: 'GETSOLARSTOCK', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const GetInventoryOrders = async () => {
+        try {
+            const response = await axiosInstance.get(EasyBuyEndpoints.getInventoryOrders)
+            const result = response.data
+            dispatch({ type: 'GETORDER', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const GetProductInventory = async () => {
+        try {
+            const response = await axiosInstance.get(EasyBuyEndpoints.getProductInventory)
+            const result = response.data
+            dispatch({ type: 'GETPRODUCTINVENTORY', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const GetActiveCustomers = async () => {
+        try {
+            const response = await axiosInstance.get(EasyBuyEndpoints.getActiveCustomer)
+            const result = response.data
+            dispatch({ type: 'GETACTIVECUSTOMER', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const CreateServiceCenter = async (data) => {
+        try {
+            const response = await axiosInstance.post(EasyBuyEndpoints.createServiceCenter, data)
+            const result = response.data
+            dispatch({ type: 'CREATESERVICECENTER', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const GetServiceCenter = async () => {
+        try {
+            const response = await axiosInstance.get(EasyBuyEndpoints.getServiceCenter)
+            const result = response.data
+            dispatch({ type: 'GETCENTER', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const GetPartnerCustomers = async () => {
+        try {
+            const response = await axiosInstance.get(EasyBuyEndpoints.getPartnerCustomers)
+            const result = response.data
+            dispatch({ type: 'GETCUSTOMERS', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const GetPercentage = async () => {
+        try {
+            const response = await axiosInstance.get(EasyBuyEndpoints.getPercentages)
+            const result = response.data
+            dispatch({ type: 'GETPERCENTAGE', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    const DeleteEasyBuyCart = async () => {
+        try {
+            const response = await axiosInstance.delete(EasyBuyEndpoints.deleteAllCartItem)
+            const result = response.data
+            dispatch({ type: 'DELETECART', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
     const object = {
         ...state, dispatch, CreateDebtorAccount, CreateInvestorAccount, CreateBusiness, GetIndustries, getBusinessInfo,
         ViewBusiness, AddLoan, GetBusinessStages, GetModels,
         InvestInBusiness, GetInvestmentRequest, GetLoanBusiness, getUserDetails, GetFilteredLoanBusiness, InvestorsInvestment,
         AcceptInvestmentRequest, DeclineInvestmentRequest, RepayInvestmentRequest, GetCart, CreateBuyerProfile, AddToCart,
-        FetchAllProduct, ValidateCoupon, DeleteCart, GetEasyBuyCatgories, CreateProduct, GetDeliveryInfo, checkOut, swapProduct,
-        GetUserOrders, GetUInstallmentOrders,
+        FetchAllProduct, ValidateCoupon, DeleteCart, GetEasyBuyCatgories, CreateProduct, GetDeliveryInfo, checkOut, swapProduct, GetPercentage, DeleteEasyBuyCart,
+        GetUserOrders, GetUInstallmentOrders, GetSolarStock, GetInventoryOrders,  GetProductInventory,GetActiveCustomers, CreateServiceCenter, GetServiceCenter, GetPartnerCustomers,
     }
 
     return <InvestmentContext.Provider value={object}>{children}</InvestmentContext.Provider>

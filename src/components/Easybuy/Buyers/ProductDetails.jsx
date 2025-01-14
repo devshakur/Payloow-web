@@ -9,127 +9,114 @@ import { motion } from 'framer-motion';
 import BuyersLayout from '../EasyBuyRegistration/BuyersLayout';
 import { useParams } from 'react-router-dom';
 import useInvestment from '../../../hooks/useInvetment';
-import {toast, Toaster} from 'react-hot-toast'
+import { toast, Toaster } from 'react-hot-toast'
 import { phonesItems } from './product';
-import { solarItems } from './product'; 
+import { solarItems } from './product';
 import { CartContext } from './cartContext';
 
 const ProductDetails = () => {
     const { id } = useParams()
-    const {FetchAllProduct, AddToCart, GetCart} = useInvestment();
-    const {increaseCartQuantity} = useContext(CartContext)
+    const { FetchAllProduct, AddToCart, GetCart } = useInvestment();
+    const { increaseCartQuantity } = useContext(CartContext)
     const router = useRouter();
     const [selectedImage, setSelectedImage] = useState(null);
-    const [product, setProduct] = useState(null); 
+    const [product, setProduct] = useState(null);
     const [selecttedPrd, setSelectedPrd] = useState([])
     const [quantity, setQuantity] = useState(0)
+    const [additionalImage, setAdditionalImage] = useState([])
     const [cartItems, setCartItems] = useState([])
     const [checkProduct, setCheckProduct] = useState('')
+    const [colors, setColors] = useState([])
     const [productId, setProductId] = useState(null)
     const [loading, setLoading] = useState(false)
     const [totalQuantity, setTotalQuantity] = useState(0)
-    const items = [
-        {
-            id: 1,
-            img: '/images/iphone.png',
-            name: 'Apple IPhone XS',
-            amount: '₦3,499',
-            descrp: '5.8 Inches - 64GB ROM 4GB RAM - Space Grey',
-        },
-        {
-            id: 2,
-            img: '/images/iPhone11.png',
-            name: 'iPhone11',
-            amount: '₦300,000',
-            descrp: '5.8 Inches - 64GB ROM 4GB RAM - Space Grey',
-        },
-        {
-            id: 3,
-            img: '/images/iPhone12.png',
-            name: 'iPhone13',
-            amount: '₦400,000',
-            descrp: '1000W 48V 120VAC Solar Cabin kit',
-        },
-    ]
+
 
     useEffect(() => {
         const productItems = async () => {
-          try {
-            const resp = await FetchAllProduct();
-            const message = resp?.data?.data?.message; 
-            const productsData = resp?.data?.data?.data;
-            if (productsData) {
-              setSelectedPrd(productsData)
-              toast.success(message)
-            } else {
-              setSelectedPrd([])
-              toast.error('Failed to fetch products')
+            try {
+                const resp = await FetchAllProduct();
+                const message = resp?.data?.data?.message;
+                const productsData = resp?.data?.data?.data;
+                if (productsData) {
+                    setSelectedPrd(productsData)
+
+                    toast.success(message)
+                } else {
+                    setSelectedPrd([])
+                    toast.error('Failed to fetch products')
+                }
+            } catch (error) {
+                if (error?.response?.data?.msg) {
+                    toast.error(error.response.data.msg);
+                } else {
+                    toast.error('Failed to fetch products');
+                }
             }
-          } catch (error) {
-            if (error?.response?.data?.msg) {
-              toast.error(error.response.data.msg);  
-            } else {
-              toast.error('Failed to fetch products'); 
-            }
-          }
         }
-       productItems();
-      }, [])
+        productItems();
+    }, [])
 
     const increaseQuantity = () => {
         setQuantity(prev => prev + 1);
-      };
-    
-      const decreaseQuantity = () => {
-        setQuantity(prev => (prev > 0 ? prev - 1 : 0 ));
-      };
-    const changeImage = (chooseImg) => {
-        setSelectedImage(chooseImg);
-    }
+    };
+
+    const decreaseQuantity = () => {
+        setQuantity(prev => (prev > 0 ? prev - 1 : 0));
+    };
+
 
     const handleCart = () => {
         router.push('/user-cart');
     }
-   
 
-    const saveId = ()=>{
+
+    const saveId = () => {
         localStorage.setItem('product_id', id)
         router.push('/swap-product')
     }
-    
-  useEffect(() => {
-        // Find the product based on the id from the URL
-        const foundProduct = selecttedPrd.find((p) => p._id === id); 
+
+
+    const changeImage = (chooseImg) => {
+        setSelectedImage(chooseImg);
+    }
+
+    useEffect(() => {
+        const foundProduct = selecttedPrd.find((p) => p._id === id);
         if (foundProduct) {
-            console.log(foundProduct);
-            setProduct(foundProduct);  
-          //  setSelectedImage(foundProduct.img)
-            setProductId(foundProduct._id)
-            setCheckProduct(foundProduct.name)
+            setProduct(foundProduct);
+            setProductId(foundProduct._id);
+            setColors(foundProduct.color);
+            setCheckProduct(foundProduct.name);
+            setAdditionalImage(foundProduct.additionalImageKeys)
+            // Set default image only when product is loaded for the first time
+            if (!selectedImage) {
+                setSelectedImage(foundProduct.imageKey);
+            }
         }
-    }, [id, selectedImage, selecttedPrd]);  
+    }, [id, selecttedPrd]); // Removed selectedImage from dependency array
+
 
     if (!product) {
         return <div className='flex justify-center items-center'>
             <p className='text-lg font-plus-jakarta font-medium text-gray-700'>Loading...</p>
-        </div>;  
+        </div>;
     }
 
-        const fetchCartItems = async () => {
-          try {
+    const fetchCartItems = async () => {
+        try {
             const resp = await GetCart();
             const info = resp?.data?.data;
-      
             if (info) {
-              const total = info.reduce((sum, item) => sum + item.quantity, 0);
-              setTotalQuantity(total);
+                const total = info.reduce((sum, item) => sum + item.quantity, 0);
+                setTotalQuantity(total);
             }
-          } catch (error) {
+        } catch (error) {
             console.error("Failed to fetch cart items:", error);
-          }
-        };
-      
-       
+        }
+    };
+
+
 
 
 
@@ -139,34 +126,34 @@ const ProductDetails = () => {
         quantity: quantity
     }
 
-    const AddItemsToCart = async ()=> {
+    const AddItemsToCart = async () => {
         setLoading(true)
         try {
-          const resp = await AddToCart(values);
-          const info = resp?.data?.data
-          if(info){
-            setCartItems(info)
-            increaseCartQuantity(quantity)
-            toast.success('View Cart Items')
-            setLoading(false)
-          } else {
-            setCartItems([])
-            toast.error('Failed to add Items to Cart', info)
-          }
+            const resp = await AddToCart(values);
+            const info = resp?.data?.data
+            if (info) {
+                setCartItems(info)
+                increaseCartQuantity(quantity)
+                toast.success('View Cart Items')
+                setLoading(false)
+            } else {
+                setCartItems([])
+                toast.error('Failed to add Items to Cart', info)
+            }
         } catch (error) {
             if (error?.response?.data?.msg) {
-                toast.error(error.response.data.msg);  
-              } else {
-                toast.error('Failed to add Items to Cart'); 
-              }
+                toast.error(error.response.data.msg);
+            } else {
+                toast.error('Failed to add Items to Cart');
+            }
         }
-      }
-     
-       const handleAddToCart = () => {
+    }
+
+    const handleAddToCart = () => {
         AddItemsToCart();
         fetchCartItems()
     }
-
+ 
     return (
         <BuyersLayout>
             <div>
@@ -182,42 +169,30 @@ const ProductDetails = () => {
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.5 }}
                         >
-                            <img src={product.img || selectedImage} alt="iphone11" className='w-[70%] h-[80%]' />
+                            <img src={selectedImage} alt="iphone11" className='w-[70%] h-[80%]' />
                         </motion.div>
-
-                        <div className="my-5 flex flex-row lg:grid lg:grid-cols-3 xl:flex items-center">
-                        <motion.img
-                                src={product.img || '/images/iphon11-small.png'}
+                        <div className="my-5 flex flex-wrap items-center gap-2">
+                            <motion.img
+                                src={product.imageKey ? product.imageKey : '/images/iphon11-small.png'}
                                 alt="iphone"
-                                onClick={() => {changeImage(product.img)}}
+                                onClick={() => { changeImage(product.imageKey) }}
                                 whileHover={{ scale: 1.1 }}
-                                className='w-24 h-24'
+                                className="w-24 h-24"
                                 transition={{ duration: 0.3 }}
                             />
-                            <motion.img
-                                src="/images/iphon-yellow.png"
-                                alt="yellow"
-                                onClick={() => { changeImage('/images/full-view.png') }}
-                                whileHover={{ scale: 1.1 }}
-                                transition={{ duration: 0.3 }}
-                            />
-                            <motion.img
-                                src="/images/iphon-black.png"
-                                alt="black"
-                                onClick={() => { changeImage('/images/iphon-black.png') }}
-                                whileHover={{ scale: 1.1 }}
-                                transition={{ duration: 0.3 }}
-                            />
-                            <span className='hidden lg:flex'>
-                            <motion.img
-                                src="/images/iphon-green.png"
-                                alt="green"
-                                onClick={() => { changeImage('/images/iphon-green.png') }}
-                                whileHover={{ scale: 1.1 }}
-                                transition={{ duration: 0.3 }}
-                            />
-                            </span>
+                            {additionalImage.map((image, index) => (
+                                <motion.img
+                                    key={index}
+                                    src={image || "/images/iphon-yellow.png"}
+                                    alt="yellow"
+                                    onClick={() => { changeImage(image) }}
+                                    whileHover={{ scale: 1.1 }}
+                                    className="w-24 h-24"
+                                    transition={{ duration: 0.3 }}
+                                />
+                            ))}
                         </div>
+
                     </section>
 
                     <article className='flex flex-col'>
@@ -228,7 +203,7 @@ const ProductDetails = () => {
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 0.5 }}
                             >
-                               {product.name}
+                                {product.name}
                             </motion.h3>
 
                             <motion.p
@@ -237,7 +212,7 @@ const ProductDetails = () => {
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 0.5 }}
                             >
-                                Compare <button onClick={()=> router.push('/comapare-product')} className='hidden lg:flex text-blue-800 font-semibold'><IoIosArrowForward /></button>
+                                <button onClick={() => router.push('/comapare-product')} className='flex text-blue-500 font-semibold items-center gap-4'>Compare <IoIosArrowForward /> </button>
                             </motion.p>
                         </div>
 
@@ -246,7 +221,7 @@ const ProductDetails = () => {
                             <span><RiStarSFill className='text-blue-800' /></span>
                             <span><RiStarSFill className='text-blue-800' /></span>
                             <span><RiStarSFill className='text-blue-800' /></span>
-                            <span className='text-[14px] font-medium font-inter ml-4 text-[#344054]'>10 Sold</span>
+                            <span className='text-[14px] font-medium font-inter ml-4 text-[#344054]'>{product.__v} Sold</span>
                         </div>
 
                         <div>
@@ -256,7 +231,7 @@ const ProductDetails = () => {
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 0.5 }}
                             >
-                            {product.description}
+                                {product.description}
                             </motion.p>
                         </div>
 
@@ -267,7 +242,7 @@ const ProductDetails = () => {
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 0.5 }}
                             >
-                              {`${product.price.$numberDecimal} or ₦${(parseFloat(product.price.$numberDecimal.replace(/[^\d.-]/g, '')) / 6).toFixed(0)}/month`}
+                                {`${product.price.$numberDecimal} or ₦${(parseFloat(product.price.$numberDecimal.replace(/[^\d.-]/g, '')) / 6).toFixed(0)}/month`}
 
                             </motion.h5>
                             <motion.p
@@ -287,7 +262,7 @@ const ProductDetails = () => {
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 0.5 }}
                             >
-                                Choose a Color
+                                Available Colors
                             </motion.h5>
                         </div>
 
@@ -297,10 +272,11 @@ const ProductDetails = () => {
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.5 }}
                         >
-                            <li className="w-14 h-14 border bg-white shadow-md rounded-[50%]"></li>
-                            <li className="w-10 h-10 border bg-[#000] shadow-md rounded-[50%]"></li>
-                            <li className="w-10 h-10 border bg-[#F3FF0D] shadow-md rounded-[50%]"></li>
-                            <li className="w-10 h-10 border bg-[#08875D] shadow-md rounded-[50%]"></li>
+                            {colors?.map((color) => (
+
+                                <li style={{ backgroundColor: color }} className='w-14 h-14 border shadow-md rounded-[50%]'></li>
+                            ))}
+
                             <div className=" w-full flex justify-end rounded-lg text-white">
                                 <button onClick={saveId} className='w-[50%] text-blue-700 border border-blue-600 py-4 lg:-py-5 rounded-lg text-sm lg:text-lg'>Swap Product</button>
                             </div>
@@ -348,57 +324,49 @@ const ProductDetails = () => {
                     >
                         Similar items you might like
                     </motion.h4>
-                    <div className='grid lg:grid-cols-3 justify-start sm:grid-cols-2 gap-y-8 mt-5'>
-        {/* Check if the product contains the keyword 'Solar' */}
-        {checkProduct.toLowerCase().includes('solar') ? (
-            // If 'Solar', map over the solarItems array
-            solarItems.map((item) => (
-                <motion.div key={item.id} whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
-                    <div className='w-full h-[300px]'>
-                        <img src={item.img} alt={item.id} className='w-auto h-auto' />
-                    </div>
-                    <div className='lg:w-[80%] w-[50%] lg:-mt-6 flex justify-between md:w-[70%]'>
-                        <p className='font-poppins font-medium text-[#101928] text-lg'>{item.name}</p>
-                        <p className='font-poppins font-[450] text-[#101928] text-xl'>{item.amount}</p>
-                    </div>
-                    <div>
-                        <p className='font-poppins w-[80%] truncate font-normal text-[14px] text-[#101928]'>{item.descrp}</p>
-                    </div>
-                    <button  className='flex items-center gap-3 bg-white border rounded-md my-5 py-1 px-2'>
-                        <span><IoCartOutline className='text-[#475367]' /></span>
-                        <p className='text-[14px] text-[#475367] font-poppins font-semibold'>
-                        {loading ? (
-        <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
-      ) : (
-        "Add to Cart"
-      )}
+                    <div className="grid lg:grid-cols-3 justify-start sm:grid-cols-2 gap-y-8 mt-5">
+    {selecttedPrd
+        .filter((product) =>
+            product?.category?.name?.toLowerCase().includes('phones') || 
+            product?.category?.name?.toLowerCase().includes('solar')
+        )
+        .map((product) => (
+            <motion.div
+                key={product._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className='mx-2'
+            >
+                {/* <Link to={`/product-details/${product._id}`}> */}
+                <div className='w-full flex justify-center lg:justify-start'>
+                    <img src={product.imageKey || '/images/default-img.png'} alt={product._id || 'Product'} className='w-[85%]' />
+                </div>
+                <div className='lg:w-[80%] w-[100%] flex justify-between md:w-[70%]'>
+                    <p className='font-poppins font-medium text-[#101928] text-lg'>{product.name}</p>
+                    <p className='font-poppins font-[450] text-[#101928] text-xl'>₦{product.price?.$numberDecimal}</p>
+                </div>
+                <div className="truncate-text">
+                    <p className="font-poppins w-[100%] lg:w-[80%] font-normal text-[14px] text-[#101928] line-clamp-2">
+                        {product.description}
+                    </p>
+                </div>
+                <motion.button
+                    className='flex items-center gap-3 bg-white border rounded-md my-5 py-1 px-2'
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                >
+                    <span><IoCartOutline className='text-[#475367]' /></span>
+                    <p className='text-[14px] text-[#475367] font-poppins font-semibold'>
+                        Add to Cart
+                    </p>
+                </motion.button>
+                {/* </Link> */}
+            </motion.div>
+        ))}
+</div>
 
-                             </p>
-                    </button>
-                </motion.div>
-            ))
-        ) : (
-            // If not 'Solar', map over the phonesItems array
-            phonesItems.map((item) => (
-                <motion.div key={item.id} whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
-                    <div className='w-full h-[300px]'>
-                        <img src={item.img} alt={item.id} className='w-auto h-auto' />
-                    </div>
-                    <div className='lg:w-[80%] w-[50%] lg:-mt-6 flex justify-between md:w-[70%]'>
-                        <p className='font-poppins font-medium text-[#101928] text-lg'>{item.name}</p>
-                        <p className='font-poppins font-[450] text-[#101928] text-xl'>{item.amount}</p>
-                    </div>
-                    <div>
-                        <p className='font-poppins w-[80%] truncate font-normal text-[14px] text-[#101928]'>{item.descrp}</p>
-                    </div>
-                    <button  className='flex items-center gap-3 bg-white border rounded-md my-5 py-1 px-2'>
-                        <span><IoCartOutline className='text-[#475367]' /></span>
-                        <p className='text-[14px] text-[#475367] font-poppins font-semibold'> Add to Cart</p>
-                    </button>
-                </motion.div>
-            ))
-        )}
-    </div>
+
                 </section>
                 <Toaster />
             </div>
@@ -407,4 +375,5 @@ const ProductDetails = () => {
 }
 
 export default ProductDetails;
+
 

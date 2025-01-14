@@ -22,6 +22,8 @@ function RegisterTwo({ formik }) {
   const register = [
     { value: 'user', label: 'User' },
     { value: 'Tutor', label: 'Tutor' },
+    {value: 'partner', label: 'Partner'},
+    {value: 'investor', label: 'Investor'}
   
   ]
   return (

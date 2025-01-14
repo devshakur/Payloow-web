@@ -34,9 +34,10 @@ import StudentMessages from "../components/E-Learning/Student/StudentMessages.js
 import Support from "../components/Dashboard/Support.jsx";
 import SingleCourse from "../components/E-Learning/Student/SingleCourse.jsx";
 //Datas
-import { items } from "../components/Easybuy/Buyers/product.js";
 import { phonesItems } from "../components/Easybuy/Buyers/product.js";
 import { solarItems } from "../components/Easybuy/Buyers/product.js";
+import ElearningCheckout from "../components/E-Learning/Student/ElearningCheckout.jsx";
+import FlutterSuccessPurchaseModal from "../components/Easybuy/FlutterSuccessPurchaseModal.jsx";
 //Registration
 const Regsiter = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Register.jsx'))
 const Login = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Login.jsx'))
@@ -359,6 +360,15 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
+    path: "/e-learning/student/wallet-checkout",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <ElearningCheckout />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
     path: "/e-learning/student/messages",
     element: (
       <Suspense fallback={<Loader />}>
@@ -667,6 +677,15 @@ export const router = createBrowserRouter([
   element: (
     <Suspense fallback={<Loader />}>
     <Transaction />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/purchase/success",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <FlutterSuccessPurchaseModal />
     </Suspense>
   ),
   errorElement: <ErrorPage />,

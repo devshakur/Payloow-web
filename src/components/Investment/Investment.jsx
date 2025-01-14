@@ -16,7 +16,7 @@ const Investment = () => {
     const [isInvestorModalOpen, setIsInvestorModalOpen] = useState(false);
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const [isInvestorSuccessModalOpen, setIsInvestorSuccessModalOpen] = useState(false);
-
+   
     const openDialog = () => setIsOpen(true);
     const closeDialog = () => setIsOpen(false);
     const openFormModal = () => {
@@ -40,14 +40,14 @@ const Investment = () => {
     };
     const closeSuccessModal = () => setIsSuccessModalOpen(false);
     const closeInvestorSuccessModal = () => setIsInvestorSuccessModalOpen(false);
-
- 
+    const user = JSON.parse(localStorage.getItem('currentUser'))
+     
 
     return (
         <InvestmentLayout className={clsx('h-[100vh] w-[100vw] bg-blue-50 font-poppins p-4', { 'blur-md': isOpen || isFormModalOpen || isSuccessModalOpen })}>
             <section className="w-full rounded-xl bg-white px-3 py-8 shadow-lg grid lg:grid-cols-[2fr, 1fr] lg:grid-flow-col">
                 <div>
-                    <h4 className='text-2xl font-[550]'>Welcome to Investment, Mayowa</h4>
+                    <h4 className='text-2xl font-[550]'>Welcome to Investment, {user ? user?.firstName : 'Guest'}</h4>
                     <p className='text-base font-medium py-4'>Are you here to seek investment for your business or to invest in promising businesses?</p>
                     <Button onClick={openDialog} className="w-full lg:w-[180px] rounded-lg bg-[#3369F4] py-5 px-4 text-md text-white mt-6 data-[hover]:bg-sky-500 data-[active]:bg-sky-700 data-[disabled]:bg-gray-500">
                         Register Now

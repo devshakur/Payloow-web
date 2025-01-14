@@ -35,7 +35,7 @@ const CheckOutModalCrad = ({isOpen, setIsOpen, handleActive, SubmitCheckOutFlutt
                 </form>
            
             <div className="flex gap-4 w-full justify-end">
-              <button onClick={SubmitCheckOutFlutter}  className='bg-blue-700 text-white py-2 rounded-lg w-[6rem]'>{loading ? 'Please Wait...' : 'Proceed'}</button>
+              <button onClick={SubmitCheckOutFlutter}  className='bg-blue-700 text-white py-2 rounded-lg w-[8rem]'>{loading ? 'Processing...' : 'Proceed'}</button>
             </div>
           </DialogPanel>
         </div>

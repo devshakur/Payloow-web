@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import DashboardLayout from "./DashboardLayout";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -13,8 +13,30 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { FaTv } from "react-icons/fa";
 import { FaMoneyBills } from "react-icons/fa6";
 import { MdOutlineMenuBook } from "react-icons/md";
+import useAuth from "../../hooks/useAuth";
 
 const DashboardHome = () => {
+  const {GetUser} = useAuth();
+  const [details, setDetails] = useState({})
+  const [history, setHistory] = useState({})
+  useEffect(() => {
+    const getUserDetails = async () => {
+      try {
+        const resp = await GetUser(); // Call the correct function
+        const data = resp
+        const historyReference = resp.previousReference
+        if (data) {
+          setDetails(data); // Update state with fetched data
+          setHistory(historyReference)
+          toast.success("Fetched User Details");
+        }
+      } catch (error) {
+        toast.error("Failed to fetch user details");
+      }
+    };
+
+    getUserDetails();
+  }, [GetUser]);
   let settings = {
     dots: true,
     infinite: false,
@@ -59,9 +81,7 @@ const DashboardHome = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
-  const user = {
-    name: "Mayowa Sunusi",
-  };
+ 
   const copyToClipboard = () => {
     const content = document.querySelector(".account-number").innerText;
     navigator.clipboard
@@ -74,58 +94,17 @@ const DashboardHome = () => {
       });
   };
 
-  const transactions = [
-    {
-      id: 1,
-      title: "MTN Airtime",
-      amount: "₦2,000.00",
-      status: "successful",
-      date: "12th May, 2021",
-      image: "/images/mtn.svg",
-    },
-    {
-      id: 2,
-      title: "Deposit",
-      amount: "₦1,500.00",
-      status: "pending",
-      date: "10th May, 2021",
-      image: "/images/wema.svg",
-    },
-    {
-      id: 3,
-      title: "KEDCO Unit",
-      amount: "₦5,000.00",
-      status: "failed",
-      date: "8th May, 2021",
-      image: "/images/kedco.svg",
-    },
-    {
-      id: 4,
-      title: "UI/UX Fundamentals",
-      amount: "₦50,000.00",
-      status: "successful",
-      date: "1st May, 2021",
-      image: "/images/course-image.png",
-    },
-    {
-      id: 5,
-      title: "Airtel Airtime",
-      amount: "₦500.00",
-      status: "successful",
-      date: "1st May, 2021",
-      image: "/images/airtel.svg",
-    },
-  ];
+
   return (
     <DashboardLayout>
       <section>
         <div>
           <h3 className="md:text-3xl text-3xl font-bold pb-3">
-            Welcome Back,{" "}
+            Welcome Back,{details.lastName ? details?.lastName + " " + details?.firstName : "Guest"} 
             <span className="md:hidden">
               <br />
             </span>{" "}
-            {user?.name}
+            {/* {user?.name} */}
           </h3>
           <p>Here are some quick stats</p>
         </div>
@@ -136,7 +115,7 @@ const DashboardHome = () => {
                 <div className="available-balance text-white p-6 rounded-lg flex flex-col justify-between ">
                   <div className="space-y-3">
                     <p className="font-medium text-2xl">Available Balance</p>
-                    <p className="text-3xl font-bold">₦2,000.00</p>
+                    <p className="text-3xl font-bold"> ₦{(currentUser?.wallet?.balance ?? 0).toLocaleString()}</p>
                   </div>
                   <div>
                     <p className="flex items-center space-x-3">
@@ -310,39 +289,33 @@ const DashboardHome = () => {
                   </Link>
                 </div>
                 <div className="space-y-4">
-                  {transactions.map((transaction) => (
+                  {history.length > 0 ? 
+                  history.reverse().map((transaction) => (
                     <div
                       key={transaction.id}
                       className="flex items-center justify-between p-4"
                     >
                       <div className="flex items-center space-x-4">
                         <img
-                          src={transaction.image}
+                          src={transaction.body == 'mtn' ? "/images/mtn.svg" : "/images/airtel.svg"}
                           alt={transaction.title}
                           className="w-12 h-12 rounded-full"
                         />
                         <div>
-                          <p className="font-medium">{transaction.title}</p>
-                          <p className="text-sm text-gray-500">
-                            {transaction.date}
+                          <p className="font-medium capitalize">{transaction.body} {transaction.title}</p>
+                          <p className="text-sm w-1/2 text-gray-500 truncate text-ellipsis">
+                            {transaction._id}
                           </p>
                         </div>
                       </div>
                       <div className="text-center">
-                        <p>{transaction.amount}</p>
-                        <p
-                          className={`font-medium ${transaction.status === "successful"
-                              ? "text-green-500 bg-green-100"
-                              : transaction.status === "pending"
-                                ? "text-yellow-500 bg-yellow-100"
-                                : "text-red-500 bg-red-100"
-                            } capitalize p-1 rounded md:text-sm text-xs`}
-                        >
-                          {transaction.status}
-                        </p>
+                        <p>{transaction.code}</p>
+                        <p className="text-green-500 bg-green-100 capitalize p-1">Successfull</p>
                       </div>
                     </div>
-                  ))}
+                  )) : (
+                    <div>No recent Transaction</div>
+                  )}
                 </div>
               </div>
             </div>

@@ -15,21 +15,26 @@ const UserOrders = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const {GetUserOrders} = useInvestment();
    const [allOrders, setAllOrders] = useState([])
+const [showBrandInput, setShowBrandInput] = useState(false);
+const [showPriceInput, setShowPriceInput] = useState(false);
+const [brandFilter, setBrandFilter] = useState('');
+const [priceFilter, setPriceFilter] = useState('');
 
-       useEffect(() => {
+   
+    useEffect(() => {
         const getAllOrders = async () => {
             try {
                 const resp = await GetUserOrders();
-                const data = resp?.data?.data?.data; // Nested data structure from API response
+                const data = resp?.data?.data?.data; // Nested data structure
                 const message = resp?.data?.message;
 
                 if (data) {
                     const formattedOrders = data.map((order) => ({
-                        img: '/images/iphon-yellow.png', // Placeholder, adjust if `imageKey` is used
-                        productName: order.product.name,
+                        img: order.product?.imageKey || '/images/placeholder.png',
+                        productName: order.product?.name || 'Unknown Product',
                         ProductId: order.transactionReference,
-                        productPrice: `$${order.price.toFixed(2)}`, // Format price
-                        orderDate: new Date(order.createdAt).toLocaleDateString(), // Format date
+                        productPrice: `$${order.price.toLocaleString()}`,
+                        orderDate: new Date(order.createdAt).toLocaleDateString(),
                         productStatus: order.paymentStatus,
                     }));
 
@@ -46,9 +51,10 @@ const UserOrders = () => {
 
         getAllOrders();
     }, []);
+   
 
     // Filter orders based on selected status
-    const filteredOrders = selectedStatus === 'All'
+    const filteredOrder = selectedStatus === 'All'
         ? allOrders
         : allOrders.filter(order => order.productStatus.toLowerCase() === selectedStatus.toLowerCase());
 
@@ -56,6 +62,22 @@ const UserOrders = () => {
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
     };
+  
+
+
+const filteredOrders = allOrders.filter(order => {
+    const matchesStatus = selectedStatus === 'All' || order.productStatus.toLowerCase() === selectedStatus.toLowerCase();
+    
+    const matchesBrand = brandFilter === '' || 
+        (order.productName && order.productName.toLowerCase().includes(brandFilter.toLowerCase()));
+    
+    // Remove "$" from productPrice and convert to a number
+    const numericPrice = parseFloat(order.productPrice.replace(/[^0-9.-]+/g, '')); 
+    const matchesPrice = priceFilter === '' || numericPrice <= parseFloat(priceFilter);
+
+    return matchesStatus && matchesBrand && matchesPrice;
+});
+
 
    
 
@@ -63,7 +85,9 @@ const UserOrders = () => {
     const itemsPerPage = 4;
     const pageCount = Math.ceil(filteredOrders.length / itemsPerPage);
     const displayedOrders = filteredOrders.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+    
 
+   
     return (
         <BuyersLayoutGen>
             <div>
@@ -96,20 +120,42 @@ const UserOrders = () => {
                             <span><IoFilterOutline className='text-blue-800 w-7 h-7' /></span>
                             <p className='text-lg text-blue-700'> Filters</p>
                         </button>
-                        <div className='hidden lg:flex gap-3'>
-                            <p className='font-poppins text-lg font-semibold text-blue-700 flex items-center gap-2'>
-                                Brand (1) <IoIosArrowDown />
-                            </p>
-                            <p className='font-poppins text-lg font-semibold flex items-center gap-2'>
-                                Color <IoIosArrowDown />
-                            </p>
-                            <p className='font-poppins text-lg font-semibold flex items-center gap-2'>
-                                Price <IoIosArrowDown />
-                            </p>
-                        </div>
+                <div>
+                <div className="flex justify-between items-center">
+                    <div className="flex gap-3">
+                        <p className="font-poppins text-lg font-semibold text-blue-700 flex items-center gap-2 cursor-pointer"
+                           onClick={() => setShowBrandInput(!showBrandInput)}>
+                            Brand <IoIosArrowDown />
+                        </p>
+                        {showBrandInput && (
+                            <input
+                                type="text"
+                                placeholder="Enter brand"
+                                value={brandFilter}
+                                onChange={(e) => setBrandFilter(e.target.value)}
+                                className="border px-3 py-2 rounded"
+                            />
+                        )}
+                        <p className="font-poppins text-lg font-semibold flex items-center gap-2 cursor-pointer"
+                           onClick={() => setShowPriceInput(!showPriceInput)}>
+                            Price <IoIosArrowDown />
+                        </p>
+                        {showPriceInput && (
+                            <input
+                                type="number"
+                                placeholder="Enter max price"
+                                value={priceFilter}
+                                onChange={(e) => setPriceFilter(e.target.value)}
+                                className="border px-3 py-2 rounded"
+                            />
+                        )}
+                    </div>
+                </div>
+                    
+                    </div>
                     </div>
                     <p className='font-poppins font-medium flex items-center gap-2 text-lg text-[#101928]'>
-                        Sort by: <span className='flex gap-2 items-center text-blue-800 font-poppins font-medium'>Most popular <IoIosArrowDown /></span>
+                        Sort by: <span className='flex gap-2 items-center text-blue-800 font-poppins font-medium'>Most Recent <IoIosArrowDown /></span>
                     </p>
                 </div>
 
@@ -202,6 +248,5 @@ const UserOrders = () => {
 };
 
 export default UserOrders;
-
 
 

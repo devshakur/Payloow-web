@@ -54,7 +54,6 @@ const ImageUploadModal = ({ isOpen, setIsOpen, setActive, handleUploadSuccess, f
   const handleSubmit = (event) => {
     event.preventDefault();
     formik.handleSubmit(); // Trigger Formik's submit
-    onSubmit && onSubmit(); // Optional additional logic
     // setActive('two');
     handleUploadSuccess(); // Call handleUploadSuccess when the user uploads
     setSubmiting(false)

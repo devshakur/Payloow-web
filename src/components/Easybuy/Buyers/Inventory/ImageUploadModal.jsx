@@ -8,7 +8,7 @@ import {
 } from '@headlessui/react';
 import { useDropzone } from 'react-dropzone';
 
-export default function ImageUploadModal({ isOpened, closes, closeModal, formik, onSubmit }) {
+export default function ImageUploadModal({ isOpened, closes, closeModal, formik, }) {
   const [fullDevice, setFullDevice] = useState(null);
   const [otherImages, setOtherImages] = useState([]);
 
@@ -32,7 +32,6 @@ export default function ImageUploadModal({ isOpened, closes, closeModal, formik,
   const handleSubmit = (event) => {
     event.preventDefault();
     formik.handleSubmit(); // Trigger Formik's submit
-    onSubmit && onSubmit(); // Optional additional logic
   };
 
   const {
@@ -120,12 +119,14 @@ export default function ImageUploadModal({ isOpened, closes, closeModal, formik,
                 <div className="mt-6">
                   <Button
                     type="submit"
+                    disabled={formik.isSubmitting}
                     className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm font-semibold text-white focus:outline-none hover:bg-gray-600"
                   >
-                    Submit
+                    {formik.isSubmitting ? "Submitting..." : "Submit"}
                   </Button>
                   <Button
                     type="button"
+                   
                     className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm font-semibold text-white focus:outline-none hover:bg-gray-600 ml-2"
                     onClick={closes}
                   >

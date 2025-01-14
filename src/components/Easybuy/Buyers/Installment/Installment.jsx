@@ -16,15 +16,19 @@ const Installment = () => {
   const [amountPaid, setAmountPaid] = useState(0)
   const [balance, setBalance] = useState(0)
   let [isOpen, setIsOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
+  const handleViewDetails = (order) => {
+    setSelectedOrder(order); // Set the clicked order as the selected order
+   setIsOpen(true)      // Open the modal
+  };
+  const itemsPerPage = 4;
 
  const formatDueDate = (dueDate) => {
   const now = new Date();
   const nextDueDate = new Date(dueDate); // Convert string to Date object
   const timeDifference = nextDueDate - now; // Difference in milliseconds
 
-  console.log('Current Date:', now); // Log current date
-  console.log('Next Due Date:', nextDueDate); // Log due date
 
   if (timeDifference > 0) {
     const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24)); // Calculate days
@@ -120,12 +124,15 @@ useEffect(() => {
 
   
   
-  
+const pageCount = Math.ceil(orders.length / itemsPerPage);
+const displayedOrders = orders.slice(
+  currentPage * itemsPerPage,
+  (currentPage + 1) * itemsPerPage
+);
 
-
-  const itemsPerPage = 4;
-  const pageCount = Math.ceil(orders.length / itemsPerPage);
-  const displayedOrders = orders.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+const handlePageClick = ({ selected }) => {
+  setCurrentPage(selected);
+};
 
   return (
     <BuyersLayoutGen>
@@ -146,7 +153,7 @@ useEffect(() => {
 
         <motion.div className="bg-[#FFFFFF] shadow-md p-3" initial={{ x: -100 }} animate={{ x: 0 }} transition={{ duration: 0.7 }}>
           <div className="flex justify-between">
-            <h3 className="font-poppins font-normal text-[20px] text-[#1D2433]">Amount Paid</h3>
+            <p className="font-poppins font-normal text-[20px] text-[#1D2433]">Amount Paid</p>
             <p className="font-medium">...</p>
           </div>
           <h3 className="font-poppins font-medium text-[28px] text-[#1D2433] py-2">₦{amountPaid}</h3>
@@ -169,30 +176,43 @@ useEffect(() => {
         transition={{ duration: 1 }}
       >
         <motion.div className="bg-[#FFFFFF] shadow-md p-3" initial={{ y: 100 }} animate={{ y: 0 }} transition={{ duration: 0.5 }}>
-        {orders.map((order) => (
-  <div key={order.productName}>
-    <h4 className="font-poppins font-medium text-[22px] text-[#1D2433]">Next Due Date</h4>
-    <div className="flex items-center justify-between mx-6">
-      <div>
-        <h4 className="font-poppins font-normal italic text-xl">In</h4>
-        {/* Check if nextDueDetails exists and display the formatted data */}
-        <p className="font-poppins font-medium text-[28px] text-[#000]">
-          {order.nextDueDetails ? order.nextDueDetails.formatted : "No due date"}
-        </p>
-        <p className="font-poppins font-medium text-lg text-[#1D2433CC]">
-          {order.nextDueDetails ? order.nextDueDetails.time : "N/A"}
-        </p>
-      </div>
-      <div>
-        <img src="/images/Progress-circle.png" alt="progress-bar" />
-        <p className="relative left-6 lg:left-14 -top-24 font-poppins font-semibold text-[32px] text-[#000]">
-          {/* Display the time remaining in the "hh : mm" format */}
-          {order.nextDueDetails ? order.nextDueDetails.time : "N/A"}
-        </p>
-      </div>
-    </div>
-  </div>
-))}
+   
+        {orders.length > 0 && (
+        <motion.div
+          className="bg-[#FFFFFF] shadow-md p-3"
+          initial={{ y: 100 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h4 className="font-poppins font-medium text-[22px] text-[#1D2433]">
+            Next Due Date
+          </h4>
+          <div className="flex items-center justify-between mx-6">
+            <div>
+              <h4 className="font-poppins font-normal italic text-xl">In</h4>
+              {/* Display next due details of the last product */}
+              <p className="font-poppins font-medium text-[28px] text-[#000]">
+                {orders[orders.length - 1].nextDueDetails
+                  ? orders[orders.length - 1].nextDueDetails.formatted
+                  : "N/A"}
+              </p>
+              <p className="font-poppins font-medium text-lg text-[#1D2433CC]">
+                {orders[orders.length - 1].nextDueDetails
+                  ? orders[orders.length - 1].nextDueDetails.time
+                  : "Past due"}
+              </p>
+            </div>
+            <div>
+              <img src="/images/Progress-circle.png" alt="progress-bar" />
+              <p className="relative left-6 lg:left-14 -top-24 font-poppins font-semibold text-[32px] text-[#000]">
+                {orders[orders.length - 1].nextDueDetails
+                  ? orders[orders.length - 1].nextDueDetails.time
+                  : "N/A"}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      )}
 
         </motion.div>
 
@@ -218,14 +238,14 @@ useEffect(() => {
                   <p>{item.productName}</p>
                 </div>
                 <button
-                  onClick={() => setIsOpen(true)}
+                  onClick={()=>handleViewDetails(item)}
                   className={`px-4 h-8 rounded-md ${item.status === 'active' ? 'text-green-500 bg-green-200' : 'text-red-600 bg-red-100'}`}
                 >
                   {item.status}
                 </button>
               </motion.div>
             )) : <div className='text-gray-700 font-medium text-lg font-plus-jakarta'>No Installment plan</div>}
-          {isOpen && <InstallmentModal isOpen={isOpen} setIsOpen={setIsOpen} orders={orders} />}
+          {selectedOrder && <InstallmentModal isOpen={isOpen} setIsOpen={setIsOpen} selectedOrder={selectedOrder} />}
         </motion.div>
       </motion.div>
 
@@ -247,13 +267,11 @@ useEffect(() => {
             <p className="text-lg text-blue-700">Filters</p>
           </motion.button>
           <div className="hidden lg:flex gap-3">
-            <p className="font-poppins text-lg font-semibold text-blue-700 flex items-center gap-2">Brand (1) <IoIosArrowDown /> </p>
-            <p className="font-poppins text-lg font-semibold flex items-center gap-2">Color <IoIosArrowDown /></p>
-            <p className="font-poppins text-lg font-semibold flex items-center gap-2">Price <IoIosArrowDown /></p>
+            <p className="font-poppins text-lg font-semibold text-blue-700 flex items-center gap-2">Amount ({displayedOrders.length}) <IoIosArrowDown /> </p>
           </div>
         </div>
         <p className="font-poppins font-medium flex items-center gap-2 text-lg text-[#101928]">
-          Sort by: <span className="flex gap-2 items-center text-blue-800 font-poppins font-medium">Most popular <IoIosArrowDown /></span>
+          {/* Sort by: <span className="flex gap-2 items-center text-blue-800 font-poppins font-medium">Most popular <IoIosArrowDown /></span> */}
         </p>
       </motion.div>
 
@@ -288,7 +306,7 @@ useEffect(() => {
           <p className="text-sm font-poppins text-gray-500">Purchased: {item.purchaseDate}</p>
         </div>
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={()=>handleViewDetails(item)}
           className="px-4 py-1 text-sm rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200"
         >
           View Details
@@ -340,22 +358,20 @@ useEffect(() => {
             transition={{ duration: 1 }}
           >
             <ReactPaginate
-              previousLabel="←"
-              nextLabel="→"
-              breakLabel="..."
-              pageCount={pageCount}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={5}
-              containerClassName="flex justify-center mt-6"
-              pageClassName="mx-1"
-              pageLinkClassName="px-4 py-2 rounded bg-gray-300 text-black hover:bg-blue-500 hover:text-white transition duration-200"
-              previousClassName="mx-1"
-              previousLinkClassName="px-4 py-2 rounded bg-gray-300 text-black hover:bg-blue-500 hover:text-white transition duration-200"
-              nextClassName="mx-1"
-              nextLinkClassName="px-4 py-2 rounded bg-gray-300 text-black hover:bg-blue-500 hover:text-white transition duration-200"
-              activeClassName="bg-blue-600 text-white"
-              disabledClassName="opacity-50 cursor-not-allowed"
-            />
+        previousLabel="←"
+        nextLabel="→"
+        breakLabel="..."
+        pageCount={pageCount}
+        onPageChange={handlePageClick}
+        containerClassName="flex justify-center mt-4"
+        pageClassName="mx-1"
+        pageLinkClassName="px-3 py-1 rounded bg-gray-200 hover:bg-blue-500 hover:text-white transition"
+        previousClassName="mx-1"
+        previousLinkClassName="px-3 py-1 rounded bg-gray-200 hover:bg-blue-500 hover:text-white transition"
+        nextClassName="mx-1"
+        nextLinkClassName="px-3 py-1 rounded bg-gray-200 hover:bg-blue-500 hover:text-white transition"
+        activeClassName="bg-blue-500 text-white"
+      />
           </motion.div>
         </article>
       </motion.div>
