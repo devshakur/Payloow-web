@@ -24,6 +24,9 @@ const BuyCourse = () => {
   const handleCourseClick = (courseId) => {
     navigate(`/e-learning/tutor/course/edit-course/${courseId}`);
   };
+  const handleCheckOut = ()=>{
+    navigate('/e-learning/student/cart')
+  }
 
   const sectionVariant = {
     hidden: { opacity: 0, height: 0 },
@@ -150,8 +153,8 @@ const BuyCourse = () => {
               </div>
 
               {/* <button onClick={() => handleCourseClick(course._id)} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"> */}
-              <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
-                Proceed to Checkout
+              <button onClick={handleCheckOut} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                Proceed to Cart
               </button>
             </div>
           </div>

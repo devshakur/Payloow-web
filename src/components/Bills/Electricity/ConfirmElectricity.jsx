@@ -41,7 +41,7 @@ const ConfirmElectricity = ({ setActive, formik }) => {
                     }
 
                 } else {
-                    toast.error('Electricity purchase failed. Please try again.');
+                    toast.error('Invalid Pin Please try again');
                     setLoading(false);
                 }
             } else if (balance <= amountValue) {
@@ -50,7 +50,8 @@ const ConfirmElectricity = ({ setActive, formik }) => {
             }
 
         } catch (error) {
-            toast.error('Invalid pin, please try again')
+            const errorMsg = error?.response?.message
+            toast.error(errorMsg || 'Something went wrong')
             setLoading(false);
         }
     };

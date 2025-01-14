@@ -11,15 +11,18 @@ import toast, { Toaster } from 'react-hot-toast';
 import { CloseCircle } from 'iconsax-react';
 import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { MdDeleteOutline } from "react-icons/md";
+import useInvestment from '../../../hooks/useInvetment';
 
 
 
 
 const Cart = () => {
   const { id } = useParams();
+  const {checkOut} = useInvestment();
   const navigate = useNavigate();
   const [cart, setCart] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [checkOuts, setCheckOuts] = useState(false)
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   let [isOpen, setIsOpen] = useState(false);
 
@@ -44,6 +47,9 @@ const Cart = () => {
   const handleCourseClick = (courseId) => {
     navigate(`/e-learning/student/course/${courseId}`);
   };
+  const handleWallet = ()=>{
+    navigate('/e-learning/student/wallet-checkout')
+  }
 
   const cartVariant = {
     hidden: { opacity: 0, height: 0 },
@@ -76,7 +82,6 @@ const Cart = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      console.log(response.data);
       toast.success('Course successfully removed from cart')
       getCartCourses()
     } catch (error) {
@@ -88,17 +93,67 @@ const Cart = () => {
     }
   }
 
+  const deleteCartItems = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem('token'));
+      const response = await axios.delete(endpoints.deleteCart, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      toast.success('Course successfully removed from cart')
+    } catch (error) {
+      toast.error('Failed to delete cart Item')
+    } 
+  }
+
+  
+  const FlutterPurchase = async (e) => {
+    e.preventDefault();
+    try {
+      const token = JSON.parse(localStorage.getItem('auth')).auth;
+  
+      // Make the API call and store the response in a variable
+      const response = await axios.post(
+        endpoints.purchaseCourse,
+        {
+          paymentType: 'flutterwave',
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Access and store data from the response
+      const purchaseUrl = response?.data?.data;
+  
+      if (purchaseUrl) {
+        window.location.href = purchaseUrl; // Redirect to the purchase URL
+        toast.success('Purchase submitted successfully');
+        deleteCartItems();
+      } else {
+        toast.error('Could not access Flutterwave Gateway, please try again in a few minutes');
+      }
+    } catch (error) {
+      toast.error('Failed to submit purchase');
+      console.error('Error submitting purchase:', error);
+    } 
+  };
+  
+  
   // Calculate cart summary
   const calculateSummary = () => {
     const summary = cart.reduce((acc, item) => {
       const originalPrice = parseFloat(item.course_id.price) || 0;
       const discountPrice = parseFloat(item.course_id.discount_price) || originalPrice;
-
+     
       return {
         originalTotal: acc.originalTotal + originalPrice,
-        discountTotal: acc.discountTotal + discountPrice
+        discountTotal: acc.discountTotal + discountPrice,
+      
       };
-    }, { originalTotal: 0, discountTotal: 0 });
+    }, { originalTotal: 0, discountTotal: 0,  });
 
     return {
       originalPrice: summary.originalTotal.toFixed(2),
@@ -290,7 +345,7 @@ const Cart = () => {
               <div className="space-y-4">
                 <button
                   className="w-full flex items-center justify-between p-4 border rounded-lg hover:bg-primary hover:text-white"
-                  onClick={() => console.log("Wallet payment")}
+                  onClick={handleWallet}
                 >
                   <div className="flex items-center">
                     <span className="text-lg">Pay ${summary.discountTotal} with Wallet</span>
@@ -300,7 +355,7 @@ const Cart = () => {
 
                 <button
                   className="w-full flex items-center justify-between p-4 border rounded-lg hover:bg-primary hover:text-white"
-                  onClick={() => console.log("Card payment")}
+                  onClick={FlutterPurchase}
                 >
                   <div className="flex items-center">
                     <span className="text-lg">Pay ${summary.discountTotal} with Card</span>

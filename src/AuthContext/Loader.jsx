@@ -1,12 +1,12 @@
 import React from 'react'
-import { BallTriangle } from 'react-loader-spinner'
+import { RotatingLines } from 'react-loader-spinner'
 
 
 export const Loader = () => {
 
   return (
     <div className='bg-[#0B1D33] h-screen flex justify-center items-center'>
-      <BallTriangle
+      <RotatingLines
         height={100}
         width={100}
         radius={5}
@@ -19,3 +19,16 @@ export const Loader = () => {
   )
 }
 
+// import { RotatingLines } from "react-loader-spinner";
+
+// function Loader() {
+//   return (
+//     <RotatingLines
+//       strokeColor="grey"
+//       strokeWidth="5"
+//       animationDuration="0.75"
+//       width="96"
+//       visible={true}
+//     />
+//   )
+// }

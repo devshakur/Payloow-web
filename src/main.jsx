@@ -11,7 +11,7 @@ import CartProvider from "./components/Easybuy/Buyers/cartContext.jsx";
 import useInvestment from "./hooks/useInvetment.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+ 
     <VariationsProvider>
       <AuthProvider>
           <InvestmentProvider>
@@ -23,5 +23,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           </InvestmentProvider>
       </AuthProvider>
     </VariationsProvider>
-  </React.StrictMode>
+
 );

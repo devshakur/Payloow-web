@@ -1,108 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PartnersLayout from './PartnersLayout';
 import { IoIosArrowDown } from "react-icons/io";
 import ReactPaginate from 'react-paginate';
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { motion } from 'framer-motion'; 
+import {toast, Toaster} from 'react-hot-toast'
+import useInvestment from '../../../hooks/useInvetment';
 
-const orders = [
- {
-    productName: 'Yusuf A Baba',
-    ProductId: '#3097674',
-    productPrice: '+234-7890876723',
-    orderDate: '04/10/2024',
-    productStatus: 'active',
-},
-{
-    productName: 'Mayowa Sanusi',
-    ProductId: '#0297214',
-    productPrice: '+234-7890876723',
-    orderDate: '05/03/2022',
-    productStatus: 'active',
-},
-{
-    productName: 'Solomon Boss',
-    ProductId: '#0457876',
-    productPrice: '+234-7890876723',
-    orderDate: '24/11/2024',
-    productStatus: 'inactive',
-},
-{
-    productName: 'Marvelous Boss',
-    ProductId: '#0409876',
-    productPrice: '+234-7890876723',
-    orderDate: '14/03/2021',
-    productStatus: 'active',
-},
-{
-    productName: 'Boss Kabir',
-    ProductId: '#0203476',
-    productPrice: '+234-7890876723',
-    orderDate: '02/12/2024',
-    productStatus: 'inactive',
-},
-{
-    productName: 'Yusuf A Baba',
-    ProductId: '#3097674',
-    productPrice: '+234-7890876723',
-    orderDate: '04/10/2024',
-    productStatus: 'active',
-},
-{
-    productName: 'Mayowa Sanusi',
-    ProductId: '#0297214',
-    productPrice: '+234-7890876723',
-    orderDate: '05/03/2022',
-    productStatus: 'inactive',
-},
-{
-    productName: 'Solomon Boss',
-    ProductId: '#0457876',
-    productPrice: '+234-7890876723',
-    orderDate: '24/11/2024',
-    productStatus: 'active',
-},
-{
-    productName: 'Marvelous Boss',
-    ProductId: '#0409876',
-    productPrice: '+234-7890876723',
-    orderDate: '14/03/2021',
-    productStatus: 'inactive',
-},
-{
-    productName: 'Yusuf A Baba',
-    ProductId: '#3097674',
-    productPrice: '+234-7890876723',
-    orderDate: '04/10/2024',
-    productStatus: 'active',
-},
-{
-    productName: 'Mayowa Sanusi',
-    ProductId: '#0297214',
-    productPrice: '+234-7890876723',
-    orderDate: '05/03/2022',
-    productStatus: 'inactive',
-},
-{
-    productName: 'Solomon Boss',
-    ProductId: '#0457876',
-    productPrice: '+234-7890876723',
-    orderDate: '24/11/2024',
-    productStatus: 'active',
-},
-{
-    productName: 'Marvelous Boss',
-    ProductId: '#0409876',
-    productPrice: '+234-7890876723',
-    orderDate: '14/03/2021',
-    productStatus: 'inactive',
-},
-]
+
 
 
 const Customers = ({ handleStep }) => {
+    const {GetPartnerCustomers} = useInvestment()
     const [currentPage, setCurrentPage] = useState(0);
+    const [customers, setCustomers] = useState([])
+
+    useEffect(() => {
+        const GetCustomers = async () => {
+            try {
+                const resp = await GetPartnerCustomers();
+                const message = resp?.data?.message; 
+                const customersData = resp?.data?.data; // Updated to match API response structure
+                if (customersData) {
+                    // Map the response data to match your component's expected format
+                    const formattedCustomers = customersData.map((customer) => ({
+                        ProductId: customer._id,
+                        productName: customer.user.email,
+                        productPrice: customer.user.Address,
+                        orderDate: new Date(customer.createdAt).toLocaleDateString(),
+                        productStatus: 'active', // Assuming all customers are active; adjust based on logic
+                    }));
+                    setCustomers(formattedCustomers);
+                    toast.success(message);
+                } else {
+                    toast.success('Fetched Customers');
+                }
+            } catch (error) {
+                if (error?.response?.data?.msg) {
+                    toast.error(error.response.data.msg);  
+                } else {
+                    toast.error('Failed to fetch customers'); 
+                }
+            }
+        };
+        GetCustomers();
+    }, []);
+    
 
     // Handle page change
     const handlePageClick = ({ selected }) => {
@@ -111,8 +55,8 @@ const Customers = ({ handleStep }) => {
 
     // Items per page for pagination
     const itemsPerPage = 6;
-    const pageCount = Math.ceil(orders.length / itemsPerPage);
-    const displayedOrders = orders.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+    const pageCount = Math.ceil(customers.length / itemsPerPage);
+    const displayedOrders = customers.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
     return (
         <PartnersLayout>
@@ -124,8 +68,6 @@ const Customers = ({ handleStep }) => {
             >
                 <ul className='flex gap-3 border-b border-gray-300 cursor-pointer'>
                     <li>All Customers</li>
-                    <li>Pending</li>
-                    <li>Leads</li>
                 </ul>
                 <div>
                     <button 
@@ -167,15 +109,22 @@ const Customers = ({ handleStep }) => {
                 <article className="bg-white w-[100%] overflow-scroll mx-4 lg:mx-0 rounded-lg p-4">
                     <ul className="lg:flex justify-between bg-white shadow-lg hidden">
                         <li className="font-medium text-md lg:mr-5">Customer ID</li>
-                        <li className="font-medium text-md relative lg:-left-8">Name</li>
-                        <li className="font-medium text-md relative lg:-left-8">Phone Number</li>
-                        <li className="font-medium text-md relative lg:-left-4">Date</li>
-                        <li className="font-medium text-md lg:mr-7 relative xl:left-[-2rem]">Status</li>
+                        <li className="font-medium text-md relative lg:-left-8">EMAIL</li>
+                        <li className="font-medium text-md relative lg:-left-8">Address</li>
+                        <li className="font-medium text-md relative lg:-right-20">Date</li>
+                        <li className="font-medium text-md lg:mr-7 relative xl:left-[1rem]">Status</li>
                         <li className="font-medium text-md lg:mr-7 relative xl:left-[-3.4rem]">Action</li>
                     </ul>
 
                     {/* Animate individual order items */}
-                    {displayedOrders.map((item, index) => (
+                    {displayedOrders.length === 0 ?(
+                 <>
+                 <div className='flex justify-start'>
+                    <p className='text-lg font-medium font-plus-jakarta text-gray-600'>No Available Customers</p>
+                 </div>
+                 </>
+                    ): 
+                    displayedOrders.map((item, index) => (
                         <motion.div 
                             key={item.ProductId} 
                             className="rounded-lg p-4 mb-4 shadow-md lg:shadow-sm"
@@ -191,13 +140,13 @@ const Customers = ({ handleStep }) => {
                                     </div>
                                 </div>
                                 <div className="flex justify-between lg:w-auto mt-3">
-                                    <p className="font-poppins text-md font-medium lg:hidden">Name</p>
+                                    <p className="font-poppins text-md font-medium lg:hidden">Email</p>
                                     <span className="text-sm font-poppins font-medium lg:relative lg:right-24 lg:max-w-[8rem] lg:truncate">
                                         {item.productName}
                                     </span>
                                 </div>
                                 <div className="flex justify-between w-full lg:w-auto mt-3">
-                                    <p className="font-poppins text-md font-medium lg:hidden">Phone Number</p>
+                                    <p className="font-poppins text-md font-medium lg:hidden">Address</p>
                                     <span className="font-poppins text-sm font-medium lg:ml-[-6rem] xl:ml-[-9rem]">{item.productPrice}</span>
                                 </div>
                                 <div className="flex justify-between w-full lg:w-auto mt-3">
@@ -219,8 +168,8 @@ const Customers = ({ handleStep }) => {
                                 </div>
                             </div>
                         </motion.div>
-                    ))}
-
+                    ))
+                }
                     {/* Pagination with animation */}
                     <div className="flex text-center justify-between">
                         <ReactPaginate
@@ -247,6 +196,7 @@ const Customers = ({ handleStep }) => {
                     </div>
                 </article>
             </motion.div>
+            <Toaster />
         </PartnersLayout>
     );
 };

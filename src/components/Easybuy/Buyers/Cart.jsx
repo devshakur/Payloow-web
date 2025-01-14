@@ -4,12 +4,12 @@ import { GoPlus } from "react-icons/go";
 import { AiOutlineMinus } from "react-icons/ai";
 import { useRouter } from '../../../Routes/router';
 import { motion } from 'framer-motion';
-import useInvestment from '../../../hooks/useInvetment';
 import { toast, Toaster } from 'react-hot-toast';
+import useInvestment from '../../../hooks/useInvetment';
 
 const Cart = () => {
   const router = useRouter();
-  const { GetCart, DeleteCart } = useInvestment();
+  const { GetCart, DeleteCart } = useInvestment()
   const [quantities, setQuantities] = useState({});
   const [cartItems, setCartItems] = useState([]);
   const [productId, setProductId] = useState(null);
@@ -35,19 +35,19 @@ const Cart = () => {
     DeleteCartItem(_id);
   };
 
-  const handleIncrease = (id) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: (prev[id] || 0) + 1,
-    }));
-  };
+  // const handleIncrease = (id) => {
+  //   setQuantities((prev) => ({
+  //     ...prev,
+  //     [id]: (prev[id] || 0) + 1,
+  //   }));
+  // };
 
-  const handleDecrease = (id) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: prev[id] > 1 ? prev[id] - 1 : 1,
-    }));
-  };
+  // const handleDecrease = (id) => {
+  //   setQuantities((prev) => ({
+  //     ...prev,
+  //     [id]: prev[id] > 1 ? prev[id] - 1 : 1,
+  //   }));
+  // };
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -104,7 +104,10 @@ const Cart = () => {
                     <p className="text-sm text-gray-600 mt-1">
                       Color: <span>{item.color}</span>
                     </p>
-                    <div className="flex items-center gap-4 mt-3">
+                    <div className="flex gap-2"> 
+                    <h5 className='font-plus-jakarta text-lg font-semibold text-gray-700'>Qty:</h5>
+                    <p className="text-lg font-plus-jakarta font-bold text-gray-600">{quantities[item._id] || 1}</p></div>
+                    {/* <div className="flex items-center gap-4 mt-3">
                       <button onClick={() => handleDecrease(item._id)} className="text-blue-700">
                         <AiOutlineMinus className="w-5 h-5" />
                       </button>
@@ -112,7 +115,7 @@ const Cart = () => {
                       <button onClick={() => handleIncrease(item._id)} className="text-blue-700">
                         <GoPlus className="w-5 h-5" />
                       </button>
-                    </div>
+                    </div> */}
                     <button
                       onClick={() => handleDelete(item.product?._id)}
                       className="text-red-500 mt-3"

@@ -21,6 +21,7 @@ function Login() {
 		try {
 			const token = JSON.parse(localStorage.getItem('auth')).auth;
 			
+			
 			const response = await axios.get(endpoints.getCurrentUser, {
 				headers: {
 					Authorization: `Bearer ${token}`
@@ -61,7 +62,7 @@ function Login() {
 						}else{
 							router.push('/dashboard'); 
 						}
-					}, 2000);
+					}, 1000);
 				}
 			} catch (error) {
 				if (error.response) {
@@ -94,8 +95,8 @@ function Login() {
 					<span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3 relative right-12'>ayloow</span>
 				</div>
 				<div className='bg-white w-[90vw] h-[550px] max-w-lg p-6 rounded-lg shadow-lg flex flex-col'>
-					<h4 className='flex justify-center font-poppins text-2xl font-semibold text-primary-text'>Log in to your account </h4>
-					<h6 className='flex justify-center text-lg font-poppins font-medium text-primary-text'>Welcome back to payloow</h6>
+					<h4 className='flex justify-center font-plus-jakarta text-2xl font-semibold text-primary-text'>Login to your account </h4>
+					<h6 className='flex justify-center text-lg font-plus-jakarta font-medium text-primary-text'>Welcome back to payloow</h6>
 					<form onSubmit={formik.handleSubmit} className='grid gap-4 mt-8'>
 						<div>
 							<label htmlFor='phone' className='text-primary-text text-[14px] font-medium'>Phone Number</label>
@@ -131,7 +132,7 @@ function Login() {
 						</div>
 
 						<button type="submit" disabled={formik.isSubmitting} className="h-[55px] bg-[#3369F4] rounded-lg p-4 text-white py-2">
-							{formik.isSubmitting ? 'Verifying...' : 'Log in'}
+							{formik.isSubmitting ? 'Verifying...' : 'Login'}
 						</button>
 						<li className='flex justify-end font-poppins font-normal text-sm text-[#3369F4]'><a href="/forgot-password">forgot password</a></li>
 					</form>

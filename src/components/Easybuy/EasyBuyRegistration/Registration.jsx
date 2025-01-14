@@ -55,13 +55,27 @@ const items = [
 const Registration = ({ openStepTwo }) => {
     const [isOpen, setIsOpen] = useState(true);
     const router = useRouter();
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+   
 
     const closeDialog = () => {
         setIsOpen(false);
     };
+    const handleBuyer = ()=>{
+        if(currentUser.easyBuyRole === null){
+            openStepTwo()   
+        }else{
+            router.push('/buyers/dashboard')
+        }
+    }
 
     const handlePartner = () => {
-        router.push('/partners/dashboard');
+        if(currentUser.easyBuyRole === null){
+            openStepTwo()   
+        }else{
+            router.push('/partners/dashboard');
+
+        }
     };
 
     return (
@@ -87,7 +101,7 @@ const Registration = ({ openStepTwo }) => {
                                         <Input
                                             defaultValue={'Buyer'}
                                             readOnly
-                                            onClick={openStepTwo}
+                                            onClick={handleBuyer}
                                             className={clsx(
                                                 'focus mt-3 block w-full rounded-lg bg-[#F1F3F9] py-6 mb-8 px-5 text-xl font-bold cursor-pointer focus:outline-none',
                                             )}
@@ -124,7 +138,7 @@ const Registration = ({ openStepTwo }) => {
                     transition={{ duration: 0.6 }}
                 >
                     <h3 className='font-poppins text-[22px] font-medium my-6 text-[#000000]'>Phones & Solar items Deals</h3>
-                    <div className='grid lg:grid-cols-3 gap-y-8'>
+                    <div className='w-full justify-center grid sm:grid-cols-2 lg:grid-cols-3 gap-y-8'>
                         {items.map((item) => (
                             <motion.div
                                 key={item.id}
@@ -135,7 +149,7 @@ const Registration = ({ openStepTwo }) => {
                                 <div className='w-full h-[300px]'>
                                     <img src={item.img} alt={item.id} className='w-auto h-auto' />
                                 </div>
-                                <div className='lg:w-[80%] lg:-mt-6 flex justify-between'>
+                                <div className='lg:w-[100%] lg:-mt-6 flex justify-between'>
                                     <p className='font-poppins font-medium text-[#101928] text-lg'>{item.name}</p>
                                     <p className='font-poppins font-[450] text-[#101928] text-xl'>{item.amount}</p>
                                 </div>

@@ -156,7 +156,7 @@ const DebtorDashboard = () => {
                         <a href="#">
                             <h5 className="-mt-2 mb-3 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Loan Wallet Balance</h5>
                         </a>
-                        <p className="mb-4 font-medium text-2xl text-white">₦{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : 'Loading...'}</p>
+                        <p className="mb-4 font-medium text-2xl text-white">₦{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : '0'}</p>
                         <div className='flex items-center gap-1'>
                             <p className='text-white font-medium text-sm my-3'> bank: {user.account_disabled}</p>
                             <Copy size="17" color="white" />
@@ -177,14 +177,14 @@ const DebtorDashboard = () => {
                                 <span className='bg-white w-6 h-6 flex justify-center items-center rounded-[50%]'><Briefcase size="12" color="blue" /></span>
                                 <p className='font-normal text-lg font-poppins text-[#1D2433]'>Total Loan Amount</p>
                             </div>
-                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : 'Loading...'}</p>
+                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : '0'}</p>
                         </div>
                         <div className='bg-[#D6F7FF] md:w-[47%] my-5 py-5 rounded-md'>
                             <div className='flex items-center gap-2 mx-2'>
                                 <span className='bg-white w-6 h-6 flex justify-center items-center rounded-[50%]'><Briefcase size="12" color="blue" /></span>
                                 <p className='font-normal text-lg font-poppins text-[#1D2433]'>Loan Balance</p>
                             </div>
-                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : 'Loading...'}</p>
+                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : '0'}</p>
                         </div>
                     </div>
 

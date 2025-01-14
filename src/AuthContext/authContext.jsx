@@ -40,6 +40,24 @@ const AuthProvider = ({ children }) => {
             throw error;
         }
     }
+    const GetUser = async () => {
+		try {
+			const token = JSON.parse(localStorage.getItem('auth')).auth;
+			
+			
+			const response = await axios.get(AuthEndPoints.getUser, {
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			});
+			
+			localStorage.setItem('currentUser', JSON.stringify(response.data.data));
+			return response.data.data
+
+		} catch (error) {
+			toast.error('An error occured while fetching user data')
+		}
+	}
 
    
 
@@ -70,7 +88,7 @@ const AuthProvider = ({ children }) => {
             throw error;
         } 
     }
-    const object = { ...state, dispatch, LoginUser, RegisterUser, ForgetPswd, ResetPswd }
+    const object = { ...state, dispatch, LoginUser, RegisterUser, ForgetPswd, ResetPswd, GetUser }
 
     return <AuthContext.Provider value={object}>{children}</AuthContext.Provider>
 }

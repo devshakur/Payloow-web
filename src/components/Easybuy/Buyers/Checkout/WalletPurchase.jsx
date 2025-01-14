@@ -2,6 +2,7 @@ import React from 'react'
 import { Wallet, ArrowRight2 } from "iconsax-react";
 
 const WalletPurchase = ({handleModal}) => {
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   return (
     <div className="">
     <div className="my-3">
@@ -11,7 +12,7 @@ const WalletPurchase = ({handleModal}) => {
            <Wallet size="24" color="#1D2433CC" />
          </div>
          <p className="mt-5 font-poppins font-normal text-sm leading-5">
-           Wallet (₦44,5000)
+           Wallet ({`₦${currentUser?.wallet?.balance ?? 0}`})
          </p>
        </div>
        <div className="mt-1 flex items-center gap-1">

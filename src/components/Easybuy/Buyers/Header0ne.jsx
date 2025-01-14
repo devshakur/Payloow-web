@@ -9,6 +9,7 @@ import { useRouter } from '../../../Routes/router';
 
 const HeaderOne = () => {
   const router = useRouter();
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   const handleRoutes = (path)=>{
    router.push(path)
@@ -22,8 +23,8 @@ const HeaderOne = () => {
           animate={{ opacity: 1, scale: 1 }}  
           transition={{ duration: 0.5 }} 
         >
-          <h3 className='font-poppins font-medium text-2xl text-white'>Available Balance</h3>
-          <h4 className='font-poppins font-medium text-4xl text-white mt-3'>₦2,000.00</h4>
+          <h3 className='font-poppins font-medium text-2xl text-white'>Available Balances</h3>
+          <h4 className='font-poppins font-medium text-4xl text-white mt-3'> ₦{(currentUser?.wallet?.balance ?? 0).toLocaleString()}</h4>
           <div className='flex mt-3 text-white gap-3'>
             <p>Wema bank: 4054673854</p>
             <span className='text-white'>
@@ -61,7 +62,7 @@ const HeaderOne = () => {
             </div>
             <div className='flex justify-center'>
               <motion.p
-                className='text-[24px] lg:text-[18px] relative md:top-3 mt-1 -top-10 xl:-top-6 2xl:-top-24 font-medium font-poppins'
+                className='text-[24px] lg:text-[18px] relative md:top-3 mt-1 -top-10 xl:-top-6 2xl:-top-28 font-medium font-poppins'
                 initial={{ opacity: 0, y: 20 }} // Slide from bottom and fade in
                 animate={{ opacity: 1, y: 0 }}  // Normal opacity and position
                 transition={{ duration: 0.5, delay: 0.6 }} // Fade-in and slide effect with delay

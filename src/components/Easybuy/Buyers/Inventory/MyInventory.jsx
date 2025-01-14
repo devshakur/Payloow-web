@@ -1,26 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { motion } from 'framer-motion';
-
-// Sample Inventory Data
-const Inventory = [
-  { id: 1, ProductId: '#3097674', productName: 'Iphone 12', Category: 'phone', quantity: '04', Price: '$5,000' },
-  { id: 2, ProductId: '#3097674', productName: 'Inverter', Category: 'solar', quantity: '02', Price: '$15,000' },
-  { id: 3, ProductId: '#3097974', productName: 'Iphone 12', Category: 'phone', quantity: '04', Price: '$50,000' },
-  { id: 4, ProductId: '#3097694', productName: 'Battery', Category: 'solar', quantity: '01', Price: '$25,000' },
-  { id: 5, ProductId: '#3097674', productName: 'Iphone 14', Category: 'phone', quantity: '03', Price: '$35,000' },
-];
-
+import useInvestment from '../../../../hooks/useInvetment';
+import {toast, Toaster} from 'react-hot-toast'
 const MyInventory = () => {
-  const [selectedStatus, setSelectedStatus] = useState('Inventory');
+  const { GetProductInventory } = useInvestment();
   const [currentPage, setCurrentPage] = useState(0);
+  const [inventory, setInventory] = useState([]); // To hold inventory data
 
-  // Filter orders based on selected status
-  const filteredOrders = selectedStatus === 'Inventory'
-    ? Inventory
-    : Inventory.filter(order => order.Category.toLowerCase() === selectedStatus.toLowerCase());
+  useEffect(() => {
+    const getInventory = async () => {
+      try {
+        const resp = await GetProductInventory();
+        
+        // Fetching inventory from API response
+        const productsData = resp?.data?.data?.data; 
+        if (productsData) {
+         toast.success('Fetched User Inventory')
+          setInventory(productsData); // Setting the fetched data
+        }
+      } catch (error) {
+        toast.error('Error fetching inventory:', error);
+      }
+    };
+
+    getInventory();
+  }, [GetProductInventory]);
 
   // Handle page change
   const handlePageClick = ({ selected }) => {
@@ -29,8 +36,8 @@ const MyInventory = () => {
 
   // Items per page for pagination
   const itemsPerPage = 4;
-  const pageCount = Math.ceil(filteredOrders.length / itemsPerPage);
-  const displayedOrders = filteredOrders.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+  const pageCount = Math.ceil(inventory.length / itemsPerPage);
+  const displayedOrders = inventory.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
   return (
     <div>
@@ -49,10 +56,16 @@ const MyInventory = () => {
             <li className="font-medium text-lg lg:mr-7 relative xl:left-[-2rem]">Unit Price</li>
             <li className="font-medium text-lg lg:mr-7 relative xl:left-[-3.4rem]">Action</li>
           </motion.ul>
-
-          {displayedOrders.map(item => (
+        {displayedOrders.length === 0 ? (
+         <>
+         <div className="flex justify-center my-3">
+          <p className="text-lg font-plus-jakarta font-medium text-gray-700">No orders found for this partner</p>
+         </div>
+         </>
+        ):
+          displayedOrders.reverse().map(item => (
             <motion.div 
-              key={item.id} 
+              key={item._id} // Use item._id as the key
               className="rounded-lg p-4 mb-4 shadow-md lg:shadow-sm"
               initial={{ opacity: 0, x: -100 }}
               animate={{ opacity: 1, x: 0 }}
@@ -62,27 +75,31 @@ const MyInventory = () => {
                 <div className="flex justify-between w-full lg:w-[12%] mt-3">
                   <p className="font-poppins text-lg font-medium lg:hidden">Product ID:</p>
                   <div className="text-sm justify-start ml-[-1rem] font-poppins font-medium lg:truncate">
-                    <p>{item.ProductId}</p>
+                    <p>{item._id}</p> {/* Display product ID */}
                   </div>
                 </div>
                 <div className="flex justify-between w-full lg:w-auto mt-3">
                   <p className="font-poppins text-lg font-medium lg:hidden">Product Name:</p>
-                  <span className="text-sm font-poppins font-medium lg:relative lg:right-20 lg:truncate">{item.productName}</span>
+                  <span className="text-sm font-poppins font-medium lg:relative lg:right-20 lg:truncate">
+                    {item.name} {/* Display product name */}
+                  </span>
                 </div>
                 <div className="flex justify-between w-full lg:w-auto mt-3">
                   <p className="font-poppins text-lg font-medium lg:hidden">Category:</p>
-                  <span className="font-poppins text-sm font-medium lg:ml-[-6rem] xl:ml-[-7rem]">{item.Category}</span>
+                  <span className="font-poppins text-sm font-medium lg:ml-[-6rem] xl:ml-[-7rem]">
+                    {item.category.name} {/* Display category name */}
+                  </span>
                 </div>
                 <div className="flex justify-between lg:w-auto mt-3">
                   <p className="font-poppins text-lg font-medium lg:hidden">Stock Quantity:</p>
                   <span className="text-sm font-poppins font-medium lg:relative lg:right-20 lg:max-w-[8rem] lg:truncate">
-                    {item.quantity}
+                    {item.stock} {/* Display stock quantity */}
                   </span>
                 </div>
                 <div className="flex justify-between w-full lg:w-auto mt-3">
                   <p className="font-poppins text-lg font-medium lg:hidden">Unit Price:</p>
                   <span className='text-sm font-poppins font-medium lg:relative right-9 xl:right-20'>
-                    {item.Price}
+                    {item.price.$numberDecimal} {/* Display unit price */}
                   </span>
                 </div>
                 <div className="flex justify-between w-full lg:w-auto mt-3">
@@ -123,9 +140,10 @@ const MyInventory = () => {
             </motion.div>
           </div>
         </article>
+        <Toaster />
       </div>
     </div>
   );
-}
+};
 
 export default MyInventory;

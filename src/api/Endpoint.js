@@ -1,5 +1,5 @@
-export const BaseUrl = "https://revo-1cxp.onrender.com/api/v1";
-const investmentApiBaseUrl = "https://revo-backend.onrender.com/"
+export const BaseUrl = "https://revo-dv0d.onrender.com/api/v1";
+ const investmentApiBaseUrl = "https://revo-backend.onrender.com/"
 
 
 //registration
@@ -8,6 +8,7 @@ export const AuthEndPoints = {
   register: `${BaseUrl}/register`,
   forget: `${BaseUrl}/forget-password`,
   reset: `${BaseUrl}/reset-password`,
+  getUser: `${BaseUrl}/get-current-user`
 };
 
 export const endpoints = {
@@ -21,7 +22,7 @@ export const endpoints = {
   addToCart: `${BaseUrl}/enroll-course`,
   getCartCourses: `${BaseUrl}/get-course-in-cart`,
   removeCourseFromCart: (courseId) =>
-    `${BaseUrl}/delete-course-in-cart/${courseId}`,
+    `${BaseUrl}/delete-all-course-in-cart/${courseId}`,
 
   // course
   getAllCourses: `${BaseUrl}/get-all-courses`,
@@ -35,7 +36,8 @@ export const endpoints = {
   uploadCourseVideo: `${BaseUrl}/upload-course-video-document`,
   createCourseContent: `${BaseUrl}/create-course-content`,
   addCourseRating: `${BaseUrl}/add-course-rating`,
-
+  purchaseCourse: `${BaseUrl}/course/payment`,
+  deleteCart: `${BaseUrl}/delete-all-course-in-cart`,
   // General
   getCurrentUser: `${BaseUrl}/get-current-user`,
   changeEmail: `${BaseUrl}/change-email`,
@@ -115,5 +117,14 @@ export const EasyBuyEndpoints = {
   checkOut:`${BaseUrl}/easybuy/buyer/checkout/`,
   swapProduct: `${BaseUrl}/swap/product`,
   getUserOrders: `${BaseUrl}/easybuy/buyer/orders/`,
-  getInstallmentOrders: `${BaseUrl}/easybuy/buyer/installment-orders/`
+  getInstallmentOrders: `${BaseUrl}/easybuy/buyer/installment-orders/`,
+  getTotalSolarStock: `${BaseUrl}/easybuy/partner/inventory/solar-inverter-stock`,
+  getInventoryOrders: `${BaseUrl}/easybuy/partner/inventory/orders`,
+  getProductInventory: `${BaseUrl}/easybuy/partner/inventory/products`,
+  getActiveCustomer: `${BaseUrl}/easybuy/partner/inventory/number-of-active-customers`,
+  createServiceCenter: `${BaseUrl}/easybuy/partner/service-center`,
+  getServiceCenter: `${BaseUrl}/easybuy/partner/service-center`,
+  getPartnerCustomers: `${BaseUrl}/easybuy/partner/customers`,
+  getPercentages: `${BaseUrl}/easybuy/partner/inventory/percentage-paid`,
+  deleteAllCartItem: `${BaseUrl}/easybuy/buyer/orders/delete`
 }

@@ -290,7 +290,7 @@ function BuyersLayoutPage({ children}) {
         >
           <FiHeart className="w-5 h-5"  />
         </button>
-        <span className="hidden  absolute bg-slate-200 w-5 h-5 rounded-full lg:flex justify-center items-center right-[14.3rem] top-[14px]"><p className="text-red-700 font-poppins font-medium text-sm">{cartTotalQuantity}</p></span>
+        <span className="hidden fixed bg-slate-200 w-5 h-5 rounded-full lg:flex justify-center items-center right-[14.5rem] top-[14px]"><p className="text-red-700 font-poppins font-medium text-sm">{cartTotalQuantity}</p></span>
         <button
           type="button"
           onClick={handleCart}

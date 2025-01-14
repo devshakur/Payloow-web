@@ -1,0 +1,35 @@
+import React from 'react'
+import { useRouter } from '../../Routes/router'
+
+const FlutterSuccessPurchaseModal = () => {
+    const router = useRouter();
+  return (
+    <div className='w-full h-[100vh] flex justify-center items-center bg-[#1D2433]'>
+        <div className='flex items-end md:items-center justify-center lg:-ml-[-14vw]'>  
+    <div className='flex justify-center'>  
+        <main className='w-full md:w-[600px] bg-[#FFFFFF] shadow-md rounded-lg'>  
+            <section className=' w-auto mx-5 my-5'>  
+                <div className='w-[100%] flex justify-center md:justify-center'>  
+                    <img src="/images/success.png" alt="success-logo" />  
+                </div>  
+                <div className='flex justify-center my-5'>  
+                    <p className='font-poppins text-lg font-[550] leading-6 text-[#1D2433] my-4'> Product Purchase Successful!</p>  
+                </div> 
+                <div className='flex justify-center flex-col lg:flex-row lg:gap-5 my-4'>
+                <button onClick={()=>router.push('/dashboard')} type='button' className="p-3 w-[95%] lg:w-[50%] font-poppins text-sm font-semibold leading-5 my-3 rounded-lg border border-[#6196F9] text-[#6196F9]">  
+                    Share Receipt  
+                </button>  
+                <button onClick={()=>router.push('/dashboard')} type='button' className="p-3  w-[95%] lg:w-[50%]   font-poppins my-3 rounded-lg bg-blue-500 text-white">  
+                    Done  
+                </button>  
+
+                    </div> 
+            </section>  
+        </main>  
+    </div>  
+</div>
+    </div>
+  )
+}
+
+export default FlutterSuccessPurchaseModal

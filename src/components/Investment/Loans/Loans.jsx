@@ -248,7 +248,7 @@ const openAddLoan = ()=>{
                           autoFocus
                           className="w-full rounded-lg bg-[#3369F4] py-3 px-4 text-md text-white mt-6"
                         >
-                          {loading ? 'Submitting...' : 'Add Now'}
+                          {loading ? 'Submitting...' : 'Add Nows'}
                         </Button>
                       </div>
                     </form>
@@ -289,7 +289,7 @@ const openAddLoan = ()=>{
                       </p>
                     </div>
                     <div className="mx-4 mt-9 flex gap-4 flex-col lg:-mb-[3rem]">
-                      <button onClick={() => openAddLoan()}    className="w-full bg-[#3369F4] py-3 rounded-md text-white font-semibold font-poppins">
+                      <button onClick={()=> openAddLoan()}    className="w-full bg-[#3369F4] py-3 rounded-md text-white font-semibold font-poppins">
                         Add Loan
                       </button>
                       <Button
