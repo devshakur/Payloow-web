@@ -38,6 +38,7 @@ import { phonesItems } from "../components/Easybuy/Buyers/product.js";
 import { solarItems } from "../components/Easybuy/Buyers/product.js";
 import ElearningCheckout from "../components/E-Learning/Student/ElearningCheckout.jsx";
 import FlutterSuccessPurchaseModal from "../components/Easybuy/FlutterSuccessPurchaseModal.jsx";
+import SuccessPage from "../components/AuthenticationPage/password-issues/SuccessPage.jsx";
 //Registration
 const Regsiter = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Register.jsx'))
 const Login = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Login.jsx'))
@@ -112,15 +113,15 @@ export const router = createBrowserRouter([
     ),
     errorElement: <ErrorPage />,
   },
-  // {
-  //   path: "/Verification",
-  //   element: (
-  //     <Suspense fallback={<Loader />}>
-  //       <Verification />
-  //     </Suspense>
-  //   ),
-  //   errorElement: <ErrorPage />,
-  // },
+  {
+    path: "/reset-password-success",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <SuccessPage />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
 
   {
     path: "/reset-password",

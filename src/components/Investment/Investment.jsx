@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import InvestmentLayout from './InvestmentLayout';
 import { Button, Dialog, DialogPanel, DialogTitle, Field, Input } from '@headlessui/react';
 import { CloseCircle } from "iconsax-react";
@@ -8,24 +8,42 @@ import FormModal from './Modal/FormModal';
 import SuccessModal from './Modal/SuccessModal';
 import InvestorSuccessModal from './Modal/InvestorSuccessModal';
 import InvestorFormModal from './Modal/InvestorFormModal';
+import { useRouter } from '../../Routes/router';
+
 
 
 const Investment = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const router = useRouter();
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [isInvestorModalOpen, setIsInvestorModalOpen] = useState(false);
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const [isInvestorSuccessModalOpen, setIsInvestorSuccessModalOpen] = useState(false);
    
+    const user = JSON.parse(localStorage.getItem('currentUser'))
+
+ 
+
     const openDialog = () => setIsOpen(true);
     const closeDialog = () => setIsOpen(false);
+
     const openFormModal = () => {
-        closeDialog(); // Close the main dialog
-        setIsFormModalOpen(true); // Open the FormModal
+        if(user?.isDebtor === true){
+            router.push('/debtor/dashboard')
+        }else{
+            closeDialog(); // Close the main dialog
+            setIsFormModalOpen(true); // Open the FormModal
+
+        }
     };
     const openInvestorModal = ()=>{
-        closeDialog();
-        setIsInvestorModalOpen(true)
+        if(user?.isInvestor === true){
+            router.push('/investor/dashboard') 
+        }else{
+            closeDialog();
+            setIsInvestorModalOpen(true)
+
+        }
     }
     const closeFormModal = () => setIsFormModalOpen(false);
     const closeInvestorFormModal = () => setIsInvestorModalOpen(false)
@@ -40,8 +58,7 @@ const Investment = () => {
     };
     const closeSuccessModal = () => setIsSuccessModalOpen(false);
     const closeInvestorSuccessModal = () => setIsInvestorSuccessModalOpen(false);
-    const user = JSON.parse(localStorage.getItem('currentUser'))
-     
+   
 
     return (
         <InvestmentLayout className={clsx('h-[100vh] w-[100vw] bg-blue-50 font-poppins p-4', { 'blur-md': isOpen || isFormModalOpen || isSuccessModalOpen })}>

@@ -62,7 +62,7 @@ function Login() {
 						}else{
 							router.push('/dashboard'); 
 						}
-					}, 1000);
+					}, 500);
 				}
 			} catch (error) {
 				if (error.response) {
@@ -94,7 +94,7 @@ function Login() {
 					<span><img src="images/angle.png" className='h-5 relative right-10 -top-8' alt="arrow" /></span>
 					<span className='font-sans font-bold text-[32px] text-[#3369F4] mt-3 relative right-12'>ayloow</span>
 				</div>
-				<div className='bg-white w-[90vw] h-[550px] max-w-lg p-6 rounded-lg shadow-lg flex flex-col'>
+				<div className='bg-white w-[90vw]  max-w-lg p-6 rounded-lg shadow-lg flex flex-col'>
 					<h4 className='flex justify-center font-plus-jakarta text-2xl font-semibold text-primary-text'>Login to your account </h4>
 					<h6 className='flex justify-center text-lg font-plus-jakarta font-medium text-primary-text'>Welcome back to payloow</h6>
 					<form onSubmit={formik.handleSubmit} className='grid gap-4 mt-8'>

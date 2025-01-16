@@ -69,24 +69,32 @@ const Navbar = () => {
             </ul>
 
             <div className="hidden md:flex space-x-6">
-              <a
-                href="/login"
+              <button
+                onClick={() => {
+                  setTimeout(() => {
+                    window.location.href = "/login";
+                  }, 2000); // 2-second delay
+                }}
                 className={`${scrolled
                   ? "text-black-800 border-primary-500 hover:bg-primary-500"
                   : "text-white border-white hover:bg-white hover:text-primary-500"
                   } border-2 rounded-xl px-5 md:px-10 py-2 md:py-3 hover:text-white transition-all duration-300 ease-in-out`}
               >
                 Login
-              </a>
-              <a
-                href="/register"
+              </button>
+              <button
+                onClick={() => {
+                  setTimeout(() => {
+                    window.location.href = "/register";
+                  }, 2000); // 2-second delay
+                }}
                 className={`${scrolled
                   ? "bg-primary-500 text-white"
                   : "bg-white text-primary-500 border-white"
                   } border-2 px-5 md:px-10 py-2 md:py-3 rounded-lg`}
               >
                 Sign Up
-              </a>
+              </button>
             </div>
 
             <div className="md:hidden z-40">

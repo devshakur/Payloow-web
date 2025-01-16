@@ -50,8 +50,8 @@ const MyInventory = () => {
             transition={{ duration: 1 }}
           >
             <li className="font-medium text-lg lg:mr-5">Product ID</li>
-            <li className="font-medium text-lg relative lg:-left-4">Product Name</li>
-            <li className="font-medium text-lg relative lg:-left-2">Category</li>
+            <li className="font-medium text-lg relative lg:left-6">Product Name</li>
+            <li className="font-medium text-lg relative lg:left-7">Category</li>
             <li className="font-medium text-lg lg:mr-7">Stock Quantity</li>
             <li className="font-medium text-lg lg:mr-7 relative xl:left-[-2rem]">Unit Price</li>
             <li className="font-medium text-lg lg:mr-7 relative xl:left-[-3.4rem]">Action</li>
@@ -73,7 +73,7 @@ const MyInventory = () => {
             >
               <div className="flex justify-center lg:justify-between lg:items-center flex-col lg:flex-row">
                 <div className="flex justify-between w-full lg:w-[12%] mt-3">
-                  <p className="font-poppins text-lg font-medium lg:hidden">Product ID:</p>
+                  <p className="font-poppins text-lg font-medium lg:hidden truncate">Product ID:</p>
                   <div className="text-sm justify-start ml-[-1rem] font-poppins font-medium lg:truncate">
                     <p>{item._id}</p> {/* Display product ID */}
                   </div>

@@ -1,7 +1,7 @@
 export const BaseUrl = "https://revo-dv0d.onrender.com/api/v1";
  const investmentApiBaseUrl = "https://revo-backend.onrender.com/" 
 
-
+ 
 //registration
 export const AuthEndPoints = {
   login: `${BaseUrl}/login`,

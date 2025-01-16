@@ -135,7 +135,7 @@ const Customers = ({ handleStep }) => {
                             <div className="flex justify-center lg:justify-between lg:items-center flex-col lg:flex-row">
                                 <div className="flex justify-between w-full lg:w-[12%] mt-3">
                                     <p className="font-poppins text-md font-medium lg:hidden">Customer ID:</p>
-                                    <div className="text-sm justify-start ml-[-1rem] font-poppins font-medium lg:truncate">
+                                    <div className="text-sm justify-start ml-[-1rem] font-poppins font-medium truncate">
                                         <p>{item.ProductId}</p>
                                     </div>
                                 </div>
@@ -147,7 +147,7 @@ const Customers = ({ handleStep }) => {
                                 </div>
                                 <div className="flex justify-between w-full lg:w-auto mt-3">
                                     <p className="font-poppins text-md font-medium lg:hidden">Address</p>
-                                    <span className="font-poppins text-sm font-medium lg:ml-[-6rem] xl:ml-[-9rem]">{item.productPrice}</span>
+                                    <span className="font-poppins text-sm font-medium lg:ml-[-6rem] xl:ml-[-9rem] truncate">{item.productPrice}</span>
                                 </div>
                                 <div className="flex justify-between w-full lg:w-auto mt-3">
                                     <p className="font-poppins text-md font-medium lg:hidden">Date</p>

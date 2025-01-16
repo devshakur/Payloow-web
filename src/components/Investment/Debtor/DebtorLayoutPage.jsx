@@ -30,7 +30,7 @@ import '../investment.css';
 import { Toaster } from "react-hot-toast";
 
 const board = [
-    { name: "Main Menu", icon: Home },
+    { name: "Main Menu", href: '/dashboard', icon: Home },
     { name: "Investment", icon: ArrowDown2 },
 ];
 
@@ -110,13 +110,14 @@ function DebtorLayoutPage({ children }) {
                                 </div>
                             </TransitionChild>
                             <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-                                <div className="flex h-16 shrink-0 items-center">
-                                    <img
-                                        alt="Your Company"
-                                        src="/images/logo.svg"
-                                        className="h-10 w-auto"
-                                    />
-                                </div>
+                            <div className="flex h-16 justify-center pt-6 shrink-0 items-center">
+                  <img alt="Logo" src="/images/logo.svg" className="h-10 w-auto" />
+                </div>
+                <div className="flex items-center justify-center -mt-4">
+                    <div className="md:text-sm text-sm bg-primary text-white px-6 py-1 rounded-full font-plus-jakarta">
+                     Debtor
+                    </div>
+                  </div>
                                 <nav className="flex flex-1 flex-col">
                                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                                         <li>
@@ -127,7 +128,9 @@ function DebtorLayoutPage({ children }) {
                                                 <div className="w-[60%] flex gap-5 flex-col mt-5">
                                                     {board.map((item) => (
                                                         <div key={item.name} className="flex items-center justify-between">
+                                                            <a href={item.href}>
                                                             <span className="text-md font-bold">{item.name}</span>
+                                                            </a>
                                                             <div>
                                                                 {clickedStates[item.name] ? (
                                                                     <ArrowUp2 onClick={() => toggleClick(item.name)} className="font-normal text-gray-500" />
@@ -214,6 +217,11 @@ function DebtorLayoutPage({ children }) {
                                 className="h-14 w-auto"
                             />
                         </div>
+                        <div className="flex items-center justify-start px-3 -mt-4">
+                    <div className="md:text-sm text-xs bg-primary text-white px-8 py-1 rounded-full font-plus-jakarta">
+                      Debtor
+                    </div>
+                  </div>
                         <nav className="flex flex-1 flex-col">
                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
                                 <div className="w-[60%] flex gap-5 flex-col mt-5">
@@ -242,7 +250,7 @@ function DebtorLayoutPage({ children }) {
                                                                 activeItem === item.name
                                                                     ? "bg-blue-700 text-white"
                                                                     : "hover:bg-blue-700 hover:text-white",
-                                                                "group flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6"
+                                                                "group -mx-4 flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6"
                                                             )}
                                                         >
                                                             <item.icon className="w-5 text-[#1D2433CC] font-semibold h-5" />

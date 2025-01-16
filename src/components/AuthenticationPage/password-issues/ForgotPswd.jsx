@@ -48,8 +48,8 @@ function ForgotPswd() {
         </div>
             <div className='bg-white w-[90vw] h-[400px] max-w-lg p-6 rounded-lg shadow-lg flex flex-col'>
             <form onSubmit={formik.handleSubmit} className='w-[100%] flex flex-col justify-center gap-6'>
-            <h4 className='flex justify-center font-poppins text-2xl font-semibold leading-9  text-primary-text'>Forgot Password</h4>
-              <h6 className='flex justify-center text-lg font-poppins leading-7 -mt-3 font-medium text-primary-text'>Enter your registered Email</h6>
+            <h4 className='flex justify-center font-plus-jakarta text-2xl font-semibold leading-9  text-primary-text'>Forgot Password</h4>
+              <h6 className='flex justify-center text-lg font-plus-jakarta leading-7 -mt-3 font-medium text-primary-text'>Enter your registered Email</h6>
               <div>
             <label htmlFor='email' className='text-primary-text text-[14px] font-medium'>Email</label>
                     <input

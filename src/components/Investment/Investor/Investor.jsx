@@ -20,7 +20,7 @@ const Investor = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState({});
     const [wallet, setWallet] = useState({});
-    const [getId, setGetId] = useState(''); 
+    const [getId, setGetId] = useState('');
     const [formData, setFormData] = useState({
         business_id: '',
         investment_amount: 0,
@@ -63,14 +63,15 @@ const Investor = () => {
             try {
                 const resp = await getUserDetails();
                 let info = resp?.data?.data?.user;
-              
-                let balance = resp.data.data.wallet
-                if(info){
+
+                let balance = resp?.data?.data?.wallet?.balance
+                if (info) {
                     setUser(info)
-                    setWallet(balance)
+                    setWallet({ balance })
+
                 }
             } catch (error) {
-                console.error("Failed to fetch information on User:", error);
+                toast.error("Failed to fetch information on User:", error);
             }
         };
 
@@ -79,32 +80,32 @@ const Investor = () => {
 
     useEffect(() => {
         const getInvestment = async () => {
-          try {
-            const resp = await InvestorsInvestment();
-            const investmentInfo = resp?.data.data.investments
-            if (investmentInfo) {
-              setInvestment(investmentInfo);
-             
+            try {
+                const resp = await InvestorsInvestment();
+                const investmentInfo = resp?.data.data.investments
+                if (investmentInfo) {
+                    setInvestment(investmentInfo);
+
+                }
+            } catch (error) {
+                console.error('Failed to fetch investment information:', error);
             }
-          } catch (error) {
-            console.error('Failed to fetch investment information:', error);
-          }
         };
         getInvestment();
-      }, []);
+    }, []);
 
-      const totalInvested = investment.reduce((accum, investment) => {
+    const totalInvested = investment.reduce((accum, investment) => {
         return accum + investment.investment_amount;
-      }, 0);
-      
-      const formattedTotalInvested = totalInvested.toLocaleString();
-      
-      const totalProfits = investment.reduce((accum, investment) => {
+    }, 0);
+
+    const formattedTotalInvested = totalInvested.toLocaleString();
+
+    const totalProfits = investment.reduce((accum, investment) => {
         return accum + investment.total_profit;
-      }, 0);
-      
-      const netProfit = totalProfits - totalInvested;
-      const formattedNetProfits = netProfit.toLocaleString();
+    }, 0);
+
+    const netProfit = totalProfits - totalInvested;
+    const formattedNetProfits = netProfit.toLocaleString();
 
 
     // Function to open the modal and set the selected business ID
@@ -112,7 +113,7 @@ const Investor = () => {
         console.log('Selected business ID:', id);
         open();
         setGetId(id);
-        setFormData((prevData) => ({ ...prevData, business_id: id })); 
+        setFormData((prevData) => ({ ...prevData, business_id: id }));
     };
 
     // Handle form input changes
@@ -130,24 +131,24 @@ const Investor = () => {
             const resp = await InvestInBusiness(formData);
             if (resp?.data?.data) {
                 toast.success('Investment successful');
-                close(); 
+                close();
             }
         } catch (error) {
-            console.error("Error investing:", error);
+            toast.error("Error investing:", error);
 
 
             if (error?.response) {
 
                 const errorMessage = error.response?.data?.message || "Unknown error occurred";
-                toast.error(errorMessage); 
+                toast.error(errorMessage);
                 setVerifying(false);
                 setTimeout(() => {
                     close();
-                    
+
                 }, 2000);
             } else {
 
-                console.log("Error message: Network issue or server down");
+                toast.error('Check network Connection')
             }
         }
     };
@@ -190,9 +191,9 @@ const Investor = () => {
                                 <InvestModal formData={formData}
                                     handleInputChange={handleInputChange}
                                     handleInvest={handleInvest}
-                                    onCancel={close} 
+                                    onCancel={close}
                                     verifying={verifying}
-                                    />
+                                />
                                 <Toaster />
                             </DialogPanel>
                         </div>
@@ -206,7 +207,11 @@ const Investor = () => {
                         <a href="#">
                             <h5 className="-mt-2 mb-3 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Available Balance</h5>
                         </a>
-                        <p className="mb-4 font-medium text-2xl text-white">{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : 'Loading...'}</p>
+                        <p className="mb-4 font-medium text-2xl text-white">
+                            {wallet && wallet.balance !== undefined
+                                ? parseFloat(wallet.balance).toLocaleString()
+                                : 'Loading...'}
+                        </p>
                         <div className='flex items-center gap-1'>
                             <p className='text-white font-medium text-sm my-3'>Wema bank: 4054673854</p>
                             <Copy size="17" color="white" />

@@ -39,7 +39,7 @@ import { CartContext } from "../Buyers/cartContext";
 
 
 const navigation = [
-  { name: "Main Menu", href: "/easybuy/home", icon: Category2 },
+  { name: "Main Menu", href: "/dashboard", icon: Category2 },
   { name: "Dashboard", href: "/buyers/dashboard", icon: LuStore  },
   { name: "My Order", href: "/my-orders", icon: HiOutlineArchiveBox },
   { name: "Payment", href: "/payment", icon: Card },
@@ -98,9 +98,14 @@ function BuyersLayout({ children }) {
                 </button>
               </div>
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-                <div className="flex h-16 shrink-0 items-center">
+              <div className="flex h-16 justify-center pt-6 shrink-0 items-center">
                   <img alt="Logo" src="/images/logo.svg" className="h-10 w-auto" />
                 </div>
+                <div className="flex items-center justify-center -mt-4">
+                    <div className="md:text-sm text-xs bg-primary text-white px-6 py-1 rounded-full font-plus-jakarta">
+                      EasyBuy
+                    </div>
+                  </div>
                 <nav className="flex flex-1 flex-col">
                   <ul role="list" className="flex flex-1 flex-col gap-y-7">
                     <li>
@@ -152,6 +157,11 @@ function BuyersLayout({ children }) {
             <div className="flex shrink-0 items-center mt-8">
               <img alt="Logo" src="/images/logo.svg" className="h-14 w-auto" />
             </div>
+            <div className="flex items-center justify-start px-3 -mt-4">
+                    <div className="md:text-sm text-xs bg-primary text-white px-8 py-1 rounded-full font-plus-jakarta">
+                      EasyBuy
+                    </div>
+                  </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
                 <li>

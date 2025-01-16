@@ -95,9 +95,14 @@ function PartnersLayout({ children }) {
                 </button>
               </div>
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-                <div className="flex h-16 shrink-0 items-center">
+              <div className="flex h-16 justify-center pt-6 shrink-0 items-center">
                   <img alt="Logo" src="/images/logo.svg" className="h-10 w-auto" />
                 </div>
+                <div className="flex items-center justify-center -mt-4">
+                    <div className="md:text-sm text-sm bg-primary text-white px-6 py-1 rounded-full font-plus-jakarta">
+                      Partner
+                    </div>
+                  </div>
                 <nav className="flex flex-1 flex-col">
                   <ul role="list" className="flex flex-1 flex-col gap-y-7">
                     <li>
@@ -149,6 +154,11 @@ function PartnersLayout({ children }) {
             <div className="flex shrink-0 items-center mt-8">
               <img alt="Logo" src="/images/logo.svg" className="h-14 w-auto" />
             </div>
+            <div className="flex items-center justify-start px-3 -mt-4">
+                    <div className="md:text-sm text-sm bg-primary text-white px-8 py-1 rounded-full font-plus-jakarta">
+                      Partner
+                    </div>
+                  </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
                 <li>

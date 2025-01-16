@@ -5,12 +5,14 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useLocation, useParams } from 'react-router-dom';
 import useAuth from '../../../hooks/useAuth';
-import { ToastContainer, toast } from 'react-toastify';
+import { Toaster, toast } from 'react-hot-toast';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 const ResetPswd = () => {
   const {ResetPswd} = useAuth();
   const location = useLocation();
+  const router = useRouter()
   const { search } = location;
   const query = new URLSearchParams(search);
   const token = query.get('token');
@@ -36,6 +38,7 @@ const ResetPswd = () => {
         const response = await ResetPswd(email, token, values.password)
         if(response){
         toast.success('password reset succesful')
+         router.push('/reset-password-success')
       }
     }catch(error){
       if(error.response.status === 400){
@@ -48,12 +51,7 @@ const ResetPswd = () => {
   },
 })
 
-  const router = useRouter();
-  const verifyCode = (e) => {
-    e.preventDefault();
-    router.push('/success');
-  };
-
+ 
   
 
   return (
@@ -68,23 +66,23 @@ const ResetPswd = () => {
         </div>
           <div className='bg-white w-[90vw] h-[400px] max-w-lg p-6 rounded-lg shadow-lg flex flex-col items-center'>
             <header className='my-9'>
-              <h4 className='flex justify-center font-poppins text-2xl font-semibold text-primary-text leading-9'>Verification</h4>
-              <h6 className='flex justify-center text-lg font-poppins leading-7 font-medium text-primary-text'>enter your new password</h6>
+              <h4 className='flex justify-center font-plus-jakarta text-2xl font-semibold text-primary-text leading-9'>Verification</h4>
+              <h6 className='flex justify-center text-lg font-plus-jakarta leading-7 font-medium text-primary-text'>enter your new password</h6>
             </header>
             <main className='-mt-3'>
               <form  onSubmit={formik.handleSubmit}>
               <div className='flex flex-col gap-3 w-[55vw]  max-w-md'>
-                <label htmlFor='email' className='text-primary-text text-[14px] font-medium'>New Password</label>
+                <label htmlFor='email' className='text-primary-text text-[16px] font-plus-jakarta font-medium'>New Password</label>
                 <input
                   id="outlined-required-4"
                   placeholder='Enter new password'
                   type='password'
                   fullWidth
-                  className='border-b border-blue-300 focus:outline-none'
+                  className='border border-blue-300 p-3 rounded-lg focus:outline-none'
                   {...formik.getFieldProps('password')}
                 />
                 {formik.touched.password && formik.errors.password ? (
-                  <div>{formik.errors.password}</div>
+                  <div style={{color: 'red'}}>{formik.errors.password}</div>
                 ) : null}
 
               </div>
@@ -95,9 +93,7 @@ const ResetPswd = () => {
             </div>
 
               </form>
-              <ToastContainer
-                    position='top-center' autoClose={5000} className='w-[100%]'
-                />
+              <Toaster />
             </main>
           </div>
         </div>
