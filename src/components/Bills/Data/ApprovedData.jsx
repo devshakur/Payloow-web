@@ -17,7 +17,7 @@ const ApprovedData = () => {
                 </div> 
                 <div className='flex justify-center flex-col lg:flex-row lg:gap-3'>
                 <button onClick={()=>{router.push('/dashboard')}} type='button' className="p-3 w-[95%] font-poppins text-sm font-semibold leading-5 my-3 rounded-lg border border-[#6196F9] text-[#6196F9]">  
-                    Share Receipt  
+                   Close
                 </button>  
                 <button onClick={()=>{router.reload()}} type='button' className="p-3 w-[95%] font-poppins my-3 rounded-lg bg-blue-500 text-white">  
                     Done 

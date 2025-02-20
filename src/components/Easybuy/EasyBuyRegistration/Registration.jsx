@@ -65,7 +65,8 @@ const Registration = ({ openStepTwo }) => {
         if(currentUser.easyBuyRole === null){
             openStepTwo()   
         }else{
-            router.push('/buyers/dashboard')
+         
+         router.push('/buyers/dashboard')
         }
     }
 
@@ -87,11 +88,11 @@ const Registration = ({ openStepTwo }) => {
                     transition={{ duration: 0.5 }}
                 >
                     <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
-                        <DialogBackdrop className="fixed inset-0 bg-black/30" />
-                        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-                            <DialogPanel className="max-w-xl space-y-6 border bg-white p-12">
+                        <DialogBackdrop className="fixed inset-0  bg-black/30" />
+                        <div className="fixed  inset-0 flex w-screen items-center justify-center p-4">
+                            <DialogPanel className="max-w-xl lg:w-[30vw] space-y-6 border bg-white p-12 rounded-lg">
                                 <div className='flex justify-between items-start gap-x-[10rem]'>
-                                    <DialogTitle className="-mt-7 -ml-7 font-bold font-poppins text-sm md:text-md lg:text-lg text-[#1D2433]"> Register as?</DialogTitle>
+                                    <DialogTitle className="-mt-7 -ml-7 font-bold font-plus-jakarta text-[16px] md:text-md lg:text-lg text-[#1D2433]"> Register as?</DialogTitle>
                                     <div className="-mt-7">
                                         <CloseCircle size="30" color="black" onClick={closeDialog} />
                                     </div>

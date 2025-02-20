@@ -115,7 +115,7 @@ const user = JSON.parse(localStorage.getItem(('currentUser')))
           transition={{ duration: 0.5 }}
         >
           <h3 className='font-poppins font-medium text-2xl text-white'>Available Balance</h3>
-          <h4 className='font-poppins font-medium text-4xl text-white mt-3'>₦{user ? user?.wallet?.balance.toLocaleString() : '0'}</h4>
+          <h4 className='font-poppins font-medium text-4xl text-white mt-3'><span className='text-[16px]'>₦</span>{user ? user?.wallet?.balance.toLocaleString() : '0'}</h4>
           <div className='flex mt-3 text-white gap-3'>
             <p>Wema bank: 4054673854</p>
             <span className='text-white'>
@@ -144,7 +144,7 @@ const user = JSON.parse(localStorage.getItem(('currentUser')))
               <p className='font-normal text-lg font-poppins'>Total Amount Paid</p>
             </div>
             <div className='font-plus-jakarta font-medium text-3xl text-[#1D2433] ml-[3.6rem] pb-3'>
-            ₦{totalPaid? totalPaid.toLocaleString() : '0'}
+            <span className='text-[16px]'>₦</span>{totalPaid? totalPaid.toLocaleString() : '0'}
             </div>
           </motion.div>
 
@@ -180,7 +180,7 @@ const user = JSON.parse(localStorage.getItem(('currentUser')))
               <p className='font-normal text-lg font-poppins'>Total Pending</p>
             </div>
             <div className='font-plus-jakarta font-medium text-3xl text-[#1D2433] ml-[3.6rem] pb-3'>
-              ₦{pendingAmount ? pendingAmount.toLocaleString() : '0'}
+            <span className='text-[16px]'>₦</span>{pendingAmount ? pendingAmount.toLocaleString() : '0'}
             </div>
           </motion.div>
 
@@ -247,7 +247,7 @@ const user = JSON.parse(localStorage.getItem(('currentUser')))
         <article className="bg-white w-[100%] overflow-scroll mx-4 lg:mx-0 rounded-lg p-4">
           <ul className="lg:flex justify-between bg-white shadow-lg hidden">
             <li className="font-semibold text-lg lg:mr-5">Product ID</li>
-            <li className="font-semibold text-lg relative lg:-right-6">Date</li>
+            <li className="font-semibold text-lg relative lg:-right-3">Date</li>
             <li className="font-semibold text-lg relative lg:-left-2">Amount</li>
             {/* <li className="font-semibold text-lg lg:mr-7">Transaction Type</li> */}
             <li className="font-semibold text-lg lg:mr-7 relative xl:left-[-1rem]">Status</li>
@@ -264,38 +264,40 @@ const user = JSON.parse(localStorage.getItem(('currentUser')))
             >
               <div className="flex justify-center lg:justify-between lg:items-center flex-col lg:flex-row">
                 <div className="flex justify-between w-full lg:w-[12%] mt-3">
-                  <p className="font-poppins text-lg font-semibold lg:hidden">Product ID:</p>
-                  <div className="text-sm justify-start ml-[-1rem] font-poppins font-semibold lg:truncate">
+                  <p className="font-plus-jakarta text-lg font-medium lg:hidden">Product ID:</p>
+                  <div className="text-sm justify-start ml-[-1rem] font-plus-jakarta  font-medium max-w-[8rem] truncate ">
                     <p>{item.ProductId}</p>
                   </div>
                 </div>
                 <div className="flex justify-between w-full lg:w-auto mt-3">
-                  <p className="font-poppins text-lg font-semibold lg:hidden">Date:</p>
-                  <span className="text-sm font-poppins font-semibold lg:relative lg:right-20">{item.orderDate}</span>
+                  <p className="font-plus-jakarta text-lg font-medium lg:hidden">Date:</p>
+                  <span className="text-sm font-plus-jakarta font-medium lg:relative lg:right-20">{item.orderDate}</span>
                 </div>
                 <div className="flex justify-between w-full lg:w-auto mt-3">
-                  <p className="font-poppins text-lg font-semibold lg:hidden">Amount:</p>
-                  <span className="font-poppins text-sm font-semibold lg:ml-[-6rem] xl:ml-[-8rem]">{item.productPrice}</span>
+                  <p className="font-plus-jakarta text-lg font-medium lg:hidden">Amount:</p>
+                  <span className="font-plus-jakarta text-sm font-medium lg:ml-[-6rem] xl:ml-[-8rem]">{item.productPrice}</span>
                 </div>
                 {/* <div className="flex justify-between lg:w-auto mt-3">
-                  <p className="font-poppins text-lg font-semibold lg:hidden">Transaction Type:</p>
+                  <p className="font-poppins text-lg font-semibold lg:hidden">Transaction Type:</p> 
+
+
                   <span className="text-sm font-poppins font-semibold lg:relative lg:right-20 lg:max-w-[8rem] lg:truncate">
                     {item.name}
                   </span>
                 </div> */}
 
                 <div className="flex justify-between w-full lg:w-auto mt-3">
-                  <p className="font-poppins text-lg font-semibold lg:hidden">Status:</p>
+                  <p className="font-plus-jakarta text-lg font-medium lg:hidden">Status:</p>
                   <span
-                    className={`text-sm font-poppins font-semibold lg:relative right-9 xl:right-20 ${item.productStatus.toLowerCase() === 'pending' ? 'text-red-500' : 'text-green-500'}`}
+                    className={`text-sm font-plus-jakarta font-medium lg:relative right-9 xl:right-20 ${item.productStatus.toLowerCase() === 'pending' ? 'text-red-500' : 'text-green-500'}`}
                   >
                     {item.productStatus}
                   </span>
                 </div>
 
                 <div className="flex justify-between w-full lg:w-auto mt-3">
-                  <p className="font-poppins text-lg font-semibold lg:hidden">Action:</p>
-                  <span className="font-poppins text-sm font-semibold lg:relative lg:right-9 xl:right-24">...</span>
+                  <p className="font-plus-jakarta text-lg font-medium lg:hidden">Action:</p>
+                  <span className="font-plus-jakarta text-sm font-medium lg:relative lg:right-9 xl:right-24">...</span>
                 </div>
               </div>
             </motion.div>

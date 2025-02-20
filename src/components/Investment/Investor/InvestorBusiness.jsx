@@ -261,7 +261,7 @@ const InvestorBusiness = () => {
             </article>
 
             {/* Pagination controls */}
-            <div className="flex justify-center my-4">
+            <div className="flex justify-end my-4">
                 <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0} className="px-4 py-2 bg-blue-500 text-white rounded-md">
                     Previous
                 </button>

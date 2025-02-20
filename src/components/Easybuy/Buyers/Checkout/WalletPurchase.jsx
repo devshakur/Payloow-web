@@ -1,8 +1,16 @@
 import React from 'react'
 import { Wallet, ArrowRight2 } from "iconsax-react";
 
-const WalletPurchase = ({handleModal}) => {
+const WalletPurchase = ({ handleModalWallet, fullPayment, walletLoading, SubmitCheckOutWallet}) => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const handleCheck = ()=>{
+    if(fullPayment === 'full'){
+       SubmitCheckOutWallet()
+    
+    }else {
+      handleModalWallet()
+    }
+  }
   return (
     <div className="">
     <div className="my-3">
@@ -31,7 +39,7 @@ const WalletPurchase = ({handleModal}) => {
        <p className='font-poppins font-medium text-lg text-[#000]'>I have read and agree to the website terms and conditions *</p>
    </div>
    <div className='w-full flex justify-center my-5'>
-       <button  onClick={handleModal} className='w-[90%] bg-blue-700 py-2 rounded-md text-white'>Complete Checkout</button>
+       <button  onClick={handleCheck} className='w-[90%] bg-blue-700 py-2 rounded-md text-white'>{walletLoading ? 'Processing...' : 'Complete Checkout'}</button>
    </div>
  </div>
   )

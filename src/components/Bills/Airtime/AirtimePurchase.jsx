@@ -19,10 +19,10 @@ const AirtimePurchase = () => {
             pin: '',
         },
         validationSchema: Yup.object({
-            network_id: Yup.string().required('Required'),
-            amount: Yup.string().required('Required'),
-            phone: Yup.string().matches(/^[0-9]+$/, 'Phone number must be digits').required('Required'),
-            pin: Yup.string().required('required')
+            network_id: Yup.string().required('required***'),
+            amount: Yup.string().required('required***'),
+            phone: Yup.string().matches(/^[0-9]+$/, 'Phone number must be digits').required('required***'),
+            pin: Yup.string().required('required***')
         }),
         onSubmit: async (values, { setSubmitting }) => {
                 setSubmitting(false);

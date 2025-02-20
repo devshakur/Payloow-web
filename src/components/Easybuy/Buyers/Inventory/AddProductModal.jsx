@@ -42,8 +42,8 @@ export default function AddProductModal({ isOpen, close, productId, formik }) {
                                         onChange={formik.handleChange}
                                         value={formik.values.category}
                                     >
+                                        <option>Choose Category</option>
                                         {productId?.map((item) => (
-
                                             <option value={item._id}>{item.name}</option>
 
 

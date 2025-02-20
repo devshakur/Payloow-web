@@ -24,7 +24,7 @@ const HeaderOne = () => {
           transition={{ duration: 0.5 }} 
         >
           <h3 className='font-poppins font-medium text-2xl text-white'>Available Balances</h3>
-          <h4 className='font-poppins font-medium text-4xl text-white mt-3'> ₦{(currentUser?.wallet?.balance ?? 0).toLocaleString()}</h4>
+          <h4 className='font-poppins font-medium text-3xl text-white mt-3'><span className='text-sm'>₦</span>{(currentUser?.wallet?.balance ?? 0).toLocaleString()}</h4>
           <div className='flex mt-3 text-white gap-3'>
             <p>Wema bank: 4054673854</p>
             <span className='text-white'>
@@ -67,7 +67,7 @@ const HeaderOne = () => {
                 animate={{ opacity: 1, y: 0 }}  // Normal opacity and position
                 transition={{ duration: 0.5, delay: 0.6 }} // Fade-in and slide effect with delay
               >
-                You are 74% Behind
+                {/* You are 74% Behind */}
               </motion.p>
             </div>
           </div>

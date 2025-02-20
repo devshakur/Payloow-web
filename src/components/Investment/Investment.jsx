@@ -29,7 +29,8 @@ const Investment = () => {
 
     const openFormModal = () => {
         if(user?.isDebtor === true){
-            router.push('/debtor/dashboard')
+             router.push('/debtor/dashboard')
+           
         }else{
             closeDialog(); // Close the main dialog
             setIsFormModalOpen(true); // Open the FormModal
@@ -38,7 +39,8 @@ const Investment = () => {
     };
     const openInvestorModal = ()=>{
         if(user?.isInvestor === true){
-            router.push('/investor/dashboard') 
+             router.push('/investor/dashboard') 
+           
         }else{
             closeDialog();
             setIsInvestorModalOpen(true)

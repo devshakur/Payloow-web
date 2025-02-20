@@ -8,9 +8,11 @@ import useInvestment from '../../../hooks/useInvetment';
 import SkeletonLoader from '../../Skeleton/SkeletalLoading';
 import { Toaster, toast } from 'react-hot-toast';
 import InvestModal from './InvestModal';
+import { useRouter } from '../../../Routes/router';
 
 const Investor = () => {
     const { GetLoanBusiness, InvestInBusiness, getUserDetails, InvestorsInvestment } = useInvestment();
+    const router = useRouter()
     const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 768);
     const [isOpen, setIsOpen] = useState(false);
     const [data, setData] = useState([]);
@@ -165,13 +167,14 @@ const Investor = () => {
     function close() {
         setIsOpen(false);
     }
+    
 
     return (
         <InvestorLayoutPage>
             <h4 className='font-poppins text-2xl font-medium'>Welcome, {user.first_name}</h4>
             <div className='flex justify-between'>
                 <p className='font-poppins text-lg font-normal my-3 text-[#000000]'>Explore and Invest in Growing Businesses!</p>
-                <Button className='px-8 h-12 rounded-lg text-lg text-white bg-[#3369F4]'>
+                <Button onClick={()=>router.push('/investor/business')} className='px-8 h-12 rounded-lg text-lg text-white bg-[#3369F4]'>
                     {isLargeScreen ? 'Invest Now' : '+'}
                 </Button>
                 <Dialog open={isOpen} as="div" className="relative z-10 focus:outline-none" onClose={close}>
@@ -208,8 +211,9 @@ const Investor = () => {
                             <h5 className="-mt-2 mb-3 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Available Balance</h5>
                         </a>
                         <p className="mb-4 font-medium text-2xl text-white">
-                            {wallet && wallet.balance !== undefined
-                                ? parseFloat(wallet.balance).toLocaleString()
+                        <span className='text-sm'>₦</span>
+                             {wallet && wallet.balance !== undefined
+                                ?  parseFloat(wallet.balance).toLocaleString()
                                 : 'Loading...'}
                         </p>
                         <div className='flex items-center gap-1'>
@@ -229,14 +233,14 @@ const Investor = () => {
                                 <span className='bg-white w-6 h-6 flex justify-center items-center rounded-[50%]'><Briefcase size="12" color="blue" /></span>
                                 <p className='font-normal text-lg font-poppins text-[#1D2433]'>Total Investment</p>
                             </div>
-                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦{formattedTotalInvested}</p>
+                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'><span className='text-sm'>₦</span>{formattedTotalInvested}</p>
                         </div>
                         <div className='bg-[#D6F7FF] md:w-[47%] my-5 py-5 rounded-md'>
                             <div className='flex items-center gap-2 mx-2'>
                                 <span className='bg-white w-6 h-6 flex justify-center items-center rounded-[50%]'><Briefcase size="12" color="blue" /></span>
                                 <p className='font-normal text-lg font-poppins text-[#1D2433]'>Returns</p>
                             </div>
-                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦{formattedNetProfits}</p>
+                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'><span className='text-sm'>₦</span>{formattedNetProfits}</p>
                         </div>
                     </div>
 
@@ -247,9 +251,9 @@ const Investor = () => {
                         </header>
                         <ul className='flex justify-between bg-[#F1F3F9] py-3 my-4'>
                             <li className='text-[#000000] text-lg font-medium font-poppins'>Business</li>
-                            <li className='text-[#000000] text-lg font-medium font-poppins'>Progress</li>
-                            <li className='text-[#000000] text-lg font-medium font-poppins'>Status</li>
-                            <li><img src="/images/verticalline.png" alt="vertical" className='relative right-4' /></li>
+                            <li className='text-[#000000] text-lg font-medium font-poppins xl:relative left-10'>Progress</li>
+                            <li className='text-[#000000] text-lg font-medium font-poppins xl:relative left-12'>Status</li>
+                            <li onClick={()=> router.push('/investor/business')} className='cursor-pointer'><img  src="/images/verticalline.png" alt="vertical" className='relative right-4' /></li>
                         </ul>
 
                         {/* Show skeleton loader when data is still loading */}
@@ -261,7 +265,7 @@ const Investor = () => {
                                     <p className=''>{item.business_name}</p>
                                     <img src='/images/Progress-bar.png' className='w-auto h-3' alt="bar" />
                                     <p className='text-md font-normal font-poppins text-[#F37426]'>Active</p>
-                                    <span><img src='/images/verticalline.png' alt="line" /></span>
+                                    <span className='cursor-pointer' onClick={()=> router.push('/investor/business')}><img src='/images/verticalline.png' alt="line" /></span>
                                 </div>
                             ))
                         )}

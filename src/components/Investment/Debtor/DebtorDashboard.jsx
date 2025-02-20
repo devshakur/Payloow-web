@@ -9,6 +9,7 @@ const DebtorDashboard = () => {
     const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 768);
     const [user, setUser] = useState({});
     const [wallet, setWallet] = useState({});
+    const [date, setDate] = useState()
     const [currentPage, setCurrentPage] = useState(0);
     const [data, setData] = useState([]);
     const [businesses, setBusinesses] = useState([]);
@@ -37,6 +38,7 @@ const DebtorDashboard = () => {
 
         fetchBusinessDetails();
     }, []);
+
 
     useEffect(() => {
         const fetchInvestmentRequests = async () => {
@@ -140,6 +142,13 @@ const DebtorDashboard = () => {
             }
         }
     };
+  
+    useEffect(()=>{
+        const newDate = new Date();
+        setDate(newDate)
+    }, [])
+
+
     
     return (
         <DebtorLayoutPage>
@@ -156,7 +165,7 @@ const DebtorDashboard = () => {
                         <a href="#">
                             <h5 className="-mt-2 mb-3 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Loan Wallet Balance</h5>
                         </a>
-                        <p className="mb-4 font-medium text-2xl text-white">₦{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : '0'}</p>
+                        <p className="mb-4 font-medium text-2xl text-white"><span className='text-[16px]'>₦</span>{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : '0'}</p>
                         <div className='flex items-center gap-1'>
                             <p className='text-white font-medium text-sm my-3'> bank: {user.account_disabled}</p>
                             <Copy size="17" color="white" />
@@ -177,14 +186,14 @@ const DebtorDashboard = () => {
                                 <span className='bg-white w-6 h-6 flex justify-center items-center rounded-[50%]'><Briefcase size="12" color="blue" /></span>
                                 <p className='font-normal text-lg font-poppins text-[#1D2433]'>Total Loan Amount</p>
                             </div>
-                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : '0'}</p>
+                            <p className='text-2xl mx-8 my-3 font-plus-jakarta font-medium'><span className='text-[16px]'>₦</span>{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : '0'}</p>
                         </div>
                         <div className='bg-[#D6F7FF] md:w-[47%] my-5 py-5 rounded-md'>
                             <div className='flex items-center gap-2 mx-2'>
                                 <span className='bg-white w-6 h-6 flex justify-center items-center rounded-[50%]'><Briefcase size="12" color="blue" /></span>
                                 <p className='font-normal text-lg font-poppins text-[#1D2433]'>Loan Balance</p>
                             </div>
-                            <p className='text-3xl mx-8 my-3 font-poppins font-[600]'>₦{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : '0'}</p>
+                            <p className='text-2xl mx-8 my-3 font-plus-jakarta font-medium'><span className='text-[16px]'>₦</span>{wallet.balance ? parseFloat(wallet.balance).toLocaleString() : '0'}</p>
                         </div>
                     </div>
 
@@ -194,7 +203,7 @@ const DebtorDashboard = () => {
                             <div className='h-[10rem] flex justify-center'>
                                 <img src="/images/score.png" className='h-[12rem] mx-6 my-5' alt="score" />
                             </div>
-                            <p className='font-poppins font-normal text-center text-[#1D2433]'>Last Updated on 16 Oct, 2023</p>
+                            <p className='font-poppins font-normal text-center text-[#1D2433]'>Last Updated on {date ? date.toLocaleString() : 'Loading'}</p>
                         </div>
                         <div className='bg-[#F1F3F9] md:w-1/2 h-[6rem] my-5 py-5 rounded-md'>
                             <div className='flex items-center gap-2 mx-2'>
@@ -254,7 +263,7 @@ const DebtorDashboard = () => {
                             </div>
                         </article>
                     )) : 
-                    <p className='text-lg font-semibold'>No Investment on your Business currently..</p>
+                    <p className='text-lg font-medium font-plus-jakarta'>No Investment on your Business currently..</p>
                 }
 
             </main>

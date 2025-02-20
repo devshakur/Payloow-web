@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState } from "react";
 import {
     Dialog,
     DialogBackdrop,
@@ -27,6 +27,8 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import '../investment.css';
 import { Toaster } from "react-hot-toast";
+import { useRouter } from "../../../Routes/router";
+import DefaultProfile from "../../Easybuy/Buyers/DefaultProfile";
 
 const board = [
     { name: "Main Menu", href: '/dashboard', icon: Home },
@@ -46,8 +48,8 @@ const action = [
 ];
 
 const userNavigation = [
-    { name: "Your profile", href: "#" },
-    { name: "Sign out", href: "#" },
+    { name: "Your profile", href: "/settings" },
+    { name: "Sign out", href: "/" },
 ];
 
 function classNames(...classes) {
@@ -55,10 +57,11 @@ function classNames(...classes) {
 }
 
 function InvestorLayoutPage({ children }) {
-    const [clickedStates, setClickedStates] = useState({ "Investment": true }); 
+    const [clickedStates, setClickedStates] = useState({ "Investment": true });
     const [activeItem, setActiveItem] = useState(null);
     const location = useLocation();
     const navigate = useNavigate();
+    const router = useRouter();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -71,7 +74,7 @@ function InvestorLayoutPage({ children }) {
 
     const handleNavigationClick = (item) => {
         setActiveItem(item.name);
-        navigate(item.href); 
+        navigate(item.href);
     };
 
     return (
@@ -108,14 +111,14 @@ function InvestorLayoutPage({ children }) {
                                 </div>
                             </TransitionChild>
                             <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-                            <div className="flex h-16 justify-center pt-6 shrink-0 items-center">
-                  <img alt="Logo" src="/images/logo.svg" className="h-10 w-auto" />
-                </div>
-                <div className="flex items-center justify-center -mt-4">
-                    <div className="md:text-sm text-sm bg-primary text-white px-6 py-1 rounded-full font-plus-jakarta">
-                     Investor
-                    </div>
-                  </div>
+                                <div className="flex h-16 justify-center pt-6 shrink-0 items-center">
+                                    <img alt="Logo" src="/images/logo.svg" className="h-10 w-auto" />
+                                </div>
+                                <div className="flex items-center justify-center -mt-4">
+                                    <div onClick={()=>router.push('/dashboard')} className="md:text-sm text-sm bg-primary text-white px-6 py-1 rounded-full font-plus-jakarta">
+                                        Investor
+                                    </div>
+                                </div>
                                 <nav className="flex flex-1 flex-col">
                                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                                         <li>
@@ -127,7 +130,7 @@ function InvestorLayoutPage({ children }) {
                                                     {board.map((item) => (
                                                         <div key={item.name} className="flex items-center justify-between cursor-pointer">
                                                             <a href={item.href}>
-                                                            <span className="text-md font-bold">{item.name}</span>
+                                                                <span className="text-md font-bold">{item.name}</span>
                                                             </a>
                                                             <div>
                                                                 {clickedStates[item.name] ? (
@@ -215,11 +218,11 @@ function InvestorLayoutPage({ children }) {
                                 className="h-14 w-auto"
                             />
                         </div>
-                        <div className="flex items-center justify-start px-3 -mt-4">
-                    <div className="md:text-sm text-xs bg-primary text-white px-8 py-1 rounded-full font-plus-jakarta">
-                      Partner
-                    </div>
-                  </div>
+                        <div className="flex items-center justify-start px-3 -mt-4 cursor-pointer">
+                            <div onClick={() => router.push('/dashboard')} className="md:text-sm text-xs bg-primary text-white px-8 py-1 rounded-full font-plus-jakarta">
+                               Investor
+                            </div>
+                        </div>
                         <nav className="flex flex-1 flex-col">
                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
                                 <div className="w-[60%] flex gap-5 flex-col mt-5">
@@ -326,11 +329,16 @@ function InvestorLayoutPage({ children }) {
                                 <Menu as="div" className="relative">
                                     <MenuButton className="-m-1.5 flex items-center p-1.5">
                                         <span className="sr-only">Open user menu</span>
-                                        <img
-                                            alt=""
-                                            src={currentUser ? currentUser.profilePicture : "/images/user.png"}
-                                            className="h-8 w-8 rounded-full bg-gray-50"
-                                        />
+                                        {currentUser ? (
+                                            <DefaultProfile />
+
+                                        ) : (
+                                            <img
+                                                alt="User Profile"
+                                                src={currentUser.profilePicture}
+                                                className="h-8 w-8 rounded-full bg-gray-50"
+                                            />
+                                        )}
                                         <span className="hidden lg:flex lg:items-center">
                                             <span aria-hidden="true" className="ml-4 text-sm font-semibold leading-6 text-gray-900">
                                                 {currentUser ? currentUser.firstName : 'John Doe'}
@@ -339,8 +347,8 @@ function InvestorLayoutPage({ children }) {
                                                 aria-hidden="true"
                                                 className="ml-2 h-5 w-5 text-gray-400"
                                             />
-                                                <span className="relative top-4 right-16 text-sm  text-gray-300">Investor</span>
-                                           
+                                            <span className="relative top-4 right-16 text-sm  text-gray-300">Investor</span>
+
                                         </span>
                                     </MenuButton>
                                     <MenuItems

@@ -1,13 +1,17 @@
 import React from 'react'
+import { useState } from 'react'
+
 
 const StepTwo = ({ openStepThree, formik }) => {
+
+  
   return (
     <div>
       <div className='flex justify-center pb-[3rem]'>
         <div className='bg-white w-[80%] max-w-3xl rounded-xl shadow-lg pb-10'>
           <form className='my-3 flex flex-col gap-3'>
             <div className='flex flex-col'>
-              <label htmlFor="fullname" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Full Name</label>
+              <label htmlFor="fullname" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Full Name<span className='text-red-700'>*</span></label>
               <input name='fullName' id='fullName' type="text" placeholder='full Name' className='border mx-5 p-2 rounded-md focus:outline-none'
                 onChange={formik.handleChange}
                 value={formik.values.fullName}
@@ -17,7 +21,7 @@ const StepTwo = ({ openStepThree, formik }) => {
               ) : null}
             </div>
             <div className='flex flex-col'>
-              <label htmlFor="phone number" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Phone Number</label>
+              <label htmlFor="phone number" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Phone Number<span className='text-red-700'>*</span></label>
               <input name='phoneNumber' id='phoneNumber' type="text" placeholder='Phone Number' className='border mx-5 p-2 rounded-md focus:outline-none'
                 onChange={formik.handleChange}
                 value={formik.values.phoneNumber}
@@ -27,7 +31,7 @@ const StepTwo = ({ openStepThree, formik }) => {
               ) : null}
             </div>
             <div className='flex flex-col'>
-              <label htmlFor="email" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Email</label>
+              <label htmlFor="email" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Email<span className='text-red-700'>*</span></label>
               <input name='email' id='email' type="text" placeholder='Email' className='border mx-5 p-2 rounded-md focus:outline-none'
                 onChange={formik.handleChange}
                 value={formik.values.email}
@@ -37,7 +41,7 @@ const StepTwo = ({ openStepThree, formik }) => {
               ) : null}
             </div>
             <div className='flex flex-col'>
-              <label htmlFor="country" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Country</label>
+              <label htmlFor="country" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Country<span className='text-red-700'>*</span></label>
               <select 
               name='country' 
               id='country' 
@@ -58,7 +62,7 @@ const StepTwo = ({ openStepThree, formik }) => {
             </div>
 
             <div className='flex flex-col'>
-              <label htmlFor="state" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>State</label>
+              <label htmlFor="state" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>State<span className='text-red-700'>*</span></label>
               <select 
               name='state' 
               id='state' 
@@ -78,7 +82,7 @@ const StepTwo = ({ openStepThree, formik }) => {
             </div>
 
             <div className='flex flex-col'>
-              <label htmlFor="address" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Address</label>
+              <label htmlFor="address" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Address<span className='text-red-700'>*</span></label>
               <input 
               name='address' 
               id='address' 
@@ -93,7 +97,7 @@ const StepTwo = ({ openStepThree, formik }) => {
               ) : null}
             </div>
             <div className='flex flex-col'>
-              <label htmlFor="id" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>National ID</label>
+              <label htmlFor="id" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>National ID<span className='text-red-700'>*</span></label>
               <input 
               name='nin' 
               id='nin' 
@@ -108,7 +112,7 @@ const StepTwo = ({ openStepThree, formik }) => {
               ) : null}
             </div>
             <div className='flex flex-col'>
-              <label htmlFor="bvn" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>BVN</label>
+              <label htmlFor="bvn" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>BVN<span className='text-red-700'>*</span></label>
               <input 
               name='bvn' 
               id='bvn' 
@@ -137,8 +141,8 @@ const StepTwo = ({ openStepThree, formik }) => {
                 <div className="text-red-500">{formik.errors.referralCode}</div>
               ) : null}
             </div>
-            <div className='mx-5'>
-              <button onClick={openStepThree} className='bg-blue-700 text-white mt-3 w-full py-3 rounded-md'>Next</button>
+            <div className='mx-5 flex justify-center'>
+              <button onClick={openStepThree} className='bg-blue-700 text-white mt-3 w-[40%] py-3 rounded-md'>Next</button>
             </div>
           </form>
         </div>

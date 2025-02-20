@@ -45,8 +45,8 @@ const action = [
   { name: "Logout", href: "/", icon: LogoutCurve, onClick: () => { localStorage.clear(); window.location.href = '/login' } },
 ];
 const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Your profile", href: "/settings" },
+  { name: "Sign out", href: "/" },
 ];
 
 function classNames(...classes) {

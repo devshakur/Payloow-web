@@ -103,7 +103,7 @@ const formattedNetProfit = netProfit.toLocaleString();
             <p className="font-medium text-xl font-poppins text-[#1D2433]">Total Invested</p>
             <More size="22" color="#000000" />
           </div>
-          <p className="text-3xl mx-6 my-3 font-poppins font-[600]">₦{formattedTotalInvested}</p>
+          <p className="text-3xl mx-6 my-3 font-poppins font-medium"><span className='text-sm'>₦</span>{formattedTotalInvested}</p>
         </div>
 
         {/* Active Investments */}
@@ -121,7 +121,7 @@ const formattedNetProfit = netProfit.toLocaleString();
             <p className="font-normal text-xl font-poppins text-[#1D2433]">Net Profits</p>
             <More size="22" color="#000000" />
           </div>
-          <p className="text-[33px] flex justify-center mx-8 my-3 font-poppins font-[600]">₦{formattedNetProfit}</p>
+          <p className="text-[33px] flex justify-center mx-8 my-3 font-poppins font-medium"><span className='text-sm mt-6'>₦</span>{formattedNetProfit}</p>
         </div>
       </div>
 
@@ -180,7 +180,7 @@ const formattedNetProfit = netProfit.toLocaleString();
             </div>
           ))
         ) : (
-          <p className="my-6 text-xl mx-6">You do not have any active investments. Start investing now!</p>
+          <p className="my-6 text-xl font-plus-jakarta mx-6">You do not have any active investments. Start investing now!</p>
         )}
 
         {/* Pagination Section */}

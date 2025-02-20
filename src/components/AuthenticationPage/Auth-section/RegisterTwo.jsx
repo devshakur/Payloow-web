@@ -10,8 +10,6 @@ import Select from 'react-select';
 function RegisterTwo({ formik }) {
   const Country = [
     { value: 'Nigeria', label: 'Nigeria' },
-    { value: 'Ghana', label: 'Ghana' },
-    { value: 'USA', label: 'USA' }
   ]
 
   const States = [
@@ -20,7 +18,7 @@ function RegisterTwo({ formik }) {
     { value: 'Lagos', label: 'Lagos' }
   ]
   const register = [
-    { value: 'user', label: 'User' },
+    { value: 'user', label: 'Customer' },
     { value: 'Tutor', label: 'Tutor' },
     {value: 'partner', label: 'Partner'},
     {value: 'investor', label: 'Investor'}
@@ -29,10 +27,10 @@ function RegisterTwo({ formik }) {
   return (
     <div>
       <div className='flex justify-center items-center overflow-y-auto'>
-        <div className='bg-white w-[90vw] h-[760px] max-w-lg p-6 rounded-lg shadow-lg flex flex-col'>
+        <div className='bg-white w-[90vw]  max-w-lg p-6 rounded-lg shadow-lg flex flex-col'>
           <RegisterHeaders currentIndex={1} />
-          <div className='mb-4'>
-            <label htmlFor="country" className='text-primary-text text-[16px] font-medium -pb-8'>Country</label>
+          <div className='mb-4 mt-3'>
+            <label htmlFor="country" className='-pb-8 text-primary-text text-[14px] font-semibold font-plus-jakarta'>Country<span className='text-red-700'>*</span></label>
             <Select
               id="country"
               name="country"
@@ -57,7 +55,7 @@ function RegisterTwo({ formik }) {
           </div>
 
           <div className='mb-4'>
-            <label htmlFor="state" className='text-primary-text text-[16px] font-medium -pb-8'>State</label>
+            <label htmlFor="state" className='-pb-8 text-primary-text text-[14px] font-semibold font-plus-jakarta'>State<span className='text-red-700'>*</span></label>
             <Select
               id="state"
               name="state"
@@ -83,7 +81,7 @@ function RegisterTwo({ formik }) {
           </div>
 
           <div className=''>
-            <label htmlFor="address" className='text-primary-text text-[16px] font-medium'>Address</label>
+            <label htmlFor="address" className='-pb-8 text-primary-text text-[14px] font-semibold font-plus-jakarta'>Address<span className='text-red-700'>*</span></label>
             <input
               id="outlined-required-8"
               placeholder='Home-Address'
@@ -100,7 +98,7 @@ function RegisterTwo({ formik }) {
           </div>
 
           <div className='mb-7'>
-            <label htmlFor="role" className='text-primary-text text-[16px] font-medium'>Register as</label>
+            <label htmlFor="role" className='-pb-8 text-primary-text text-[14px] font-semibold font-plus-jakarta'>Register as<span className='text-red-700'>*</span></label>
             <Select
               id="role"
               name="role"
@@ -125,7 +123,7 @@ function RegisterTwo({ formik }) {
           </div>
           <div className='w-full -mt-4'>
             <button type="submit" disabled={formik.isSubmitting} className="h-[50px] w-[100%] font-poppins my-5 rounded-lg bg-blue-500 text-white p-4">
-              {formik.isSubmitting ? 'Registering User...' : ' Register Account '}
+              {formik.isSubmitting ? 'Registering User...' : ' Create Account '}
             </button>
           </div>
           <div>

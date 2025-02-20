@@ -10,7 +10,7 @@ import { toast, Toaster } from 'react-hot-toast'
 import { useRouter } from '../../../Routes/router';
 
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-const userId = currentUser._id
+// const userId = currentUser._id
 const ElearningCheckout = () => {
   const [cart, setCart] = useState([])
   const router = useRouter()

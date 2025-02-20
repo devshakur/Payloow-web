@@ -20,12 +20,12 @@ const Electricity = () => {
            
         },
         validationSchema: Yup.object({
-            phone: Yup.number().integer('Phone number must be digits').required('Required'),
-            meter_number: Yup.number().min(11, 'meter number must be 11 digits').required('Required'),
-            service_id: Yup.string().required('Required'),
-            variation_id: Yup.string().required('Required'),
-            amount: Yup.number().required('Required'),
-            pin: Yup.string().required('Required'),
+            phone: Yup.number().integer('Phone number must be digits').required('required***'),
+            meter_number: Yup.number().min(11, 'meter number must be 11 digits').required('required***'),
+            service_id: Yup.string().required('required***'),
+            variation_id: Yup.string().required('required***'),
+            amount: Yup.number().required('required***'),
+            pin: Yup.string().required('required***'),
         }),
         onSubmit: async (values, { setSubmitting }) => {
                 setSubmitting(false);

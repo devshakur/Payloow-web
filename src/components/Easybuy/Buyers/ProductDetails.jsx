@@ -13,6 +13,7 @@ import { toast, Toaster } from 'react-hot-toast'
 import { phonesItems } from './product';
 import { solarItems } from './product';
 import { CartContext } from './cartContext';
+import { Loader } from '../../../AuthContext/Loader';
 
 const ProductDetails = () => {
     const { id } = useParams()
@@ -98,10 +99,30 @@ const ProductDetails = () => {
 
 
     if (!product) {
-        return <div className='flex justify-center items-center'>
-            <p className='text-lg font-plus-jakarta font-medium text-gray-700'>Loading...</p>
-        </div>;
+        return (
+            <div className="w-screen h-screen flex justify-center items-center bg-gray-100">
+                <div className="space-y-6 w-full max-w-lg px-4">
+                    {/* Skeleton image */}
+                    <div className="w-full h-64 bg-gray-300 animate-pulse rounded-lg"></div>
+                    
+                    {/* Skeleton title */}
+                    <div className="h-8 bg-gray-300 animate-pulse rounded w-3/4"></div>
+                    
+                    {/* Skeleton description */}
+                    <div className="h-6 bg-gray-300 animate-pulse rounded w-full"></div>
+                    <div className="h-6 bg-gray-300 animate-pulse rounded w-5/6"></div>
+                    
+                    {/* Skeleton buttons or actions */}
+                    <div className="flex space-x-4">
+                        <div className="h-10 bg-gray-300 animate-pulse rounded w-1/3"></div>
+                        <div className="h-10 bg-gray-300 animate-pulse rounded w-1/3"></div>
+                    </div>
+                </div>
+            </div>
+        );
     }
+    
+    
 
     const fetchCartItems = async () => {
         try {
@@ -274,7 +295,7 @@ const ProductDetails = () => {
                         >
                             {colors?.map((color) => (
 
-                                <li style={{ backgroundColor: color }} className='w-14 h-14 border shadow-md rounded-[50%]'></li>
+                                <li style={{ backgroundColor: color }} className='w-14 h-14 border shadow-md rounded-[47%]'></li>
                             ))}
 
                             <div className=" w-full flex justify-end rounded-lg text-white">

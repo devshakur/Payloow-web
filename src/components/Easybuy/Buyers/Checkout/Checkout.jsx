@@ -35,28 +35,30 @@ const Checkout = () => {
   let [isOpen, setIsOpen] = useState(false)
   const [isOpened, setIsOpened] = useState(false)
   let [active, setActive] = useState('one')
-
+  const [fullPayment, setFullPayment] = useState('')
 
   const handleClick = () => {
     setIsClicked(prevState => !prevState);
+    setFullPayment('full')
   };
+ 
   const handleClickTwo = () => {
     setIsClickedTwo(prevState => !prevState);
+    setFullPayment('installment')
   };
   const handleSelection = (formType) => {
     setSelectedForm(formType);
+
   };
 
   const handleActive = () => {
     setActive('two')
     setIsOpen(false)
   }
-  const handleModal = (e) => {
-    e.preventDefault()
+  const handleModal = () => {
     setIsOpen(true)
   }
-  const handleModalWallet = (e) => {
-    e.preventDefault()
+  const handleModalWallet = () => {
     setIsOpened(true)
   }
 
@@ -181,15 +183,14 @@ const Checkout = () => {
   };
 
   //Submit Checkout
-  const SubmitCheckOutWallet = async () => {
-    console.log("SubmitCheckOut called"); // Debugging log
+  const SubmitCheckOutWallet = async () => {   
     setWalletLoading(true)
     try {
       const method = {
         paymentMethod: selectedForm,
         installmentPlan: installmentPlan
       };
-      const resp = await checkOut(method);
+        const resp = await checkOut(fullPayment === 'full' ? {paymentMethod: method.paymentMethod} : method);
       const info = resp?.data?.data;
       if (resp) {
         setCheckOuts(true);
@@ -200,7 +201,7 @@ const Checkout = () => {
         setTimeout(() => {
           router.reload()
         }, 3000);
-        setLoading(false)
+        setWalletLoading(false)
       } else {
         toast.success('Approved Purchase Method');
       }
@@ -214,14 +215,13 @@ const Checkout = () => {
 
   //Submit Checkout
   const SubmitCheckOutFlutter = async () => {
-    console.log("SubmitCheckOut called"); // Debugging log
     setLoading(true)
     try {
       const method = {
         paymentMethod: selectedForm,
         installmentPlan: installmentPlan
       };
-      const resp = await checkOut(method);
+      const resp = await checkOut(fullPayment === 'full' ? {paymentMethod: method.paymentMethod} : method);
       const info = resp?.data?.data;
       const flutter_url = resp?.data?.data?.result?.checkout_url
 
@@ -264,14 +264,15 @@ const Checkout = () => {
           Cart
         </div>
         <div className='mt-2'>
-          <button onClick={handleExit} className='cursor-pointer font-poppins font-medium text-2xl text-blue-600'>Exit</button>
+          <button onClick={handleExit} className='cursor-pointer font-plus-jakarta font-medium text-xl text-blue-600'>Exit</button>
         </div>
       </header>
       <main className="flex flex-col md:grid md:grid-cols-[2fr_1fr] md:gap-8 p-5">
-        <div className='flex flex-col  gap-3  xl:grid grid-cols-2'>
+        <div className='flex flex-col gap-3'>
+        <div className="bg-white shadow-lg p-4 h-max w-auto flex-wrap gap-5 flex items-end rounded-lg ">
           {cartItems && cartItems.length > 0 ? (
             cartItems.map((item) => (
-              <div className="bg-white  shadow-lg p-4 h-max w-full rounded-lg ">
+              <div>
                 <div className="flex gap-2 my-1">
                   <h3>Order Summary </h3>
                   <div className='w-6 h-7 bg-blue-700 rounded-[50%] flex justify-center items-center text-white'><p>{item?.quantity}</p></div>
@@ -280,102 +281,37 @@ const Checkout = () => {
                   <div className="flex items-center">
                     <img src={item?.product?.imageKey || "/images/iphon-yellow.png"} alt={item?.name} />
                     <div className="">
-                      <p className='font-semibold text-lg font-poppins'>{item?.product?.name}</p>
+                      <p className='font-semibold text-lg font-plus-jakarta'>{item?.product?.name}</p>
                       <p className='font-normal text-[#475367] text-[12px] font-inter'>Color: <span>{selectedColors[item._id]} </span></p>
                     </div>
                   </div>
-                  <div className="font-plus-jakarta text-xl font-medium text-[#1D2433] my-2">₦{new Intl.NumberFormat().format(item?.product?.price?.$numberDecimal || 0)} or ₦{new Intl.NumberFormat().format(((item?.product?.price?.$numberDecimal || 0) / 12).toFixed(0))}/Month</div>
+                  <div className="font-plus-jakarta text-xl font-medium text-[#1D2433] my-2">₦{new Intl.NumberFormat().format(item?.product?.price?.$numberDecimal || 0)} or ₦{new Intl.NumberFormat().format(((item?.product?.price?.$numberDecimal || 0) / 3).toFixed(0))}/Month</div>
 
                 </div>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    className='w-[70%] border border-gray-200 pl-2 py-2 rounded-lg'
-                    placeholder='Coupon here'
-                    value={coupon}
-                    onChange={(e) => setCoupon(e.target.value)}
-                  />
-                  <button onClick={CheckCoupon} className='bg-blue-700 text-white py-2 rounded-lg w-[30%]'>Apply Coupon</button>
+             
                 </div>
-              </div>
+                
 
             ))
           ) : (
             <div></div>
           )}
-        </div>
-        {/* summary          */}
-        {cartItems && cartItems.length > 0 ? (
-          <div className='bg-white shadow-lg mt-5 md:mt-0'>
-            <h3 className='p-3 font-medium text-lg'>Summary</h3>
-            <div className='flex justify-between p-3'>
-              <p className='font-poppins text-[14px] font-normal text-[#000]'>Original Price</p>
-              <p className='font-poppins text-[14px] font-normal text-[#000]'>₦{new Intl.NumberFormat().format(price)}</p>
-            </div>
-            <div className="border-t px-5 border-dashed border-gray-500 w-full"></div>
-            <div className='flex justify-between p-3'>
-              <p className='font-plus-jakarta  text-lg font-medium text-[#000]'>Total:</p>
-              <p className='font-plus-jakarta text-lg font-medium text-[#000]'>₦{new Intl.NumberFormat().format(price)}</p>
-            </div>
-            <ul className='p-4'>
-              <h3 className='text-lg font-plus-jakarta font-medium text-[#000]'>Pay</h3>
-              <div className="flex gap-3 pt-4">
-                <li
-                  className="w-5 h-5 bg-white rounded-full flex justify-center items-center shadow-lg border border-gray-300 focus:bg-blue-700"
-                  onClick={handleClick}
-                >
-                  <button
-                    className={`w-[70%] h-[70%] rounded-full ${isClicked ? 'bg-blue-700' : 'bg-white'}`}
-                  ></button>
-                </li>
-                <p className='font-medium text-[#000] font-poppins text-[14px]'>Full Payment</p>
-              </div>
-              <div className="flex gap-3 pt-4">
-                <li
-                  className="w-5 h-5 bg-white rounded-full flex justify-center items-center shadow-lg border border-gray-300 focus:bg-blue-700"
-                  onClick={handleClickTwo}
-                >
-                  <button
-                    className={`w-[70%] h-[70%] rounded-full ${isClickedTwo ? 'bg-blue-700' : 'bg-white'}`}
-                  ></button>
-                </li>
-                <p className='font-medium text-[#000] font-poppins text-[14px]'>Pay on Installment</p>
-              </div>
-
-            </ul>
-            <div className="p-4">
-              <h3 className='font-plus-jakarta font-medium text-lg'>Payment Method</h3>
-              <div>
-                <ul className='p-3 flex gap-3 w-full'>
-                  <li
-                    className={`w-[50%] py-4 rounded-md pl-12 text-[#000] flex justify-between items-center ${selectedForm === 'wallet' ? 'bg-blue-100 text-blue-700' : 'bg-[#F8F9FC]'} cursor-pointer`}
-                    onClick={() => handleSelection('wallet')}
-                  >
-                    Wallet <span className='mr-4 w-3 h-3'><img src="/images/checkout.png" alt="checkout" /></span>
-                  </li>
-                  <li
-                    className={`w-[50%] py-4 rounded-md pl-12 text-[#000] flex justify-between items-center ${selectedForm === 'flutterwave' ? 'bg-blue-100 text-blue-700' : 'bg-[#F8F9FC]'} cursor-pointer`}
-                    onClick={() => handleSelection('flutterwave')}
-                  >
-                    FlutterWave<span className='mr-4 w-3 h-3'><img src="/images/checkout.png" alt="checkout" /></span>
-                  </li>
-                </ul>
-                {selectedForm === 'wallet' && (
-                  <WalletPurchase handleModal={handleModalWallet} />
-                )}
-              </div>
-            </div>
-            {selectedForm === 'flutterwave' && (
-              <CardPurchase handleModal={handleModal} />
-            )}
+     
+             <div className="flex self-end mt-auto gap-2">
+                  <input
+                    type="text"
+                    className='w-[100%] shadow-lg border-b-4 border-gray-200 p-3 focus:outline-none  rounded-lg'
+                    placeholder='Coupon here'
+                    value={coupon}
+                    onChange={(e) => setCoupon(e.target.value)}
+                  />
+                  <button onClick={CheckCoupon} className='bg-blue-700 text-white shadow-md h-10 mt-2 rounded-lg w-[80%]'>Apply Coupon</button>
+                </div>
           </div>
-        ) : null}
-
-      </main>
-      {products.map((product, index) => (
+          {products.map((product, index) => (
         <div
           key={index}
-          className="bg-[#DBE7FE] w-full mx-2 pb-8 lg:left-3 xl:w-1/2 shadow-lg p-5 mb-9"
+          className="hidden lg:block bg-[#DBE7FE] mt-5 p-3 w-[100%] shadow-xl"
         >
           <header className="flex justify-between p-3">
             <h3 className="font-plus-jakarta font-semibold text-[24px] text-[#1D2433]">
@@ -466,11 +402,174 @@ const Checkout = () => {
           )}
         </div>
       ))}
+        </div>
+        {/* summary          */}
+        {cartItems && cartItems.length > 0 ? (
+          <div className='bg-white shadow-lg mt-5 md:mt-0'>
+            <h3 className='p-3 font-medium text-lg'>Summary</h3>
+            <div className='flex justify-between p-3'>
+              <p className='font-poppins text-[14px] font-normal text-[#000]'>Original Price</p>
+              <p className='font-poppins text-[14px] font-normal text-[#000]'>₦{new Intl.NumberFormat().format(price)}</p>
+            </div>
+            <div className="border-t px-5 border-dashed border-gray-500 w-full"></div>
+            <div className='flex justify-between p-3'>
+              <p className='font-plus-jakarta  text-lg font-medium text-[#000]'>Total:</p>
+              <p className='font-plus-jakarta text-lg font-medium text-[#000]'>₦{new Intl.NumberFormat().format(price)}</p>
+            </div>
+            <ul className='p-4'>
+              <h3 className='text-lg font-plus-jakarta font-medium text-[#000]'>Pay</h3>
+              <div className="flex gap-3 pt-4">
+                <li
+                  className="w-5 h-5 bg-white rounded-full flex justify-center items-center shadow-lg border border-gray-300 focus:bg-blue-700"
+                  onClick={handleClick}
+                >
+                  <button
+                    className={`w-[70%] h-[70%] rounded-full ${fullPayment === 'full' ? 'bg-blue-700' : 'bg-white'}`}
+                  ></button>
+                </li>
+                <p className='font-medium text-[#000] font-poppins text-[14px]'>Full Payment</p>
+              </div>
+              <div className="flex gap-3 pt-4">
+                <li
+                  className="w-5 h-5 bg-white rounded-full flex justify-center items-center shadow-lg border border-gray-300 focus:bg-blue-700"
+                  onClick={handleClickTwo}
+                >
+                  <button
+                    className={`w-[70%] h-[70%] rounded-full ${fullPayment === 'installment' ? 'bg-blue-700' : 'bg-white'}`}
+                  ></button>
+                </li>
+                <p className='font-medium text-[#000] font-poppins text-[14px]'>Pay on Installment</p>
+              </div>
+
+            </ul>
+            <div className="p-4">
+              <h3 className='font-plus-jakarta font-medium text-lg'>Payment Method</h3>
+              <div>
+                <ul className='p-3 flex gap-3 w-full'>
+                  <li
+                    className={`w-[50%] py-4 rounded-md pl-12 text-[#000] flex justify-between items-center ${selectedForm === 'wallet' ? 'bg-blue-100 text-blue-700' : 'bg-[#F8F9FC]'} cursor-pointer`}
+                    onClick={() => handleSelection('wallet')}
+                  >
+                    Wallet <span className='mr-4 w-3 h-3'><img src="/images/checkout.png" alt="checkout" /></span>
+                  </li>
+                  <li
+                    className={`w-[50%] py-4 rounded-md pl-12 text-[#000] flex justify-between items-center ${selectedForm === 'flutterwave' ? 'bg-blue-100 text-blue-700' : 'bg-[#F8F9FC]'} cursor-pointer`}
+                    onClick={() => handleSelection('flutterwave')}
+                  >
+                    FlutterWave<span className='mr-4 w-3 h-3'><img src="/images/checkout.png" alt="checkout" /></span>
+                  </li>
+                </ul>
+                {selectedForm === 'wallet' && (
+                  <WalletPurchase handleModalWallet={handleModalWallet} walletLoading={walletLoading} fullPayment={fullPayment} SubmitCheckOutWallet={SubmitCheckOutWallet} />
+                )}
+              </div>
+            </div>
+            {selectedForm === 'flutterwave' && (
+              <CardPurchase handleModal={handleModal} fullPayment={fullPayment} SubmitCheckOutFlutter={SubmitCheckOutFlutter} loading={loading} />
+            )}
+          </div>
+        ) : null}
+
+      </main>
+      {products.map((product, index) => (
+        <div
+          key={index}
+          className="bg-[#DBE7FE] w-[93%] lg:hidden md:w-[95%] mb-6 mx-4 p-3 shadow-xl"
+        >
+          <header className="flex justify-between p-3">
+            <h3 className="font-plus-jakarta font-semibold text-[24px] text-[#1D2433]">
+              Delivery Information
+            </h3>
+            <div
+              className="flex items-center gap-1 font-poppins font-semibold text-blue-500 text-[16px] cursor-pointer"
+              onClick={() => handleEditClick(product, index)}
+            >
+              Edit <HiOutlinePencilSquare />
+            </div>
+          </header>
+
+          {editMode && editableProduct.index === index ? (
+            <div className="mt-5 px-3">
+              <input
+                type="text"
+                name="fullName"
+                value={editableProduct.fullName}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded px-2 py-1 focus:outline-none"
+              />
+              <div className="mt-3 px-3 flex flex-col gap-3">
+                <div className="flex items-center gap-2">
+                  <ImLocation2 className="text-blue-600" />
+                  <input
+                    type="text"
+                    name="address"
+                    value={editableProduct.address}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-2 py-1 focus:outline-none"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <FaPhone className="text-blue-600" />
+                  <input
+                    type="text"
+                    name="phoneNumber"
+                    value={editableProduct.phoneNumber}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-2 py-1"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <MdOutlineMailOutline className="text-blue-600" />
+                  <input
+                    type="text"
+                    name="email"
+                    value={editableProduct.email}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-2 py-1"
+                  />
+                </div>
+              </div>
+              <button
+                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                onClick={handleSave}
+              >
+                Save
+              </button>
+            </div>
+          ) : (
+            <div className="mt-5 px-3">
+              <h3 className="font-poppins font-semibold text-[#1D2433] text-lg">
+                {product.fullName}
+              </h3>
+              <div className="mt-3 px-3 flex flex-col gap-3">
+                <div className="flex items-center gap-2">
+                  <ImLocation2 className="text-blue-600" />
+                  <p className="font-poppins text-[16px] font-normal text-[#1D2433]">
+                    {product.address}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FaPhone className="text-blue-600" />
+                  <p className="font-poppins text-[16px] font-normal text-[#1D2433]">
+                    {product.phoneNumber}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MdOutlineMailOutline className="text-blue-600" />
+                  <p className="font-poppins text-[16px] font-normal text-[#1D2433]">
+                    {product.email}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
       {isOpened && <CheckoutModal
         isOpened={isOpened}
         setIsOpened={setIsOpened}
-        handleActive={handleActive}
-        installmentPlan={installmentPlan}
+        // handleActive={handleActive}
+       installmentPlan={installmentPlan}
         handlePlanChange={handlePlanChange}
         SubmitCheckOutWallet={SubmitCheckOutWallet}
         walletLoading={walletLoading} />}

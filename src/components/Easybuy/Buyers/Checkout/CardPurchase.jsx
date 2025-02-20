@@ -1,6 +1,15 @@
 import React from 'react'
 
-const CardPurchase = ({handleModal}) => {
+const CardPurchase = ({handleModal, fullPayment, loading, SubmitCheckOutFlutter}) => {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const handleCheck = ()=>{
+      if(fullPayment === 'full'){
+        SubmitCheckOutFlutter()
+      
+      }else {
+        handleModal()
+      }
+    }
   return (
     <form action="" className="w-full p-3 flex flex-col gap-3">
                              <div className="w-[97%] flex flex-col">
@@ -16,7 +25,7 @@ const CardPurchase = ({handleModal}) => {
                  <p className='font-poppins font-medium text-lg text-[#000]'>I have read and agree to the website terms and conditions *</p>
              </div>
              <div className='w-full flex justify-center my-5'>
-                 <button  onClick={handleModal} className='w-[90%] bg-yellow-500 py-4 rounded-md  text-white'>Pay With Flutter...</button>
+                 <button  onClick={handleCheck} className='w-[90%] bg-yellow-500 py-4 rounded-md  text-white'>{loading ? 'Processing...' : 'Pay With Flutter...'}</button>
              </div>
                          </form>
   )

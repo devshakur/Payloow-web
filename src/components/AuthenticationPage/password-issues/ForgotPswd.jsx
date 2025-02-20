@@ -16,7 +16,7 @@ function ForgotPswd() {
         email: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email address').required('Required'), 
+      email: Yup.string().email('Invalid email address').required('required***'), 
     }),
   
     onSubmit:  async (values, { setSubmitting }) => {    
@@ -49,9 +49,9 @@ function ForgotPswd() {
             <div className='bg-white w-[90vw] h-[400px] max-w-lg p-6 rounded-lg shadow-lg flex flex-col'>
             <form onSubmit={formik.handleSubmit} className='w-[100%] flex flex-col justify-center gap-6'>
             <h4 className='flex justify-center font-plus-jakarta text-2xl font-semibold leading-9  text-primary-text'>Forgot Password</h4>
-              <h6 className='flex justify-center text-lg font-plus-jakarta leading-7 -mt-3 font-medium text-primary-text'>Enter your registered Email</h6>
+              <h6 className='flex justify-center text-lg font-sans leading-7 -mt-5 font-medium text-primary-text'>Enter your registered e-mail</h6>
               <div>
-            <label htmlFor='email' className='text-primary-text text-[14px] font-medium'>Email</label>
+            <label htmlFor='email' className='text-primary-text text-[14px] font-medium'>Email<span className='text-red-700'>*</span></label>
                     <input
                         id="outlined-required-4"
                         placeholder='Enter Your Email'
@@ -61,11 +61,11 @@ function ForgotPswd() {
                         className='input-field'
                     /> 
                     {formik.touched.email && formik.errors.email ? (
-                        <div style={{color: 'red'}}>{formik.errors.email}</div>
+                        <div style={{ color: 'red', marginTop: "-2vh" }}>{formik.errors.email}</div>
                     ) : null}
                     </div>
                     <button type="submit" disabled={formik.isSubmitting} className="h-[55px] bg-[#3369F4] rounded-lg p-4 text-white py-2">
-                        {formik.isSubmitting ? 'Sending...' : 'Send Code'}
+                        {formik.isSubmitting ? 'Requesting...' : 'Proceed'}
                     </button>
               </form>
               <Toaster/>

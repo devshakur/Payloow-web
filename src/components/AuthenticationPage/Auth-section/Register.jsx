@@ -36,22 +36,22 @@ function Register() {
   const formik = useFormik({
     initialValues: formInput,
     validationSchema: Yup.object({
-      firstName: Yup.string("field must be a text").required("Required"),
-      lastName: Yup.string().required("Required"),
+      firstName: Yup.string("field must be a text").required("required***"),
+      lastName: Yup.string().required("required***"),
       password: Yup.string()
-        .required("Required")
+        .required("required***")
         .min(8, "Password must be at least 8 characters")
         .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
         .matches(/[a-z]/, "Password must contain at least one lowercase letter")
         .matches(/[0-9]/, "Password must contain at least one number"),
       phone: Yup.string()
         .matches(/^[0-9]+$/, "Phone number must be digits")
-        .required("Required"),
-      email: Yup.string().email("Invalid email address").required("Required"),
-      country: Yup.string().required("Required"),
-      state: Yup.string().required("Required"),
-      address: Yup.string().required("Required"),
-      role: Yup.string().required("Required"),
+        .required("required***"),
+      email: Yup.string().email("Invalid email address").required("required***"),
+      country: Yup.string().required("required*"),
+      state: Yup.string().required("required***"),
+      address: Yup.string().required("required***"),
+      role: Yup.string().required("required***"),
     }),
 
     onSubmit: async (values, { setSubmitting }) => {

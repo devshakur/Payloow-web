@@ -89,11 +89,12 @@ const PartnersDashboard = () => {
   const navigateIcon = (href) => {
     router.push(href);
   };
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   return (
     <PartnersLayout>
       <motion.div className='flex justify-between' initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
-        <h3 className='font-poppins font-medium text-xl text-[#000]'>Welcome Mayowa</h3>
+        <h3 className='font-poppins font-medium text-xl text-[#000]'>Welcome {currentUser.firstName}</h3>
         <motion.button
           className='bg-blue-700 text-white py-2 px-6 rounded-md'
           whileHover={{ scale: 1.1 }}

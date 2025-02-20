@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const BusinessStep3 = ({ stepFour, formik }) => {
+const BusinessStep3 = ({ nextStep, stepFour, formik }) => {
+    const navigate = useNavigate()
     return (
         <div>
             <header className='flex justify-between items-center mx-8 mt-8 border-b-4'>
@@ -12,15 +14,15 @@ const BusinessStep3 = ({ stepFour, formik }) => {
                     />
                 </div>
                 <div className='mt-2'>
-                    <p className='font-poppins font-medium text-2xl text-blue-600'>Exit</p>
+                    <p onClick={()=>navigate(-1)} className='font-poppins font-medium text-2xl text-blue-600 cursor-pointer'>Exit</p>
                 </div>
             </header>
-            <main className='w-[100vw] h-screen'>
+            <main className='w-[100vw] bg-blue-50'>
                 <div className='flex justify-center'>
                     <ul className='flex gap-4 my-4 border-b-2 border-blue-500 py-3 px-4'>
-                        <li className='font-poppins text-xl font-medium'>Account Information</li>
-                        <li className='font-poppins text-xl font-medium text-blue-600'>Online</li>
-                        <li className='font-poppins text-xl font-medium'>Business Details</li>
+                        <li onClick={nextStep} className='font-plus-jakarta text-[16px] lg:text-xl font-medium cursor-pointer'>Account Information</li>
+                        <li className='font-plus-jakarta text-[16px] lg:text-xl  font-medium text-blue-600 cursor-pointer'>Online</li>
+                        <li onClick={stepFour} className='font-plus-jakarta text-[16px] lg:text-xl  font-medium cursor-pointer'>Business Details</li>
                     </ul>
                 </div>
                 <section className='flex justify-center'>
@@ -32,7 +34,7 @@ const BusinessStep3 = ({ stepFour, formik }) => {
                                 type="text" 
                                 id="website"
                                 name="website"
-                                className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2'
+                                className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2 focus:outline-none'
                                 placeholder='Website link...'
                                 onChange={formik.handleChange}
                                 value={formik.values.website}
@@ -47,7 +49,7 @@ const BusinessStep3 = ({ stepFour, formik }) => {
                                 type="text" 
                                 id="twitter_url"
                                 name="twitter_url"
-                                className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2'
+                                className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2 focus:outline-none'
                                 placeholder='Twitter handle'
                                 onChange={formik.handleChange}
                                 value={formik.values.twitter_url}
@@ -62,7 +64,7 @@ const BusinessStep3 = ({ stepFour, formik }) => {
                                 type="text" 
                                 id="linkedIn_url"
                                 name="linkedIn_url"
-                                className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2'
+                                className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2 focus:outline-none'
                                 placeholder='LinkedIn link...'
                                 onChange={formik.handleChange}
                                 value={formik.values.linkedIn_url}
@@ -77,7 +79,7 @@ const BusinessStep3 = ({ stepFour, formik }) => {
                                 type="text" 
                                 id="facebook_url"
                                 name="facebook_url"
-                                className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2'
+                                className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2 focus:outline-none'
                                 placeholder='Facebook username'
                                 onChange={formik.handleChange}
                                 value={formik.values.facebook_url}
@@ -92,7 +94,7 @@ const BusinessStep3 = ({ stepFour, formik }) => {
                                 type="text" 
                                 id="youTube_url"
                                 name="youTube_url"
-                                className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2'
+                                className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2 focus:outline-none'
                                 placeholder='YouTube link'
                                 onChange={formik.handleChange}
                                 value={formik.values.youTube_url}
@@ -107,7 +109,7 @@ const BusinessStep3 = ({ stepFour, formik }) => {
                                 type="text" 
                                 id="instagram_url"
                                 name="instagram_url"
-                                className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2'
+                                className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2 focus:outline-none'
                                 placeholder='Instagram link'
                                 onChange={formik.handleChange}
                                 value={formik.values.instagram_url}
@@ -122,7 +124,7 @@ const BusinessStep3 = ({ stepFour, formik }) => {
                                 type="text" 
                                 id="tikTok_url"
                                 name="tikTok_url"
-                                className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2'
+                                className='py-3 mx-6 border-2 border-[#D0D5DD] rounded-md mb-3 px-2 focus:outline-none'
                                 placeholder='TikTok username'
                                 onChange={formik.handleChange}
                                 value={formik.values.tikTok_url}
@@ -132,13 +134,15 @@ const BusinessStep3 = ({ stepFour, formik }) => {
                             )}
 
                             {/* Next Button */}
+                            <div className="flex justify-center">
                             <button 
                                 type="button" 
                                 onClick={stepFour} 
-                                className='w-[90%] py-2 mx-8 my-5 bg-blue-600 text-white rounded-lg'
+                                className='w-[40%] py-2 mx-8 my-5 bg-blue-600 text-white rounded-lg'
                             >
                                 NEXT
                             </button>
+                            </div>
                         </form>
                     </div>
                 </section>

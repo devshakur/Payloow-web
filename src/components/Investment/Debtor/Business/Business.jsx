@@ -8,7 +8,7 @@ import Loan from './BusinessModal/Loan';
 import useInvestment from '../../../../hooks/useInvetment';
 import SkeletonLoader from '../../../Skeleton/SkeletalLoading';
 import { useRouter } from '../../../../Routes/router';
-
+import clsx from 'clsx';
 
 const Business = ({ nextStep }) => {
   const {ViewBusiness, getBusinessInfo} = useInvestment();
@@ -21,7 +21,8 @@ const Business = ({ nextStep }) => {
   const [links, setLinks] = useState({})
   const [businesslinks, setBusinessLinks] = useState([])
   const [isLoading, setIsLoading] = useState(true);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(6);
   const selectedId = getid;
  const router = useRouter();
 
@@ -79,6 +80,16 @@ useEffect(()=>{
   setIsOpen(true)
   setGetId(id)
  }
+ const indexOfLastItem = currentPage * itemsPerPage;
+const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+const currentBusinesses = data.slice(indexOfFirstItem, indexOfLastItem);
+
+const totalPages = Math.ceil(data.length / itemsPerPage);
+
+// Function to change page
+const handlePageChange = (pageNumber) => {
+  setCurrentPage(pageNumber);
+};
   return (
     <DebtorLayoutPage>
       <main>
@@ -104,8 +115,8 @@ useEffect(()=>{
         ): (
           <div className='flex flex-wrap justify-center lg:justify-start'>
             {data && data.length > 0 ?
-            data.map((startup) => ( 
-              <article key={startup.business_id} className='flex lg:flex-row justify-center my-4 lg:mx-4 w-full lg:w-[30%]'>
+            currentBusinesses.reverse().map((startup) => ( 
+              <article key={startup.business_id} className='flex lg:flex-row justify-center my-4  lg:mx-4 w-full lg:w-[30%]'>
                 <div className='bg-white w-full lg:py-[5rem] py-3 rounded-lg shadow-lg'>
                   <div className='flex justify-between mx-3 lg:-mt-12'>
                     <div className='h-9 w-9 flex justify-center items-center bg-gray-300 rounded-[50%]'>
@@ -131,11 +142,45 @@ useEffect(()=>{
                 </div>
               </article>
             )) : <div className='w-full my-4  flex justify-center'>
-              <p className='text-xl  font-semibold font-poppins'>No Available Business...</p>
+              <p className='text-xl  font-medium font-plus-jakarta'>No Available Business...</p>
               </div>}
           </div>
         )}
         </section>
+        <div className="pagination flex justify-center lg:justify-end items-center space-x-3 ">
+  <button
+    onClick={() => handlePageChange(currentPage - 1)}
+    disabled={currentPage === 1}
+    className={clsx(
+      'px-4 py-2 text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed'
+    )}
+  >
+    Previous
+  </button>
+  {[...Array(totalPages)].map((_, index) => (
+    <button
+      key={index}
+      onClick={() => handlePageChange(index + 1)}
+      className={clsx(
+        'px-4 py-2 text-lg font-medium text-blue-600 border border-blue-500 rounded-md transition-all',
+        currentPage === index + 1
+          ? 'bg-blue-500 text-white shadow-md'
+          : 'bg-white hover:bg-blue-50'
+      )}
+    >
+      {index + 1}
+    </button>
+  ))}
+  <button
+    onClick={() => handlePageChange(currentPage + 1)}
+    disabled={currentPage === totalPages}
+    className={clsx(
+      'px-4 py-2 text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed'
+    )}
+  >
+    Next
+  </button>
+</div>
       </main>
     </DebtorLayoutPage>
   )

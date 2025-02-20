@@ -18,22 +18,22 @@ const SetPin = ({ handleSuccess }) => {
             confirmPin: '',
         },
         validationSchema: Yup.object({
-            pin: Yup.string().required('Required'),
+            pin: Yup.string().required('required***'),
             confirmPin: Yup.string()
-                .oneOf([Yup.ref('pin'), null], 'Pins must match')
-                .required('Required'),
+                .oneOf([Yup.ref('pin'), null], 'transaction code must match**')
+                .required('required***'),
         }),
         onSubmit: async (values, { setSubmitting }) => {
             try {
                 const { ...data } = values
                 const response = await SetPins(data)
                 if (response) {
-                    toast.success('Pin set Suscessfully!');
+                    toast.success('Transaction code set suscessfully!');
                     handleSuccess();
                 }
             } catch (error) {
                 console.error(error);
-                toast.error('Failed to set PIN. Please try again.');
+                toast.error('Failed to set transaction code. Please try again.');
             }
             setSubmitting(false);
         },
@@ -56,7 +56,7 @@ const SetPin = ({ handleSuccess }) => {
                     <h6 className='flex justify-center text-xl font-poppins font-medium text-primary-text text-center leading-7'>To secure your transactions, please set up a transaction code.</h6>
                     <form onSubmit={formik.handleSubmit} className='grid gap-4 mt-8'>
                         <div>
-                            <label htmlFor='pin' className='text-primary-text text-[14px] font-medium'>Transaction Code</label>
+                            <label htmlFor='pin' className='text-primary-text text-[14px] font-medium'>Transaction Code<span className='text-red-700'>*</span></label>
                             <input
                                 id="pin"
                                 placeholder='Enter Pin'
@@ -65,12 +65,12 @@ const SetPin = ({ handleSuccess }) => {
                                 className='input-field'
                             />
                             {formik.touched.pin && formik.errors.pin ? (
-                                <div>{formik.errors.pin}</div>
+                                <div style={{ color: 'red', marginTop: "-2vh" }}>{formik.errors.pin}</div>
                             ) : null}
                         </div>
 
                         <div>
-                            <label htmlFor='confirmPin' className='text-primary-text text-[14px] font-medium'>Confirm Pin</label>
+                            <label htmlFor='confirmPin' className='text-primary-text text-[14px] font-medium'>Confirm Transaction Code<span className='text-red-700'>*</span></label>
                             <input
                                 id="confirmPin"
                                 placeholder='Confirm Pin'
@@ -79,7 +79,7 @@ const SetPin = ({ handleSuccess }) => {
                                 className='input-field'
                             />
                             {formik.touched.confirmPin && formik.errors.confirmPin ? (
-                                <div>{formik.errors.confirmPin}</div>
+                                <div style={{ color: 'red', marginTop: "-2vh" }}>{formik.errors.confirmPin}</div>
                             ) : null}
                         </div>
 

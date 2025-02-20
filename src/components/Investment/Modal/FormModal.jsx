@@ -12,10 +12,11 @@ const FormModal = ({ isOpen, onClose, onRegister }) => {
     const { CreateDebtorAccount } = useInvestment();
     const router = useRouter();
     const [loading, setLoading] = useState(false)
-
+    const user = JSON.parse(localStorage.getItem('currentUser'))
+    const phone = `${'+234' + user?.phone}`
     const [debtorDetails, setDebtorDetails] = useState({
-        contact_email: '',
-        contact_phone_number: '',
+        contact_email: user?.email || '',
+        contact_phone_number: phone || '',
         credit_profile: {
             credit_score: 0,
             proof_of_credit_score: '',
@@ -92,7 +93,7 @@ const FormModal = ({ isOpen, onClose, onRegister }) => {
                         className="w-full max-w-lg rounded-xl p-6 bg-white duration-300 ease-out data-[closed]:transform-[scale(95%)]"
                     >
                         <div className='flex justify-between my-6'>
-                            <DialogTitle as="h3" className="text-base/7 font-medium">
+                            <DialogTitle as="h3" className="text-xl font-plus-jakarta font-medium">
                                 Create Debtor Account
                             </DialogTitle>
                             <CloseCircle size="30" color="black" onClick={onClose} />

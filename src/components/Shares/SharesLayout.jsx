@@ -39,7 +39,7 @@ import { useRouter } from "../../Routes/router";
 
 
 const navigation = [
-  { name: "Main Menu", href: "#", icon: Category2 },
+  { name: "Main Menu", href: "/dashboard", icon: Category2 },
   { name: "Dashboard", href: "/shares/dashboard", icon: LuStore  },
   { name: "Analytics", href: "/shares/analytics", icon: BiChart },
   { name: "Portfolio", href: "/shares/portfolio", icon: FiPieChart },
@@ -53,8 +53,8 @@ const action = [
 ];
 
 const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Your profile", href: "/settings" },
+  { name: "Sign out", href: "/" },
 ];
 
 function classNames(...classes) {
@@ -94,9 +94,14 @@ function SharesLayout({ children }) {
                 </button>
               </div>
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-                <div className="flex h-16 shrink-0 items-center">
-                  <img alt="Logo" src="/images/logo.svg" className="h-10 w-auto" />
-                </div>
+              <div className="flex h-16 justify-center pt-6 shrink-0 items-center">
+                                    <img alt="Logo" src="/images/logo.svg" className="h-10 w-auto" />
+                                </div>
+                                <div className="flex items-center justify-center -mt-4 cursor-pointer">
+                                    <button onClick={()=>router.push('/dashboard')} className="md:text-sm text-sm bg-primary text-white px-6 py-1 rounded-full font-plus-jakarta">
+                                        ShareHolder
+                                    </button>
+                                </div>
                 <nav className="flex flex-1 flex-col">
                   <ul role="list" className="flex flex-1 flex-col gap-y-7">
                     <li>
@@ -145,9 +150,19 @@ function SharesLayout({ children }) {
         {/* Sidebar for large screens */}
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-            <div className="flex shrink-0 items-center mt-8">
-              <img alt="Logo" src="/images/logo.svg" className="h-14 w-auto" />
-            </div>
+          <div className="flex shrink-0 items-center mt-8">
+                            <img
+                                alt="Paylow Logo"
+                                src="/images/logo.svg"
+                                className="h-14 w-auto"
+                            />
+                        </div>
+                        <div className="flex items-center justify-start  -mt-4 cursor-pointer ">
+                            <div onClick={() => router.push('/dashboard')} className="md:text-sm text-xs bg-primary text-white px-8 py-1 rounded-full font-plus-jakarta ">
+                               ShareHolder
+                            </div>
+                        </div>
+            
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
                 <li>
@@ -238,13 +253,13 @@ function SharesLayout({ children }) {
           <FiHeart className="w-5 h-5"  />
         </button>
 
-        <button
+        {/* <button
           type="button"
           className="-m-2.5 p-1.5 bg-[#F1F3F9] rounded-[50%] text-[#1D2433CC] hover:text-gray-500 lg:block hidden"
         >
          <IoCartOutline className="w-5 h-5" />
        
-        </button>
+        </button> */}
 
          {/* Notification Icon (Visible on all screens) */}
          <button

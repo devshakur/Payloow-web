@@ -27,6 +27,7 @@ import {
 import { useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { Toaster } from "react-hot-toast";
+import DefaultProfile from "../Easybuy/Buyers/DefaultProfile";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
@@ -41,8 +42,8 @@ const action = [
   { name: "Logout", href: "/", icon: LogoutCurve },
 ];
 const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Your profile", href: "/settings" },
+  { name: "Sign out", href: "/" },
 ];
 
 function classNames(...classes) {
@@ -290,11 +291,16 @@ function InvestmentLayout({ children }) {
                 <Menu as="div" className="relative">
                   <MenuButton className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    <img
-                      alt=""
-                      src={currentUser ? currentUser.profilePicture : "/images/user.png"}
-                      className="h-8 w-8 rounded-full bg-gray-50"
-                    />
+                    {currentUser ? (
+              <DefaultProfile />
+           
+            ) : (
+              <img
+            alt="User Profile"
+            src={currentUser.profilePicture }
+            className="h-8 w-8 rounded-full bg-gray-50"
+          />
+            ) }
                     <span className="hidden lg:flex lg:items-center">
                       <span
                         aria-hidden="true"

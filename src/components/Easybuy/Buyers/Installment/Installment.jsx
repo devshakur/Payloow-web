@@ -79,6 +79,7 @@ useEffect(() => {
           const nextDueDetails = installments.length > 0 ? formatDueDate(installments[0]?.dueDate) : null;
 
           return {
+            productImg: order?.cartItems[0]?.product.imageKey,
             productName: order?.cartItems[0]?.product?.name,
             dueDates: installments.map((inst) => ({
               dueDate: new Date(inst?.dueDate).toLocaleDateString(),
@@ -91,6 +92,7 @@ useEffect(() => {
             paymentStatus: order?.paymentStatus,
             totalPaidAmount: `$${totalPaidAmount.toFixed(2)}`,
             remainingBalance: `$${remainingBalance.toFixed(2)}`,
+          
           };
         });
 
@@ -134,6 +136,7 @@ const handlePageClick = ({ selected }) => {
   setCurrentPage(selected);
 };
 
+
   return (
     <BuyersLayoutGen>
       {/* Total Amount Section with Animation */}
@@ -148,7 +151,7 @@ const handlePageClick = ({ selected }) => {
             <h3 className="font-poppins font-normal text-[20px] text-[#1D2433]">Total Amount</h3>
             <p className="font-medium">...</p>
           </div>
-          <h3 className="font-poppins font-medium text-[28px] text-[#1D2433] py-2">₦{totalAmount || 0}</h3>
+          <h3 className="font-poppins font-medium text-[28px] text-[#1D2433] py-2"><span className='text-[16px]'>₦</span>{totalAmount || 0}</h3>
         </motion.div>
 
         <motion.div className="bg-[#FFFFFF] shadow-md p-3" initial={{ x: -100 }} animate={{ x: 0 }} transition={{ duration: 0.7 }}>
@@ -156,7 +159,7 @@ const handlePageClick = ({ selected }) => {
             <p className="font-poppins font-normal text-[20px] text-[#1D2433]">Amount Paid</p>
             <p className="font-medium">...</p>
           </div>
-          <h3 className="font-poppins font-medium text-[28px] text-[#1D2433] py-2">₦{amountPaid}</h3>
+          <h3 className="font-poppins font-medium text-[28px] text-[#1D2433] py-2"><span className='text-[16px]'>₦</span>{amountPaid}</h3>
         </motion.div>
 
         <motion.div className="bg-[#FFFFFF] shadow-md p-3" initial={{ x: -100 }} animate={{ x: 0 }} transition={{ duration: 0.9 }}>
@@ -164,7 +167,7 @@ const handlePageClick = ({ selected }) => {
             <h3 className="font-poppins font-normal text-[20px] text-[#1D2433]">Remaining Balance</h3>
             <p className="font-medium">...</p>
           </div>
-          <h3 className="font-poppins font-medium text-[28px] text-[#1D2433] py-2">₦{balance}</h3>
+          <h3 className="font-poppins font-medium text-[28px] text-[#1D2433] py-2"><span className='text-[16px]'>₦</span>{balance}</h3>
         </motion.div>
       </motion.div>
 
@@ -233,7 +236,7 @@ const handlePageClick = ({ selected }) => {
               >
                 <div className="flex gap-3">
                   <div className="w-11 h-11 rounded-[50%] border border-gray-200 flex justify-center items-center">
-                    <img className="w-[30px] h-[30px]" src={item.img || '/images/iphon-green.png'} alt={item.name} />
+                    <img className="w-[30px] h-[30px]" src={item.productImg || '/images/iphon-green.png'} alt={item.name} />
                   </div>
                   <p>{item.productName}</p>
                 </div>
@@ -296,8 +299,8 @@ const handlePageClick = ({ selected }) => {
       <div className="flex items-center gap-4 mb-4">
         <div className="w-16 h-16 rounded-lg bg-gray-100 flex justify-center items-center">
           <img
-            src={item.img || '/images/iphon-green.png'}
-            alt={item.productName}
+          src={item.productImg || "/images/iphon-green.png"}
+          alt={item?.cartItems?.[0]?.product?.name || "Product Image"}
             className="w-12 h-12 object-cover"
           />
         </div>
