@@ -3,10 +3,12 @@ import { Category2, Notification, ProfileCircle, ArrowLeft2, ArrowDown2, SearchN
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";  
 import MobileSideNav from './MobileSideNav';
 import { useRouter } from '../../Routes/router'
+import DefaultProfile from '../Easybuy/Buyers/DefaultProfile';
 
 const BillsHeader = ({ active }) => {  
     const router = useRouter()
     const [isOpen, setIsOpen] = useState(false);  
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
     const userNavigation = [  
         { name: "Your profile", href: "#" },  
@@ -16,10 +18,10 @@ const BillsHeader = ({ active }) => {
         setIsOpen(false);
     };
 
-    const baseStyles = ' h-[36px] my-16 mx-5 rounded-lg border flex justify-center items-center gap-2 lg:flex lg:ml-[29vw] xl:ml-[22vw]';
+    const baseStyles = ' h-[36px] my-16 mx-1 rounded-lg border flex cursor-pointer justify-center items-center gap-2 lg:flex lg:ml-[29vw] xl:ml-[22vw]';
     const activeStyles = active === 'page3' || active === 'page4'
-        ? 'w-[186px] lg:mt-[12vh] border-[#6196F9]'
-        : 'w-[86px] lg:mt-[10vh] border-[#6196F9]';
+        ? 'w-[186px] lg:mt-[12vh]  border-[#6196F9]'
+        : 'w-[86px] lg:mt-[10vh]  border-[#6196F9]';
     const secondary = active === 'page2'
         ? 'w-[146px] lg:mt-[12vh] border-[#6196F9]'
         : null
@@ -29,7 +31,7 @@ const BillsHeader = ({ active }) => {
 
     return (  
         <div>  
-            <header className='mt-5 w-[92%] mx-3 grid grid-cols-[auto, 1fr] grid-flow-col h-[30px] items-center'>  
+            <header className='w-full lg:bg-white shadow-lg mt-0  grid grid-cols-[auto, 1fr] grid-flow-col p-3 items-center'>  
                 <div className="lg:hidden">  
                     <button >  
                         <Category2 size="24" color="black" onClick={() => setIsOpen(true)} />  
@@ -39,17 +41,26 @@ const BillsHeader = ({ active }) => {
                     </div>
                 </div>  
                 <div className='hidden w-[65vw] lg:flex lg:justify-end xl:justify-center xl:ml-[5rem]'>  
-                    <SearchNormal1 size="24" className='relative top-4 left-10' color="#697689" />  
-                    <input type="text" placeholder="Tap here to search" className='h-14 w-[400px] pl-12 mr-3 border' />  
+                    {/* <SearchNormal1 size="24" className='relative top-4 left-10' color="#697689" />  
+                    <input type="text" placeholder="Tap here to search" className='h-14 w-[400px] pl-12 mr-3 border' />   */}
                 </div>  
-                <div className='flex flex-row justify-end items-center gap-4 lg:w-[27vw]'>  
+                <div className='flex flex-row justify-end items-center gap-4 lg:w-[23vw]'>  
                     <Notification size="24" color="black" />  
-                    <ProfileCircle size="34" className='lg:size-14' color="#697689" variant="Bulk" />  
+                    {currentUser ? (
+              <DefaultProfile />
+           
+            ) : (
+              <img
+            alt="User Profile"
+            src={currentUser.profilePicture }
+            className="h-8 w-8 rounded-full bg-gray-50"
+          />
+            ) } 
                     <div className='gap-2 mt-1 items-center hidden lg:flex lg:flex-row xl:mr-8'>  
-                        <p className='font-poppins font-normal text-lg text-[#1D2433] leading-5'>Mayowa Sunusi</p>  
+                        <p className='font-poppins font-normal text-lg text-[#1D2433] leading-5'>{currentUser ? currentUser.firstName : 'Guest'}</p>  
                         <Menu as="div" className="relative">  
                             <MenuButton>  
-                                <ArrowDown2 size="28" className='mt-1' color="#697689" />  
+                                <ArrowDown2 size="18" className='mt-1' color="#697689" />  
                             </MenuButton>  
                             <MenuItems  
                                 transition  
@@ -70,8 +81,8 @@ const BillsHeader = ({ active }) => {
                     </div>  
                 </div>  
             </header>  
-            <div className=''>  
-                <button onClick={ move}  className={`${baseStyles} ${activeStyles} ${secondary}`}>  
+            <div onClick={move} className='xl:-ml-20'>  
+                <button onClick={move}   className={`${baseStyles} ${activeStyles} ${secondary}`}>  
                     <ArrowLeft2 size="22" color="blue" />  
                     <span className='text-sm font-semibold text-[#6196F9] leading-5'>  
                         {active === 'page1' && 'Back'}  

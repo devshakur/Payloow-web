@@ -11,10 +11,21 @@ const Confirm = ({ active, setActive, formik, selectedPlan }) => {
     const [image, setImage] = useState("");
     const [buttonDisabled, setbuttonDisabled] = useState(true)
     const [balance, setBalance] = useState(0)
+    const [userBalance, setUserBalance] = useState(0)
     const { BuyData, UserBalance, ConfirmPin } = useBills();
 
 
     const { phone, network_id, amount, variation_id, pin } = formik.values;
+
+    useEffect(() => {
+        const fetchBalance = async () => {
+            const response = await UserBalance();
+            const fetchedBalance = response.data.data.data.balance;
+            setUserBalance(fetchedBalance);  
+        };
+
+        fetchBalance();
+    }, []);  
 
     const handleBuy = async (e) => {
         e.preventDefault();
@@ -45,6 +56,7 @@ const Confirm = ({ active, setActive, formik, selectedPlan }) => {
             } else if (balance <= amountValue) {
                 toast.error('Insufficient amount kindly fund your wallet')
                 setLoading(false);
+                
             }
         } catch (error) {
             toast.error('Invalid PIN. Please try again.')
@@ -71,10 +83,10 @@ const Confirm = ({ active, setActive, formik, selectedPlan }) => {
 
 
     return (
-        <div>
-            <div className='grid lg:-mt-12 items-center'>
-                <div className='flex justify-center lg:-ml-[-20vw] xl:justify-center 2xl:ml-[-10vw]'>
-                    <div className='w-full mx-4 h-[550px] md:w-[430px] lg:h-[500px] lg:w-[600px] 2xl:w-[700px] bg-[#FFFFFF] pb-[20px]  shadow-md rounded-lg'>
+        
+            <div className='grid lg:-mt-12 items-center '>
+                <div className=' w-screen flex justify-center lg:justify-center lg:-ml-[-10vw] 2xl:ml-[8vw]'>
+                    <div className='w-full mx-4 h-[550px] md:w-[530px] lg:h-[500px] lg:w-[600px] 2xl:w-[700px] bg-[#FFFFFF] pb-[20px]  shadow-md rounded-md'>
                         <h4 className='flex justify-center text-lg leading-7 font-poppins font-bold my-4 text-[#000000]'>Confirm Data Purchase</h4>
                         <h6 className='flex justify-center font-[500] text-[16px] text-[#1D2433] font-poppins leading-5 -mt-3'>{selectedPlan}</h6>
                         <section className='h-[97px] w-[95%]  mx-2 mt-9'>
@@ -86,22 +98,22 @@ const Confirm = ({ active, setActive, formik, selectedPlan }) => {
                             </div>
                             <div className='flex justify-between my-1'>
                                 <p className='text-[#1D2433CC] font-[600]'>Package</p>
-                                <p className='font-semibold text-sm font-poppins leading-5 mr-6 text-[#1D2433CC]'>{amount}</p>
+                                <p className='font-semibold text-sm font-poppins leading-5 mr-[60px] text-[#1D2433CC]'>{amount}</p>
                             </div>
                             <div className=' flex justify-between'>
                                 <p className='text-sm font-poppins leading-5 text-[#1D2433CC] font-[600]'>Beneficiary</p>
                                 <p className='font-semibold text-sm font-poppins leading-5 text-[#1D2433CC]'>{phone}</p>
                             </div>
                             <div className='flex justify-center'>
-                                <p className='w-[90%] border-2 mt-6 border-dashed'></p>
+                                <p className='w-[99%] border-2 mt-6 border-dashed'></p>
                             </div>
                             <div className='my-5'>
-                                <div className='h-[70px] w-[95%] flex justify-between items-center'>
+                                <div className='h-[70px] w-[99%] flex justify-between items-center'>
                                     <div className='flex mx-1 gap-1'>
-                                        <div className='bg-[#F1F3F9] rounded-[50%] p-4'>
+                                        <div className='bg-[#F1F3F9] shadow-md rounded-[50%] p-4'>
                                             <Wallet size="24" color="#1D2433CC" />
                                         </div>
-                                        <p className='mt-5 font-poppins font-normal text-sm leading-5'>Wallet (₦{balance})</p>
+                                        <p className='mt-5 font-poppins font-normal text-sm leading-5'>Wallet (₦{userBalance || 0})</p>
                                     </div>
                                     <div className='mt-1 flex items-center gap-1'>
                                         <p className='font-poppins font-normal text-[#1E3DD7] text-sm leading-5'>Fund wallet</p>
@@ -110,20 +122,21 @@ const Confirm = ({ active, setActive, formik, selectedPlan }) => {
                                 </div>
                             </div>
                             <form className='mx-3 flex flex-col' onSubmit={handleBuy}>
-                                <label htmlFor="pin" className='text-[#101928] text-[16px] font-semibold -pb-8'>Pin</label>
+                                <label htmlFor="pin" className='text-[#101928] font-plus-jakarta text-[16px] font-semibold -pb-8'>Enter Your Pin<span className='text-red-700'>*</span></label>
                                 <input
                                     id="outlined-required-5"
                                     placeholder='Enter pin'
                                     type='password'
                                     name='pin'
+                                    required
                                     autoComplete='off'
                                     {...formik.getFieldProps('pin')}
-                                    className='border h-[56px] w-[95%] rounded-lg text-[16px] pl-2'
+                                    className='border h-[56px] w-[95%] rounded-lg shadow-md text-[16px] pl-2 focus:outline-none'
                                 />
 
                                 <div className='flex justify-center w-[100%] my-5'>
-                                    <button type='submit' className='h-[46px] w-[95%] font-poppins my-3 rounded-lg bg-blue-500 text-white'>
-                                        {loading ? 'Loading...' : 'Confirm & pay'}
+                                    <button type='submit' className='h-[46px] w-[55%] font-poppins my-3 rounded-lg bg-blue-500 text-white'>
+                                        {loading ? 'Processing...' : 'Confirm & pay'}
                                     </button>
                                 </div>
 
@@ -133,7 +146,7 @@ const Confirm = ({ active, setActive, formik, selectedPlan }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        
     )
 }
 

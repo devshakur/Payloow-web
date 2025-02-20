@@ -49,11 +49,11 @@ const Airtime = ({ handleNext, formik }) => {
     return (
         <div>
             <main className='pb-[40px]'>
-                <div className='w-[100vw] xl:-mt-12 flex justify-center lg:-ml-[-10vw] xl:justify-center'>
-                    <div className='w-[95%] md:w-[500px] lg:w-[650px] bg-[#FFFFFF] pb-4 shadow-md rounded-xl overflow-hidden'>
-                        <h4 className='flex justify-center text-xl leading-5 font-poppins font-bold my-4'>Buy Airtime</h4>
-                        <h4 className='text-lg mx-2 leading-5 font-poppins text-[#000000] font-[550]'>Most recent</h4>
-                        <article className='flex gap-3 mx-2'>
+                <div className='w-[100vw] xl:-mt-24 flex justify-center lg:-ml-[-10vw] xl:justify-center'>
+                    <div className='mx-4 bg-[#FFFFFF] pb-4 shadow-md rounded-sm overflow-hidden'>
+                        <h4 className='flex justify-center text-xl leading-5 font-plus-jakarta font-bold my-4'>Buy Airtime</h4>
+                        <h4 className='text-lg  leading-5 font-plus-jakarta text-[#000000] font-[550] mx-3 md:mx-8'>Most recent</h4>
+                        <article className='flex gap-3 mx-3 md:mx-8'>
                             {Array.isArray(info) && info.length > 0 ? (
                                 info.slice(-2).map((user) => (
                                     <section key={user.code} className="flex flex-row gap-6 my-4">
@@ -79,8 +79,8 @@ const Airtime = ({ handleNext, formik }) => {
                                 <div className='ml-8 my-5 text-lg text-green-500'>No recent Purchase</div>
                             )}
                         </article>
-                        <form className='w-[95%] mt-5 mx-2 overflow-y-auto'>
-                            <label htmlFor="network_id" className='text-[#101928] text-[14px] font-bold mb-2'>Choose Network</label>
+                        <form className='w-[95%] mt-5 mx-2 md:mx-8 overflow-y-auto'>
+                            <label htmlFor="network_id" className='text-[#101928] text-[14px] font-plus-jakarta font-medium mb-2'>Choose Network<span className='text-red-700'>*</span></label>
                             <Select
                                 id="network_id"
                                 name="network_id"
@@ -112,7 +112,7 @@ const Airtime = ({ handleNext, formik }) => {
                                     </span>
                                 ))}
                             </div>
-                            <label htmlFor="amount" className='text-[#101928] text-[14px] font-bold mb-2'>Amount</label>
+                            <label htmlFor="amount" className='text-[#101928] text-[14px] font-medium font-plus-jakarta mb-2 mx-2'>Amount<span className='text-red-700'>*</span></label>
                             <input
                                 id="outlined-required-2"
                                 placeholder='Amount'
@@ -120,13 +120,13 @@ const Airtime = ({ handleNext, formik }) => {
                                 name='amount'
                                 autoComplete='off'
                                 {...formik.getFieldProps('amount')}
-                                className='border h-[60px] w-[95%] rounded-lg text-[16px] pl-2 mb-5'
+                                className='border-2 border-gray-400 focus:outline-none h-[60px] w-[95%] rounded-lg text-[16px] pl-2 mx-2 mb-5'
                             />
                             {formik.touched.amount && formik.errors.amount ? (
-                                <div style={{ color: 'red', marginTop: "-5px" }}>{formik.errors.amount}</div>
+                                <div style={{ color: 'red', marginTop: "-10px" }}>{formik.errors.amount}</div>
                             ) : null}
 
-                            <label htmlFor="phone" className='text-[#101928] text-[14px] font-bold mb-2'>Phone Number</label>
+                            <label htmlFor="phone" className='text-[#101928] text-[14px] font-medium font-plus-jakarta mb-2 mx-2'>Phone Number <span className='text-red-700'>*</span></label>
                             <input
                                 id="outlined-required-3"
                                 placeholder='PhoneNumber'
@@ -134,19 +134,21 @@ const Airtime = ({ handleNext, formik }) => {
                                 name='phone'
                                 autoComplete='off'
                                 {...formik.getFieldProps('phone')}
-                                className='border h-[60px] w-[95%] rounded-lg text-[14px] pl-2 mb-5'
+                                className='border-2 border-gray-400 focus:outline-none h-[60px] w-[95%] rounded-lg text-[14px] pl-2 mb-5 mx-2'
                             />
                             {formik.touched.phone && formik.errors.phone ? (
-                                <div style={{ color: 'red', marginTop: "-5px" }}>{formik.errors.phone}</div>
+                                <div style={{ color: 'red', marginTop: "-12px" }}>{formik.errors.phone}</div>
                             ) : null}
-
+                             <div className="flex justify-center">
                             <button
                                 type="button"
-                                className='w-full p-2 bg-blue-600 text-white font-bold rounded-lg mt-4'
+                                className='w-[35%] p-2 bg-blue-600 text-white font-bold rounded-lg mt-4'
                                 onClick={validateFields}
                             >
                                 Buy Airtime
                             </button>
+
+                             </div>
                         </form>
                     </div>
                 </div>

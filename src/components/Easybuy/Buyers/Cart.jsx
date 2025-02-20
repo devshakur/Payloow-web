@@ -21,7 +21,6 @@ const Cart = () => {
       const info = resp?.data;
       if (info?.success) {
         toast.success(info?.message || 'Items removed from cart');
-        router.reload();
       } else {
         toast.error('Failed to remove Items from Cart');
       }
@@ -84,12 +83,12 @@ const Cart = () => {
               {cartItems.map((item) => (
                 <motion.div
                   key={item._id}
-                  className="flex flex-col lg:flex-row items-center bg-white p-4 rounded-lg shadow-md"
+                  className="flex flex-col lg:flex-row items-center bg-white p-2 rounded-lg shadow-lg"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, ease: 'easeOut' }}
                 >
-                  <div className="w-full lg:w-1/3">
+                  <div className="w-full lg:w-1/2">
                     <img
                       className="w-full h-full object-cover rounded-lg"
                       src={item.product?.imageKey || '/images/iphon11-small.png'}
@@ -101,9 +100,9 @@ const Cart = () => {
                     <p className="font-medium text-lg text-black mt-2">
                       {item.product?.price.$numberDecimal}
                     </p>
-                    <p className="text-sm text-gray-600 mt-1">
+                    {/* <p className="text-sm text-gray-600 mt-1">
                       Color: <span>{item.color}</span>
-                    </p>
+                    </p> */}
                     <div className="flex gap-2"> 
                     <h5 className='font-plus-jakarta text-lg font-semibold text-gray-700'>Qty:</h5>
                     <p className="text-lg font-plus-jakarta font-bold text-gray-600">{quantities[item._id] || 1}</p></div>
@@ -147,14 +146,14 @@ const Cart = () => {
                 </div>
               </div>
               <motion.div
-                className="my-6"
+                className="my-6 flex justify-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
                 <button
                   onClick={() => router.push('/product-view')}
-                  className="w-full py-3 bg-blue-800 text-white rounded-lg"
+                  className="w-[55%] py-3 bg-blue-800 text-sm text-md text-white rounded-lg"
                 >
                   Proceed to Checkout
                 </button>

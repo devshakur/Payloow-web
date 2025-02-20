@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import useInvestment from '../../../../hooks/useInvetment';
 import { toast,  Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
-const BusinessStep2 = ({ stepThree, formik }) => {
+const BusinessStep2 = ({ stepThree, stepFour, formik }) => {
     const { GetIndustries, GetBusinessStages, GetModels } = useInvestment();
+    const navigate = useNavigate();
     const [industries, setIndustries] = useState([]);
     const [stages, setStages] = useState([]);
     const [models, setModels] = useState([]);
@@ -76,15 +78,15 @@ const BusinessStep2 = ({ stepThree, formik }) => {
                     />
                 </div>
                 <div className='mt-2'>
-                    <p className='font-poppins font-medium text-2xl text-blue-600'>Exit</p>
+                    <p onClick={()=>navigate(-1)} className='font-poppins font-medium text-2xl text-blue-600 cursor-pointer'>Exit</p>
                 </div>
             </header>
-            <main className='w-[100vw] h-screen'>
+            <main className='w-[100vw] bg-blue-50'>
                 <div className='flex justify-center'>
                     <ul className='flex gap-4 my-4 border-b-2 border-blue-500 py-3 px-4'>
-                        <li className='font-poppins text-xl font-medium text-blue-600'>Account Information</li>
-                        <li className='font-poppins text-xl font-medium'>Online</li>
-                        <li className='font-poppins text-xl font-medium'>Business Details</li>
+                        <li className='font-plus-jakarta text-[16px] lg:text-xl font-medium text-blue-600 cursor-pointer'>Account Information</li>
+                        <li onClick={stepThree} className='font-plus-jakarta text-[16px] lg:text-xl cursor-pointer  font-medium'>Online</li>
+                        <li onClick={stepFour} className='font-plus-jakarta text-[16px] lg:text-xl cursor-pointer font-medium'>Business Details</li>
                     </ul>
                 </div>
                 <section className='flex justify-center'>
@@ -95,7 +97,7 @@ const BusinessStep2 = ({ stepThree, formik }) => {
                                 type="text"
                                 name='business_name'
                                 id='business_name'
-                                className='py-4 mx-6 border-2 border-[#D0D5DD] rounded-md mb-4 px-2'
+                                className='py-4 mx-6 border-2 border-[#D0D5DD] rounded-md mb-4 px-2 focus:outline-none'
                                 placeholder='Business Name'
                                 onChange={formik.handleChange}
                                 value={formik.values.business_name}
@@ -110,7 +112,7 @@ const BusinessStep2 = ({ stepThree, formik }) => {
                                     type="date"
                                     name='founding_date'
                                     id='founding_date'
-                                    className='py-4 mx-6 border-2 border-[#D0D5DD] rounded-md mb-4 px-2'
+                                    className='py-4 mx-6 border-2 border-[#D0D5DD] rounded-md mb-4 px-2 focus:outline-none'
                                     placeholder='Founding Date'
                                     onChange={formik.handleChange}
                                     value={formik.values.founding_date}
@@ -122,7 +124,7 @@ const BusinessStep2 = ({ stepThree, formik }) => {
 
                             <label htmlFor="business_description" className='mt-4 mx-6 font-semibold'>Description</label>
                             <textarea
-                                className='py-1 mx-6 border-2 border-[#D0D5DD] rounded-md mb-4 px-2'
+                                className='py-1 mx-6 border-2 border-[#D0D5DD] rounded-md mb-4 px-2 focus:outline-none'
                                 id="business_description"
                                 name="business_description"
                                 onChange={formik.handleChange}
@@ -195,7 +197,7 @@ const BusinessStep2 = ({ stepThree, formik }) => {
                                 <select
                                     id="industry"
                                     name="industry"
-                                    className="block appearance-none w-[95%] mb-8 bg-white rounded-lg py-4 mx-6 px-4 pr-8 border-2 border-[#D0D5DD] text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+                                    className="block appearance-none w-[90%] lg:w-[95%] mb-8 bg-white rounded-lg py-4 mx-6 px-4 pr-8 border-2 border-[#D0D5DD] text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
                                     onChange={formik.handleChange}
                                     value={formik.values.industry}
                                 >
@@ -225,8 +227,9 @@ const BusinessStep2 = ({ stepThree, formik }) => {
                                     </svg>
                                 </div>
                             </div>
-
-                            <button type="button" onClick={stepThree} className='w-[90%] py-2 mx-8 mb-5 bg-blue-600 text-white rounded-lg'>NEXT</button>
+                            <div className="flex justify-center">
+                            <button type="button" onClick={stepThree} className='w-[40%] py-2 mx-8 mb-5 bg-blue-600 text-white rounded-lg'>NEXT</button>
+                            </div>
                         </form>
                         <Toaster />
                     </div>

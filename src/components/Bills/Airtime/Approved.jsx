@@ -16,7 +16,7 @@ const Approved = ({active, handleErrorPage}) => {
                 </div> 
                 <div className='flex justify-center flex-col lg:flex-row lg:gap-5 my-4'>
                 <button onClick={()=>router.push('/dashboard')} type='button' className="p-3 w-[95%] lg:w-[50%] font-poppins text-sm font-semibold leading-5 my-3 rounded-lg border border-[#6196F9] text-[#6196F9]">  
-                    Share Receipt  
+                    Close
                 </button>  
                 <button onClick={()=>router.back()} type='button' className="p-3  w-[95%] lg:w-[50%]   font-poppins my-3 rounded-lg bg-blue-500 text-white">  
                     Done  

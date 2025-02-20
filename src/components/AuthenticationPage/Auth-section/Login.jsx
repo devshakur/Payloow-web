@@ -10,6 +10,7 @@ import Cookies from 'js-cookie'
 import axios from 'axios'
 import { endpoints } from '../../../api/Endpoint'
 import { toast, Toaster } from 'react-hot-toast'
+import PasswordInput from './PasswordInput'
 
 
 
@@ -42,8 +43,8 @@ function Login() {
 			password: ''
 		},
 		validationSchema: Yup.object({
-			phone: Yup.string().matches(/^[0-9]+$/, 'Phone number must be digits').required('Required'),
-			password: Yup.string().required('Required')
+			phone: Yup.string().matches(/^[0-9]+$/, 'Phone number must be digits').required('required***'),
+			password: Yup.string().required('required***')
 		}),
 		onSubmit: async (values, { setSubmitting }) => {
 			try {
@@ -99,7 +100,7 @@ function Login() {
 					<h6 className='flex justify-center text-lg font-plus-jakarta font-medium text-primary-text'>Welcome back to payloow</h6>
 					<form onSubmit={formik.handleSubmit} className='grid gap-4 mt-8'>
 						<div>
-							<label htmlFor='phone' className='text-primary-text text-[14px] font-medium'>Phone Number</label>
+							<label htmlFor='phone' className='text-primary-text text-[14px] font-medium'>Phone Number<span className='text-red-700'>*</span></label>
 							<input
 								required
 								id="outlined-required-3"
@@ -110,12 +111,15 @@ function Login() {
 								className='input-field'
 							/>
 							{formik.touched.phone && formik.errors.phone ? (
-								<div>{formik.errors.phone}</div>
+								<div style={{ color: 'red', marginTop: "-2vh" }}>{formik.errors.phone}</div>
 							) : null}
 						</div>
 
-						<div>
-							<label htmlFor='password' className='text-primary-text text-[14px] font-medium'>Password</label>
+						<PasswordInput formik={formik} />
+
+
+						{/* <div>
+							<label htmlFor='password' className='text-primary-text text-[14px] font-medium'>Password<span className='text-red-700'>*</span></label>
 							<input
 								required
 								id="outlined-required-4"
@@ -127,9 +131,9 @@ function Login() {
 								className='input-field'
 							/>
 							{formik.touched.password && formik.errors.password ? (
-								<div>{formik.errors.password}</div>
+								<div style={{ color: 'red', marginTop: "-2vh" }}>{formik.errors.password}</div>
 							) : null}
-						</div>
+						</div> */}
 
 						<button type="submit" disabled={formik.isSubmitting} className="h-[55px] bg-[#3369F4] rounded-lg p-4 text-white py-2">
 							{formik.isSubmitting ? 'Verifying...' : 'Login'}

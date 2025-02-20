@@ -115,7 +115,7 @@ const DashboardHome = () => {
                 <div className="available-balance text-white p-6 rounded-lg flex flex-col justify-between ">
                   <div className="space-y-3">
                     <p className="font-medium text-2xl">Available Balance</p>
-                    <p className="text-3xl font-bold"> ₦{(currentUser?.wallet?.balance ?? 0).toLocaleString()}</p>
+                    <p className="text-3xl font-bold font-plus-jakarta"> <span className="text-[16px]">₦</span>{(currentUser?.wallet?.balance ? currentUser.wallet.balance  : '0.00').toLocaleString()}</p>
                   </div>
                   <div>
                     <p className="flex items-center space-x-3">
@@ -137,7 +137,7 @@ const DashboardHome = () => {
                 <div className="loan-balance text-white p-6 rounded-lg flex flex-col justify-between ">
                   <div className="space-y-3">
                     <p className="font-medium text-2xl">Loan Balance</p>
-                    <p className="text-3xl font-bold">₦2,000,000.00</p>
+                    <p className="text-3xl font-bold"><span className="text-[16px]">₦</span>{(currentUser?.wallet?.loan?.balance ? currentUser.wallet.loan.balance  : '0.00').toLocaleString()}</p>
                   </div>
 
                   <div className="flex md:flex-row flex-col items-center gap-3">

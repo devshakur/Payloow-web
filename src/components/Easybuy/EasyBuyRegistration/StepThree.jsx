@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useRouter } from '../../../Routes/router'
+import { Link } from 'react-router-dom';
 
 
 const StepThree = ({ formik }) => {
@@ -23,7 +24,7 @@ const StepThree = ({ formik }) => {
                 <div className='bg-white w-[90%] max-w-3xl rounded-xl shadow-lg pb-10'>
                     <form onSubmit={handleSubmit} className='my-3 flex flex-col gap-4'>
                         <div className='flex flex-col'>
-                            <label htmlFor="employment" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Employment Status</label>
+                            <label htmlFor="employment" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Employment Status<span className='text-red-700'>*</span></label>
                             <select
                                 name='employmentStatus'
                                 id='employmentStatus'
@@ -43,7 +44,7 @@ const StepThree = ({ formik }) => {
                             ) : null}
                         </div>
                         <div className='flex flex-col'>
-                            <label htmlFor="income" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Monthly/ Annual Income</label>
+                            <label htmlFor="income" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Monthly/ Annual Income<span className='text-red-700'>*</span></label>
                             <input
                                 name='income'
                                 id='income'
@@ -58,7 +59,7 @@ const StepThree = ({ formik }) => {
                             ) : null}
                         </div>
                         <div className='flex flex-col'>
-                            <label htmlFor="easyBuyRole" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Role</label>
+                            <label htmlFor="easyBuyRole" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Role<span className='text-red-700'>*</span></label>
                             <select
                                 name='easyBuyRole'
                                 id='easyBuyRole'
@@ -89,13 +90,15 @@ const StepThree = ({ formik }) => {
                                 onChange={formik.handleChange}
                                 checked={formik.values.termsAccepted}
                             />
-                            <p>I have read and agree to the website terms and conditions *</p>
+                            <p>I have read and agree to the website <span className='text-blue-500 cursor-pointer' onClick={()=>router.push('/support')}>terms</span> and conditions *</p>
                         </div>
                         {formik.touched.termsAccepted && formik.errors.termsAccepted ? (
                             <div className="text-red-500">{formik.errors.termsAccepted}</div>
                         ) : null}
-                        <div className='bg-blue-800 py-2 flex justify-center mx-6'>
+                        <div className='flex justify-center'>
+                        <div className='bg-blue-800 w-[40%] py-2 flex justify-center rounded-md shadow-lg mx-6'>
                             <button type="submit" className='text-white'>Submit</button>
+                        </div>
                         </div>
                     </form>
                 </div>

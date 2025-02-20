@@ -4,7 +4,7 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { toast, Toaster } from 'react-hot-toast';
 import { useRouter } from '../../../../Routes/router';
 
-const BusinessStep4 = ({ formik }) => {
+const BusinessStep4 = ({ formik,nextStep, stepThree, loading, setLoading }) => {
     const { setFieldValue, values } = formik;
     const router = useRouter();
 
@@ -30,7 +30,8 @@ const BusinessStep4 = ({ formik }) => {
 
    
     const handleSubmit = async (event) => {
-        event.preventDefault();
+        setLoading(true)
+            event.preventDefault();
       
        
             const formData = new FormData();
@@ -40,18 +41,21 @@ const BusinessStep4 = ({ formik }) => {
             values.growth_plans?.forEach(file => formData.append('growth_plans', file));
             values.loan_requirements?.forEach(file => formData.append('loan_requirements', file));
            
-            await formik.handleSubmit();
-            
-            setTimeout(() => {
-                open();
-            }, 2000);
-
-            setTimeout(() => {
-                router.push('/debtor/dashboard');
-              
+           await formik.handleSubmit();
+           if (formik.isValid && formik.dirty) {
+               setTimeout(() => {
+                toast.success("Business Created Successfully");
+              open();
             }, 4000);
+      
+           }else{
+            toast.error('something went wrong')
+           }        
+        
     };
     
+   
+
 
     return (
         <div>
@@ -60,15 +64,15 @@ const BusinessStep4 = ({ formik }) => {
                     <img alt="Paylow Logo" src="/images/logo.svg" className="h-14 w-auto" />
                 </div>
                 <div className="mt-2">
-                    <p className="font-poppins font-medium text-2xl text-blue-600">Exit</p>
+                    <p onClick={()=>router.back()} className="font-poppins font-medium text-2xl text-blue-600 cursor-pointer">Exit</p>
                 </div>
             </header>
             <main className="bg-blue-50 w-full h-screen">
                 <div className="flex justify-center">
                     <ul className="flex gap-4 my-4 border-b-2 border-blue-500 py-3 px-4">
-                        <li className="font-poppins text-xl font-medium">Account Information</li>
-                        <li className="font-poppins text-xl font-medium">Online</li>
-                        <li className="font-poppins text-xl font-medium text-blue-600">Business Details</li>
+                        <li onClick={nextStep} className="font-plus-jakarta text-[16px] lg:text-xl font-medium cursor-pointer">Account Information</li>
+                        <li onClick={stepThree} className="font-plus-jakarta text-[16px] lg:text-xl font-medium cursor-pointer">Online</li>
+                        <li className="font-plus-jakarta text-[16px] lg:text-xl font-medium text-blue-600 cursor-pointer">Business Details</li>
                     </ul>
                 </div>
                 <section className="flex justify-center">
@@ -120,7 +124,7 @@ const BusinessStep4 = ({ formik }) => {
 
                             <div className="flex justify-center">
                                 <button type="submit" className="w-[50%] py-3 my-5 bg-blue-600 text-white rounded-lg">
-                                    Submit
+                                    {loading ? 'Submitting...' :'Submit'}
                                 </button>
                             </div>
                         </form>
@@ -139,8 +143,8 @@ const BusinessStep4 = ({ formik }) => {
                                                 Congratulations! Your business is now set up and ready to go. Start adding loan details to attract investors and take your business to the next level.
                                             </p>
                                             <div className="w-full py-5 mt-4 gap-4 flex justify-center">
-                                                <button className="w-full py-2 rounded-md border border-blue-400 text-blue-600">Add Loan</button>
-                                                <button onClick={close} className="w-full rounded-md bg-blue-500 text-white">
+                                                <button onClick={()=>router.push('/debtor/loans')} className="w-full py-2 rounded-md border border-blue-400 text-blue-600 cursor-pointer">Add Loan</button>
+                                                <button onClick={()=>router.reload()} className="w-full rounded-md bg-blue-500 text-white cursor-pointer">
                                                     Done
                                                 </button>
                                             </div>

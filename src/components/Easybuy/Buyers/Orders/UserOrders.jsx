@@ -91,22 +91,22 @@ const filteredOrders = allOrders.filter(order => {
     return (
         <BuyersLayoutGen>
             <div>
-                <div className='w-full flex justify-center cursor-pointer'>
-                    <ul className='flex gap-4 border-b border-gray-900 p-3 text-lg'>
+                <div className='w-full flex justify-start cursor-pointer'>
+                    <ul className='flex gap-8 border-gray-900 p-3 text-lg mb-5'>
                         <li
-                            className={selectedStatus === 'All' ? 'text-blue-600' : ''}
+                            className={selectedStatus === 'All' ? 'bg-black text-white p-2 shadow-md rounded-md' : 'text-blue-600 bg-blue-100 p-2 shadow-md rounded-md'}
                             onClick={() => setSelectedStatus('All')}
                         >
                             All Orders
                         </li>
                         <li
-                            className={selectedStatus === 'pending' ? 'text-blue-600' : ''}
+                            className={selectedStatus === 'pending' ? 'bg-black text-white p-2 shadow-md rounded-md' : 'text-blue-600 bg-blue-100 p-2 shadow-md rounded-md'}
                             onClick={() => setSelectedStatus('pending')}
                         >
                             Pending
                         </li>
                         <li
-                            className={selectedStatus === 'paid' ? 'text-blue-600' : ''}
+                            className={selectedStatus === 'paid' ? 'bg-black text-white p-2 shadow-md rounded-md' : 'text-blue-600 bg-blue-100 p-2 shadow-md rounded-md'}
                             onClick={() => setSelectedStatus('paid')}
                         >
                             Shipped
@@ -116,7 +116,7 @@ const filteredOrders = allOrders.filter(order => {
 
                 <div className='flex justify-between'>
                     <div className='lg:flex items-center gap-4'>
-                        <button className='border border-blue-800 px-2 lg:px-5 rounded-lg py-2 my-3 flex justify-start items-center gap-3'>
+                        <button className='hidden border border-blue-800 px-2 lg:px-5 rounded-lg py-2 my-3 md:flex justify-start items-center gap-3'>
                             <span><IoFilterOutline className='text-blue-800 w-7 h-7' /></span>
                             <p className='text-lg text-blue-700'> Filters</p>
                         </button>
@@ -154,7 +154,7 @@ const filteredOrders = allOrders.filter(order => {
                     
                     </div>
                     </div>
-                    <p className='font-poppins font-medium flex items-center gap-2 text-lg text-[#101928]'>
+                    <p className='hidden font-poppins font-medium md:flex items-center gap-2 text-lg text-[#101928]'>
                         Sort by: <span className='flex gap-2 items-center text-blue-800 font-poppins font-medium'>Most Recent <IoIosArrowDown /></span>
                     </p>
                 </div>
@@ -181,37 +181,37 @@ const filteredOrders = allOrders.filter(order => {
                             >
                                 <div className="flex justify-center lg:justify-between lg:items-center flex-col lg:flex-row">
                                     <div className="flex justify-between w-full lg:w-[12%] mt-3">
-                                        <p className="font-poppins text-lg font-semibold lg:hidden">Product:</p>
+                                        <p className="font-plus-jakarta text-lg font-medium lg:hidden">Product:</p>
                                         <div className="text-sm flex gap-2 justify-start ml-[-1rem] font-poppins font-semibold lg:truncate">
                                             <img src={item.img} alt="phone" style={{ width: '30px', height: '30px' }} />
                                             <p>{item.productName}</p>
                                         </div>
                                     </div>
                                     <div className="flex justify-between lg:w-auto mt-3">
-                                        <p className="font-poppins text-lg font-semibold lg:hidden">Product ID:</p>
-                                        <span className="text-sm font-poppins font-semibold lg:ml-[-3rem] lg:max-w-[8rem] lg:truncate">
+                                        <p className="font-plus-jakarta text-lg font-medium lg:hidden">Product ID:</p>
+                                        <span className="text-sm font-plus-jakarta font-medium   lg:ml-[-3rem] lg:max-w-[8rem] lg:truncate">
                                             {item.ProductId}
                                         </span>
                                     </div>
                                     <div className="flex justify-between w-full lg:w-auto mt-3">
-                                        <p className="font-poppins text-lg font-semibold lg:hidden">Price:</p>
-                                        <span className="font-poppins text-sm font-semibold lg:ml-[-3.5rem]">{item.productPrice}</span>
+                                        <p className="font-plus-jakarta text-lg font-medium lg:hidden">Price:</p>
+                                        <span className=" text-sm font-plus-jakarta font-medium  lg:ml-[-3.5rem]">{item.productPrice}</span>
                                     </div>
                                     <div className="flex justify-between w-full lg:w-auto mt-3">
-                                        <p className="font-poppins text-lg font-semibold lg:hidden">Order Date:</p>
-                                        <span className="text-sm font-poppins font-semibold lg:relative lg:right-10 xl:right-14">{item.orderDate}</span>
+                                        <p className="font-plus-jakarta text-lg font-medium lg:hidden">Order Date:</p>
+                                        <span className="text-sm font-plus-jakarta font-medium  lg:relative lg:right-10 xl:right-14">{item.orderDate}</span>
                                     </div>
                                     <div className="flex justify-between w-full lg:w-auto mt-3">
-                                        <p className="font-poppins text-lg font-semibold lg:hidden">Status:</p>
+                                        <p className="font-plus-jakarta text-lg font-medium lg:hidden">Status:</p>
                                         <span
-                                            className={`text-sm font-poppins font-semibold lg:relative right-9 xl:right-20 ${item.productStatus.toLowerCase() === 'pending' ? 'text-red-500' : 'text-green-500'}`}
+                                            className={`text-sm font-plus-jakarta font-medium lg:relative right-9 xl:right-20 ${item.productStatus.toLowerCase() === 'pending' ? 'text-red-500' : 'text-green-500'}`}
                                         >
                                             {item.productStatus}
                                         </span>
                                     </div>
 
                                     <div className="flex justify-between w-full lg:w-auto mt-3">
-                                        <p className="font-poppins text-lg font-semibold lg:hidden">Action:</p>
+                                        <p className="font-plus-jakarta text-lg font-medium lg:hidden">Action:</p>
                                         <span className="font-poppins text-sm font-semibold lg:relative lg:right-9 xl:right-24">...</span>
                                     </div>
                                 </div>

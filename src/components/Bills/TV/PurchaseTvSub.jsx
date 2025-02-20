@@ -79,11 +79,11 @@ const PurchaseTvSub = ({ handleNext, formik }) => {
     <div>
       <main>
         <div className="w-[100vw] md:-mt-14 flex justify-center lg:-ml-[-10vw] xl:justify-center">
-          <div className="h-auto w-[95%] md:w-[400px] lg:w-[650px] bg-[#FFFFFF] pb-4 mx-4 shadow-md rounded-xl lg:p-8">
-            <h4 className="flex justify-center text-xl leading-5 font-poppins font-[600] my-4 text-[#212121]">
+          <div className="h-auto w-[95%] md:w-[530px] lg:w-[650px] bg-[#FFFFFF] pb-4 mx-4 shadow-md rounded-xl lg:p-8">
+            <h4 className="flex justify-center text-xl leading-5 font-plus-jakarta font-[600] my-2 text-[#212121]">
               Pay Tv Subcription
             </h4>
-              <h4 className="text-lg leading-5 font-poppins text-[#000000] font-[550] mx-1">
+              <h4 className="text-lg leading-5 font-plus-jakarta text-[#000000] font-[550] mx-1">
                 Most recent
               </h4>
             <article className="mx-3 my-3">
@@ -134,7 +134,7 @@ const PurchaseTvSub = ({ handleNext, formik }) => {
                       width: '95%',
                       fontWeight: '700',
                       marginBottom: '10px',
-                      padding: '12px',
+                      padding: '8px',
                     }),
                   }}
                 />
@@ -156,7 +156,7 @@ const PurchaseTvSub = ({ handleNext, formik }) => {
                       ...provided,
                       width: '95%',
                       fontWeight: '700',
-                      padding: '12px',
+                      padding: '8px',
                     }),
                   }}
                 />
@@ -172,7 +172,7 @@ const PurchaseTvSub = ({ handleNext, formik }) => {
                 name="smartcard_number"
                 {...formik.getFieldProps('smartcard_number')}
                 autoComplete="off"
-                className="border-2 p-5 w-[95%] rounded-lg font-semibold text-[16px] text-[#101928] pl-2 mb-2"
+                className="border-2 p-3 shadow w-[95%] rounded-lg font-semibold text-[16px] text-[#101928] pl-2 mb-2 focus:outline-none"
               />
               {formik.touched.smartcard_number && formik.errors.smartcard_number && (
                 <div className="text-red-500">{formik.errors.smartcard_number}</div>
@@ -185,7 +185,7 @@ const PurchaseTvSub = ({ handleNext, formik }) => {
                 name='phone'
                 {...formik.getFieldProps('phone')}
                 autoComplete='off'
-                className='border-2 p-5 w-[95%] rounded-lg font-semibold text-[16px] text-[#101928] pl-2 mb-2'
+                className='border-2 p-3 shadow w-[95%] rounded-lg font-semibold text-[16px] text-[#101928] pl-2 mb-2 focus:outline-none'
               />
               {formik.touched.phone && formik.errors.phone && (
                 <div className="text-red-500">{formik.errors.phone}</div>

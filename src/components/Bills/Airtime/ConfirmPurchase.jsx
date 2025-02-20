@@ -8,9 +8,19 @@ const ConfirmPurchase = ({ active, setActive, formik }) => {
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
   const [balances, setBalances] = useState(0)
+  const [userBalance, setUserBalance] = useState(0)
   const { BuyAirtime, UserBalance, ConfirmPin, UserDetails, } = useBills();
 
   const { phone, network_id, amount, pin } = formik.values;
+  useEffect(() => {
+    const fetchBalance = async () => {
+        const response = await UserBalance();
+        const fetchedBalance = response.data.data.data.balance;
+        setUserBalance(fetchedBalance);  
+    };
+
+    fetchBalance();
+}, []); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,19 +111,19 @@ const ConfirmPurchase = ({ active, setActive, formik }) => {
   return (
     <div className="grid items-center justify-center w-full">
       <div className="w-screen flex justify-center lg:justify-center lg:-ml-[-10vw] 2xl:ml-[8vw]">
-        <div className="w-full mx-4 h-[550px] md:w-[430px] lg:h-[490px] lg:w-[600px] 2xl:w-[700px] bg-[#FFFFFF] pb-[20px] shadow-md rounded-lg">
-          <h4 className="flex justify-center text-lg leading-7 font-poppins font-bold my-4">
+        <div className="w-full mx-4 h-[500px] md:w-[530px] lg:h-[490px] lg:w-[600px] 2xl:w-[700px] bg-[#FFFFFF] pb-[20px] shadow-lg rounded-lg">
+          <h4 className="flex justify-center text-lg leading-7 font-plus-jakarta font-bold my-4">
             Confirm Airtime Purchase
           </h4>
-          <h6 className="flex justify-center font-bold text-[20px] font-poppins leading-5 -mt-3">
+          <h6 className="flex justify-center font-semibold text-[20px] font-plus-jakarta leading-5 -mt-3">
             {amount}
           </h6>
           <section className="h-[97px] w-[95%] mx-2 mt-9">
             <div className="flex">
-              <h6 className="text-sm w-[83%] font-poppins font-[400] text-[#1D2433CC]">
-                Product Name
+              <h6 className="text-md w-[83%] font-plus-jakarta font-semibold text-[#1D2433CC]">
+               Airtime
               </h6>
-              <div className="w-[70%] flex justify-end gap-3 ml-6">
+              <div className="w-[70%] flex justify-end  ml-6">
                 <img src={image} className="w-6 h-6" alt="" />
                 <p className="text-[13px] font-medium font-poppins leading-5 mt-1 text-[#1D2433CC]">
                   {network_id} Airtime.
@@ -121,32 +131,32 @@ const ConfirmPurchase = ({ active, setActive, formik }) => {
               </div>
             </div>
             <div className="flex justify-between my-1">
-              <p className="text-[13px] font-medium font-poppins leading-5 mt-1 text-[#1D2433CC]">
+              <p className="text-md font-plus-jakarta font-semibold leading-5 mt-1 text-[#1D2433CC]">
                 Amount
               </p>
-              <p className="font-normal text-sm font-poppins leading-5 mr-11 text-[#1D2433CC]">
+              <p className="font-normal text-sm font-poppins leading-5 mr-8 text-[#1D2433CC]">
                 {amount}
               </p>
             </div>
             <div className="flex justify-between">
-              <p className="font-normal text-sm font-poppins leading-5 text-[#1D2433CC]">
+              <p className=" text-md font-plus-jakarta font-semibold leading-5 text-[#1D2433CC]">
                 Beneficiary
               </p>
-              <p className="font-normal text-sm font-poppins leading-5 text-[#1D2433CC]">
+              <p className="font-normal text-sm font-poppins leading-5  text-[#1D2433CC]">
                 {phone}
               </p>
             </div>
             <div className="flex justify-center">
-              <p className="w-[90%] border-2 mt-6 border-dashed"></p>
+              <p className="w-[99%] border-2 mt-6 border-dashed"></p>
             </div>
             <div className="my-5">
-              <div className="h-[70px] w-[95%] flex justify-between items-center">
+              <div className=" w-[99%] flex justify-between items-center">
                 <div className="flex mx-1 gap-1">
-                  <div className="bg-[#F1F3F9] rounded-[50%] p-4">
+                  <div className="bg-[#F1F3F9] shadow-md rounded-[50%] p-4">
                     <Wallet size="24" color="#1D2433CC" />
                   </div>
                   <p className="mt-5 font-poppins font-normal text-sm leading-5">
-                    Wallet (₦{balances || 0})
+                  Wallet (₦{userBalance || 0})
                   </p>
                 </div>
                 <div className="mt-1 flex items-center gap-1">
@@ -162,7 +172,7 @@ const ConfirmPurchase = ({ active, setActive, formik }) => {
                 htmlFor="pin"
                 className="text-[#101928] text-[14px] font-semibold -pb-8"
               >
-                Pin
+               Enter Your Pin<span className='text-red-700'>*</span>
               </label>
               <input
                 id="outlined-required-5"
@@ -172,14 +182,14 @@ const ConfirmPurchase = ({ active, setActive, formik }) => {
                 required
                 autoComplete="off"
                 {...formik.getFieldProps("pin")}
-                className="border-2 h-[55px] w-[95%] rounded-lg text-[16px] pl-2"
+                className="border-2 border-gray-300 shadow-md focus:outline-none p-3 w-[95%] rounded-lg text-[16px] pl-2"
               />
               <div className="flex justify-center w-[100%] my-5">
                 <button
                   type="submit"
-                  className="h-[46px] w-[95%] font-poppins my-3 rounded-lg bg-blue-500 text-white"
+                  className="p-2 w-[45%] font-plus-jakarta my-3 rounded-lg bg-blue-500 text-white text-md"
                 >
-                  {loading ? "Loading..." : "Confirm & pay"}
+                  {loading ? "Processing..." : "Confirm & pay"}
                 </button>
               </div>
             </form>

@@ -68,7 +68,10 @@ export default function ImageUploadModal({ isOpened, closes, closeModal, formik,
             >
               <DialogTitle as="h3" className="text-lg font-medium text-gray-600 flex justify-between">
                <h3> Upload Product Images</h3>
-               <h5 onClick={closeModal} className='cursor-pointer'>X</h5>
+               <div className='flex justify-center items-center  border-2 border-gray-950 w-7 h-7 rounded-[50%]'>
+               <h5 onClick={closeModal} className='cursor-pointer p-1'>X</h5>
+
+               </div>
               </DialogTitle>
               <form onSubmit={handleSubmit}>
                 <div className="mt-4">
@@ -130,7 +133,7 @@ export default function ImageUploadModal({ isOpened, closes, closeModal, formik,
                     className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm font-semibold text-white focus:outline-none hover:bg-gray-600 ml-2"
                     onClick={closes}
                   >
-                    Close
+                   Verify
                   </Button>
                 </div>
               </form>

@@ -5,16 +5,20 @@ import { useRouter } from '../../../../Routes/router';
 const InstallmentModal = ({ isOpen, setIsOpen, selectedOrder }) => {
   const router = useRouter();
   const [productName, setProductName] = useState('');
+  const [productImg, setProductImg] = useState('');
   const [totalAmount, setTotalAmount] = useState(0);
   const [remainingBalance, setRemainingBalance] = useState(0);
   const [dueDates, setDueDates] = useState([]);
   const [status, setStatus] = useState({})
   const [totalPaid, setTotalPaid] = useState([])
   const [pendingAmount, setPendingAmount] = useState(0);
+  
 
   useEffect(() => {
     if (selectedOrder) {
+      console.log(selectedOrder);
       setProductName(selectedOrder.productName || 'Product Name Not Available');
+      setProductImg(selectedOrder.productImg)
       setTotalAmount(selectedOrder.totalAmount || 0);
       setRemainingBalance(selectedOrder.remainingBalance || 0);
        setStatus(selectedOrder.nextDueDetails || 'Pending')
@@ -55,7 +59,7 @@ const InstallmentModal = ({ isOpen, setIsOpen, selectedOrder }) => {
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
         <DialogBackdrop className="fixed inset-0 bg-black/30" />
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-          <DialogPanel className="w-[50rem] space-y-4 bg-white p-12">
+          <DialogPanel className="w-[50rem] space-y-4 bg-white px-12">
             <DialogTitle className="font-bold flex justify-between">
               <h3>Item Details</h3>
               <button onClick={() => setIsOpen(false)}>X</button>
@@ -64,7 +68,7 @@ const InstallmentModal = ({ isOpen, setIsOpen, selectedOrder }) => {
               <div className="flex items-center justify-between gap-5 border border-gray-700 px-4">
                 <div className="flex items-center">
                   <div>
-                    <img src="/images/iphon-green.png" alt="iphone" />
+                    <img src={productImg || "/images/iphon-green.png"} alt="iphone" />
                   </div>
                   <p className="font-poppins text-xl font-medium">{productName}</p>
                 </div>

@@ -1,44 +1,50 @@
-import React, { Suspense } from "react";
+import React, { Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Loader } from "../AuthContext/Loader.jsx";
-import App from "../components/App.jsx";
-import ErrorPage from "../ErrorPage/ErrorPage.jsx";
-import DashboardHome from "../components/Dashboard/DashboardHome.jsx";
-import TutorDashboard from "../components/E-Learning/Tutor/Dashboard.jsx";
-import StudentDashboard from "../components/E-Learning/Student/Dashboard.jsx";
-import CompleteProfile from "../components/E-Learning/Tutor/CompleteProfile.jsx";
-import Courses from "../components/E-Learning/Tutor/Courses.jsx";
-import CreateCourse from "../components/E-Learning/Tutor/CreateCourse.jsx";
-import Settings from "../components/Dashboard/Settings.jsx";
-import Messages from "../components/E-Learning/Tutor/Messages.jsx";
-import CreateQuiz from "../components/E-Learning/Tutor/CreateQuiz.jsx";
-import AllCourses from "../components/E-Learning/Tutor/AllCourses.jsx";
-import CourseDetails from "../components/E-Learning/Tutor/CourseDetails.jsx";
-import EditCourse from "../components/E-Learning/Tutor/AddSectionsToCourse.jsx";
-import AirtimePurchase from "../components/Bills/Airtime/AirtimePurchase.jsx";
-import DataPurchase from '../components/Bills/Data/Data.jsx'
-import TvSub from "../components/Bills/TV/TvSub.jsx";
-import Electricity from "../components/Bills/Electricity/Electricity.jsx";
-import BuyCourse from "../components/E-Learning/Student/BuyCourse.jsx";
-import Investment from "../components/Investment/Investment.jsx";
-import DebtorDashboard from "../components/Investment/Debtor/DebtorDashboard.jsx";
-import BusinessParent from "../components/Investment/Debtor/Business/BusinessParent.jsx";
-import Loans from "../components/Investment/Loans/Loans.jsx";
-import Request from "../components/Investment/Request/Request.jsx";
-import Investor from "../components/Investment/Investor/Investor.jsx";
-import InvestorBusiness from "../components/Investment/Investor/InvestorBusiness.jsx";
-import MyInvestment from "../components/Investment/Investor/MyInvestment.jsx";
-import Cart from "../components/E-Learning/Student/Cart.jsx";
-// import MyCourse from "../components/E-Learning/Student/MyCourse.jsx";
-import StudentMessages from "../components/E-Learning/Student/StudentMessages.jsx";
-import Support from "../components/Dashboard/Support.jsx";
-import SingleCourse from "../components/E-Learning/Student/SingleCourse.jsx";
+
+const App = lazy(() => import("../components/App.jsx"));
+const ErrorPage = lazy(() => import("../ErrorPage/ErrorPage.jsx"));
+const DashboardHome = lazy(() => import("../components/Dashboard/DashboardHome.jsx"));
+const TutorDashboard = lazy(() => import("../components/E-Learning/Tutor/Dashboard.jsx"));
+const StudentDashboard = lazy(() => import("../components/E-Learning/Student/Dashboard.jsx"));
+const CompleteProfile = lazy(() => import("../components/E-Learning/Tutor/CompleteProfile.jsx"));
+const Courses = lazy(() => import("../components/E-Learning/Tutor/Courses.jsx"));
+const CreateCourse = lazy(() => import("../components/E-Learning/Tutor/CreateCourse.jsx"));
+const Settings = lazy(() => import("../components/Dashboard/Settings.jsx"));
+const Messages = lazy(() => import("../components/E-Learning/Tutor/Messages.jsx"));
+const CreateQuiz = lazy(() => import("../components/E-Learning/Tutor/CreateQuiz.jsx"));
+const AllCourses = lazy(() => import("../components/E-Learning/Tutor/AllCourses.jsx"));
+const CourseDetails = lazy(() => import("../components/E-Learning/Tutor/CourseDetails.jsx"));
+const EditCourse = lazy(() => import("../components/E-Learning/Tutor/AddSectionsToCourse.jsx"));
+const AirtimePurchase = lazy(() => import("../components/Bills/Airtime/AirtimePurchase.jsx"));
+const DataPurchase = lazy(() => import("../components/Bills/Data/Data.jsx"));
+const TvSub = lazy(() => import("../components/Bills/TV/TvSub.jsx"));
+const Electricity = lazy(() => import("../components/Bills/Electricity/Electricity.jsx"));
+const BuyCourse = lazy(() => import("../components/E-Learning/Student/BuyCourse.jsx"));
+const Investment = lazy(() => import("../components/Investment/Investment.jsx"));
+const DebtorDashboard = lazy(() => import("../components/Investment/Debtor/DebtorDashboard.jsx"));
+const BusinessParent = lazy(() => import("../components/Investment/Debtor/Business/BusinessParent.jsx"));
+const Loans = lazy(() => import("../components/Investment/Loans/Loans.jsx"));
+const Request = lazy(() => import("../components/Investment/Request/Request.jsx"));
+const Investor = lazy(() => import("../components/Investment/Investor/Investor.jsx"));
+const InvestorBusiness = lazy(() => import("../components/Investment/Investor/InvestorBusiness.jsx"));
+const MyInvestment = lazy(() => import("../components/Investment/Investor/MyInvestment.jsx"));
+const Cart = lazy(() => import("../components/E-Learning/Student/Cart.jsx"));
+// const MyCourse = lazy(() => import("../components/E-Learning/Student/MyCourse.jsx")); // Uncomment if needed
+const StudentMessages = lazy(() => import("../components/E-Learning/Student/StudentMessages.jsx"));
+const Support = lazy(() => import("../components/Dashboard/Support.jsx"));
+const SingleCourse = lazy(() => import("../components/E-Learning/Student/SingleCourse.jsx"));
+
 //Datas
-import { phonesItems } from "../components/Easybuy/Buyers/product.js";
-import { solarItems } from "../components/Easybuy/Buyers/product.js";
-import ElearningCheckout from "../components/E-Learning/Student/ElearningCheckout.jsx";
-import FlutterSuccessPurchaseModal from "../components/Easybuy/FlutterSuccessPurchaseModal.jsx";
-import SuccessPage from "../components/AuthenticationPage/password-issues/SuccessPage.jsx";
+const phonesItems = React.lazy(() => import("../components/Easybuy/Buyers/product.js"));
+const solarItems = React.lazy(() => import("../components/Easybuy/Buyers/product.js"));
+const ElearningCheckout = React.lazy(() => import("../components/E-Learning/Student/ElearningCheckout.jsx"));
+const FlutterSuccessPurchaseModal = React.lazy(() => import("../components/Easybuy/FlutterSuccessPurchaseModal.jsx"));
+const SuccessPage = React.lazy(() => import("../components/AuthenticationPage/password-issues/SuccessPage.jsx"));
+const AdminDashboard = React.lazy(() => import("../components/Admin/AdminDashboard.jsx"));
+const Admin_E_learning = React.lazy(() => import("../components/Admin/Admin_E_learning.jsx"));
+const Admin_Investment = React.lazy(() => import("../components/Admin/Admin_Investment.jsx"));
+
 //Registration
 const Regsiter = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Register.jsx'))
 const Login = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Login.jsx'))
@@ -687,6 +693,34 @@ export const router = createBrowserRouter([
   element: (
     <Suspense fallback={<Loader />}>
     <FlutterSuccessPurchaseModal />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+//admin
+{
+  path: "/admin/dashboard",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <AdminDashboard />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/admin/e-learning",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <Admin_E_learning />
+    </Suspense>
+  ),
+  errorElement: <ErrorPage />,
+},
+{
+  path: "/admin/investment",
+  element: (
+    <Suspense fallback={<Loader />}>
+    <Admin_Investment />
     </Suspense>
   ),
   errorElement: <ErrorPage />,

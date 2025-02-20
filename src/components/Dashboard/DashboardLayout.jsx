@@ -26,6 +26,7 @@ import {
 } from "iconsax-react";
 import { RiStockLine } from "react-icons/ri";
 import { useLocation } from "react-router-dom";
+import DefaultProfile from '../Easybuy/Buyers/DefaultProfile'
 import { ToastContainer } from "react-toastify";
 import { Toaster } from "react-hot-toast";
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -33,7 +34,7 @@ const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
   { name: "Easybuy", 
-  href: currentUser?.role === 'Buyer'  ? "/buyers/dashboard"  : currentUser?.role === 'Partner' ? "/partners/dashboard" : "/easybuy/home", 
+   href: currentUser?.role === 'Buyer'  ? "/buyers/dashboard"  : currentUser?.role === 'Partner' ? "/partners/dashboard" : "/easybuy/home", 
   icon: MoneyChange
 },
 
@@ -56,8 +57,8 @@ const action = [
   { name: "Logout", href: "/", icon: LogoutCurve, onclick: () => localStorage.clear() },
 ];
 const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Your profile", href: "/settings" },
+  { name: "Sign out", href: "/" },
 ];
 
 function classNames(...classes) {
@@ -276,16 +277,16 @@ export default function DashboardLayout({ children }) {
                 <label htmlFor="search-field" className="sr-only">
                   Search
                 </label>
-                <SearchNormal
+                {/* <SearchNormal
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"
-                />
+                /> */}
                 <input
                   id="search-field"
                   name="search"
                   type="search"
                   placeholder="Search..."
-                  className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
+                  className="hidden h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
                 />
               </form>
               <div className="flex items-center gap-x-4 lg:gap-x-6">
@@ -298,26 +299,31 @@ export default function DashboardLayout({ children }) {
                 </button>
 
                 {/* Separator */}
-                <div
+                {/* <div
                   aria-hidden="true"
                   className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200"
-                />
+                /> */}
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative">
                   <MenuButton className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    <img
-                      alt=""
-                      src={currentUser ? currentUser.profilePicture : "/images/user.png"}
-                      className="h-8 w-8 rounded-full bg-gray-50"
-                    />
+                    {currentUser ? (
+              <DefaultProfile />
+           
+            ) : (
+              <img
+            alt="User Profile"
+            src={currentUser.profilePicture }
+            className="h-8 w-8 rounded-full bg-gray-50"
+          />
+            ) }
                     <span className="hidden lg:flex lg:items-center">
                       <span
                         aria-hidden="true"
                         className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                       >
-                        {currentUser ? currentUser.firstName : 'John Doe'}
+                        {currentUser ? currentUser.firstName : 'Guest'}
                       </span>
                       <ArrowDown2
                         aria-hidden="true"

@@ -12,24 +12,25 @@ const CheckOutModalCrad = ({isOpen, setIsOpen, handleActive, SubmitCheckOutFlutt
         {/* Full-screen container to center the panel */}
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           {/* The actual dialog panel  */}
-          <DialogPanel className="w-[80%] max-w-2xl space-y-6 bg-white p-6">
+          <DialogPanel className="w-[80%] max-w-xl space-y-6 bg-white p-6 rounded-md">
             <DialogTitle className="font-bold flex justify-between items-center">
-                <h3 className='font-poppins font-semibold text-xl text-[#1D2433]'>Select Installment Plan</h3>
-                <button onClick={()=>setIsOpen(false)} className='font-semibold'>X</button>
+                <h3 className='font-plus-jakarta font-semibold text-xl text-[#1D2433]'>Select Installment Plan</h3>
+                <button onClick={()=>setIsOpen(false)} className='font-semibold font-plus-jakarta'>X</button>
             </DialogTitle>
                 <form action="">
             <Description className='w-full'>
-                    <label htmlFor="plans">Installment Plans</label>
+                    <label htmlFor="plans" className='font-plus-jakarta text-md'>Installment Plans</label>
                     <select 
                     name="plans" 
                     id="plans"
                     value={installmentPlan} // Bind state to the select element
                       onChange={handlePlanChange} 
-                      className='w-[95%] py-2 pl-3 border border-gray-300 focus:outline-none rounded-md'>
+                      className='w-[95%] py-2 pl-3 border-b-2 font-plus-jakarta shadow-md focus:outline-none rounded-md'>
                         <option value="weekly">WEEKLY</option>
                         <option value="monthly">MONTHLY</option>
                         <option value="quarterly">QUARTERLY</option>
                         <option value="annually">ANNUALLY</option>
+                        <option value="">Full Payment</option>
                     </select>
             </Description>
                 </form>

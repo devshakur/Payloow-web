@@ -26,6 +26,7 @@ const Inventory = () => {
   const [phoneStock, setPhoneStock] = useState([])
   const [active, setActive] = useState('zero')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [date, setDate] = useState()
   let [isOpened, setIsOpened] = useState(true)
 
   const initialValues = {
@@ -191,6 +192,10 @@ const Inventory = () => {
     totalStock();
   }, []);
 
+useEffect(()=>{
+ const currentDate = new Date().toLocaleString()
+ setDate(currentDate)
+},[])
 
   return (
     <PartnersLayout>
@@ -310,7 +315,7 @@ const Inventory = () => {
 
       </motion.ul>
 
-      <p className='w-[70%] md:w-[20%] border-b border-[#1D2433A6] p-1'></p>
+      <p className='w-[40%] md:w-[10%] border-b border-[#1D2433A6] p-1'></p>
 
       <motion.div
         className='flex justify-between mt-4'
@@ -330,7 +335,7 @@ const Inventory = () => {
           </div>
         </div>
         <p className='font-poppins font-medium flex items-center gap-2 text-lg text-[#101928]'>
-          Sort by: <span className='flex gap-2 items-center text-blue-800 font-poppins font-medium'>November<IoIosArrowDown /></span>
+          Sort by: <span className='flex gap-2 items-center text-blue-800 font-poppins font-medium'>{date}</span>
         </p>
       </motion.div>
 

@@ -1,6 +1,6 @@
-export const BaseUrl = "https://revo-dv0d.onrender.com/api/v1";
+export const BaseUrl = "https://revo-oait.onrender.com/api/v1/";
  const investmentApiBaseUrl = "https://revo-backend.onrender.com/" 
-
+  
  
 //registration
 export const AuthEndPoints = {
@@ -127,4 +127,16 @@ export const EasyBuyEndpoints = {
   getPartnerCustomers: `${BaseUrl}/easybuy/partner/customers`,
   getPercentages: `${BaseUrl}/easybuy/partner/inventory/percentage-paid`,
   deleteAllCartItem: `${BaseUrl}/easybuy/buyer/orders/delete`
+}
+
+//admin
+export const AdminEndpoints = {
+  getAllDebtors: `${BaseUrl}/investment/admin/debtors`,
+  getAllInvestors: `${BaseUrl}/investment/admin/investors`,
+  getAllBusinesses: `${BaseUrl}/investment/admin/businesses`,
+//E-learning
+getAllTutors: `${BaseUrl}/tutors`,
+getAllCourses: `${BaseUrl}/all/courses`,
+getEnrolledStudents: `${BaseUrl}/students`,
+getVtuBalance: `${BaseUrl}/get-vtu-providers-wallet-balance`,
 }

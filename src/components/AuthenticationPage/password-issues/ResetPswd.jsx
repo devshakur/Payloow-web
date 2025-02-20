@@ -66,13 +66,13 @@ const ResetPswd = () => {
         </div>
           <div className='bg-white w-[90vw] h-[400px] max-w-lg p-6 rounded-lg shadow-lg flex flex-col items-center'>
             <header className='my-9'>
-              <h4 className='flex justify-center font-plus-jakarta text-2xl font-semibold text-primary-text leading-9'>Verification</h4>
+              <h4 className='flex justify-center font-plus-jakarta text-2xl font-semibold text-primary-text leading-9'>Set a New Password</h4>
               <h6 className='flex justify-center text-lg font-plus-jakarta leading-7 font-medium text-primary-text'>enter your new password</h6>
             </header>
             <main className='-mt-3'>
               <form  onSubmit={formik.handleSubmit}>
               <div className='flex flex-col gap-3 w-[55vw]  max-w-md'>
-                <label htmlFor='email' className='text-primary-text text-[16px] font-plus-jakarta font-medium'>New Password</label>
+                <label htmlFor='email' className='text-primary-text text-[14px] font-plus-jakarta font-medium'>Enter new password<span className='text-red-700'>*</span></label>
                 <input
                   id="outlined-required-4"
                   placeholder='Enter new password'

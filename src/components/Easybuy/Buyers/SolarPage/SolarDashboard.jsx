@@ -80,15 +80,17 @@ const SolarDashboard = () => {
           >
             Discover your potential savings! Calculate the energy and cost benefits of switching to solar with our easy-to-use Energy Calculator.
           </motion.p>
+          <div className="flex justify-center">
           <motion.button
             onClick={handleEnergy}
-            className='w-full bg-blue-500 text-white py-3'
+            className='w-[50%] bg-blue-500 rounded-md text-white py-3'
             initial={{ scale: 0.95 }}
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
             Get Started
           </motion.button>
+          </div>
         </div>
 
         <div className='bg-blue-100 p-3 flex flex-col gap-3'>
@@ -108,15 +110,17 @@ const SolarDashboard = () => {
           >
             Design your ideal solar setup! Get an accurate quote and personalized solar system design tailored to your energy needs.
           </motion.p>
+          <div className="flex justify-center">
           <motion.button
             onClick={handleDesign}
-            className='w-full bg-blue-500 text-white py-3'
+            className='w-[50%] rounded-md bg-blue-500 text-white py-3'
             initial={{ scale: 0.95 }}
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
             Get Started
           </motion.button>
+          </div>
         </div>
       </header>
 

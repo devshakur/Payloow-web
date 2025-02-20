@@ -12,9 +12,11 @@ const InvestorFormModal = ({ isOpen, onClose, onRegister }) => {
     const { CreateInvestorAccount } = useInvestment();
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const user = JSON.parse(localStorage.getItem('currentUser'))
+    const phone = `${'+234' + user?.phone}`
     const [investorDetails, setInvestorDetails] = useState({
-        contact_email: '',
-        contact_phone_number: '',
+        contact_email: user?.email || '',
+        contact_phone_number: phone || '',
         industry: [], // Stores selected industries
     });
 

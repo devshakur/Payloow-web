@@ -132,7 +132,7 @@ const Request = () => {
     <DebtorLayoutPage>
       <main className="w-[100vw]">
         <header className="flex justify-between mx-12 lg:mx-0 my-5 items-center w-[100%]">
-          <h3 className="font-poppins text-xl font-semibold">Investment Request</h3>
+          <h3 className="font-plus-jakarta text-xl font-medium">Investment Request</h3>
           <button className="px-5 flex justify-center mr-[5rem] lg:relative lg:left-[34rem] xl:left-[52rem] gap-2 items-center py-3 rounded-xl border border-blue-400">
             <Sort size="20" color="blue" />
             <p className="text-lg text-blue-600 font-semibold font-poppins">Filter</p>
@@ -150,7 +150,7 @@ const Request = () => {
             <li className="font-semibold text-lg lg:mr-7 relative xl:left-[-3.5rem]">Date of Request</li>
             <li className="font-semibold text-lg lg:mr-7 relative xl:left-[-3.8rem]">Total Profit</li>
             <li className="font-semibold text-lg lg:mr-7 relative xl:left-[-3.8rem]">Status</li>
-            <li className="font-semibold text-lg relative right-[-20px] xl:left-[-2rem]">Action</li>
+            <li className="font-semibold text-lg relative right-[-20px] xl:left-[-3rem]">Action</li>
             <li className="font-semibold text-lg relative right-[-20px] xl:left-[-1rem]">Repay Loan</li>
           </ul>
 
@@ -172,7 +172,7 @@ const Request = () => {
                   </div>
                   <div className="flex justify-between w-full lg:w-auto mt-3">
                     <p className="font-poppins text-lg font-semibold lg:hidden">Invested Amount:</p>
-                    <span className="font-poppins text-sm font-semibold lg:ml-[-1rem]">{user.investment_amount}</span>
+                    <span className="font-poppins text-sm font-semibold lg:ml-[-3rem]">{user.investment_amount}</span>
                   </div>
                   <div className="flex justify-between w-full lg:w-auto mt-3">
                     <p className="font-poppins text-lg font-semibold lg:hidden">Expected Roi:</p>
@@ -180,7 +180,7 @@ const Request = () => {
                   </div>
                   <div className="flex justify-between w-full lg:w-auto mt-3">
                     <p className="font-poppins text-lg font-semibold lg:hidden">Installment Amount:</p>
-                    <span className="text-sm font-poppins font-semibold lg:relative left-7">{user.installment_amount}</span>
+                    <span className="text-sm font-poppins font-semibold lg:relative left-5">{Math.round(user.installment_amount)}</span>
                   </div>
                   <div className="flex justify-between w-full lg:w-auto mt-3">
                     <p className="font-poppins text-lg font-semibold lg:hidden">Repayment Term:</p>
@@ -188,7 +188,7 @@ const Request = () => {
                   </div>
                   <div className="flex justify-between w-full lg:w-auto mt-3">
                     <p className="font-poppins text-lg font-semibold lg:hidden">Date of Request:</p>
-                    <span className="font-poppins text-sm font-semibold lg:relative lg:left-[11rem]">
+                    <span className="font-poppins text-sm font-semibold lg:relative lg:left-[10rem]">
                       {format(new Date(user.created_at), 'dd/MM/yyyy')}
                     </span>
                   </div>
@@ -233,7 +233,7 @@ const Request = () => {
                       className={user.is_repaid ? `w-full lg:w-full py-2 text-lg -ml-10 rounded-xl lg:px-2 lg:py-2 lg:ml-5 bg-red-700 lg:text-sm font-medium text-white focus:outline-none` : `w-full lg:w-full py-2 text-lg lg:ml-5 -ml-10 rounded-md bg-gray-700 lg:py-2 lg:px-2 px-4 lg:text-sm font-medium text-white focus:outline-none`}
                       disabled={user.is_repaid}
                     >
-                      {user.is_repaid ? 'Loan Repaid' : 'Repay'}
+                      {user.is_repaid ? 'Repaid' : 'Repay'}
                     </button>
 
                     {selectedRequest && (
@@ -252,7 +252,7 @@ const Request = () => {
               </div>
             ))
           ) : (
-            <div className="text-xl my-6 mx-6">No Available Investment Request</div>
+            <div className="text-lg my-6 mx-6">No Available Investment Request</div>
           )}
            {current === 1 && ( <RepaySuccess setCurrent={setCurrent} data={selectedRequest} />
                     )}

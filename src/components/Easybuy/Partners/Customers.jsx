@@ -15,6 +15,7 @@ const Customers = ({ handleStep }) => {
     const {GetPartnerCustomers} = useInvestment()
     const [currentPage, setCurrentPage] = useState(0);
     const [customers, setCustomers] = useState([])
+    const [date, setDate] = useState()
 
     useEffect(() => {
         const GetCustomers = async () => {
@@ -54,9 +55,14 @@ const Customers = ({ handleStep }) => {
     };
 
     // Items per page for pagination
-    const itemsPerPage = 6;
+    const itemsPerPage = 8;
     const pageCount = Math.ceil(customers.length / itemsPerPage);
     const displayedOrders = customers.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+
+    useEffect(()=>{
+     const current = new Date().toLocaleDateString()
+     setDate(current)
+    },[])
 
     return (
         <PartnersLayout>
@@ -96,7 +102,7 @@ const Customers = ({ handleStep }) => {
                     </div>
                 </div>
                 <p className='font-poppins font-medium flex items-center gap-2 text-md text-[#101928]'>
-                    Sort by: <span className='flex gap-2 items-center text-blue-800 font-poppins font-medium'>November<IoIosArrowDown /></span>
+                    Sort by: <span className='flex gap-2 items-center text-blue-800 font-poppins font-medium'>{date}</span>
                 </p>
             </motion.div>
 
@@ -136,8 +142,8 @@ const Customers = ({ handleStep }) => {
                                 <div className="flex justify-between w-full lg:w-[12%] mt-3">
                                     <p className="font-poppins text-md font-medium lg:hidden">Customer ID:</p>
                                     <div className="text-sm justify-start ml-[-1rem] font-poppins font-medium truncate">
-                                        <p>{item.ProductId}</p>
-                                    </div>
+                                        <p className='max-w-[8rem] truncate'>{item.ProductId}</p>
+                                    </div> 
                                 </div>
                                 <div className="flex justify-between lg:w-auto mt-3">
                                     <p className="font-poppins text-md font-medium lg:hidden">Email</p>
@@ -190,7 +196,7 @@ const Customers = ({ handleStep }) => {
                             activeClassName="bg-blue-600 text-white"
                             disabledClassName="opacity-50 cursor-not-allowed"
                         />
-                        <div className='px-6 h-8 mt-5 text-white bg-blue-700 flex items-center gap-3 rounded-lg'>
+                        <div className=' hidden px-6 h-8 mt-5 text-white bg-blue-700 lg:flex items-center gap-3 rounded-lg'>
                             <IoIosArrowBack className='w-4 h-4' /> <IoIosArrowForward className='w-4 h-4' />
                         </div>
                     </div>

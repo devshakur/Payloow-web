@@ -76,7 +76,7 @@ const ImageUploadModal = ({ isOpen, setIsOpen, setActive, handleUploadSuccess, f
     <Dialog open={isOpen} onClose={handleClose} className="relative z-50">
       <DialogBackdrop className="fixed inset-0 bg-black/30" />
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-        <DialogPanel className="md:w-[40rem] space-y-2 bg-white p-8 rounded-lg">
+        <DialogPanel className="w-[100%] md:w-[40rem] space-y-2 bg-white py-3 px-8 rounded-lg">
           <DialogTitle className="font-bold text-xl flex justify-between">
             <p>Upload Device Pictures</p>
             <span

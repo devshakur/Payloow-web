@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import RegisterHeaders from './RegisterHeaders'
+import PasswordInput from './PasswordInput'
 
 const RegisterOne = ({ formik, handleNextPage }) => {
   const validateField = () => {
@@ -19,13 +20,13 @@ const RegisterOne = ({ formik, handleNextPage }) => {
   return (
     <div>
       <div className='flex justify-center items-center overflow-y-auto'>
-        <div className='bg-white w-[90vw] h-[792px] max-w-lg p-6 rounded-lg shadow-lg flex flex-col'>
+        <div className='bg-white w-[90vw]  max-w-xl p-6 rounded-lg shadow-lg flex flex-col'>
           <RegisterHeaders currentIndex={0} />
-          <div>
-            <label htmlFor='firstName' className='text-primary-text text-[14px] font-medium'>first Name</label>
+          <div className='mt-2'>
+            <label htmlFor='firstName' className='text-primary-text text-[14px] font-semibold font-plus-jakarta'>First Name <span className='text-red-700'>*</span></label>
             <input
               id="outlined-required-1"
-              placeholder="firstName"
+              placeholder="First Name"
               type="text"
               name="firstName"
               autoComplete='username'
@@ -38,10 +39,10 @@ const RegisterOne = ({ formik, handleNextPage }) => {
           </div>
 
           <div>
-            <label htmlFor="LastName" className='text-primary-text text-[14px] font-medium'>Last Name</label>
+            <label htmlFor="LastName" className='text-primary-text text-[14px] font-semibold font-plus-jakarta'>Surname<span className='text-red-700'>*</span></label>
             <input
               id="outlined-required-2"
-              placeholder='lastName'
+              placeholder='Surname'
               type='text'
               name='lastName'
               autoComplete='username'
@@ -53,11 +54,13 @@ const RegisterOne = ({ formik, handleNextPage }) => {
             ) : null}
           </div>
 
-          <div>
-            <label htmlFor="Password" className='text-primary-text text-[14px] font-medium'>Password</label>
+          <PasswordInput formik={formik} />
+
+          {/* <div>
+            <label htmlFor="Password" className='text-primary-text text-[14px] font-semibold font-plus-jakarta'>Password<span className='text-red-700'>*</span></label>
             <input
               id="outlined-required-5"
-              placeholder='Enter password'
+              placeholder='Create Password'
               type='password'
               name='password'
               autoComplete='current-password'
@@ -67,10 +70,10 @@ const RegisterOne = ({ formik, handleNextPage }) => {
             {formik.touched.password && formik.errors.password ? (
               <div style={{ color: 'red', marginTop: "-2vh" }}>{formik.errors.password}</div>
             ) : null}
-          </div>
+          </div> */}
 
           <div>
-            <label htmlFor="phone" className='text-primary-text text-[14px] font-medium'>Phone Number</label>
+            <label htmlFor="phone" className='text-primary-text text-[14px] font-semibold font-plus-jakarta'>Phone Number<span className='text-red-700'>*</span></label>
             <input
               id="outlined-required-4"
               placeholder='Mobile No.'
@@ -85,11 +88,11 @@ const RegisterOne = ({ formik, handleNextPage }) => {
           </div>
 
           <div>
-            <label htmlFor="email" className='text-primary-text text-[14px] font-medium'>Email</label>
+            <label htmlFor="email" className='text-primary-text text-[14px] font-semibold font-plus-jakarta'>Email<span className='text-red-700'>*</span></label>
             <input
 
               id="outlined-required-3"
-              placeholder='Email'
+              placeholder='ex:myname@gmail.com'
               type='email'
               name='email'
               autoComplete='username'

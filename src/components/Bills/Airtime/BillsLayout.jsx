@@ -9,6 +9,7 @@ const navigation = [
   { name: "Investment", href: "/investment", icon: Chart },
 ];
 
+
 const action = [
   { name: "Support", href: "/support", icon: Headphone },
   { name: "Settings", href: "/settings", icon: Setting2 },

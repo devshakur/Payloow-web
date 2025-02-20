@@ -45,7 +45,7 @@ const TvSub = () => {
 
   return (
     <div>
-       <div className="w-screen  bg-gray-100 overflow-x-hidden overflow-y-scroll flex flex-col lg:flex-row">  
+       <div className="w-screen   overflow-x-hidden overflow-y-scroll flex flex-col lg:flex-row">  
     <div className="hidden lg:block">  
         <BillsLayout />   
     </div>  

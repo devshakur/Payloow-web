@@ -117,18 +117,18 @@ const DegreeView = () => {
                     return (
                         <main
                             key={productId}
-                            className="flex flex-col lg:grid lg:grid-cols-2 bg-white mt-5 lg:gap-12"
+                            className="flex flex-col lg:grid lg:grid-cols-[2fr_1fr] bg-white mt-5 lg:gap-12"
                         >
                             <div className="flex flex-col lg:flex-row justify-center lg:justify-start mx-3">
                                 <motion.img
-                                    className="w-[70%] h-[90%]"
+                                    className="w-[100%] h-[90%]"
                                     src={selectedImage || '/images/default-image.png'}
                                     alt="Selected product"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ duration: 0.5 }}
                                 />
-                                <div className="flex pl-8 lg:pl-12 gap-4 lg:gap-2 lg:flex-col lg:mt-8 lg:justify-center lg:rounded-[56px]">
+                                <div className="flex pl-8 lg:pl-12 lg:gap-2 lg:flex-col lg:mt-8 lg:justify-center lg:rounded-[56px]">
                                     {otherImages.map((image, index) => (
                                         <div className="mt-4" key={index}>
                                             <motion.img
@@ -145,6 +145,17 @@ const DegreeView = () => {
                             </div>
 
                             <article className="lg:mt-12 mx-2">
+                                <div className="flex justify-center">
+                            <motion.img
+                                    className="hidden lg:block w-[40%] h-[30%]"
+                                    src={selectedImage || '/images/default-image.png'}
+                                    alt="Selected product"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.5 }}
+                                />
+
+                                </div>
                                 <div className="flex justify-between">
                                     <h4 className="font-plus-jakarta font-semibold text-lg">
                                         {item.product?.name}
@@ -166,7 +177,7 @@ const DegreeView = () => {
                                         id={`color-${productId}`}
                                         onChange={(e) => handleColorChange(productId, e.target.value)}
                                         value={selectedColors?.[productId] || ''}
-                                        className="border border-gray-300 rounded-md px-2 py-1"
+                                        className="border border-gray-300 shadow-md rounded-md px-2 py-1"
                                     >
                                         <option value="">Select a color</option>
                                         {item.product?.color?.map((color, index) => (
@@ -195,7 +206,7 @@ const DegreeView = () => {
                 <div className="w-full my-4 flex justify-center">
                     <motion.button
                         onClick={handleCheckout}
-                        className="w-[80%] lg:w-[30%] font-plus-jakarta text-white bg-blue-700 py-3 rounded-lg"
+                        className="w-[50%] lg:w-[20%] font-plus-jakarta text-white bg-blue-700 py-3 rounded-lg"
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: 'spring', stiffness: 300 }}
                     >

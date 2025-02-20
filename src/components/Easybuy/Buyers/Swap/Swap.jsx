@@ -10,9 +10,11 @@ import SwapModal from './SwapModal';
 import TradeSuccessModal from './TradeSuccessModal';
 import useInvestment from '../../../../hooks/useInvetment';
 import { useEffect } from 'react';
+import { useRouter } from '../../../../Routes/router';
 
 const Swap = () => {
   const { swapProduct } = useInvestment()
+  const router = useRouter()
   const [selectedForm, setSelectedForm] = useState('phone');
   const [isOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState('one');
@@ -151,8 +153,8 @@ const productToSwapId = localStorage.getItem('product_id') || ''
             </p>
           </div>
           <div className='flex items-end w-auto h-[15rem] p-4'>
-            <p className='font-poppins font-medium text-lg'>
-              Get help by contacting our <span className='text-blue-500'>support</span> team
+            <p className='font-poppins font-medium text-lg cursor-pointer'>
+              Get help by contacting our <span onClick={()=>router.push('/support')} className='text-blue-500'>support</span> team
             </p>
           </div>
         </motion.div>
@@ -173,7 +175,7 @@ const productToSwapId = localStorage.getItem('product_id') || ''
             </li>
             <li
               className={`w-[50%] py-4 rounded-md pl-12 text-blue-700 flex justify-between items-center ${selectedForm === 'solar' ? 'bg-blue-100' : 'bg-[#F8F9FC]'} cursor-pointer`}
-              onClick={() => handleSelection('solar')}
+              // onClick={() => handleSelection('solar')}
             >
               Solar <span className='mr-4 w-3 h-3'><img src="/images/checkout.png" alt="checkout" /></span>
             </li>
@@ -305,59 +307,62 @@ const productToSwapId = localStorage.getItem('product_id') || ''
           {active === 'three' && <TradeSuccessModal />} 
 
           {selectedForm === 'solar' && (
-            <form action="">
-              <motion.div
-                className="w-full p-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <label htmlFor="solarProductName" className='font-medium font-plus-jakarta'>Solar Product Name</label>
-                <input placeholder='Solar Product Name' className='w-[100%] border border-gray-300 focus:outline-none py-2 rounded-md px-3' type="text" />
-              </motion.div>
-              <motion.div
-                className="w-full p-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <label htmlFor="solarBrand" className='font-medium font-plus-jakarta'>Brand</label>
-                <select name="solarBrand" id="solarBrand" className='w-[100%] border border-gray-300 focus:outline-none py-2 rounded-md px-3'>
-                  <option value="SolarBrand1">SolarBrand1</option>
-                  <option value="SolarBrand2">SolarBrand2</option>
-                </select>
-              </motion.div>
-              <motion.div
-                className="w-full p-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <label htmlFor="solarModel" className='font-medium font-plus-jakarta'>Model</label>
-                <input placeholder='Model' className='w-[100%] border border-gray-300 focus:outline-none py-2 rounded-md px-3' type="text" />
-              </motion.div>
-              <motion.div
-                className='w-full p-4'
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <label htmlFor="solar-desc" className='font-medium font-plus-jakarta'>Product Description</label>
-              </motion.div>
-              <motion.textarea
-                name="solar-desc" id="solar-desc"
-                className='border-2 rounded-md focus:outline-none border-gray-300 w-[95%] ml-4'
-                cols="30" rows="8"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              />
-              <div className='w-full flex justify-center mt-6 pb-5'>
-                <motion.button className="py-2 w-[95%] bg-blue-700 text-white rounded-lg font-poppins font-medium text-md">
-                  Next
-                </motion.button>
-              </div>
-            </form>
+            <div className='font-plus-jakarta p-5 flex justify-center text-lg font-medium'>
+             This Feature is not Available yet
+            </div>
+            // <form action="">
+            //   <motion.div
+            //     className="w-full p-4"
+            //     initial={{ opacity: 0 }}
+            //     animate={{ opacity: 1 }}
+            //     transition={{ duration: 0.5 }}
+            //   >
+            //     <label htmlFor="solarProductName" className='font-medium font-plus-jakarta'>Solar Product Name</label>
+            //     <input placeholder='Solar Product Name' className='w-[100%] border border-gray-300 focus:outline-none py-2 rounded-md px-3' type="text" />
+            //   </motion.div>
+            //   <motion.div
+            //     className="w-full p-4"
+            //     initial={{ opacity: 0 }}
+            //     animate={{ opacity: 1 }}
+            //     transition={{ duration: 0.5 }}
+            //   >
+            //     <label htmlFor="solarBrand" className='font-medium font-plus-jakarta'>Brand</label>
+            //     <select name="solarBrand" id="solarBrand" className='w-[100%] border border-gray-300 focus:outline-none py-2 rounded-md px-3'>
+            //       <option value="SolarBrand1">SolarBrand1</option>
+            //       <option value="SolarBrand2">SolarBrand2</option>
+            //     </select>
+            //   </motion.div>
+            //   <motion.div
+            //     className="w-full p-4"
+            //     initial={{ opacity: 0 }}
+            //     animate={{ opacity: 1 }}
+            //     transition={{ duration: 0.5 }}
+            //   >
+            //     <label htmlFor="solarModel" className='font-medium font-plus-jakarta'>Model</label>
+            //     <input placeholder='Model' className='w-[100%] border border-gray-300 focus:outline-none py-2 rounded-md px-3' type="text" />
+            //   </motion.div>
+            //   <motion.div
+            //     className='w-full p-4'
+            //     initial={{ opacity: 0 }}
+            //     animate={{ opacity: 1 }}
+            //     transition={{ duration: 0.5 }}
+            //   >
+            //     <label htmlFor="solar-desc" className='font-medium font-plus-jakarta'>Product Description</label>
+            //   </motion.div>
+            //   <motion.textarea
+            //     name="solar-desc" id="solar-desc"
+            //     className='border-2 rounded-md focus:outline-none border-gray-300 w-[95%] ml-4'
+            //     cols="30" rows="8"
+            //     initial={{ opacity: 0 }}
+            //     animate={{ opacity: 1 }}
+            //     transition={{ duration: 0.5 }}
+            //   />
+            //   <div className='w-full flex justify-center mt-6 pb-5'>
+            //     <motion.button className="py-2 w-[95%] bg-blue-700 text-white rounded-lg font-poppins font-medium text-md">
+            //       Next
+            //     </motion.button>
+            //   </div>
+            // </form>
           )}
         </motion.div>
         <Toaster />

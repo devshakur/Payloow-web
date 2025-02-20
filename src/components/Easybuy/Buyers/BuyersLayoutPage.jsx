@@ -43,6 +43,7 @@ import { useRouter } from "../../../Routes/router";
 import { items } from "./product";
 import { useContext } from "react";
 import { CartContext } from "./cartContext";
+import DefaultProfile from "./DefaultProfile";
 
 
 
@@ -64,8 +65,8 @@ const action = [
 ];
 
 const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Your profile", href: "/settings" },
+  { name: "Sign out", href: "/" },
 ];
 
 function classNames(...classes) {
@@ -75,7 +76,6 @@ function classNames(...classes) {
 function BuyersLayoutPage({ children}) {
   const location = useLocation();
   const router = useRouter();
-  // const {} = useInvestment();
   const {cartTotalQuantity } = useContext(CartContext) || {}; 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isFocus, setIsFocus] = useState(false)
@@ -127,8 +127,8 @@ function BuyersLayoutPage({ children}) {
               <div className="flex h-16 justify-center pt-6 shrink-0 items-center">
                   <img alt="Logo" src="/images/logo.svg" className="h-10 w-auto" />
                 </div>
-                <div className="flex items-center justify-center -mt-4">
-                    <div className="md:text-sm text-xs bg-primary text-white px-6 py-1 rounded-full font-plus-jakarta">
+                <div className="flex items-center justify-center -mt-4 cursor-pointer">
+                    <div onClick={()=>router.push('/dashboard')} className="md:text-sm text-xs bg-primary text-white px-6 py-1 rounded-full font-plus-jakarta">
                       EasyBuy
                     </div>
                   </div>
@@ -184,8 +184,8 @@ function BuyersLayoutPage({ children}) {
             <div className="flex shrink-0 items-center mt-8">
               <img alt="Logo" src="/images/logo.svg" className="h-14 w-auto" />
             </div>
-            <div className="flex items-center justify-start px-3 -mt-4">
-                    <div className="md:text-sm text-xs bg-primary text-white px-8 py-1 rounded-full font-plus-jakarta">
+            <div className="flex items-center justify-start px-3 -mt-4 cursor-pointer">
+                    <div onClick={()=>router.push('/dashboard')} className="md:text-sm text-xs bg-primary text-white px-8 py-1 rounded-full font-plus-jakarta">
                       EasyBuy
                     </div>
                   </div>
@@ -257,7 +257,7 @@ function BuyersLayoutPage({ children}) {
         <label htmlFor="search-field" className="sr-only">Search</label>
         <SearchNormal
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"
+          className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400 ml-2"
         />
         <input
           id="search-field"
@@ -267,21 +267,22 @@ function BuyersLayoutPage({ children}) {
           onFocus={handleFocus}
           onChange={handleSearchChange}
           placeholder="Search..."
-          className="block h-full w-full shadow-md py-3 focus:outline-none pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
+          className="block h-full w-full shadow-md py-3 mr-4 focus:outline-none pl-9 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
         />
       </form>
 
       {/* Right: Icons (Visible on large screens, only notification & profile on small screens) */}
-      <div className="flex items-center gap-x-4 lg:gap-x-12">
+      <div className="flex items-center gap-x-4 lg:gap-x-8">
 
         {/* Only visible on large screens */}
         <button
           type="button"
+          onClick={()=>router.push('/payment')}
           className="-m-2.5 p-1.5 bg-[#F1F3F9] rounded-[50%] text-[#1D2433CC] hover:text-gray-500 lg:block hidden"
         >
           <FiHeart className="w-5 h-5"  />
         </button>
-        <span className="hidden fixed bg-slate-200 w-5 h-5 rounded-full lg:flex justify-center items-center right-[14.5rem] top-[14px]"><p className="text-red-700 font-poppins font-medium text-sm">{cartTotalQuantity}</p></span>
+        <span className="hidden fixed bg-slate-200 w-5 h-5 rounded-full lg:flex justify-center items-center right-[12.8rem] top-[14px]"><p className="text-red-700 font-poppins font-medium text-sm">{cartTotalQuantity}</p></span>
         <button
           type="button"
           onClick={handleCart}
@@ -293,6 +294,7 @@ function BuyersLayoutPage({ children}) {
          {/* Notification Icon (Visible on all screens) */}
          <button
           type="button"
+          onClick={()=>router.push('/settings')}
           className="-m-2.5 p-1.5 bg-[#F1F3F9] rounded-[50%] text-[#1D2433CC] hover:text-gray-500"
         >
           <span className="sr-only">View notifications</span>
@@ -302,11 +304,16 @@ function BuyersLayoutPage({ children}) {
         {/* Profile Dropdown (Visible on all screens) */}
         <Menu as="div" className="relative">
           <MenuButton className="-m-1.5 flex items-center p-1.5">
-            <img
-              alt="User Profile"
-              src={currentUser ? <FaCircleUser className="w-5 h-5"/>  : currentUser.profilePicture }
-              className="h-8 w-8 rounded-full bg-gray-50"
-            />
+          {currentUser ? (
+               <DefaultProfile />
+           
+            ) : (
+              <img
+            alt="User Profile"
+            src={currentUser.profilePicture }
+            className="h-8 w-8 rounded-full bg-gray-50"
+          />
+            ) }
             <span className="hidden lg:flex lg:items-center">
               <span
                 aria-hidden="true"

@@ -31,14 +31,18 @@ const StepParent = () => {
   const handleExit = () => {
     router.reload();
   };
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const userName = `${currentUser?.firstName || ''} ${currentUser?.lastName || ''}`;
+ const phone = `${'+234' + currentUser?.phone || ''}`
+ 
 
   const initialValues = {
-    fullName: '',
-    phoneNumber: '',
-    email: '',
-    address: '',
-    state: '',
-    country: '',
+    fullName: userName || '',
+    phoneNumber: phone || '',
+    email: currentUser?.email || '',
+    address: currentUser?.Address || '',
+    state: currentUser?.state || '',
+    country: currentUser?.country || '',
     nin: '',
     bvn: '',
     easyBuyRole: '',
@@ -121,7 +125,7 @@ const StepParent = () => {
           <img alt="Paylow Logo" src="/images/logo.svg" className="h-14 w-auto" />
         </div>
         <div className="mt-2">
-          <p onClick={handleExit} className="font-poppins font-medium text-2xl text-blue-600 cursor-pointer">
+          <p onClick={handleExit} className="font-plus-jakarta font-medium text-xl text-blue-600 cursor-pointer">
             Exit
           </p>
         </div>
@@ -144,7 +148,7 @@ const StepParent = () => {
         </ul>
       </div>
 
-      {step === 'one' && <StepTwo openStepThree={openStepThree} formik={formik} />}
+      {step === 'one' && <StepTwo openStepThree={openStepThree} formik={formik} currentUser={currentUser} />}
       {step === 'two' && <StepThree formik={formik} onSubmit={formik.handleSubmit} />}
       {success === true && <BuyersSuccessModal isOpen={success} setIsOpen={setSuccess}/>}
 
@@ -157,147 +161,3 @@ export default StepParent;
 
 
 
-// import React, { useState } from 'react';
-// import Registration from './Registration';
-// import StepTwo from './StepTwo';
-// import StepThree from './StepThree';
-// import { useFormik } from 'formik';
-// import * as Yup from 'yup';
-// import { useRouter } from '../../../Routes/router';
-// import useInvestment from '../../../hooks/useInvetment';
-// import { toast, Toaster } from 'react-hot-toast';
-// import BuyersSuccessModal from './BuyersSuccessModal';
-
-
-// const StepParent = () => {
-//   const [step, setStep] = useState('zero');
-//   const [success, setSuccess] = useState(false);  // Ensure it's a boolean
-//   const [activeIndex, setActiveIndex] = useState(0);
-//   const router = useRouter();
-//   const { CreateBuyerProfile } = useInvestment();
-
-//   const openStepTwo = () => {
-//     setTimeout(() => {
-//       setActiveIndex(0);
-//       setStep('one');
-//     }, 200);
-//   };
-
-//   const openStepThree = () => {
-//     setActiveIndex(1);
-//     setStep('two');
-//   };
-
-//   const handleExit = () => {
-//     router.reload();
-//   };
-
-//   const initialValues = {
-//     fullName: '',
-//     phoneNumber: '',
-//     email: '',
-//     address: '',
-//     state: '',
-//     country: '',
-//     nin: '',
-//     bvn: '',
-//     easyBuyRole: '',
-//     employmentStatus: '',
-//     referralCode: '',
-//     income: '',
-//   };
-
-//   const validationSchema = Yup.object({
-//     fullName: Yup.string().required('Full Name is required'),
-//     phoneNumber: Yup.string().required('Phone Number is required'),
-//     country: Yup.string().required('Country is required'),
-//     state: Yup.string().required('State is required'),
-//     email: Yup.string().required('email is required'),
-//     address: Yup.string().required('Address is required'),
-//     nin: Yup.string().required('National ID is required'),
-//     bvn: Yup.string().required('BVN is required'),
-//     employmentStatus: Yup.string().required('employment status is required'),
-//     income: Yup.string().optional(),
-//     easyBuyRole: Yup.string().optional(),
-//     referralCode: Yup.string().optional(),
-//   });
-
-//   const onSubmit = async (values) => {
-//     console.log('Form data', values);
-//     try {
-//       const response = await CreateBuyerProfile(values);
-
-//       if (response && response.status === 200) {
-//         if (values.easyBuyRole === 'buyer') {
-//           toast.success('Buyer profile created successfully');
-//           setSuccess(true);  // This will trigger the modal
-//         } else if (values.easyBuyRole === 'partner') {
-//           toast.success('Partner profile created successfully');
-//         } else {
-//           toast.success('Profile created successfully');
-//         }
-//       } else {
-//         toast.error('Error: Could not create profile', response);
-//       }
-//     } catch (error) {
-//       if (error?.response?.data?.msg) {
-//         toast.error(error.response.data.msg);
-//         if (error.response.data.msg === 'User already has an easybuy profile') {
-//           setTimeout(() => {
-//             router.push('/buyers/dashboard');
-//           }, 3000);
-//         }
-//       } else {
-//         toast.error('Could not create buyer profile');
-//       }
-//     }
-//   };
-
-//   const formik = useFormik({
-//     initialValues,
-//     validationSchema,
-//     onSubmit,
-//   });
-
-//   return (
-//     <div>
-//       {step === 'zero' && <Registration openStepTwo={openStepTwo} />}
-
-//       <header className="flex justify-between items-center mx-8 mt-8 border-b-4">
-//         <div className="flex shrink-0 items-center">
-//           <img alt="Paylow Logo" src="/images/logo.svg" className="h-14 w-auto" />
-//         </div>
-//         <div className="mt-2">
-//           <p onClick={handleExit} className="font-poppins font-medium text-2xl text-blue-600 cursor-pointer">
-//             Exit
-//           </p>
-//         </div>
-//       </header>
-
-//       <div className="flex justify-center">
-//         <ul className="flex gap-4 my-4 border-b-2 border-blue-500 py-3 px-4 cursor-pointer">
-//           <li
-//             onClick={openStepTwo}
-//             className={`font-poppins text-lg font-medium ${activeIndex === 0 ? 'text-blue-700' : ''} focus:text-blue-700 active:text-blue-700`}
-//           >
-//             Personal Info
-//           </li>
-//           <li
-//             onClick={openStepThree}
-//             className={`font-poppins text-lg font-medium ${activeIndex === 1 ? 'text-blue-700' : ''}`}
-//           >
-//             Financial Info
-//           </li>
-//         </ul>
-//       </div>
-
-//       {step === 'one' && <StepTwo openStepThree={openStepThree} formik={formik} />}
-//       {step === 'two' && <StepThree formik={formik} onSubmit={formik.handleSubmit} />}
-//       {success === true && <BuyersSuccessModal isOpen={success} setIsOpen={setSuccess} />}
-
-//       <Toaster />
-//     </div>
-//   );
-// };
-
-// export default StepParent;
