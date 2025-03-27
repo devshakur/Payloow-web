@@ -90,8 +90,6 @@ export default function Sidebar({ onClose }) {
             </li>
           </ul>
         </nav>
-        {/* Close Sidebar Button */}
-        <button className="ml-6 mb-4" onClick={onClose}>Close</button>
       </div>
     </div>
   );

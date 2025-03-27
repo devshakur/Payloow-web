@@ -269,7 +269,8 @@ function AdminLayout({ children }) {
             ) : (
               <img
             alt="User Profile"
-            src={currentUser.profilePicture }
+            src = '/images/user.png'
+            // src={currentUser ? currentUser.profilePicture  : '/images/default-img.png' } 
             className="h-8 w-8 rounded-full bg-gray-50"
           />
             ) }

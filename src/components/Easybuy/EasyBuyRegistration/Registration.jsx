@@ -62,16 +62,19 @@ const Registration = ({ openStepTwo }) => {
         setIsOpen(false);
     };
     const handleBuyer = ()=>{
-        if(currentUser.easyBuyRole === null){
+        if(!currentUser){
+            router.push('/login') 
+         }else if(currentUser.easyBuyRole === null){
             openStepTwo()   
         }else{
-         
-         router.push('/buyers/dashboard')
+            router.push('/buyers/dashboard')
         }
     }
 
     const handlePartner = () => {
-        if(currentUser.easyBuyRole === null){
+       if(!currentUser){
+        router.push('/login')
+       }else if(currentUser.easyBuyRole === null){
             openStepTwo()   
         }else{
             router.push('/partners/dashboard');

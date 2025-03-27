@@ -284,16 +284,21 @@ function BuyersLayoutGen({ children}) {
         {/* Profile Dropdown (Visible on all screens) */}
         <Menu as="div" className="relative">
           <MenuButton className="-m-1.5 flex items-center p-1.5">
-            {currentUser ? (
-               <DefaultProfile />
-           
-            ) : (
-              <img
+          {currentUser ? (
+            
+            <img
             alt="User Profile"
             src={currentUser.profilePicture }
             className="h-8 w-8 rounded-full bg-gray-50"
           />
-            ) }
+          ) : (
+            currentUser ?  <DefaultProfile /> :
+            <img
+            alt="User Profile"
+            src='/images/user.png'
+            className="h-8 w-8 rounded-full bg-gray-50"
+          />
+          ) }
           
             <span className="hidden lg:flex lg:items-center">
               <span
