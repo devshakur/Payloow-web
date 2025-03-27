@@ -14,7 +14,7 @@ const Transaction = () => {
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.6 }}
       >
-        <h2 className='font-semibold text-[30px]'>Transaction History</h2>
+        <h2 className='font-semibold text-[26px]'>Transaction History</h2>
       </motion.div>
 
       {/* Filter & Sort Section with animation */}

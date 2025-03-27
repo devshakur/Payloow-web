@@ -18,7 +18,7 @@ const BillsHeader = ({ active }) => {
         setIsOpen(false);
     };
 
-    const baseStyles = ' h-[36px] my-16 mx-1 rounded-lg border flex cursor-pointer justify-center items-center gap-2 lg:flex lg:ml-[29vw] xl:ml-[22vw]';
+    const baseStyles = ' h-[36px] my-16 mx-1 rounded-lg border flex cursor-pointer justify-center items-center gap-2 lg:flex lg:ml-[29vw] xl:ml-[25vw]';
     const activeStyles = active === 'page3' || active === 'page4'
         ? 'w-[186px] lg:mt-[12vh]  border-[#6196F9]'
         : 'w-[86px] lg:mt-[10vh]  border-[#6196F9]';
@@ -47,15 +47,20 @@ const BillsHeader = ({ active }) => {
                 <div className='flex flex-row justify-end items-center gap-4 lg:w-[23vw]'>  
                     <Notification size="24" color="black" />  
                     {currentUser ? (
-              <DefaultProfile />
-           
-            ) : (
-              <img
+            
+            <img
             alt="User Profile"
             src={currentUser.profilePicture }
             className="h-8 w-8 rounded-full bg-gray-50"
           />
-            ) } 
+          ) : (
+            currentUser ?  <DefaultProfile /> :
+            <img
+            alt="User Profile"
+            src='/images/user.png'
+            className="h-8 w-8 rounded-full bg-gray-50"
+          />
+          ) }
                     <div className='gap-2 mt-1 items-center hidden lg:flex lg:flex-row xl:mr-8'>  
                         <p className='font-poppins font-normal text-lg text-[#1D2433] leading-5'>{currentUser ? currentUser.firstName : 'Guest'}</p>  
                         <Menu as="div" className="relative">  

@@ -67,11 +67,11 @@ const HistoryData = () => {
         <div className="flex justify-center">
                     <article className="bg-white w-[100%] overflow-scroll mx-4 lg:mx-0 rounded-lg p-4">
                         <ul className="lg:flex justify-between bg-white shadow-lg hidden">
-                            <li className="font-medium text-lg lg:mr-5">Date</li>
-                            <li className="font-medium text-lg relative lg:-left-4">Transaction Type</li>
-                            <li className="font-medium text-lg relative lg:-left-4">Description</li>
-                            <li className="font-medium text-lg lg:mr-7 relative xl:left-[-2rem]">Amount</li>
-                            <li className="font-medium text-lg lg:mr-7 relative xl:left-[-3.4rem]">Action</li>
+                            <li className="font-medium text-md lg:mr-5">Date</li>
+                            <li className="font-medium text-md relative lg:-left-4">Transaction Type</li>
+                            <li className="font-medium text-md relative lg:-left-4">Description</li>
+                            <li className="font-medium text-md lg:mr-7 relative xl:left-[-2rem]">Amount</li>
+                            <li className="font-medium text-md lg:mr-7 relative xl:left-[-3.4rem]">Action</li>
                         </ul>
 
                         {displayedOrders.map(item => (

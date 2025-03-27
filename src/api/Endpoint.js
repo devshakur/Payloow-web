@@ -1,4 +1,4 @@
-export const BaseUrl = "https://revo-oait.onrender.com/api/v1/";
+export const BaseUrl = "https://revo-oait.onrender.com/api/v1";
  const investmentApiBaseUrl = "https://revo-backend.onrender.com/" 
   
  

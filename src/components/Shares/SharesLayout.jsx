@@ -273,17 +273,27 @@ function SharesLayout({ children }) {
         {/* Profile Dropdown (Visible on all screens) */}
         <Menu as="div" className="relative">
           <MenuButton className="-m-1.5 flex items-center p-1.5">
+          {currentUser ? (
+            
             <img
-              alt="User Profile"
-              src={currentUser ? <FaCircleUser className="w-5 h-5"/>  : currentUser.profilePicture }
-              className="h-8 w-8 rounded-full bg-gray-50"
-            />
+            alt="User Profile"
+            src={currentUser.profilePicture }
+            className="h-8 w-8 rounded-full bg-gray-50"
+          />
+          ) : (
+            currentUser ?  <DefaultProfile /> :
+            <img
+            alt="User Profile"
+            src='/images/user.png'
+            className="h-8 w-8 rounded-full bg-gray-50"
+          />
+          ) }
             <span className="hidden lg:flex lg:items-center">
               <span
                 aria-hidden="true"
                 className="ml-4 text-sm font-semibold leading-6 text-gray-900"
               >
-                {currentUser ? currentUser.firstName : 'John Doe'}
+                {currentUser ? currentUser.firstName : 'Guest'}
               </span>
               <ArrowDown2
                 aria-hidden="true"

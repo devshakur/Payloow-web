@@ -45,8 +45,11 @@ const StudentDashboard = () => {
       },
     ],
   };
+  const currentUser = localStorage.getItem('currentUser');
+  const userData = currentUser ? JSON.parse(currentUser) : null
+
   const user = {
-    name: JSON.parse(localStorage.getItem('currentUser')).firstName,
+    name: userData?.firstName ?? 'Guest'
   };
 
 
