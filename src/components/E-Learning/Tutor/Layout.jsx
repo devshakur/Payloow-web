@@ -26,12 +26,13 @@ import {
 } from "iconsax-react";
 import { useLocation, Link } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import DefaultProfile from "../../Easybuy/Buyers/DefaultProfile";
 
 const navigation = [
   { name: "Dashboard", href: "/e-learning/tutor/dashboard", icon: Home },
   { name: "Courses", href: "/e-learning/tutor/courses", icon: BookSaved },
-  { name: "Analytics", href: "/e-learning/tutor/analytics", icon: Chart },
-  { name: "Quiz", href: "/e-learning/tutor/quiz", icon: TableDocument },
+ // { name: "Analytics", href: "/e-learning/tutor/analytics", icon: Chart },
+  { name: "Quiz", href: "/e-learning/tutor/create-quiz", icon: TableDocument },
   { name: "Messages", href: "/e-learning/tutor/messages", icon: Message },
 ];
 const action = [
@@ -299,11 +300,21 @@ export default function Layout({ children }) {
                 <Menu as="div" className="relative">
                   <MenuButton className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    <img
-                      alt=""
-                      src={currentUser ? currentUser.profilePicture : "/images/user.png"}
-                      className="h-8 w-8 rounded-full bg-gray-50"
-                    />
+                       {currentUser?.profilePicture ? (
+                                        <img
+                                          alt="User Profile"
+                                          src={currentUser.profilePicture}
+                                          className="h-8 w-8 rounded-full bg-gray-50"
+                                        />
+                                      ) : currentUser ? (
+                                        <DefaultProfile className="h-8 w-8 rounded-full" />
+                                      ) : (
+                                        <img
+                                          alt="User Profile"
+                                          src="/images/user.png"
+                                          className="h-8 w-8 rounded-full bg-gray-50"
+                                        />
+                                      )}
                     <span className="hidden lg:flex lg:items-center">
                       <span
                         aria-hidden="true"

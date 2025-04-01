@@ -308,21 +308,22 @@ export default function DashboardLayout({ children }) {
                 <Menu as="div" className="relative">
                   <MenuButton className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    {currentUser ? (
-            
-              <img
-              alt="User Profile"
-              src={currentUser.profilePicture }
-              className="h-8 w-8 rounded-full bg-gray-50"
-            />
-            ) : (
-              currentUser ?  <DefaultProfile /> :
-              <img
-              alt="User Profile"
-              src='/images/user.png'
-              className="h-8 w-8 rounded-full bg-gray-50"
-            />
-            ) }
+                    {currentUser?.profilePicture ? (
+  <img
+    alt="User Profile"
+    src={currentUser.profilePicture}
+    className="h-8 w-8 rounded-full bg-gray-50"
+  />
+) : currentUser ? (
+  <DefaultProfile className="h-8 w-8 rounded-full" />
+) : (
+  <img
+    alt="User Profile"
+    src="/images/user.png"
+    className="h-8 w-8 rounded-full bg-gray-50"
+  />
+)}
+
                     <span className="hidden lg:flex lg:items-center">
                       <span
                         aria-hidden="true"
