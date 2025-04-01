@@ -3,7 +3,7 @@ import { MoneyChange, TableDocument, BookSaved, Chart, Home, Headphone, Setting2
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Easybuy", href: "/easybuy", icon: MoneyChange },
+  { name: "Easybuy", href: "/easybuy/home", icon: MoneyChange },
   { name: "Bills", href: "/dashboard", icon: TableDocument },
   { name: "E-Learning", href: "/e-learning", icon: BookSaved },
   { name: "Investment", href: "/investment", icon: Chart },

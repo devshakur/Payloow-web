@@ -28,13 +28,18 @@ import {
 } from "iconsax-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import DefaultProfile from "../../Easybuy/Buyers/DefaultProfile";
 import axios from "axios";
 import { endpoints } from "../../../api/Endpoint";
 
 const navigation = [
   { name: "Main Menu", href: "/dashboard", icon: Category2 },
   { name: "Dashboard", href: "/e-learning/student/dashboard", icon: Home },
-  { name: "Courses", href: "/e-learning/student/all-courses", icon: VideoCircle },
+  {
+    name: "Courses",
+    href: "/e-learning/student/all-courses",
+    icon: VideoCircle,
+  },
   { name: "My Courses", href: "/e-learning/student/courses", icon: BookSaved },
   { name: "Messages", href: "/e-learning/student/messages", icon: Message },
   // { name: "Analytics", href: "/e-learning/student/analytics", icon: Chart },
@@ -42,7 +47,15 @@ const navigation = [
 const action = [
   { name: "Support", href: "/support", icon: Headphone },
   { name: "Settings ", href: "/settings", icon: Setting2 },
-  { name: "Logout", href: "/", icon: LogoutCurve, onClick: () => { localStorage.clear(); window.location.href = '/login' } },
+  {
+    name: "Logout",
+    href: "/",
+    icon: LogoutCurve,
+    onClick: () => {
+      localStorage.clear();
+      window.location.href = "/login";
+    },
+  },
 ];
 const userNavigation = [
   { name: "Your profile", href: "/settings" },
@@ -64,20 +77,20 @@ export default function Layout({ children }) {
 
   const getCartCourses = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
+      const token = JSON.parse(localStorage.getItem("auth")).auth;
       const response = await axios.get(endpoints.getCartCourses, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      localStorage.setItem('cart', JSON.stringify(response.data.data.length))
-      const cartCount = JSON.parse(localStorage.getItem('cart'))
-      setCartCount(cartCount)
+      localStorage.setItem("cart", JSON.stringify(response.data.data.length));
+      const cartCount = JSON.parse(localStorage.getItem("cart"));
+      setCartCount(cartCount);
     } catch (error) {
-      console.error(error)
+      console.error(error);
       // toast.error('An error occured while fetching cart')
     }
-  }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -88,13 +101,12 @@ export default function Layout({ children }) {
   }, []);
 
   const goToCart = () => {
-    navigate('/e-learning/student/cart')
-  }
+    navigate("/e-learning/student/cart");
+  };
 
   // useEffect(() => {
   //   getCartCourses();
   // }, []);
-
 
   return (
     <>
@@ -322,7 +334,6 @@ export default function Layout({ children }) {
                 />
               </form>
               <div className="flex items-center gap-x-4 lg:gap-x-6">
-
                 <button
                   type="button"
                   onClick={goToCart}
@@ -330,7 +341,9 @@ export default function Layout({ children }) {
                 >
                   <span className="sr-only">View cart</span>
                   <ShoppingCart aria-hidden="true" className="h-6 w-6" />
-                  <div className="absolute bg-red-500 text-white text-xs h-5 w-5 flex items-center justify-center rounded-full top-0 right-0">{cart ? cart : 0}</div>
+                  <div className="absolute bg-red-500 text-white text-xs h-5 w-5 flex items-center justify-center rounded-full top-0 right-0">
+                    {cart ? cart : 0}
+                  </div>
                 </button>
 
                 {/* Separator */}
@@ -343,17 +356,27 @@ export default function Layout({ children }) {
                 <Menu as="div" className="relative">
                   <MenuButton className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    <img
-                      alt=""
-                      src={currentUser ? currentUser.profilePicture : "/images/user.png"}
-                      className="h-8 w-8 rounded-full bg-gray-50"
-                    />
+                    {currentUser?.profilePicture ? (
+                      <img
+                        alt="User Profile"
+                        src={currentUser.profilePicture}
+                        className="h-8 w-8 rounded-full bg-gray-50"
+                      />
+                    ) : currentUser ? (
+                      <DefaultProfile className="h-8 w-8 rounded-full" />
+                    ) : (
+                      <img
+                        alt="User Profile"
+                        src="/images/user.png"
+                        className="h-8 w-8 rounded-full bg-gray-50"
+                      />
+                    )}
                     <span className="hidden lg:flex lg:items-center">
                       <span
                         aria-hidden="true"
                         className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                       >
-                        {currentUser ? currentUser.firstName : 'John Doe'}
+                        {currentUser ? currentUser.firstName : "John Doe"}
                       </span>
                       <ArrowDown2
                         aria-hidden="true"
