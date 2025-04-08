@@ -37,9 +37,9 @@ const Navbar = () => {
           <div className="container mx-auto md:px-20 px-5 py-4 flex justify-between items-center font-plus-jakarta">
             <div
               className={`${scrolled ? "text-primary-500" : "text-white"
-                } text-3xl md:text-4xl font-extrabold uppercase`}
+                } text-3xl md:text-4xl font-extrabold font-poppins `}
             >
-              revo
+             Payloow
             </div>
 
             <ul

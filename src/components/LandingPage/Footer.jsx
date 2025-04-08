@@ -43,7 +43,7 @@ const Footer = () => {
                   class="w-32 grayscale invert mx-auto mb-4"
                 />
                 <h3 class="max-w-xl mx-auto sans md:text-5xl text-4xl text-[#E6F6FF] tracking-[0.8em] text-center font-bold">
-                  REVO
+                  Payloow
                 </h3>
                 <p className="text-white max-w-xs mx-auto">
                   All Your Financial, Learning, and Shopping Needs in One Place
@@ -78,7 +78,7 @@ const Footer = () => {
             <div class="px-8">
               <div class="flex flex-col items-center  w-full mt-16 md:pt-12 pt-5 border-t border-[#778594] space-y-5">
                 <h5 class="text-white/40 sans">
-                  &copy; 2024 REVO. All rights reserved.
+                  &copy; 2024 Payloow. All rights reserved.
                 </h5>
                 <div class="flex items-start justify-between text-white/80">
                   <div class="flex space-x-2 items-center">
