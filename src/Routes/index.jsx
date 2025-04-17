@@ -1,90 +1,215 @@
 import React, { Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Loader } from "../AuthContext/Loader.jsx";
+import Policy from "../components/Dashboard/Policy.jsx";
 
 const App = lazy(() => import("../components/App.jsx"));
 const ErrorPage = lazy(() => import("../ErrorPage/ErrorPage.jsx"));
-const DashboardHome = lazy(() => import("../components/Dashboard/DashboardHome.jsx"));
-const TutorDashboard = lazy(() => import("../components/E-Learning/Tutor/Dashboard.jsx"));
-const StudentDashboard = lazy(() => import("../components/E-Learning/Student/Dashboard.jsx"));
-const CompleteProfile = lazy(() => import("../components/E-Learning/Tutor/CompleteProfile.jsx"));
-const Courses = lazy(() => import("../components/E-Learning/Tutor/Courses.jsx"));
-const CreateCourse = lazy(() => import("../components/E-Learning/Tutor/CreateCourse.jsx"));
+const DashboardHome = lazy(() =>
+  import("../components/Dashboard/DashboardHome.jsx")
+);
+const TutorDashboard = lazy(() =>
+  import("../components/E-Learning/Tutor/Dashboard.jsx")
+);
+const StudentDashboard = lazy(() =>
+  import("../components/E-Learning/Student/Dashboard.jsx")
+);
+const CompleteProfile = lazy(() =>
+  import("../components/E-Learning/Tutor/CompleteProfile.jsx")
+);
+const Courses = lazy(() =>
+  import("../components/E-Learning/Tutor/Courses.jsx")
+);
+const CreateCourse = lazy(() =>
+  import("../components/E-Learning/Tutor/CreateCourse.jsx")
+);
 const Settings = lazy(() => import("../components/Dashboard/Settings.jsx"));
-const Messages = lazy(() => import("../components/E-Learning/Tutor/Messages.jsx"));
-const CreateQuiz = lazy(() => import("../components/E-Learning/Tutor/CreateQuiz.jsx"));
-const AllCourses = lazy(() => import("../components/E-Learning/Tutor/AllCourses.jsx"));
-const CourseDetails = lazy(() => import("../components/E-Learning/Tutor/CourseDetails.jsx"));
-const EditCourse = lazy(() => import("../components/E-Learning/Tutor/AddSectionsToCourse.jsx"));
-const AirtimePurchase = lazy(() => import("../components/Bills/Airtime/AirtimePurchase.jsx"));
+const Messages = lazy(() =>
+  import("../components/E-Learning/Tutor/Messages.jsx")
+);
+const CreateQuiz = lazy(() =>
+  import("../components/E-Learning/Tutor/CreateQuiz.jsx")
+);
+const AllCourses = lazy(() =>
+  import("../components/E-Learning/Tutor/AllCourses.jsx")
+);
+const CourseDetails = lazy(() =>
+  import("../components/E-Learning/Tutor/CourseDetails.jsx")
+);
+const EditCourse = lazy(() =>
+  import("../components/E-Learning/Tutor/AddSectionsToCourse.jsx")
+);
+const AirtimePurchase = lazy(() =>
+  import("../components/Bills/Airtime/AirtimePurchase.jsx")
+);
 const DataPurchase = lazy(() => import("../components/Bills/Data/Data.jsx"));
 const TvSub = lazy(() => import("../components/Bills/TV/TvSub.jsx"));
-const Electricity = lazy(() => import("../components/Bills/Electricity/Electricity.jsx"));
-const BuyCourse = lazy(() => import("../components/E-Learning/Student/BuyCourse.jsx"));
-const Investment = lazy(() => import("../components/Investment/Investment.jsx"));
-const DebtorDashboard = lazy(() => import("../components/Investment/Debtor/DebtorDashboard.jsx"));
-const BusinessParent = lazy(() => import("../components/Investment/Debtor/Business/BusinessParent.jsx"));
+const Electricity = lazy(() =>
+  import("../components/Bills/Electricity/Electricity.jsx")
+);
+const BuyCourse = lazy(() =>
+  import("../components/E-Learning/Student/BuyCourse.jsx")
+);
+const Investment = lazy(() =>
+  import("../components/Investment/Investment.jsx")
+);
+const DebtorDashboard = lazy(() =>
+  import("../components/Investment/Debtor/DebtorDashboard.jsx")
+);
+const BusinessParent = lazy(() =>
+  import("../components/Investment/Debtor/Business/BusinessParent.jsx")
+);
 const Loans = lazy(() => import("../components/Investment/Loans/Loans.jsx"));
-const Request = lazy(() => import("../components/Investment/Request/Request.jsx"));
-const Investor = lazy(() => import("../components/Investment/Investor/Investor.jsx"));
-const InvestorBusiness = lazy(() => import("../components/Investment/Investor/InvestorBusiness.jsx"));
-const MyInvestment = lazy(() => import("../components/Investment/Investor/MyInvestment.jsx"));
+const Request = lazy(() =>
+  import("../components/Investment/Request/Request.jsx")
+);
+const Investor = lazy(() =>
+  import("../components/Investment/Investor/Investor.jsx")
+);
+const InvestorBusiness = lazy(() =>
+  import("../components/Investment/Investor/InvestorBusiness.jsx")
+);
+const MyInvestment = lazy(() =>
+  import("../components/Investment/Investor/MyInvestment.jsx")
+);
 const Cart = lazy(() => import("../components/E-Learning/Student/Cart.jsx"));
 // const MyCourse = lazy(() => import("../components/E-Learning/Student/MyCourse.jsx")); // Uncomment if needed
-const StudentMessages = lazy(() => import("../components/E-Learning/Student/StudentMessages.jsx"));
+const StudentMessages = lazy(() =>
+  import("../components/E-Learning/Student/StudentMessages.jsx")
+);
 const Support = lazy(() => import("../components/Dashboard/Support.jsx"));
-const SingleCourse = lazy(() => import("../components/E-Learning/Student/SingleCourse.jsx"));
+const SingleCourse = lazy(() =>
+  import("../components/E-Learning/Student/SingleCourse.jsx")
+);
 
 //Datas
-const phonesItems = React.lazy(() => import("../components/Easybuy/Buyers/product.js"));
-const solarItems = React.lazy(() => import("../components/Easybuy/Buyers/product.js"));
-const ElearningCheckout = React.lazy(() => import("../components/E-Learning/Student/ElearningCheckout.jsx"));
-const FlutterSuccessPurchaseModal = React.lazy(() => import("../components/Easybuy/FlutterSuccessPurchaseModal.jsx"));
-const SuccessPage = React.lazy(() => import("../components/AuthenticationPage/password-issues/SuccessPage.jsx"));
-const AdminDashboard = React.lazy(() => import("../components/Admin/AdminDashboard.jsx"));
-const Admin_E_learning = React.lazy(() => import("../components/Admin/Admin_E_learning.jsx"));
-const Admin_Investment = React.lazy(() => import("../components/Admin/Admin_Investment.jsx"));
+const phonesItems = React.lazy(() =>
+  import("../components/Easybuy/Buyers/product.js")
+);
+const solarItems = React.lazy(() =>
+  import("../components/Easybuy/Buyers/product.js")
+);
+const ElearningCheckout = React.lazy(() =>
+  import("../components/E-Learning/Student/ElearningCheckout.jsx")
+);
+const FlutterSuccessPurchaseModal = React.lazy(() =>
+  import("../components/Easybuy/FlutterSuccessPurchaseModal.jsx")
+);
+const SuccessPage = React.lazy(() =>
+  import("../components/AuthenticationPage/password-issues/SuccessPage.jsx")
+);
+const AdminDashboard = React.lazy(() =>
+  import("../components/Admin/AdminDashboard.jsx")
+);
+const Admin_E_learning = React.lazy(() =>
+  import("../components/Admin/Admin_E_learning.jsx")
+);
+const Admin_Investment = React.lazy(() =>
+  import("../components/Admin/Admin_Investment.jsx")
+);
 
 //Registration
-const Regsiter = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Register.jsx'))
-const Login = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Login.jsx'))
-const Pin = React.lazy(() => import('../components/AuthenticationPage/Auth-section/Pin/Pin.jsx'))
-const ForgotPswd = React.lazy(() => import('../components/AuthenticationPage/password-issues/ForgotPswd.jsx'))
-const ResetPswd = React.lazy(() => import('../components/AuthenticationPage/password-issues/ResetPswd.jsx'))
-const Success = React.lazy(() => import("../components/AuthenticationPage/password-issues/SuccessPage.jsx"))
-const AllCoursesStudents = React.lazy(() => import("../components/E-Learning/Student/AllCourses.jsx"))
-const CourseListStudents = React.lazy(() => import("../components/E-Learning/Student/CourseList.jsx"))
-const CourseDetailsStudents = React.lazy(() => import("../components/E-Learning/Student/CourseDetails.jsx"))
+const Regsiter = React.lazy(() =>
+  import("../components/AuthenticationPage/Auth-section/Register.jsx")
+);
+const Login = React.lazy(() =>
+  import("../components/AuthenticationPage/Auth-section/Login.jsx")
+);
+const Pin = React.lazy(() =>
+  import("../components/AuthenticationPage/Auth-section/Pin/Pin.jsx")
+);
+const ForgotPswd = React.lazy(() =>
+  import("../components/AuthenticationPage/password-issues/ForgotPswd.jsx")
+);
+const ResetPswd = React.lazy(() =>
+  import("../components/AuthenticationPage/password-issues/ResetPswd.jsx")
+);
+const Success = React.lazy(() =>
+  import("../components/AuthenticationPage/password-issues/SuccessPage.jsx")
+);
+const AllCoursesStudents = React.lazy(() =>
+  import("../components/E-Learning/Student/AllCourses.jsx")
+);
+const CourseListStudents = React.lazy(() =>
+  import("../components/E-Learning/Student/CourseList.jsx")
+);
+const CourseDetailsStudents = React.lazy(() =>
+  import("../components/E-Learning/Student/CourseDetails.jsx")
+);
 //EasyBuy
-const StepParent = React.lazy(() => import("../components/Easybuy/EasyBuyRegistration/StepParent.jsx"))
-const BuyersDashboard = React.lazy(()=> import("../components/Easybuy/Buyers/BuyersDashboard.jsx"))
-const BuyersDashboardTwo = React.lazy(()=> import("../components/Easybuy/Buyers/BuyersDashboardTwo.jsx"))
-const ProductDetails = React.lazy(()=>import("../components/Easybuy/Buyers/ProductDetails.jsx"))
-const Carts = React.lazy(()=>import("../components/Easybuy/Buyers/Cart.jsx"))
-const ComparePage1 = React.lazy(()=>import("../components/Easybuy/Buyers/ComparePage1.jsx"))
-const DegreeView  = React.lazy(()=>import("../components/Easybuy/Buyers/DegreeView.jsx"))
-const Phones = React.lazy(()=>import("../components/Easybuy/Buyers/PhonesPage/Phones.jsx"))
-const SolarDashboard = React.lazy(()=>import("../components/Easybuy/Buyers/SolarPage/SolarDashboard.jsx"))
-const EnergyCalculator = React.lazy(()=>import("../components/Easybuy/Buyers/SolarPage/EnergyCalculator.jsx"))
-const SolarDesign = React.lazy(()=>import("../components/Easybuy/Buyers/SolarPage/SolarDesign.jsx"))
-const UserOrders = React.lazy(()=>import("../components/Easybuy/Buyers/Orders/UserOrders.jsx"))
-const Payment = React.lazy(()=>import("../components/Easybuy/Buyers/Payment.jsx"))
-const Swap = React.lazy(()=>import("../components/Easybuy/Buyers/Swap/Swap.jsx"))
-const Installment = React.lazy(()=>import("../components/Easybuy/Buyers/Installment/Installment.jsx"))
-const Checkout = React.lazy(()=>import("../components/Easybuy/Buyers/Checkout/Checkout.jsx"))
+const StepParent = React.lazy(() =>
+  import("../components/Easybuy/EasyBuyRegistration/StepParent.jsx")
+);
+const BuyersDashboard = React.lazy(() =>
+  import("../components/Easybuy/Buyers/BuyersDashboard.jsx")
+);
+const BuyersDashboardTwo = React.lazy(() =>
+  import("../components/Easybuy/Buyers/BuyersDashboardTwo.jsx")
+);
+const ProductDetails = React.lazy(() =>
+  import("../components/Easybuy/Buyers/ProductDetails.jsx")
+);
+const Carts = React.lazy(() => import("../components/Easybuy/Buyers/Cart.jsx"));
+const ComparePage1 = React.lazy(() =>
+  import("../components/Easybuy/Buyers/ComparePage1.jsx")
+);
+const DegreeView = React.lazy(() =>
+  import("../components/Easybuy/Buyers/DegreeView.jsx")
+);
+const Phones = React.lazy(() =>
+  import("../components/Easybuy/Buyers/PhonesPage/Phones.jsx")
+);
+const SolarDashboard = React.lazy(() =>
+  import("../components/Easybuy/Buyers/SolarPage/SolarDashboard.jsx")
+);
+const EnergyCalculator = React.lazy(() =>
+  import("../components/Easybuy/Buyers/SolarPage/EnergyCalculator.jsx")
+);
+const SolarDesign = React.lazy(() =>
+  import("../components/Easybuy/Buyers/SolarPage/SolarDesign.jsx")
+);
+const UserOrders = React.lazy(() =>
+  import("../components/Easybuy/Buyers/Orders/UserOrders.jsx")
+);
+const Payment = React.lazy(() =>
+  import("../components/Easybuy/Buyers/Payment.jsx")
+);
+const Swap = React.lazy(() =>
+  import("../components/Easybuy/Buyers/Swap/Swap.jsx")
+);
+const Installment = React.lazy(() =>
+  import("../components/Easybuy/Buyers/Installment/Installment.jsx")
+);
+const Checkout = React.lazy(() =>
+  import("../components/Easybuy/Buyers/Checkout/Checkout.jsx")
+);
 //Partners
-const PartnersDashboard = React.lazy(()=>import("../components/Easybuy/Partners/PartnersDashboard.jsx"))
-const Commission = React.lazy(()=>import("../components/Easybuy/Partners/Commission.jsx"))
-const Service = React.lazy(()=>import("../components/Easybuy/Partners/Service.jsx"))
-const ParentCustomer = React.lazy(()=>import("../components/Easybuy/Partners/ParentCustomer.jsx"))
-const Inventory = React.lazy(()=>import("../components/Easybuy/Buyers/Inventory/Inventory.jsx"))
+const PartnersDashboard = React.lazy(() =>
+  import("../components/Easybuy/Partners/PartnersDashboard.jsx")
+);
+const Commission = React.lazy(() =>
+  import("../components/Easybuy/Partners/Commission.jsx")
+);
+const Service = React.lazy(() =>
+  import("../components/Easybuy/Partners/Service.jsx")
+);
+const ParentCustomer = React.lazy(() =>
+  import("../components/Easybuy/Partners/ParentCustomer.jsx")
+);
+const Inventory = React.lazy(() =>
+  import("../components/Easybuy/Buyers/Inventory/Inventory.jsx")
+);
 //Shares
-const SharesDashboard = React.lazy(()=>import("../components/Shares/SharesDashboard.jsx"))
-const Portfolio = React.lazy(()=>import("../components/Shares/Portfolio.jsx"))
-const Transaction = React.lazy(()=>import("../components/Shares/Transaction.jsx"))
-const Analysis = React.lazy(()=>import("../components/Shares/Analysis.jsx"))
-
-
+const SharesDashboard = React.lazy(() =>
+  import("../components/Shares/SharesDashboard.jsx")
+);
+const Portfolio = React.lazy(() =>
+  import("../components/Shares/Portfolio.jsx")
+);
+const Transaction = React.lazy(() =>
+  import("../components/Shares/Transaction.jsx")
+);
+const Analysis = React.lazy(() => import("../components/Shares/Analysis.jsx"));
 
 export const router = createBrowserRouter([
   {
@@ -134,7 +259,8 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <ResetPswd />
-      </Suspense>),
+      </Suspense>
+    ),
     errorElement: <ErrorPage />,
   },
   {
@@ -142,7 +268,8 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <Pin />
-      </Suspense>),
+      </Suspense>
+    ),
     errorElement: <ErrorPage />,
   },
   {
@@ -150,8 +277,8 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <Success />
-      </Suspense>)
-    ,
+      </Suspense>
+    ),
     errorElement: <ErrorPage />,
   },
   {
@@ -169,7 +296,8 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <AirtimePurchase />
-      </Suspense>),
+      </Suspense>
+    ),
     errorElement: <ErrorPage />,
   },
   {
@@ -177,7 +305,8 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <DataPurchase />
-      </Suspense>),
+      </Suspense>
+    ),
     errorElement: <ErrorPage />,
   },
   {
@@ -185,7 +314,8 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <TvSub />
-      </Suspense>),
+      </Suspense>
+    ),
     errorElement: <ErrorPage />,
   },
   {
@@ -193,7 +323,8 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <Electricity />
-      </Suspense>),
+      </Suspense>
+    ),
     errorElement: <ErrorPage />,
   },
 
@@ -212,6 +343,15 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <Support />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/payloow/policy",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Policy />
       </Suspense>
     ),
     errorElement: <ErrorPage />,
@@ -460,270 +600,269 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
 
-//Easybuy
-{
-  path: "/easybuy/home",
-  element: (
-    <Suspense fallback={<Loader />}>
-  <StepParent />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/buyers/dashboard",
-  element: (
-    <Suspense fallback={<Loader />}>
-  <BuyersDashboard />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/buyers/two",
-  element: (
-    <Suspense fallback={<Loader />}>
-  <BuyersDashboardTwo />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/product-details/:id",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <ProductDetails/>
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/user-cart",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <Carts />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/comapare-product",
-  element: (
-    <Suspense fallback={<Loader />}>
-   <ComparePage1 />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/product-view",
-  element: (
-    <Suspense fallback={<Loader />}>
-   <DegreeView />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/phones-page",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <Phones phones={phonesItems} />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/swap-product",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <Swap/>
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/solar-page",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <SolarDashboard solars={solarItems}/>
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/energy-calculator",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <EnergyCalculator/>
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/design-solar",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <SolarDesign/>
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/my-orders",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <UserOrders/>
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/payment",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <Payment/>
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/installment",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <Installment/>
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/checkout-product",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <Checkout />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-//Partners
-{
-  path: "/partners/dashboard",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <PartnersDashboard/>
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/partners/commission",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <Commission />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/partners/service-center",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <Service />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/partners/customers",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <ParentCustomer/>
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/partners/inventory",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <Inventory />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-//Shares
-{
-  path: "/shares/dashboard",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <SharesDashboard />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/shares/analytics",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <Analysis/>
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/shares/portfolio",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <Portfolio />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/shares/transaction",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <Transaction />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/purchase/success",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <FlutterSuccessPurchaseModal />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-//admin
-{
-  path: "/admin/dashboard",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <AdminDashboard />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/admin/e-learning",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <Admin_E_learning />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
-{
-  path: "/admin/investment",
-  element: (
-    <Suspense fallback={<Loader />}>
-    <Admin_Investment />
-    </Suspense>
-  ),
-  errorElement: <ErrorPage />,
-},
+  //Easybuy
+  {
+    path: "/easybuy/home",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <StepParent />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/buyers/dashboard",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <BuyersDashboard />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/buyers/two",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <BuyersDashboardTwo />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/product-details/:id",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <ProductDetails />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/user-cart",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Carts />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/comapare-product",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <ComparePage1 />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/product-view",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <DegreeView />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/phones-page",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Phones phones={phonesItems} />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/swap-product",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Swap />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/solar-page",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <SolarDashboard solars={solarItems} />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/energy-calculator",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <EnergyCalculator />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/design-solar",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <SolarDesign />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/my-orders",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <UserOrders />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/payment",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Payment />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/installment",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Installment />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/checkout-product",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Checkout />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  //Partners
+  {
+    path: "/partners/dashboard",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <PartnersDashboard />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/partners/commission",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Commission />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/partners/service-center",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Service />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/partners/customers",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <ParentCustomer />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/partners/inventory",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Inventory />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  //Shares
+  {
+    path: "/shares/dashboard",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <SharesDashboard />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/shares/analytics",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Analysis />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/shares/portfolio",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Portfolio />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/shares/transaction",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Transaction />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/purchase/success",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <FlutterSuccessPurchaseModal />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  //admin
+  {
+    path: "/admin/dashboard",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <AdminDashboard />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/admin/e-learning",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Admin_E_learning />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/admin/investment",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Admin_Investment />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
 ]);
-

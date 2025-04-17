@@ -36,15 +36,17 @@ const Navbar = () => {
         <div className="max-w-[1440px] mx-auto">
           <div className="container mx-auto md:px-20 px-5 py-4 flex justify-between items-center font-plus-jakarta">
             <div
-              className={`${scrolled ? "text-primary-500" : "text-white"
-                } text-3xl md:text-4xl font-extrabold font-poppins `}
+              className={`${
+                scrolled ? "text-primary-500" : "text-white"
+              } text-3xl md:text-4xl font-extrabold font-poppins `}
             >
-             Payloow
+              Payloow
             </div>
 
             <ul
-              className={`${scrolled ? "text-primary-500" : "text-white"
-                } hidden md:flex space-x-6`}
+              className={`${
+                scrolled ? "text-primary-500" : "text-white"
+              } hidden md:flex space-x-6`}
             >
               <li>
                 <a href="#home" className="">
@@ -75,10 +77,11 @@ const Navbar = () => {
                     window.location.href = "/login";
                   }, 2000); // 2-second delay
                 }}
-                className={`${scrolled
-                  ? "text-black-800 border-primary-500 hover:bg-primary-500"
-                  : "text-white border-white hover:bg-white hover:text-primary-500"
-                  } border-2 rounded-xl px-5 md:px-10 py-2 md:py-3 hover:text-white transition-all duration-300 ease-in-out`}
+                className={`${
+                  scrolled
+                    ? "text-black-800 border-primary-500 hover:bg-primary-500"
+                    : "text-white border-white hover:bg-white hover:text-primary-500"
+                } border-2 rounded-xl px-5 md:px-10 py-2 md:py-3 hover:text-white transition-all duration-300 ease-in-out`}
               >
                 Login
               </button>
@@ -88,10 +91,11 @@ const Navbar = () => {
                     window.location.href = "/register";
                   }, 2000); // 2-second delay
                 }}
-                className={`${scrolled
-                  ? "bg-primary-500 text-white"
-                  : "bg-white text-primary-500 border-white"
-                  } border-2 px-5 md:px-10 py-2 md:py-3 rounded-lg`}
+                className={`${
+                  scrolled
+                    ? "bg-primary-500 text-white"
+                    : "bg-white text-primary-500 border-white"
+                } border-2 px-5 md:px-10 py-2 md:py-3 rounded-lg`}
               >
                 Sign Up
               </button>
@@ -100,8 +104,9 @@ const Navbar = () => {
             <div className="md:hidden z-40">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className={`${scrolled ? "text-primary-500" : "text-white"
-                  } text-2xl`}
+                className={`${
+                  scrolled ? "text-primary-500" : "text-white"
+                } text-2xl`}
               >
                 <MenuIcon />
               </button>

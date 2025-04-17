@@ -1,6 +1,6 @@
 import { Facebook, Instagram, Whatsapp } from "iconsax-react";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function ShapeOne() {
   return (
@@ -29,6 +29,17 @@ function ShapeOne() {
 }
 
 const Footer = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  const handleNavigate = () => {
+    navigate("/payloow/policy");
+  };
+
   return (
     <>
       <section className="relative">
@@ -67,6 +78,12 @@ const Footer = () => {
                           </Link>
                           <Link to="/" class="link-hover">
                             Easy Buy
+                          </Link>
+                          <Link
+                            onClick={handleNavigate()}
+                            className="mt-2 text-blue-300"
+                          >
+                            Terms & Policy
                           </Link>
                         </div>
                       </li>
