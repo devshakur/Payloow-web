@@ -22,19 +22,6 @@ Styling: TailwindCSS
 Build Tool: Vite, PWAs, Notion, Figma
 
 
-## payloow Project Structure
-
-├── public/             # Public assets
-├── src/
-│   ├── assets/         # Images, icons, static files
-│   ├── components/     # Reusable UI components
-│   ├── pages/          # Different page views
-│   ├── App.jsx         # Main application component
-│   ├── main.jsx        # Entry point
-├── package.json        # Project metadata and dependencies
-├── tailwind.config.js  # TailwindCSS configuration
-├── vite.config.js      # Vite configuration
-├── README.md           # Project documentation
 
 # Author 👨‍💻
 Developed by Abdulshakur Dauda
