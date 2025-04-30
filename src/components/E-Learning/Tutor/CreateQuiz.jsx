@@ -20,11 +20,11 @@ const CreateQuiz = ({ onClose, onSubmit }) => {
 
   const fetchCourseById = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
-      const response = await fetch(import.meta.env.VITE_BASEURL + `${`/get-course-by-id/${id}`}`, {
+      const token = JSON.parse(localStorage.getItem("auth")).auth;
+      const response = await fetch(endpoints.getCourseById(id), {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          // Authorization: `Bearer ${token}`,
+        },
       });
       const data = await response.json();
       setCourseData(data.data);
@@ -37,7 +37,9 @@ const CreateQuiz = ({ onClose, onSubmit }) => {
   const sections = courseData?.sections || [];
 
   // Get lessons from selected section
-  const lessons = sections.find(section => section._id === selectedSectionId)?.lessons || [];
+  const lessons =
+    sections.find((section) => section._id === selectedSectionId)?.lessons ||
+    [];
 
   const handleSectionSelect = (sectionId) => {
     setSelectedSectionId(sectionId);
@@ -53,9 +55,9 @@ const CreateQuiz = ({ onClose, onSubmit }) => {
           { option: "", is_correct: false },
           { option: "", is_correct: false },
           { option: "", is_correct: false },
-          { option: "", is_correct: false }
-        ]
-      }
+          { option: "", is_correct: false },
+        ],
+      },
     ]);
   };
 
@@ -79,12 +81,12 @@ const CreateQuiz = ({ onClose, onSubmit }) => {
 
   const handleCorrectOptionChange = (questionIndex, optionIndex) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[questionIndex].options = updatedQuestions[questionIndex].options.map(
-      (option, index) => ({
-        ...option,
-        is_correct: index === optionIndex
-      })
-    );
+    updatedQuestions[questionIndex].options = updatedQuestions[
+      questionIndex
+    ].options.map((option, index) => ({
+      ...option,
+      is_correct: index === optionIndex,
+    }));
     setQuestions(updatedQuestions);
   };
 
@@ -95,23 +97,22 @@ const CreateQuiz = ({ onClose, onSubmit }) => {
       section_id: selectedSectionId,
       lesson_id: selectedLessonId,
       quiz_title: quizTitle,
-      questions: questions
+      questions: questions,
     };
     try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
+      const token = JSON.parse(localStorage.getItem("auth")).auth;
       const response = await axios.post(endpoints.addQuiz, payload, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      toast.success('quiz uploaded successfully')
+      toast.success("quiz uploaded successfully");
       const data = await response.json();
       setCourseData(data);
     } catch (error) {
       console.error("Error fetching course:", error);
-
     }
-    console.log(payload)
+    console.log(payload);
     onSubmit(payload);
   };
 
@@ -128,7 +129,9 @@ const CreateQuiz = ({ onClose, onSubmit }) => {
         </div>
 
         <div>
-          <label htmlFor="section-select" className="form-label">Select Section</label>
+          <label htmlFor="section-select" className="form-label">
+            Select Section
+          </label>
           <select
             id="section-select"
             value={selectedSectionId}
@@ -147,7 +150,9 @@ const CreateQuiz = ({ onClose, onSubmit }) => {
 
         {selectedSectionId && (
           <div>
-            <label htmlFor="lesson-select" className="form-label">Select Lesson</label>
+            <label htmlFor="lesson-select" className="form-label">
+              Select Lesson
+            </label>
             <select
               id="lesson-select"
               value={selectedLessonId}
@@ -167,7 +172,9 @@ const CreateQuiz = ({ onClose, onSubmit }) => {
 
         {selectedLessonId && (
           <div>
-            <label htmlFor="quiz-title" className="form-label">Quiz Title</label>
+            <label htmlFor="quiz-title" className="form-label">
+              Quiz Title
+            </label>
             <input
               id="quiz-title"
               type="text"
@@ -180,54 +187,77 @@ const CreateQuiz = ({ onClose, onSubmit }) => {
           </div>
         )}
 
-        {selectedLessonId && questions.map((question, questionIndex) => (
-          <div key={questionIndex} className="border rounded-lg p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <h4 className="text-lg">Question {questionIndex + 1}</h4>
-              <button
-                type="button"
-                onClick={() => handleRemoveQuestion(questionIndex)}
-                className="text-red-500"
-              >
-                <MdClose />
-              </button>
-            </div>
+        {selectedLessonId &&
+          questions.map((question, questionIndex) => (
+            <div
+              key={questionIndex}
+              className="border rounded-lg p-5 space-y-4"
+            >
+              <div className="flex items-center justify-between">
+                <h4 className="text-lg">Question {questionIndex + 1}</h4>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveQuestion(questionIndex)}
+                  className="text-red-500"
+                >
+                  <MdClose />
+                </button>
+              </div>
 
-            <div>
-              <input
-                type="text"
-                value={question.question_text}
-                onChange={(e) => handleQuestionChange(questionIndex, "question_text", e.target.value)}
-                className="form-input w-full"
-                placeholder="Enter question"
-                required
-              />
-            </div>
+              <div>
+                <input
+                  type="text"
+                  value={question.question_text}
+                  onChange={(e) =>
+                    handleQuestionChange(
+                      questionIndex,
+                      "question_text",
+                      e.target.value
+                    )
+                  }
+                  className="form-input w-full"
+                  placeholder="Enter question"
+                  required
+                />
+              </div>
 
-            <div className="space-y-2">
-              {question.options.map((option, optionIndex) => (
-                <div key={optionIndex} className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name={`correct-option-${questionIndex}`}
-                    checked={option.is_correct}
-                    onChange={() => handleCorrectOptionChange(questionIndex, optionIndex)}
-                    className="w-5 h-5"
-                    required
-                  />
-                  <input
-                    type="text"
-                    value={option.option}
-                    onChange={(e) => handleOptionChange(questionIndex, optionIndex, e.target.value)}
-                    className="form-input flex-1"
-                    placeholder={`Option ${String.fromCharCode(65 + optionIndex)}`}
-                    required
-                  />
-                </div>
-              ))}
+              <div className="space-y-2">
+                {question.options.map((option, optionIndex) => (
+                  <div
+                    key={optionIndex}
+                    className="flex items-center space-x-2"
+                  >
+                    <input
+                      type="radio"
+                      name={`correct-option-${questionIndex}`}
+                      checked={option.is_correct}
+                      onChange={() =>
+                        handleCorrectOptionChange(questionIndex, optionIndex)
+                      }
+                      className="w-5 h-5"
+                      required
+                    />
+                    <input
+                      type="text"
+                      value={option.option}
+                      onChange={(e) =>
+                        handleOptionChange(
+                          questionIndex,
+                          optionIndex,
+                          e.target.value
+                        )
+                      }
+                      className="form-input flex-1"
+                      placeholder={`Option ${String.fromCharCode(
+                        65 + optionIndex
+                      )}`}
+                      required
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
 
         {selectedLessonId && (
           <button

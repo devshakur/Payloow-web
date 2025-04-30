@@ -41,75 +41,73 @@ const CompleteProfile = () => {
     setSelectedFile(e.target.files[0]);
   };
 
-
   const handleUpload = async () => {
     if (!selectedFile) {
-      toast.error('Please select a file first');
+      toast.error("Please select a file first");
       return;
     }
 
     setIsUploading(true);
     const formData = new FormData();
-    formData.append('image', selectedFile);
+    formData.append("image", selectedFile);
 
     try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
+      const token = JSON.parse(localStorage.getItem("auth")).auth;
       const response = await axios.post(endpoints.addTutorImage, formData, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
         onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
           setUploadProgress(percentCompleted);
         },
       });
       console.log(response);
 
       if (response.status === 200) {
-        toast.success('Image uploaded successfully');
+        toast.success("Image uploaded successfully");
         await getUser();
       }
     } catch (error) {
-      toast.error('Failed to upload image');
-      console.error('Error uploading image:', error);
+      toast.error("Failed to upload image");
+      console.error("Error uploading image:", error);
     } finally {
       setIsUploading(false);
       setUploadProgress(0); // Reset progress after upload
     }
   };
 
-
   const getUser = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
+      const token = JSON.parse(localStorage.getItem("auth")).auth;
       const response = await axios.get(endpoints.getCurrentUser, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      localStorage.setItem('currentUser', JSON.stringify(response.data.data));
+      localStorage.setItem("currentUser", JSON.stringify(response.data.data));
       const currentUser = response.data.data;
       if (currentUser.profilePicture) {
-        setFormData(prevState => ({
+        setFormData((prevState) => ({
           ...prevState,
-          tutor_image: currentUser.profilePicture
+          tutor_image: currentUser.profilePicture,
         }));
       }
     } catch (error) {
-      toast.error('An error occurred while fetching user data');
+      toast.error("An error occurred while fetching user data");
     }
   };
 
   const handleRemove = () => {
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      tutor_image: ""
+      tutor_image: "",
     }));
     setSelectedFile(null);
   };
-
-
 
   const handleNextStep = () => {
     if (step < 3) setStep(step + 1);
@@ -124,36 +122,40 @@ const CompleteProfile = () => {
     setUploadProgress(0); // Reset progress at the beginning
 
     try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
+      const token = JSON.parse(localStorage.getItem("auth")).auth;
       if (!token) {
-        toast.error('No token found. Please log in again.');
+        toast.error("No token found. Please log in again.");
         return;
       }
 
-      const response = await axios.post(endpoints.createTutorProfile, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        onUploadProgress: (progressEvent) => {
-          const total = progressEvent.total;
-          const current = progressEvent.loaded;
-          const percentage = Math.floor((current / total) * 100);
-          setUploadProgress(percentage); // Update the upload progress
+      const response = await axios.post(
+        endpoints.createTutorProfile,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          onUploadProgress: (progressEvent) => {
+            const total = progressEvent.total;
+            const current = progressEvent.loaded;
+            const percentage = Math.floor((current / total) * 100);
+            setUploadProgress(percentage); // Update the upload progress
+          },
         }
-      });
+      );
 
       if (response.status === 200) {
         toast.success(response.data.message);
         navigate("/e-learning/tutor/dashboard");
       } else {
-        toast.error('Failed to create profile. Please try again.');
+        toast.error("Failed to create profile. Please try again.");
       }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.msg) {
         toast.error(error.response.data.msg);
       } else {
-        toast.error('An error occurred. Please try again.');
+        toast.error("An error occurred. Please try again.");
       }
     } finally {
       setIsSubmitting(false);
@@ -323,13 +325,20 @@ const CompleteProfile = () => {
                       <option value={"PhD"}>PhD</option>
                       <option value={"Diploma"}>Diploma</option>
                       <option value={"Certificate"}>Certificate</option>
-                      <option value={"Associate Degree"}>Associate Degree</option>
-                      <option value={"Professional License"}>Professional License</option>
-                      <option value={"Teaching Credential"}>Teaching Credential</option>
-                      <option value={"Industry Certification"}>Industry Certification</option>
+                      <option value={"Associate Degree"}>
+                        Associate Degree
+                      </option>
+                      <option value={"Professional License"}>
+                        Professional License
+                      </option>
+                      <option value={"Teaching Credential"}>
+                        Teaching Credential
+                      </option>
+                      <option value={"Industry Certification"}>
+                        Industry Certification
+                      </option>
                       <option value={"Postgraduate"}>Postgraduate</option>
                       <option value={"Training Course"}>Training Course</option>
-
                     </select>
                   </div>
                 </div>
@@ -403,7 +412,10 @@ const CompleteProfile = () => {
                         alt="user image"
                         className="w-32 h-32 rounded-full object-cover"
                       />
-                      <label htmlFor="fileInput" className="absolute bottom-0 flex items-center justify-center w-full h-10 bg-black/50 cursor-pointer">
+                      <label
+                        htmlFor="fileInput"
+                        className="absolute bottom-0 flex items-center justify-center w-full h-10 bg-black/50 cursor-pointer"
+                      >
                         <BsCameraFill color="#ffffff" />
                       </label>
                     </div>
@@ -411,16 +423,20 @@ const CompleteProfile = () => {
                       type="file"
                       onChange={handleFileChange}
                       accept="image/*"
-                      style={{ display: 'none' }}
+                      style={{ display: "none" }}
                       id="fileInput"
                     />
                     <button
                       onClick={handleUpload}
                       disabled={isUploading}
                       type="button"
-                      className={`md:py-4 px-10 py-3 rounded-lg md:text-base text-sm bg-primary text-white border border-primary ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      className={`md:py-4 px-10 py-3 rounded-lg md:text-base text-sm bg-primary text-white border border-primary ${
+                        isUploading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                     >
-                      {isUploading ? `Uploading... ${uploadProgress}%` : 'Upload'}
+                      {isUploading
+                        ? `Uploading... ${uploadProgress}%`
+                        : "Upload"}
                     </button>
                     <button
                       onClick={handleRemove}
@@ -434,13 +450,17 @@ const CompleteProfile = () => {
                   <label htmlFor="tutor_about" className="form-label">
                     About
                   </label>
-                  <textarea cols="5" rows="5" name="tutor_about"
+                  <textarea
+                    cols="5"
+                    rows="5"
+                    name="tutor_about"
                     id="tutor_about"
                     value={formData.tutor_about}
                     onChange={handleChange}
                     className="form-input"
                     placeholder="Write a short about"
-                    required></textarea>
+                    required
+                  ></textarea>
                 </div>
                 <div className="flex items-center justify-between space-x-8">
                   <button
@@ -453,9 +473,13 @@ const CompleteProfile = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-full md:py-4 py-3 rounded-lg md:text-base text-sm bg-primary text-white ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`w-full md:py-4 py-3 rounded-lg md:text-base text-sm bg-primary text-white ${
+                      isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                   >
-                    {isSubmitting ? `Submitting... ${uploadProgress}%` : 'Submit'}
+                    {isSubmitting
+                      ? `Submitting... ${uploadProgress}%`
+                      : "Submit"}
                   </button>
                 </div>
               </>
@@ -464,7 +488,6 @@ const CompleteProfile = () => {
         </div>
       </section>
     </>
-
   );
 };
 

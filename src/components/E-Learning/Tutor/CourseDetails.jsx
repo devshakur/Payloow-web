@@ -1,35 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { IoIosArrowDown, IoIosArrowUp, IoIosReturnLeft } from 'react-icons/io';
+import React, { useEffect, useState } from "react";
+import { IoIosArrowDown, IoIosArrowUp, IoIosReturnLeft } from "react-icons/io";
 import { ImUsers } from "react-icons/im";
 import { CiClock2, CiPlay1 } from "react-icons/ci";
 import { BsPatchQuestion } from "react-icons/bs";
 import { RiBookLine } from "react-icons/ri";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from "react-router-dom";
 
-import axios from 'axios';
-import { endpoints } from '../../../api/Endpoint';
-import Layout from './Layout';
-import { Loader } from '../../../AuthContext/Loader';
-import { Dialog, DialogPanel, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
-import { motion } from 'framer-motion';
-import CreateQuiz from './CreateQuiz';
-import toast from 'react-hot-toast';
-
+import axios from "axios";
+import { endpoints } from "../../../api/Endpoint";
+import Layout from "./Layout";
+import { Loader } from "../../../AuthContext/Loader";
+import {
+  Dialog,
+  DialogPanel,
+  Tab,
+  TabGroup,
+  TabList,
+  TabPanel,
+  TabPanels,
+} from "@headlessui/react";
+import { motion } from "framer-motion";
+import CreateQuiz from "./CreateQuiz";
+import toast from "react-hot-toast";
 
 const CourseDetails = () => {
   const { id } = useParams();
-  const [courses, setCourses] = useState([])
+  const [courses, setCourses] = useState([]);
   const navigate = useNavigate();
   const [openSectionId, setOpenSectionId] = useState(null);
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const [isAnnouncementModalOpen, setIsAnnouncementModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     courseId: id,
-    title: '',
-    description: ''
-  })
+    title: "",
+    description: "",
+  });
 
   const handleCourseClick = (courseId) => {
     navigate(`/e-learning/tutor/course/edit-course/${courseId}`);
@@ -42,48 +49,49 @@ const CourseDetails = () => {
 
   const getAllCourses = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
-      console.log(token);
+      const token = JSON.parse(localStorage.getItem("auth")).auth;
       const response = await axios.get(endpoints.getAllCourses, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      console.log(response.data);
-      setCourses(response.data.data)
+      setCourses(response.data.data);
     } catch (error) {
-      toast.error('An error occured while fetching user data')
+      toast.error("An error occured while fetching user data");
     }
-  }
+  };
 
   const addAnnouncement = async () => {
     setIsLoading(true);
     try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
-      const response = await axios.post(endpoints.createAnnouncement, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const token = JSON.parse(localStorage.getItem("auth")).auth;
+      const response = await axios.post(
+        endpoints.createAnnouncement,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
-      console.log(response.data);
-      toast.success('Announcement created successfully');
+      );
+      toast.success("Announcement created successfully");
     } catch (error) {
-      toast.error('Failed to create announcement');
+      toast.error("Failed to create announcement");
     } finally {
       setIsLoading(false);
       setIsAnnouncementModalOpen(false);
     }
-  }
+  };
 
   useEffect(() => {
     getAllCourses();
   }, []);
 
   const backToCourses = () => {
-    navigate('/e-learning/tutor/all-courses');
-  }
+    navigate("/e-learning/tutor/all-courses");
+  };
 
-  const course = courses.find(c => c._id === (id));
+  const course = courses.find((c) => c._id === id);
 
   const handleQuizSubmit = async (quizzes) => {
     const payload = {
@@ -99,25 +107,26 @@ const CourseDetails = () => {
         })),
       })),
     };
-
-    console.log(payload);
   };
 
-
-
-
-
-  if (!course) return <div><Loader /></div>;
+  if (!course)
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
   return (
     <Layout>
       <div className="">
-        <button onClick={backToCourses} className="flex items-center text-blue-600 mb-6">
+        <button
+          onClick={backToCourses}
+          className="flex items-center text-blue-600 mb-6"
+        >
           <IoIosReturnLeft className="mr-2" />
           Back to Courses
         </button>
 
         <div className="grid md:grid-cols-5 gap-8">
-
           <div className="md:col-span-3">
             <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
             <div className="h-44 max-h-64 overflow-hidden overflow-y-scroll">
@@ -126,50 +135,58 @@ const CourseDetails = () => {
 
             <TabGroup>
               <TabList className="flex mb-6">
-
-                <Tab className="course-detail-card">
-                  Contents
-                </Tab>
-                <Tab className="course-detail-card">
-                  Quiz
-                </Tab>
-                <Tab className="course-detail-card">
-                  Announcements
-                </Tab>
-                <Tab className="course-detail-card">
-                  Q&A
-                </Tab>
+                <Tab className="course-detail-card">Contents</Tab>
+                <Tab className="course-detail-card">Quiz</Tab>
+                <Tab className="course-detail-card">Announcements</Tab>
+                <Tab className="course-detail-card">Q&A</Tab>
               </TabList>
               <TabPanels className="mt-6">
                 <TabPanel>
                   <div className="mt-10 mb-6">
                     {course.sections?.map((section) => (
-                      <motion.div key={section._id}
+                      <motion.div
+                        key={section._id}
                         className="mb-4"
                         initial="hidden"
                         animate="visible"
                         exit="hidden"
                         variants={sectionVariant}
-                        transition={{ duration: 0.5 }}>
+                        transition={{ duration: 0.5 }}
+                      >
                         <div
-                          className='bg-white flex items-center justify-between text-xl p-3 rounded-xl cursor-pointer'
-                          onClick={() => setOpenSectionId(openSectionId === section._id ? null : section._id)}
+                          className="bg-white flex items-center justify-between text-xl p-3 rounded-xl cursor-pointer"
+                          onClick={() =>
+                            setOpenSectionId(
+                              openSectionId === section._id ? null : section._id
+                            )
+                          }
                         >
                           <span>{section.title}</span>
                           <span>
-                            {openSectionId === section._id ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                            {openSectionId === section._id ? (
+                              <IoIosArrowUp />
+                            ) : (
+                              <IoIosArrowDown />
+                            )}
                           </span>
                         </div>
                         {openSectionId === section._id && (
-                          <motion.div className="space-y-5 pl-5 mt-5"
+                          <motion.div
+                            className="space-y-5 pl-5 mt-5"
                             initial="hidden"
                             animate="visible"
                             exit="hidden"
                             variants={sectionVariant}
-                            transition={{ duration: 0.5 }}>
-                            {section.lessons.map(lesson => (
-                              <div key={lesson._id} className='flex items-center space-x-3'>
-                                <span><CiPlay1 /></span>
+                            transition={{ duration: 0.5 }}
+                          >
+                            {section.lessons.map((lesson) => (
+                              <div
+                                key={lesson._id}
+                                className="flex items-center space-x-3"
+                              >
+                                <span>
+                                  <CiPlay1 />
+                                </span>
                                 <span>{lesson.title}</span>
                               </div>
                             ))}
@@ -195,38 +212,45 @@ const CourseDetails = () => {
                     Add Announcement
                   </button>
                 </TabPanel>
-                <TabPanel>
-                  No Q&A
-                </TabPanel>
+                <TabPanel>No Q&A</TabPanel>
               </TabPanels>
             </TabGroup>
           </div>
 
-
-
           <div className="md:col-span-2">
             <div className="bg-white shadow-lg rounded-lg p-6">
               <img
-                src={course.thumbnailUrl ? course.thumbnailUrl : '/images/course-img.png'}
+                src={
+                  course.thumbnailUrl
+                    ? course.thumbnailUrl
+                    : "/images/course-img.png"
+                }
                 alt={course.title}
                 className="w-full h-72 object-cover rounded-lg mb-6"
               />
               <div className="flex items-center justify-between">
                 <div className="mb-4">
-                  <span className="bg-[#C0D5FD] text-sm px-3 py-1 rounded">{course.category}</span>
+                  <span className="bg-[#C0D5FD] text-sm px-3 py-1 rounded">
+                    {course.category}
+                  </span>
                 </div>
                 <div className="text-3xl font-bold mb-4">
                   {course.discount_price ? (
                     <>
                       <span>${course.discount_price}</span>
-                      <span className="line-through text-red-500 ml-2">${course.price}</span>
+                      <span className="line-through text-red-500 ml-2">
+                        ${course.price}
+                      </span>
                     </>
                   ) : (
                     <span>${course.price}</span>
                   )}
                 </div>
               </div>
-              <button onClick={() => handleCourseClick(course._id)} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+              <button
+                onClick={() => handleCourseClick(course._id)}
+                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+              >
                 Edit Course
               </button>
               {/* <button onClick={() => alert('Working on it')} className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">
@@ -236,15 +260,21 @@ const CourseDetails = () => {
               <h3 className="font-bold text-xl mt-10">Course Includes</h3>
               <div className="space-y-4 mt-5">
                 <div className="flex items-center space-x-3">
-                  <span><CiPlay1 /></span>
+                  <span>
+                    <CiPlay1 />
+                  </span>
                   <span>{course.duration} hours videos</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <span><RiBookLine /></span>
+                  <span>
+                    <RiBookLine />
+                  </span>
                   <span>{course.sections.length} sections</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <span><BsPatchQuestion /></span>
+                  <span>
+                    <BsPatchQuestion />
+                  </span>
                   <span>{course.sections.length} quizzess</span>
                 </div>
               </div>
@@ -270,7 +300,6 @@ const CourseDetails = () => {
         </div>
       </Dialog>
 
-
       <Dialog
         open={isAnnouncementModalOpen}
         as="div"
@@ -284,27 +313,37 @@ const CourseDetails = () => {
 
             {/* Title Input */}
             <div className="mb-4">
-              <label htmlFor="title" className="block text-lg font-medium text-gray-700">
+              <label
+                htmlFor="title"
+                className="block text-lg font-medium text-gray-700"
+              >
                 Title
               </label>
               <input
                 type="text"
                 id="title"
                 value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
             </div>
 
             {/* Description Input */}
             <div className="mb-4">
-              <label htmlFor="description" className="block text-lg font-medium text-gray-700">
+              <label
+                htmlFor="description"
+                className="block text-lg font-medium text-gray-700"
+              >
                 Description
               </label>
               <textarea
                 id="description"
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
             </div>
@@ -315,13 +354,12 @@ const CourseDetails = () => {
               className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
               disabled={isLoading}
             >
-              {isLoading ? 'Adding Announcement...' : 'Add Announcement'}
+              {isLoading ? "Adding Announcement..." : "Add Announcement"}
             </button>
           </DialogPanel>
         </div>
       </Dialog>
-
-    </Layout >
+    </Layout>
   );
 };
 
