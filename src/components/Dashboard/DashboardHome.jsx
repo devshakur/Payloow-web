@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import DashboardLayout from "./DashboardLayout";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -16,18 +16,18 @@ import { MdOutlineMenuBook } from "react-icons/md";
 import useAuth from "../../hooks/useAuth";
 
 const DashboardHome = () => {
-  const {GetUser} = useAuth();
-  const [details, setDetails] = useState({})
-  const [history, setHistory] = useState({})
+  const { GetUser } = useAuth();
+  const [details, setDetails] = useState({});
+  const [history, setHistory] = useState({});
   useEffect(() => {
     const getUserDetails = async () => {
       try {
         const resp = await GetUser(); // Call the correct function
-        const data = resp
-        const historyReference = resp.previousReference
+        const data = resp;
+        const historyReference = resp.previousReference;
         if (data) {
           setDetails(data); // Update state with fetched data
-          setHistory(historyReference)
+          setHistory(historyReference);
           toast.success("Fetched User Details");
         }
       } catch (error) {
@@ -73,7 +73,6 @@ const DashboardHome = () => {
   };
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-
   const settings2 = {
     dots: true,
     infinite: true,
@@ -81,7 +80,7 @@ const DashboardHome = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
- 
+
   const copyToClipboard = () => {
     const content = document.querySelector(".account-number").innerText;
     navigator.clipboard
@@ -94,13 +93,15 @@ const DashboardHome = () => {
       });
   };
 
-
   return (
     <DashboardLayout>
       <section>
         <div>
           <h3 className="md:text-3xl text-3xl font-bold pb-3">
-            Welcome Back,{details.lastName ? details?.lastName + " " + details?.firstName : "Guest"} 
+            Welcome Back,{" "}
+            {details.lastName
+              ? details?.lastName + " " + details?.firstName
+              : "Guest"}
             <span className="md:hidden">
               <br />
             </span>{" "}
@@ -115,7 +116,14 @@ const DashboardHome = () => {
                 <div className="available-balance text-white p-6 rounded-lg flex flex-col justify-between ">
                   <div className="space-y-3">
                     <p className="font-medium text-2xl">Available Balance</p>
-                    <p className="text-3xl font-bold font-plus-jakarta"> <span className="text-[16px]">₦</span>{(currentUser?.wallet?.balance ? currentUser.wallet.balance  : '0.00').toLocaleString()}</p>
+                    <p className="text-3xl font-bold font-plus-jakarta">
+                      {" "}
+                      <span className="text-[16px]">₦</span>
+                      {(currentUser?.wallet?.balance
+                        ? currentUser.wallet.balance
+                        : "0.00"
+                      ).toLocaleString()}
+                    </p>
                   </div>
                   <div>
                     <p className="flex items-center space-x-3">
@@ -129,7 +137,7 @@ const DashboardHome = () => {
                   <Button
                     text="Fund Wallet"
                     className="bg-white text-primary font-medium"
-                    onClick={() => { }}
+                    onClick={() => {}}
                   />
                 </div>
               </div>
@@ -137,19 +145,25 @@ const DashboardHome = () => {
                 <div className="loan-balance text-white p-6 rounded-lg flex flex-col justify-between ">
                   <div className="space-y-3">
                     <p className="font-medium text-2xl">Loan Balance</p>
-                    <p className="text-3xl font-bold"><span className="text-[16px]">₦</span>{(currentUser?.wallet?.loan?.balance ? currentUser.wallet.loan.balance  : '0.00').toLocaleString()}</p>
+                    <p className="text-3xl font-bold">
+                      <span className="text-[16px]">₦</span>
+                      {(currentUser?.wallet?.loan?.balance
+                        ? currentUser.wallet.loan.balance
+                        : "0.00"
+                      ).toLocaleString()}
+                    </p>
                   </div>
 
                   <div className="flex md:flex-row flex-col items-center gap-3">
                     <Button
                       text="Make a payment"
                       className="bg-white text-[#0099FF] font-medium"
-                      onClick={() => { }}
+                      onClick={() => {}}
                     />
                     <Button
                       text="Apply for Loan"
                       className="bg-white text-[#0099FF] font-medium"
-                      onClick={() => { }}
+                      onClick={() => {}}
                     />
                   </div>
                 </div>
@@ -158,7 +172,14 @@ const DashboardHome = () => {
                 <div className="courses p-6 rounded-lg justify-between shadow-lg">
                   <p className="flex items-center justify-between">
                     <span className="font-medium text-2xl">Your Courses</span>
-                    <Link to={currentUser?.role === 'Tutor' ? "/e-learning/tutor/all-courses" : "/e-learning/student/dashboard"} className="text-sm text-primary">
+                    <Link
+                      to={
+                        currentUser?.role === "Tutor"
+                          ? "/e-learning/tutor/all-courses"
+                          : "/e-learning/student/dashboard"
+                      }
+                      className="text-sm text-primary"
+                    >
                       See all
                     </Link>
                   </p>
@@ -289,31 +310,40 @@ const DashboardHome = () => {
                   </Link>
                 </div>
                 <div className="space-y-4">
-                  {history.length > 0 ? 
-                  history.reverse().map((transaction) => (
-                    <div
-                      key={transaction.id}
-                      className="flex items-center justify-between p-4"
-                    >
-                      <div className="flex items-center space-x-4">
-                        <img
-                          src={transaction.body == 'mtn' ? "/images/mtn.svg" : "/images/airtel.svg"}
-                          alt={transaction.title}
-                          className="w-12 h-12 rounded-full"
-                        />
-                        <div>
-                          <p className="font-medium capitalize">{transaction.body} {transaction.title}</p>
-                          <p className="text-sm w-1/2 text-gray-500 truncate text-ellipsis">
-                            {transaction._id}
+                  {history.length > 0 ? (
+                    history.reverse().map((transaction) => (
+                      <div
+                        key={transaction.id}
+                        className="flex items-center justify-between p-4"
+                      >
+                        <div className="flex items-center space-x-4">
+                          <img
+                            src={
+                              transaction.body == "mtn"
+                                ? "/images/mtn.svg"
+                                : "/images/airtel.svg"
+                            }
+                            alt={transaction.title}
+                            className="w-12 h-12 rounded-full"
+                          />
+                          <div>
+                            <p className="font-medium capitalize">
+                              {transaction.body} {transaction.title}
+                            </p>
+                            <p className="text-sm w-1/2 text-gray-500 truncate text-ellipsis">
+                              {transaction._id}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <p>{transaction.code}</p>
+                          <p className="text-green-500 bg-green-100 capitalize p-1">
+                            Successfull
                           </p>
                         </div>
                       </div>
-                      <div className="text-center">
-                        <p>{transaction.code}</p>
-                        <p className="text-green-500 bg-green-100 capitalize p-1">Successfull</p>
-                      </div>
-                    </div>
-                  )) : (
+                    ))
+                  ) : (
                     <div>No recent Transaction</div>
                   )}
                 </div>

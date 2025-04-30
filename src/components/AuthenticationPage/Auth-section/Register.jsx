@@ -47,7 +47,9 @@ function Register() {
       phone: Yup.string()
         .matches(/^[0-9]+$/, "Phone number must be digits")
         .required("required***"),
-      email: Yup.string().email("Invalid email address").required("required***"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("required***"),
       country: Yup.string().required("required*"),
       state: Yup.string().required("required***"),
       address: Yup.string().required("required***"),
@@ -60,28 +62,28 @@ function Register() {
         let resp;
         resp = await RegisterUser(payload);
         if (resp) {
-          toast.success("Registration done! Log in to access your dashboard.");
+          toast.success("Registration done! Login to access your dashboard.");
           setTimeout(() => {
             router.push("/login");
           }, 2000);
         }
       } catch (error) {
         if (error.response) {
-					if (error.response.status === 400) {
-						toast.error(error?.response.data.message);
-					} else {
-						toast.error('An unexpected error occurred: ' + error.message);
-					}
-				} else if (error.request) {
-					
-					toast.error('Network error. Check your internet connection.');
-				} else {
-					
-					toast.error('Error: ' + 'An unexpected error occurred please try again');
-				}
-			}
-			setSubmitting(false);
-			}
+          if (error.response.status === 400) {
+            toast.error(error?.response.data.message);
+          } else {
+            toast.error("An unexpected error occurred: " + error.message);
+          }
+        } else if (error.request) {
+          toast.error("Network error. Check your internet connection.");
+        } else {
+          toast.error(
+            "Error: " + "An unexpected error occurred please try again"
+          );
+        }
+      }
+      setSubmitting(false);
+    },
   });
   return (
     <main className="bg h-screen w-screen overflow-y-auto">
@@ -111,8 +113,7 @@ function Register() {
             <RegisterTwo formik={formik} />
           )}
         </form>
-        <Toaster
-        />
+        <Toaster />
       </div>
     </main>
   );

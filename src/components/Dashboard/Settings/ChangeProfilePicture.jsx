@@ -129,7 +129,7 @@ const ChangeProfilePicture = () => {
                 onClick={handleUpload}
                 disabled={isUploading}
               >
-                {isUploading ? "Uploading..." : "Upload photo"}
+                {isUploading ? <div className="loader"></div> : "Upload photo"}
               </button>
             )}
           </div>
