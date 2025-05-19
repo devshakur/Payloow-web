@@ -1,19 +1,19 @@
 // src/axiosInstance.js
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import axios from "axios";
+import Cookies from "js-cookie";
 
 // Create an Axios instance
 const axiosInstance = axios.create({
-  baseURL: '"https://revo-dblk.onrender.com/api/v1/"', 
+  baseURL: "https://api-dev.payloow.com/api/v1/",
 });
-  
+
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
     // Get the auth token from cookies
-    const token = Cookies.get('authToken'); // Adjust this as needed
+    const token = Cookies.get("authToken"); // Adjust this as needed
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`; // Add the token to headers
+      config.headers["Authorization"] = `Bearer ${token}`; // Add the token to headers
     }
     return config;
   },
