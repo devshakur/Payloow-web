@@ -1,14 +1,13 @@
-export const BaseUrl = "https://revo-dblk.onrender.com/api/v1";
- const investmentApiBaseUrl = "https://revo-backend.onrender.com/" 
-  
- 
+export const BaseUrl = "https://api-dev.payloow.com/api/v1";
+const investmentApiBaseUrl = "https://api-dev-investment.payloow.com/";
+
 //registration
 export const AuthEndPoints = {
   login: `${BaseUrl}/login`,
   register: `${BaseUrl}/register`,
   forget: `${BaseUrl}/forget-password`,
   reset: `${BaseUrl}/reset-password`,
-  getUser: `${BaseUrl}/get-current-user`
+  getUser: `${BaseUrl}/get-current-user`,
 };
 
 export const endpoints = {
@@ -72,7 +71,7 @@ export const BillsEndpoints = {
   balance: `${BaseUrl}/get-vtu-providers-wallet-balance`,
   setPin: `${BaseUrl}/set-transaction-pin`,
   confirm: `${BaseUrl}/verify-transaction-pin`,
-  getUserDetails: `${BaseUrl}/get-current-user`
+  getUserDetails: `${BaseUrl}/get-current-user`,
 };
 
 //Investment Endpoints
@@ -114,7 +113,7 @@ export const EasyBuyEndpoints = {
   fetchAllProduct: `${BaseUrl}/easybuy/buyer/products/`,
   checkCoupon: `${BaseUrl}/easybuy/buyer/check-coupon/`,
   GetDeliveryInfo: `${BaseUrl}/easybuy/buyer/delivery-information/`,
-  checkOut:`${BaseUrl}/easybuy/buyer/checkout/`,
+  checkOut: `${BaseUrl}/easybuy/buyer/checkout/`,
   swapProduct: `${BaseUrl}/swap/product`,
   getUserOrders: `${BaseUrl}/easybuy/buyer/orders/`,
   getInstallmentOrders: `${BaseUrl}/easybuy/buyer/installment-orders/`,
@@ -126,17 +125,17 @@ export const EasyBuyEndpoints = {
   getServiceCenter: `${BaseUrl}/easybuy/partner/service-center`,
   getPartnerCustomers: `${BaseUrl}/easybuy/partner/customers`,
   getPercentages: `${BaseUrl}/easybuy/partner/inventory/percentage-paid`,
-  deleteAllCartItem: `${BaseUrl}/easybuy/buyer/orders/delete`
-}
+  deleteAllCartItem: `${BaseUrl}/easybuy/buyer/orders/delete`,
+};
 
 //admin
 export const AdminEndpoints = {
   getAllDebtors: `${BaseUrl}/investment/admin/debtors`,
   getAllInvestors: `${BaseUrl}/investment/admin/investors`,
   getAllBusinesses: `${BaseUrl}/investment/admin/businesses`,
-//E-learning
-getAllTutors: `${BaseUrl}/tutors`,
-getAllCourses: `${BaseUrl}/all/courses`,
-getEnrolledStudents: `${BaseUrl}/students`,
-getVtuBalance: `${BaseUrl}/get-vtu-providers-wallet-balance`,
-}
+  //E-learning
+  getAllTutors: `${BaseUrl}/tutors`,
+  getAllCourses: `${BaseUrl}/all/courses`,
+  getEnrolledStudents: `${BaseUrl}/students`,
+  getVtuBalance: `${BaseUrl}/get-vtu-providers-wallet-balance`,
+};
