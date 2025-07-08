@@ -66,7 +66,7 @@ const DegreeView = () => {
 
                     info.forEach((item) => {
                         const productId = item._id;
-                        const additionalImages = item.product?.additionalImageKeys || [];
+                        const additionalImages = item.product?.additionalImageUrls || [];
                         otherImagesTemp[productId] = additionalImages;
                         selectedImagesTemp[productId] = additionalImages[0] || ''; // Default to first image
                         selectedColorsTemp[productId] = item.product?.color?.[0] || ''; // Default to first color

@@ -132,7 +132,7 @@ const StepTwo = ({ openStepThree, formik }) => {
               name='referralCode' 
               id='referralCode' 
               type="text" 
-              placeholder='Referral ID' 
+              placeholder='Referral ID (Optional)' 
               className='border mx-5 p-2 rounded-md focus:outline-none' 
               onChange={formik.handleChange}
               value={formik.values.referralCode}

@@ -23,8 +23,10 @@ function ForgotPswd() {
         try {  
           const response = await ForgetPswd(values)
           if (response) {
-            toast.success('We sent you a message on your Email')
-  
+            toast.success('We sent you a code on your mail')
+            setTimeout(() => {
+              router.push('/reset-password')
+            }, 2000);
         }
         } catch (error) {  
           if(error.response.status === 400){
@@ -65,7 +67,7 @@ function ForgotPswd() {
                     ) : null}
                     </div>
                     <button type="submit" disabled={formik.isSubmitting} className="h-[55px] bg-[#3369F4] rounded-lg p-4 text-white py-2">
-                        {formik.isSubmitting ? 'Requesting...' : 'Proceed'}
+                        {formik.isSubmitting ? <p className='loader'></p> : 'Proceed'}
                     </button>
               </form>
               <Toaster/>

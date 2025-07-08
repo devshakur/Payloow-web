@@ -118,6 +118,9 @@ const Login = React.lazy(() =>
 const Pin = React.lazy(() =>
   import("../components/AuthenticationPage/Auth-section/Pin/Pin.jsx")
 );
+const VirtualAccount = React.lazy(() =>
+  import("../components/AuthenticationPage/Auth-section/VirtualAccount/VirtualAccount.jsx")
+);
 const ForgotPswd = React.lazy(() =>
   import("../components/AuthenticationPage/password-issues/ForgotPswd.jsx")
 );
@@ -268,6 +271,15 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loader />}>
         <Pin />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+   {
+    path: "/set-virtual-account",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <VirtualAccount />
       </Suspense>
     ),
     errorElement: <ErrorPage />,

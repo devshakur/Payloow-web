@@ -91,7 +91,7 @@ const Cart = () => {
                   <div className="w-full lg:w-1/2">
                     <img
                       className="w-full h-full object-cover rounded-lg"
-                      src={item.product?.imageKey || '/images/iphon11-small.png'}
+                      src={item.product?.imageUrl || '/images/iphon11-small.png'}
                       alt={item.product?.name}
                     />
                   </div>

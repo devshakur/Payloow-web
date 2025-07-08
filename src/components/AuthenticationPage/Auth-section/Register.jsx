@@ -70,7 +70,7 @@ function Register() {
       } catch (error) {
         if (error.response) {
           if (error.response.status === 400) {
-            toast.error(error?.response.data.message);
+            toast.error(error?.response.data.msg);
           } else {
             toast.error("An unexpected error occurred: " + error.message);
           }

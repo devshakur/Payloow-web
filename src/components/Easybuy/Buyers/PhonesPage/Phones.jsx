@@ -24,11 +24,12 @@ const Phones = () => {
         const resp = await FetchAllProduct();
         const productsData = resp?.data?.data?.data;
 
-        if (productsData) {
+        if (productsData) {  
           const filteredProducts = productsData.filter((product) =>
-            product.category.name.toLowerCase().includes('phone')
+            product.category.name.toLowerCase().includes('electronics')
           );
-          setPhones([...filteredProducts].reverse()); // Reverse the products for latest first
+
+          setPhones([...filteredProducts].reverse()); 
         } else {
           setPhones([]);
         }
@@ -51,7 +52,9 @@ const Phones = () => {
   const displayedItems = phones.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
-  ); // Get the items to display for the current page
+  ); 
+  console.log(displayedItems);
+  
 
   return (
     <BuyersLayoutGen>
@@ -105,7 +108,7 @@ const Phones = () => {
               >
                 <Link to={`/product-details/${product._id}`}>
                   <div className='w-full flex justify-center lg:justify-start'>
-                    <img src={product.imageKey} alt={product._id} className='w-[80%]' />
+                    <img src={product.imageUrl} alt={product._id} className='w-[80%]' />
                   </div>
                   <div className='lg:w-[80%] w-[100%] flex justify-between md:w-[70%]'>
                     <p className='font-poppins font-medium text-[#101928] text-lg'>{product.name}</p>

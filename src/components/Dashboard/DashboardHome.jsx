@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import DashboardLayout from "./DashboardLayout";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -6,7 +6,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Button from "../Button";
 import { Copy } from "iconsax-react";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useBlocker } from "react-router-dom";
 import { FaBolt } from "react-icons/fa6";
 import { GiNetworkBars } from "react-icons/gi";
 import { FaPhoneAlt } from "react-icons/fa";
@@ -14,29 +14,94 @@ import { FaTv } from "react-icons/fa";
 import { FaMoneyBills } from "react-icons/fa6";
 import { MdOutlineMenuBook } from "react-icons/md";
 import useAuth from "../../hooks/useAuth";
+import FundModal from "../FundModal/FundModal";
+import WithdrawFund from "../WithdrawFund/WithdrawFund";
+import useBills from "../../hooks/useBills";
 
 const DashboardHome = () => {
   const { GetUser } = useAuth();
+  const {GetUserBalance, GetDva} = useBills()
   const [details, setDetails] = useState({});
   const [history, setHistory] = useState({});
-  useEffect(() => {
+  const [walletBalance, setWalletBalance] = useState({});
+const [isOpen, setIsOpen] = useState(false);
+const [isOpens, setIsOpens] = useState(false);
+const [dva, setDva] = useState({
+   bankName: "",
+   accountNumber: "",
+});
+
     const getUserDetails = async () => {
       try {
-        const resp = await GetUser(); // Call the correct function
+        const resp = await GetUser();
         const data = resp;
         const historyReference = resp.previousReference;
         if (data) {
-          setDetails(data); // Update state with fetched data
+          setDetails(data); 
           setHistory(historyReference);
           toast.success("Fetched User Details");
-        }
+        } 
       } catch (error) {
         toast.error("Failed to fetch user details");
       }
     };
 
-    getUserDetails();
-  }, [GetUser]);
+    const getDva = async () => {
+      try {
+        const resp = await GetDva();
+        console.log("GetDva raw response:", resp);
+        const dvaData = resp?.data?.data?.paystackDvaData;
+
+    if (dvaData) {
+      const extracted = {
+        bankName: dvaData?.bank?.name,
+        accountNumber: dvaData?.account_number,
+      };
+        console.log("Extracted DVA:", extracted);
+      setDva(extracted);
+      } 
+    } catch (error) {
+        console.error("Failed to fetch DVA details");
+      }
+    };
+    const GetWalletBalance = async () => {
+  try {
+    const resp = await GetUserBalance();
+    const balanceString = resp?.data?.data?.balance?.["$numberDecimal"];
+    
+    if (balanceString !== undefined) {
+      const balanceNumber = Number(balanceString);
+      setWalletBalance(balanceNumber); // ✅ store as number
+    } else {
+      toast.error("Unable to retrieve wallet balance.");
+    }
+  } catch (error) {
+    toast.error("Failed to fetch wallet balance");
+    console.error(error);
+  }
+};
+
+
+
+  useEffect(() => {
+    if (GetUser && GetUserBalance && GetDva) {
+      getUserDetails();
+      GetWalletBalance();
+      getDva();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [GetUserBalance, GetUser, GetDva])
+
+  const formattedBalance =
+  typeof walletBalance === "number"
+    ? new Intl.NumberFormat("en-NG", {
+        style: "currency",
+        currency: "NGN",
+        minimumFractionDigits: 2,
+      }).format(walletBalance)
+    : "₦0.00";
+
+
   let settings = {
     dots: true,
     infinite: false,
@@ -93,6 +158,11 @@ const DashboardHome = () => {
       });
   };
 
+  
+ console.log(dva);
+ 
+ 
+
   return (
     <DashboardLayout>
       <section>
@@ -117,28 +187,38 @@ const DashboardHome = () => {
                   <div className="space-y-3">
                     <p className="font-medium text-2xl">Available Balance</p>
                     <p className="text-3xl font-bold font-plus-jakarta">
-                      {" "}
+                      {/* {" "}
                       <span className="text-[16px]">₦</span>
                       {(currentUser?.wallet?.balance
                         ? currentUser.wallet.balance
                         : "0.00"
-                      ).toLocaleString()}
+                      ).toLocaleString()} */}
+                        {formattedBalance}
                     </p>
                   </div>
-                  <div>
-                    <p className="flex items-center space-x-3">
-                      <span>Wema Bank:</span>
-                      <span className="account-number">012 3456 789 </span>
-                      <button onClick={copyToClipboard}>
-                        <Copy size="24" color="#ffffff" />
-                      </button>
-                    </p>
-                  </div>
-                  <Button
-                    text="Fund Wallet"
-                    className="bg-white text-primary font-medium"
-                    onClick={() => {}}
-                  />
+                <div>
+  <p className="flex mt-2 items-center space-x-3">
+    <span>{dva.bankName}:</span>
+    <span className="account-number">{dva.accountNumber}</span>
+    <button onClick={copyToClipboard}>
+      <Copy size="24" color="#ffffff" />
+    </button>
+  </p>
+</div>
+
+      
+       <Button
+  text="Withdraw Fund"
+  className="text-primary font-poppins bg-white font-medium"
+  onClick={() => setIsOpens(true)}
+/>
+
+{isOpens && (
+  <WithdrawFund
+    isOpens={isOpens}
+    onClosed={() => setIsOpens(false)}
+  />
+)}
                 </div>
               </div>
               <div className="md:pr-5">

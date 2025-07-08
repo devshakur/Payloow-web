@@ -1,4 +1,4 @@
-export const BaseUrl = "https://api-dev.payloow.com/api/v1";
+export const BaseUrl = "https://ap.payloow.com/api/v1";
 const investmentApiBaseUrl = "https://api-dev-investment.payloow.com/";
 
 //registration
@@ -106,8 +106,8 @@ export const InvestmentEndpoints = {
 export const EasyBuyEndpoints = {
   createProfile: `${BaseUrl}/easybuy/profile`,
   getCart: `${BaseUrl}/easybuy/buyer/cart/`,
-  createProduct: `${BaseUrl}/easybuy/partner/products/`,
-  getEasyBuyCategories: `${BaseUrl}/easybuy/categories/`,
+  createProduct: `${BaseUrl}/easybuy/partner/products`,
+  getEasyBuyCategories: `${BaseUrl}/easybuy/categories`,
   addToCart: `${BaseUrl}/easybuy/buyer/cart/`,
   deleteFromCart: `${BaseUrl}/easybuy/buyer/cart/`,
   fetchAllProduct: `${BaseUrl}/easybuy/buyer/products/`,
@@ -126,6 +126,7 @@ export const EasyBuyEndpoints = {
   getPartnerCustomers: `${BaseUrl}/easybuy/partner/customers`,
   getPercentages: `${BaseUrl}/easybuy/partner/inventory/percentage-paid`,
   deleteAllCartItem: `${BaseUrl}/easybuy/buyer/orders/delete`,
+  getInstallmentPlans: `${BaseUrl}/easybuy/buyer/calculate-installment`,
 };
 
 //admin
@@ -138,4 +139,14 @@ export const AdminEndpoints = {
   getAllCourses: `${BaseUrl}/all/courses`,
   getEnrolledStudents: `${BaseUrl}/students`,
   getVtuBalance: `${BaseUrl}/get-vtu-providers-wallet-balance`,
+};
+
+//Wallet
+
+export const WalletEndpoints = {
+  depositFund: `${BaseUrl}/wallet/deposit`,
+  withdrawFund: `${BaseUrl}/wallet/withdraw`,
+  getWalletBalance: `${BaseUrl}/wallet/get-wallet-balance`,
+  verifyBvn: `${BaseUrl}/wallet/verify-customer`,
+  getDva: `${BaseUrl}/user/dva`,
 };

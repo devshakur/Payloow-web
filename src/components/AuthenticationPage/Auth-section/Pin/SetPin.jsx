@@ -39,7 +39,7 @@ const SetPin = ({ handleSuccess }) => {
         },
     });
     const skipPin = () => {
-        router.push('/dashboard')
+        router.push('/set-virtual-account')
     }
 
     return (

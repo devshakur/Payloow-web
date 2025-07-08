@@ -2,7 +2,8 @@ import React from 'react'
 
 const CardPurchase = ({handleModal, fullPayment, loading, SubmitCheckOutFlutter}) => {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    const handleCheck = ()=>{
+    const handleCheck = (e)=>{
+      e.preventDefault();
       if(fullPayment === 'full'){
         SubmitCheckOutFlutter()
       
@@ -25,7 +26,7 @@ const CardPurchase = ({handleModal, fullPayment, loading, SubmitCheckOutFlutter}
                  <p className='font-poppins font-medium text-lg text-[#000]'>I have read and agree to the website terms and conditions *</p>
              </div>
              <div className='w-full flex justify-center my-5'>
-                 <button  onClick={handleCheck} className='w-[90%] bg-yellow-500 py-4 rounded-md  text-white'>{loading ? 'Processing...' : 'Pay With Flutter...'}</button>
+                 <button  onClick={handleCheck} className='w-[90%] bg-yellow-500 py-4 rounded-md  text-white'>{loading ? 'Processing...' : 'Pay With PayStack...'}</button>
              </div>
                          </form>
   )

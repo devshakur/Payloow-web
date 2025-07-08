@@ -72,7 +72,7 @@ const PurchaseElectricity = ({ active, handleNext, formik }) => {
         <div>
             <main className='pb-[30px]' >
                 <div className='w-[100vw] md:-mt-12 flex justify-center lg:-ml-[-10vw] xl:-mt-[14vh]'>
-                    <div className='w-[95%] md:mt-[8vh] md:w-[500px] lg:w-[650px]  bg-[#FFFFFF] pb-4 shadow-md rounded-xl overflow-hidden'>
+                    <div className='w-[95%] md:mt-[5vh] md:w-[600px] px-4 lg:w-[650px]  bg-[#FFFFFF] pb-4 shadow-md rounded-xl overflow-hidden'>
                         <h4 className='flex justify-center text-xl leading-5 font-plus-jakarta font-[600] my-4 text-[#212121]'>Pay Electricity Bills</h4>
                         <h4 className='text-lg leading-5 font-plus-jakarta text-[#000000] font-[550] mx-3'>Most recent</h4>
                         <article className='h-[105px] w-[230px] mx-3'>

@@ -5,8 +5,6 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
   { name: "Easybuy", href: "/easybuy/home", icon: MoneyChange },
   { name: "Bills", href: "/dashboard", icon: TableDocument },
-  { name: "E-Learning", href: "/e-learning", icon: BookSaved },
-  { name: "Investment", href: "/investment", icon: Chart },
 ];
 
 

@@ -54,7 +54,7 @@ const Airtime = ({ handleNext, formik }) => {
                         <h4 className='flex justify-center text-xl leading-5 font-plus-jakarta font-bold my-4'>Buy Airtime</h4>
                         <h4 className='text-lg  leading-5 font-plus-jakarta text-[#000000] font-[550] mx-3 md:mx-8'>Most recent</h4>
                         <article className='flex gap-3 mx-3 md:mx-8'>
-                            {Array.isArray(info) && info.length > 0 ? (
+                            {Array.isArray(info) && info.length > 0 ? (         
                                 info.slice(-2).map((user) => (
                                     <section key={user.code} className="flex flex-row gap-6 my-4">
                                         <div className="flex flex-col gap-2">

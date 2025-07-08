@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import AdminLayout from './AdminLayout'
 import { motion } from 'framer-motion';
 import { IoIosArrowDown} from "react-icons/io";
@@ -42,7 +42,7 @@ const getAllTutors = async () => {
       setTutors(response.data.data);
   } catch (error) {
      
-      toast.error('An error occurred while fetching user data');
+      toast.error('An error occurred while fetching user data', error);
   } finally {
       setLoading(false); // Ensure loading is set to false
   }

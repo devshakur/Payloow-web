@@ -3,7 +3,7 @@ import '../../auth.css'
 
 const PinSuccess = () => {
 	const goToDashboard = () => {
-		window.location.href = '/dashboard'
+		window.location.href = '/set-virtual-account'
 	}
 	return (
 		<div className='bg h-[100vh] flex justify-center p-5'>
@@ -19,7 +19,7 @@ const PinSuccess = () => {
 							</div>
 							<div className='flex justify-center flex-col lg:flex-row lg:gap-5 my-4'>
 								<button onClick={goToDashboard} type='button' className="p-3  w-[95%]  font-poppins font-semibold text-lg my-3 rounded-lg bg-blue-500 text-white">
-									Continue to Dashboard
+									  Proceed to Create Your Virtual Account
 								</button>
 							</div>
 						</section>

@@ -11,8 +11,6 @@ import {
 } from "@headlessui/react";
 import {
   ArrowDown2,
-  BookSaved,
-  Chart,
   CloseCircle,
   HambergerMenu,
   Headphone,
@@ -20,14 +18,12 @@ import {
   LogoutCurve,
   MoneyChange,
   Notification,
-  SearchNormal,
   Setting2,
   TableDocument,
 } from "iconsax-react";
-import { RiStockLine } from "react-icons/ri";
+
 import { useLocation } from "react-router-dom";
 import DefaultProfile from '../Easybuy/Buyers/DefaultProfile'
-import { ToastContainer } from "react-toastify";
 import { Toaster } from "react-hot-toast";
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -39,17 +35,19 @@ const navigation = [
 },
 
   { name: "Bills", href: "/dashboard", icon: TableDocument },
-  {
-    name: "E-Learning",
-    href: currentUser?.role === 'Tutor' ? "/e-learning/tutor/dashboard" : "/e-learning/student/dashboard",
-    icon: BookSaved,
-  },
-  {
-    name: "Investment", 
-    href: currentUser?.role === 'Debtor' ? "/debtor/dashboard" : currentUser?.role === 'Investor' ? "/investor/dashboard" : '/investment',
-    icon: Chart
-  },
-  { name: "Shares", href: "/shares/dashboard", icon: RiStockLine },
+
+  //this is the route to E-learning, Investment, and shares. this code will reinstated when needed
+ // {
+  //   name: "E-Learning",
+  //   href: currentUser?.role === 'Tutor' ? "/e-learning/tutor/dashboard" : "/e-learning/student/dashboard",
+  //   icon: BookSaved,
+  // },
+  // {
+  //   name: "Investment", 
+  //   href: currentUser?.role === 'Debtor' ? "/debtor/dashboard" : currentUser?.role === 'Investor' ? "/investor/dashboard" : '/investment',
+  //   icon: Chart
+  // },
+  // { name: "Shares", href: "/shares/dashboard", icon: RiStockLine },
 ];
 const action = [
   { name: "Support", href: "/support", icon: Headphone },

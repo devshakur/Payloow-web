@@ -89,10 +89,10 @@ const ProductDetails = () => {
             setProductId(foundProduct._id);
             setColors(foundProduct.color);
             setCheckProduct(foundProduct.name);
-            setAdditionalImage(foundProduct.additionalImageKeys)
+            setAdditionalImage(foundProduct.additionalImagesUrls)
             // Set default image only when product is loaded for the first time
             if (!selectedImage) {
-                setSelectedImage(foundProduct.imageKey);
+                setSelectedImage(foundProduct.imageUrl);
             }
         }
     }, [id, selecttedPrd]); // Removed selectedImage from dependency array
@@ -194,9 +194,9 @@ const ProductDetails = () => {
                         </motion.div>
                         <div className="my-5 flex flex-wrap items-center gap-2">
                             <motion.img
-                                src={product.imageKey ? product.imageKey : '/images/iphon11-small.png'}
+                                src={product.imageUrl ? product.imageUrl : '/images/iphon11-small.png'}
                                 alt="iphone"
-                                onClick={() => { changeImage(product.imageKey) }}
+                                onClick={() => { changeImage(product.imageUrl) }}
                                 whileHover={{ scale: 1.1 }}
                                 className="w-24 h-24"
                                 transition={{ duration: 0.3 }}

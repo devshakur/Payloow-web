@@ -2,7 +2,7 @@ import { createContext, useReducer } from "react"
 import {  BillsHandler } from "../BillsContext/billsHandler"
 import axios from 'axios'
 import axiosInstance from "../axiosInstance"
-import { BillsEndpoints } from "../../api/Endpoint"
+import { BillsEndpoints, WalletEndpoints } from "../../api/Endpoint"
 
 
 const initial = {
@@ -109,10 +109,63 @@ const BillsProvider = ({ children }) => {
             throw error;
         }
        }
+
+          const DepositFund = async(data)=>{
+        try {
+            const response = await axiosInstance.post(WalletEndpoints.depositFund, data)
+            const result = response.data
+            return response
+        } catch (error) {
+            console.error(error)
+            throw error;
+        }
+       }
+        const WithdrawFund = async(data)=>{
+        try {
+            const response = await axiosInstance.post(WalletEndpoints.withdrawFund, data)
+            const result = response.data
+            return response
+        } catch (error) {
+            console.error(error)
+            throw error;
+        }
+       }
+
+          const GetUserBalance = async()=>{
+        try {
+            const response = await axiosInstance.get(WalletEndpoints.getWalletBalance)
+            const result = response.data
+            return response
+        } catch (error) {
+            console.error(error)
+            throw error;
+        }
+       }
+
+       const GetDva = async()=>{
+        try {
+            const response = await axiosInstance.get(WalletEndpoints.getDva)
+            const result = response.data
+            return response
+        } catch (error) {
+            console.error(error)
+            throw error;
+        }
+       }
+       const VerifyBvn = async(data)=>{
+        try {
+            const response = await axiosInstance.post(WalletEndpoints.verifyBvn, data)
+            const result = response.data
+            return response
+        } catch (error) {
+            console.error(error)
+            throw error;
+        }
+       }
    
 
 
-    const object = { ...state, dispatch, BuyAirtime, BuyData, BuyElectricity, BuyTvSubscription, UserBalance, SetPins, ConfirmPin, UserDetails,  }
+    const object = { ...state, dispatch, BuyAirtime, BuyData, BuyElectricity, VerifyBvn, BuyTvSubscription, GetUserBalance, UserBalance, DepositFund, WithdrawFund, SetPins, ConfirmPin, UserDetails, GetDva,  }
 
     return <BillsContext.Provider value={object}>{children}</BillsContext.Provider>
 }

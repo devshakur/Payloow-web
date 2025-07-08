@@ -58,9 +58,12 @@ function Login() {
           );
           const userData = await getUser();
           setTimeout(() => {
-            const checkPin = userData.pin;
-            if (checkPin === false) {
+            console.log(userData?.pin);
+            
+            if (userData?.transactionPin === "") {
               router.push("/set-pin");
+            } else if (userData?.bnvStatus !== "VERIFIED") {
+              router.push("/bvn-verification");
             } else {
               router.push("/dashboard");
             }

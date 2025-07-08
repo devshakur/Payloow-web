@@ -565,13 +565,33 @@ const InvestmentProvider = ({ children }) => {
             throw error;
         }
     }
+    const SubmitInstallmentPlanRequest = async ({ totalAmount, installmentPlan, numberOfInstallments }) => {
+  try {
+    const payload = {
+      totalAmount,
+      installmentPlan,
+      numberOfInstallments,
+    };
+
+    const response = await axiosInstance.post(EasyBuyEndpoints.getInstallmentPlans, payload);
+
+    const result = response.data;
+    dispatch({ type: 'INSTALLMENT_PLAN_SUBMITTED', payload: { data: result } });
+
+    return response;
+  } catch (error) {
+    console.error("Installment plan submission failed:", error);
+    throw error;
+  }
+};
+
     const object = {
         ...state, dispatch, CreateDebtorAccount, CreateInvestorAccount, CreateBusiness, GetIndustries, getBusinessInfo,
         ViewBusiness, AddLoan, GetBusinessStages, GetModels,
         InvestInBusiness, GetInvestmentRequest, GetLoanBusiness, getUserDetails, GetFilteredLoanBusiness, InvestorsInvestment,
         AcceptInvestmentRequest, DeclineInvestmentRequest, RepayInvestmentRequest, GetCart, CreateBuyerProfile, AddToCart,
         FetchAllProduct, ValidateCoupon, DeleteCart, GetEasyBuyCatgories, CreateProduct, GetDeliveryInfo, checkOut, swapProduct, GetPercentage, DeleteEasyBuyCart,
-        GetUserOrders, GetUInstallmentOrders, GetSolarStock, GetInventoryOrders,  GetProductInventory,GetActiveCustomers, CreateServiceCenter, GetServiceCenter, GetPartnerCustomers,
+        GetUserOrders, GetUInstallmentOrders, GetSolarStock, GetInventoryOrders, SubmitInstallmentPlanRequest,  GetProductInventory,GetActiveCustomers, CreateServiceCenter, GetServiceCenter, GetPartnerCustomers,
     }
 
     return <InvestmentContext.Provider value={object}>{children}</InvestmentContext.Provider>

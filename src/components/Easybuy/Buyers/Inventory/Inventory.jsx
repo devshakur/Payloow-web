@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import PartnersLayout from '../../Partners/PartnersLayout';
 import { IoFilterOutline } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
@@ -66,7 +66,6 @@ const Inventory = () => {
   });
 
   const onSubmit = async (values, {setSubmitting}) => {
-    console.log('Form data', values);
     setSubmitting(true)
     try {
       const response = await CreateProduct(values);
@@ -129,35 +128,40 @@ const Inventory = () => {
     setOrders('order');
   };
 
-
   useEffect(() => {
-    const productCategories = async () => {
-      try {
-        const resp = await GetEasyBuyCatgories();
+  const productCategories = async () => {
+    try {
+      const resp = await GetEasyBuyCatgories();
 
-        const message = resp?.data?.message;
-        const productsData = resp?.data?.data;
+      const message = resp?.data?.message;
+      const productsData = resp?.data?.data;
 
-        if (productsData) {
-          setCategory(productsData);
-          if (message) {
-            toast.success(message);
-          } else {
-            toast.error('Message is empty');
-          }
+      if (productsData) {
+        setCategory(productsData); // this will now correctly set the array
+        console.log(productsData); // should log your array of categories
+
+        if (message) {
+          toast.success(message);
         } else {
-          setCategory([]);
-          toast.error('Failed to fetch products');
+          toast.error("Message is empty");
         }
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        const errorMsg = error?.response?.data?.msg || 'Failed to fetch products';
-        toast.error(errorMsg);
+      } else {
+        setCategory([]);
+        toast.error("Failed to fetch products");
       }
-    };
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      const errorMsg =
+        error?.response?.data?.msg || "Failed to fetch products";
+      toast.error(errorMsg);
+    }
+  };
 
-    productCategories();
-  }, []);
+  productCategories();
+}, []);
+
+
+
 
   useEffect(() => {
     const totalStock = async () => {
@@ -174,7 +178,6 @@ const Inventory = () => {
           setSolarStock(solarProduct)
           setPhoneStock(phoneProduct)
           if (message) {
-            console.log('Success Message:', message);
             toast.success(message);
           } else {
             toast.error('Message is empty');

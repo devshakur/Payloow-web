@@ -74,9 +74,9 @@ const AuthProvider = ({ children }) => {
         } 
     }
 
-    const ResetPswd = async (email, token, password)=> {
+    const ResetPswd = async (email, code, password)=> {
         try {
-            const data = {email, token, password}
+            const data = {email, code, password}
             console.log(data);
             const response = await axios.post(AuthEndPoints.reset, data)
 

@@ -12,12 +12,13 @@ import CardPurchase from './CardPurchase';
 import { useRouter } from '../../../../Routes/router';
 import CheckOutModalCrad from './CheckOutModalCrad';
 import { EasyBuyEndpoints, } from '../../../../api/Endpoint';
+import PlansModal from './PlansModal';
 
 
 const Checkout = () => {
-  const { ValidateCoupon, GetCart, GetDeliveryInfo, checkOut, DeleteEasyBuyCart, } = useInvestment();
+  const { ValidateCoupon, GetCart, GetDeliveryInfo, checkOut, DeleteEasyBuyCart, SubmitInstallmentPlanRequest, } = useInvestment();
   const router = useRouter();
-  const [selectedForm, setSelectedForm] = useState('wallet');
+  const [selectedForm, setSelectedForm] = useState('');
   const [isClicked, setIsClicked] = useState(false);
   const [isClickedTwo, setIsClickedTwo] = useState(false);
   const [cartItems, setCartItems] = useState([])
@@ -30,7 +31,12 @@ const Checkout = () => {
   const [price, setPrice] = useState(null)
   const [editMode, setEditMode] = useState(false);
   const [editableProduct, setEditableProduct] = useState({});
-  const [installmentPlan, setInstallmentPlan] = useState()
+  const [installmentPlan, setInstallmentPlan] = useState('');
+ const [planPreview, setPlanPreview] = useState(null);
+const [showPlansModal, setShowPlansModal] = useState(false);
+const [numberOfInstallments, setNumberOfInstallments] = useState('');
+
+
   const [selectedColors, setSelectedColors] = useState({})
   let [isOpen, setIsOpen] = useState(false)
   const [isOpened, setIsOpened] = useState(false)
@@ -212,35 +218,64 @@ const Checkout = () => {
       setWalletLoading(false)
     }
   };
+ 
 
-  //Submit Checkout
-  const SubmitCheckOutFlutter = async () => {
-    setLoading(true)
-    try {
-      const method = {
-        paymentMethod: selectedForm,
-        installmentPlan: installmentPlan
-      };
-      const resp = await checkOut(fullPayment === 'full' ? {paymentMethod: method.paymentMethod} : method);
-      const info = resp?.data?.data;
-      const flutter_url = resp?.data?.data?.result?.checkout_url
+  // STEP 1: Show preview modal first
+const handleProceed = async () => {
+  if (!installmentPlan || !numberOfInstallments) {
+    alert("Please select a valid plan.");
+    return;
+  }
+  setLoading(true)
+  try {
+    const result = await SubmitInstallmentPlanRequest({
+      totalAmount: price, 
+      installmentPlan,
+      numberOfInstallments,
+    });
 
-      if (flutter_url) {
-        setCheckOuts(true);
-        setLoading(false)
-        toast.success('Redirecting to Flutter')
-        console.log(flutter_url);
-        window.location.href = flutter_url
-        deleteCartItems();
-      } else {
-        toast.error('failed to redirect to flutter')
-      }
-    } catch (error) {
-      const errorMsg = error?.response?.data?.msg;
-      toast.error(errorMsg);
-      setLoading(false)
+    setPlanPreview(result.data.data);  
+    setShowPlansModal(true); 
+          
+  } catch (err) {
+    console.error("❌ Failed to fetch installment breakdown:", err.response?.data || err);
+    toast.error("Failed to fetch installment breakdown");
+  } finally{
+  setLoading(false)
+  }
+};
+
+
+const SubmitCheckOutFlutter = async () => {
+  setShowPlansModal(false); 
+  setLoading(true);
+
+  try {
+    const payload = fullPayment === 'full'
+      ? { paymentMethod: selectedForm }
+      : {
+          paymentMethod: selectedForm,
+          installmentPlan,
+          numberOfInstallments: parseInt(numberOfInstallments), // ✅ now works
+        };
+
+    const resp = await checkOut(payload);
+    const checkoutUrl = resp?.data?.data?.result?.checkout_url;
+
+    if (checkoutUrl) {
+      toast.success("Redirecting to Paystack...");
+      window.location.href = checkoutUrl;
+    } else {
+      toast.error("No checkout URL received");
     }
-  };
+  } catch (error) {
+    const errorMsg = error?.response?.data?.msg || "Checkout failed";
+    toast.error(errorMsg);
+  } finally {
+    setLoading(false);
+  }
+};
+
   const handleBackToCart = () => {
     router.back()
   }
@@ -272,20 +307,20 @@ const Checkout = () => {
         <div className="bg-white shadow-lg p-4 h-max w-auto flex-wrap gap-5 flex items-end rounded-lg ">
           {cartItems && cartItems.length > 0 ? (
             cartItems.map((item) => (
-              <div>
+              <div key={item._id}>
                 <div className="flex gap-2 my-1">
                   <h3>Order Summary </h3>
                   <div className='w-6 h-7 bg-blue-700 rounded-[50%] flex justify-center items-center text-white'><p>{item?.quantity}</p></div>
                 </div>
                 <div className=''>
                   <div className="flex items-center">
-                    <img src={item?.product?.imageKey || "/images/iphon-yellow.png"} alt={item?.name} />
+                    <img src={item?.product?.imageUrl || "/images/iphon-yellow.png"} alt={item?.name} />
                     <div className="">
                       <p className='font-semibold text-lg font-plus-jakarta'>{item?.product?.name}</p>
                       <p className='font-normal text-[#475367] text-[12px] font-inter'>Color: <span>{selectedColors[item._id]} </span></p>
                     </div>
                   </div>
-                  <div className="font-plus-jakarta text-xl font-medium text-[#1D2433] my-2">₦{new Intl.NumberFormat().format(item?.product?.price?.$numberDecimal || 0)} or ₦{new Intl.NumberFormat().format(((item?.product?.price?.$numberDecimal || 0) / 3).toFixed(0))}/Month</div>
+                  <div className="font-plus-jakarta text-xl font-medium text-[#1D2433] my-2">₦{new Intl.NumberFormat().format(item?.product?.price?.$numberDecimal || 0)} or ₦{new Intl.NumberFormat().format(((item?.product?.price?.$numberDecimal || 0) / 6).toFixed(0))}/Month</div>
 
                 </div>
              
@@ -403,72 +438,112 @@ const Checkout = () => {
         </div>
       ))}
         </div>
-        {/* summary          */}
         {cartItems && cartItems.length > 0 ? (
-          <div className='bg-white shadow-lg mt-5 md:mt-0'>
-            <h3 className='p-3 font-medium text-lg'>Summary</h3>
-            <div className='flex justify-between p-3'>
-              <p className='font-poppins text-[14px] font-normal text-[#000]'>Original Price</p>
-              <p className='font-poppins text-[14px] font-normal text-[#000]'>₦{new Intl.NumberFormat().format(price)}</p>
-            </div>
-            <div className="border-t px-5 border-dashed border-gray-500 w-full"></div>
-            <div className='flex justify-between p-3'>
-              <p className='font-plus-jakarta  text-lg font-medium text-[#000]'>Total:</p>
-              <p className='font-plus-jakarta text-lg font-medium text-[#000]'>₦{new Intl.NumberFormat().format(price)}</p>
-            </div>
-            <ul className='p-4'>
-              <h3 className='text-lg font-plus-jakarta font-medium text-[#000]'>Pay</h3>
-              <div className="flex gap-3 pt-4">
-                <li
-                  className="w-5 h-5 bg-white rounded-full flex justify-center items-center shadow-lg border border-gray-300 focus:bg-blue-700"
-                  onClick={handleClick}
-                >
-                  <button
-                    className={`w-[70%] h-[70%] rounded-full ${fullPayment === 'full' ? 'bg-blue-700' : 'bg-white'}`}
-                  ></button>
-                </li>
-                <p className='font-medium text-[#000] font-poppins text-[14px]'>Full Payment</p>
-              </div>
-              <div className="flex gap-3 pt-4">
-                <li
-                  className="w-5 h-5 bg-white rounded-full flex justify-center items-center shadow-lg border border-gray-300 focus:bg-blue-700"
-                  onClick={handleClickTwo}
-                >
-                  <button
-                    className={`w-[70%] h-[70%] rounded-full ${fullPayment === 'installment' ? 'bg-blue-700' : 'bg-white'}`}
-                  ></button>
-                </li>
-                <p className='font-medium text-[#000] font-poppins text-[14px]'>Pay on Installment</p>
-              </div>
+  <div className='bg-white shadow-lg mt-5 md:mt-0'>
+    <h3 className='p-3 font-medium text-lg'>Summary</h3>
 
-            </ul>
-            <div className="p-4">
-              <h3 className='font-plus-jakarta font-medium text-lg'>Payment Method</h3>
-              <div>
-                <ul className='p-3 flex gap-3 w-full'>
-                  <li
-                    className={`w-[50%] py-4 rounded-md pl-12 text-[#000] flex justify-between items-center ${selectedForm === 'wallet' ? 'bg-blue-100 text-blue-700' : 'bg-[#F8F9FC]'} cursor-pointer`}
-                    onClick={() => handleSelection('wallet')}
-                  >
-                    Wallet <span className='mr-4 w-3 h-3'><img src="/images/checkout.png" alt="checkout" /></span>
-                  </li>
-                  <li
-                    className={`w-[50%] py-4 rounded-md pl-12 text-[#000] flex justify-between items-center ${selectedForm === 'flutterwave' ? 'bg-blue-100 text-blue-700' : 'bg-[#F8F9FC]'} cursor-pointer`}
-                    onClick={() => handleSelection('flutterwave')}
-                  >
-                    FlutterWave<span className='mr-4 w-3 h-3'><img src="/images/checkout.png" alt="checkout" /></span>
-                  </li>
-                </ul>
-                {selectedForm === 'wallet' && (
-                  <WalletPurchase handleModalWallet={handleModalWallet} walletLoading={walletLoading} fullPayment={fullPayment} SubmitCheckOutWallet={SubmitCheckOutWallet} />
-                )}
-              </div>
-            </div>
-            {selectedForm === 'flutterwave' && (
-              <CardPurchase handleModal={handleModal} fullPayment={fullPayment} SubmitCheckOutFlutter={SubmitCheckOutFlutter} loading={loading} />
-            )}
-          </div>
-        ) : null}
+    <div className='flex justify-between p-3'>
+      <p className='font-poppins text-[14px] font-normal text-[#000]'>Original Price</p>
+      <p className='font-poppins text-[14px] font-normal text-[#000]'>₦{new Intl.NumberFormat().format(price)}</p>
+    </div>
+
+    <div className="border-t px-5 border-dashed border-gray-500 w-full"></div>
+
+    <div className='flex justify-between p-3'>
+      <p className='font-plus-jakarta text-lg font-medium text-[#000]'>Total:</p>
+      <p className='font-plus-jakarta text-lg font-medium text-[#000]'>₦{new Intl.NumberFormat().format(price)}</p>
+    </div>
+
+    <ul className='p-4'>
+      <h3 className='text-lg font-plus-jakarta font-medium text-[#000]'>Pay</h3>
+
+      <div className="flex gap-3 pt-4">
+        <li
+          className="w-5 h-5 bg-white rounded-full flex justify-center items-center shadow-lg border border-gray-300"
+          onClick={handleClick}
+        >
+          <button
+            className={`w-[70%] h-[70%] rounded-full ${fullPayment === 'full' ? 'bg-blue-700' : 'bg-white'}`}
+          ></button>
+        </li>
+        <p className='font-medium text-[#000] font-poppins text-[14px]'>Full Payment</p>
+      </div>
+
+      <div className="flex gap-3 pt-4">
+        <li
+          className="w-5 h-5 bg-white rounded-full flex justify-center items-center shadow-lg border border-gray-300"
+          onClick={handleClickTwo}
+        >
+          <button
+            className={`w-[70%] h-[70%] rounded-full ${fullPayment === 'installment' ? 'bg-blue-700' : 'bg-white'}`}
+          ></button>
+        </li>
+        <p className='font-medium text-[#000] font-poppins text-[14px]'>Pay on Installment</p>
+      </div>
+    </ul>
+
+    <div className="p-4">
+      <h3 className='font-plus-jakarta font-medium text-lg'>Payment Method</h3>
+
+      <ul className='p-3 flex gap-3 w-full'>
+        {/* Wallet Option */}
+        <li
+          className={`w-[50%] py-4 rounded-md pl-12 text-[#000] flex justify-between items-center 
+            ${selectedForm === 'wallet' ? 'bg-blue-100 text-blue-700' : 'bg-[#F8F9FC]'} 
+            ${fullPayment === 'installment' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+          onClick={() => {
+            if (fullPayment !== 'installment') {
+              handleSelection('wallet');
+            }
+          }}
+        >
+          Wallet
+          <span className='mr-4 w-3 h-3'>
+            <img src="/images/checkout.png" alt="checkout" />
+          </span>
+        </li>
+
+        {/* Flutterwave Option */}
+        <li
+          className={`w-[50%] py-4 rounded-md pl-12 text-[#000] flex justify-between items-center 
+            ${selectedForm === 'paystack' ? 'bg-blue-100 text-blue-700' : 'bg-[#F8F9FC]'} 
+            cursor-pointer`}
+          onClick={() => handleSelection('paystack')}
+        >
+          PayStack
+          <span className='mr-4 w-3 h-3'>
+            <img src="/images/checkout.png" alt="checkout" />
+          </span>
+        </li>
+      </ul>
+
+      {fullPayment === 'installment' && (
+        <p className="text-red-500 text-sm px-4">Installment payment is only available via PayStack.</p>
+      )}
+
+      {/* Show wallet checkout only if full payment and wallet selected */}
+      {selectedForm === 'wallet' && fullPayment === 'full' && (
+        <WalletPurchase
+          handleModalWallet={handleModalWallet}
+          walletLoading={walletLoading}
+          fullPayment={fullPayment}
+          SubmitCheckOutWallet={SubmitCheckOutWallet}
+        />
+      )}
+    </div>
+
+    {/* Flutterwave Checkout */}
+    {selectedForm === 'paystack' && (
+      <CardPurchase
+        handleModal={handleModal}
+        fullPayment={fullPayment}
+        SubmitCheckOutFlutter={SubmitCheckOutFlutter}
+        loading={loading}
+      />
+    )}
+  </div>
+) : null}
+
 
       </main>
       {products.map((product, index) => (
@@ -574,14 +649,31 @@ const Checkout = () => {
         SubmitCheckOutWallet={SubmitCheckOutWallet}
         walletLoading={walletLoading} />}
 
-      {isOpen && <CheckOutModalCrad
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        handleActive={handleActive}
-        installmentPlan={installmentPlan}
-        handlePlanChange={handlePlanChange}
-        SubmitCheckOutFlutter={SubmitCheckOutFlutter}
-        loading={loading} />}
+        {isOpen && (
+<CheckOutModalCrad
+  isOpen={isOpen}
+  setIsOpen={setIsOpen}
+  installmentPlan={installmentPlan}
+  setInstallmentPlan={setInstallmentPlan}
+  numberOfInstallments={numberOfInstallments} // ✅
+  setNumberOfInstallments={setNumberOfInstallments} // ✅
+  handleProceed={handleProceed}
+  loading={loading}
+/>
+
+
+)}
+{showPlansModal && (
+  <PlansModal
+    isOpen={showPlansModal}
+    setIsOpen={setShowPlansModal}
+    planDetails={planPreview}      // The full data object from API
+    onProceed={SubmitCheckOutFlutter}
+    loading={loading}   // Final Paystack submission
+  />
+)}
+
+
       {active === 'two' && <CheckoutSuccessModal />}
       <Toaster />
     </div>

@@ -14,9 +14,9 @@ import { useRouter } from "../Routes/router";
       </div>
       <h1 className="font-plus-jakarta text-lg font-medium">Oops!</h1>
       <p className="font-plus-jakarta text-lg font-medium">Sorry, an unexpected error has occurred.</p>
-      <p className='font-plus-jakarta text-lg font-medium'>
+      {/* <p className='font-plus-jakarta text-lg font-medium'>
         <i>{error.statusText || error.message}</i>
-      </p>
+      </p> */}
     <div className="mt-2">
       <button onClick={()=>router.back()} className="w-auto px-5 py-3 bg-blue-800 text-white rounded-lg shadow-lg">Go Back</button>
     </div>
