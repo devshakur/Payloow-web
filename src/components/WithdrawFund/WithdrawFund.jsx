@@ -37,8 +37,8 @@ export default function WithdrawFund({ isOpens, onClosed }) {
 
 
   } catch (error) {
-    const ErrMsg = error?.response?.data?.msg || error?.response?.data?.error || error?.message
-    toast.error(ErrMsg)
+    const ErrMsg = error?.response?.data?.message || error?.response?.data?.error || error?.message
+    toast.error(ErrMsg || "Something went wrong")
       
   } finally {
     setLoading(false)

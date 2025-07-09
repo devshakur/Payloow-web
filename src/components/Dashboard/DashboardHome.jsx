@@ -92,6 +92,8 @@ const [dva, setDva] = useState({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [GetUserBalance, GetUser, GetDva])
 
+  const isBalanceZero = Number(walletBalance) <= 1
+
   const formattedBalance =
   typeof walletBalance === "number"
     ? new Intl.NumberFormat("en-NG", {
@@ -207,10 +209,13 @@ const [dva, setDva] = useState({
 </div>
 
       
-       <Button
+   <Button
   text="Withdraw Fund"
-  className="text-primary font-poppins bg-white font-medium"
-  onClick={() => setIsOpens(true)}
+  className={`text-primary font-poppins bg-white font-medium ${
+    isBalanceZero ? " cursor-not-allowed" : ""
+  }`}
+  onClick={() => !isBalanceZero && setIsOpens(true)}
+  disabled={isBalanceZero}
 />
 
 {isOpens && (
