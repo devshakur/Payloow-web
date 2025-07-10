@@ -1,5 +1,10 @@
-export const BaseUrl = "https://ap.payloow.com/api/v1";
+export const BaseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const investmentApiBaseUrl = "https://api-dev-investment.payloow.com/";
+
+if (!BaseUrl) {
+  throw new Error("API_BASE_URL is not defined in your .env file");
+}
 
 //registration
 export const AuthEndPoints = {
