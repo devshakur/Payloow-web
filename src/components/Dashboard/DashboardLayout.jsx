@@ -17,14 +17,17 @@ import {
   Home,
   LogoutCurve,
   MoneyChange,
+  BookSaved,
   Notification,
   Setting2,
+  Chart,
   TableDocument,
 } from "iconsax-react";
 
 import { useLocation } from "react-router-dom";
 import DefaultProfile from '../Easybuy/Buyers/DefaultProfile'
 import { Toaster } from "react-hot-toast";
+import { useRouter } from "../../Routes/router";
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
 const navigation = [
@@ -37,16 +40,16 @@ const navigation = [
   { name: "Bills", href: "/dashboard", icon: TableDocument },
 
   //this is the route to E-learning, Investment, and shares. this code will reinstated when needed
- // {
-  //   name: "E-Learning",
-  //   href: currentUser?.role === 'Tutor' ? "/e-learning/tutor/dashboard" : "/e-learning/student/dashboard",
-  //   icon: BookSaved,
-  // },
-  // {
-  //   name: "Investment", 
-  //   href: currentUser?.role === 'Debtor' ? "/debtor/dashboard" : currentUser?.role === 'Investor' ? "/investor/dashboard" : '/investment',
-  //   icon: Chart
-  // },
+ {
+    name: "E-Learning",
+    href: currentUser?.role === 'Tutor' ? "/e-learning/tutor/dashboard" : currentUser?.role === 'student' ? "/e-learning/student/dashboard" : "/e-learning/register",
+    icon: BookSaved,
+  },
+  {
+    name: "Investment", 
+    href: currentUser?.role === 'Debtor' ? "/debtor/dashboard" : currentUser?.role === 'Investor' ? "/investor/dashboard" : '/investment',
+    icon: Chart
+  },
   // { name: "Shares", href: "/shares/dashboard", icon: RiStockLine },
 ];
 const action = [
@@ -68,6 +71,9 @@ export default function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isActive = (href) => location.pathname === href;
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const router = useRouter();
+
+  
 
 
   return (
@@ -290,7 +296,8 @@ export default function DashboardLayout({ children }) {
               <div className="flex items-center gap-x-4 lg:gap-x-6">
                 <button
                   type="button"
-                  className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
+                  onClick={() => router.push('/user/notification')}
+                  className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500 cursor-pointer"
                 >
                   <span className="sr-only">View notifications</span>
                   <Notification aria-hidden="true" className="h-6 w-6" />

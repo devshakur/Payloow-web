@@ -8,9 +8,9 @@ const ChangePassword = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
+    currentPin: "",
+    newPin: "",
+    confirmPin: "",
   });
 
   const close = () => {
@@ -45,15 +45,15 @@ const ChangePassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.newPassword !== formData.confirmPassword) {
-      toast.error('New password and confirm password do not match.');
+    if (formData.newPin !== formData.confirmPin) {
+      toast.error('New pin and confirm pin do not match.');
       return;
     }
 
     setIsSubmitting(true);
     const payload = {
-      currentPassword: formData.currentPassword,
-      newPassword: formData.newPassword,
+      currentPin: formData.currentPin,
+      newPin: formData.newPin,
     };
 
     try {
@@ -71,17 +71,17 @@ const ChangePassword = () => {
       });
 
       if (response.status === 200) {
-        toast.success('Password changed successfully');
+        toast.success('Pin changed successfully');
         setIsOpen(true);
         getUser();
         // Clear form data
         setFormData({
-          currentPassword: "",
-          newPassword: "",
-          confirmPassword: "",
+          currentPin: "",
+          newPin: "",
+          confirmPin: "",
         });
       } else {
-        toast.error('Failed to change password. Please try again.');
+        toast.error('Failed to change pin. Please try again.');
       }
     } catch (error) {
       if (error.response?.data?.msg) {
@@ -97,49 +97,55 @@ const ChangePassword = () => {
   return (
     <>
       <div>
-        <h3 className="md:text-2xl text-xl mb-10">Change Password</h3>
+        <h3 className="md:text-2xl text-xl mb-10">Change Pin</h3>
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="flex flex-col space-y-2">
-            <label htmlFor="current-password" className="form-label">
-              Current Password
+            <label htmlFor="current-pin" className="form-label">
+              Current Pin
             </label>
             <input
               type="password"
-              id="current-password"
-              placeholder="**********"
-              name="currentPassword"
+              id="current-pin"
+              placeholder="****"
+              name="currentPin"
               className="form-input"
-              value={formData.currentPassword}
+              maxLength={4}
+              pattern='[0-9]{4}'
+              value={formData.currentPin}
               onChange={handleInputChange}
               required
             />
           </div>
           <div className="flex flex-col space-y-2">
-            <label htmlFor="new-password" className="form-label">
-              New Password
+            <label htmlFor="new-pin" className="form-label">
+              New Pin
             </label>
             <input
               type="password"
-              id="new-password"
-              placeholder="************"
-              name="newPassword"
+              id="new-pin"
+              placeholder="****"
+              name="newPin"
+               maxLength={4}
+              pattern='[0-9]{4}'
               className="form-input"
-              value={formData.newPassword}
+              value={formData.newPin}
               onChange={handleInputChange}
               required
             />
           </div>
           <div className="flex flex-col space-y-2">
-            <label htmlFor="confirm-password" className="form-label">
-              Confirm Password
+            <label htmlFor="confirm-pin" className="form-label">
+              Confirm Pin
             </label>
             <input
               type="password"
-              id="confirm-password"
-              placeholder="***********"
-              name="confirmPassword"
+              id="confirm-pin"
+              placeholder="****"
+              name="confirmPin"
+               maxLength={4}
+              pattern='[0-9]{4}'
               className="form-input"
-              value={formData.confirmPassword}
+              value={formData.confirmPin}
               onChange={handleInputChange}
               required
             />
@@ -149,7 +155,7 @@ const ChangePassword = () => {
             disabled={isSubmitting}
             className={`w-full md:py-4 py-3 rounded-lg md:text-base text-sm bg-primary text-white ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {isSubmitting ? 'Changing Password...' : 'Change Password'}
+            {isSubmitting ? 'Changing Pin...' : 'Change Pin'}
           </button>
         </form>
       </div>
@@ -171,7 +177,7 @@ const ChangePassword = () => {
               <div className="text-center">
                 <img src="/images/success-svg.svg" alt="success" className="mx-auto py-5" />
                 <h3 className="md:text-3xl text-xl mt-4 md:px-20 px-3">
-                  Password Changed Successfully
+                  Pin Changed Successfully
                 </h3>
               </div>
               <div className="mt-10 flex items-center justify-end">

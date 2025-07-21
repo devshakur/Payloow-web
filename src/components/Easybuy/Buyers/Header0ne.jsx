@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { GiElectric } from "react-icons/gi";
 import { GoArrowSwitch } from "react-icons/go";
 import { PiDevicesDuotone } from "react-icons/pi";
@@ -6,14 +6,67 @@ import { BiCopy } from "react-icons/bi";
 import { IoIosArrowForward } from "react-icons/io";
 import { motion } from 'framer-motion'; 
 import { useRouter } from '../../../Routes/router';
-
+import useBills from '../../../hooks/useBills';
+import toast from "react-hot-toast";
 const HeaderOne = () => {
+    const [walletBalance, setWalletBalance] = useState({});
+     const [dva, setDva] = useState({
+    bankName: "",
+    accountNumber: "",
+  });
   const router = useRouter();
+   const {GetUserBalance, GetDva} = useBills()
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   const handleRoutes = (path)=>{
    router.push(path)
   }
+
+      const GetWalletBalance = async () => {
+  try {
+    const resp = await GetUserBalance();
+    const balanceString = resp?.data?.data?.balance?.["$numberDecimal"];
+    
+    if (balanceString !== undefined) {
+      const balanceNumber = Number(balanceString);
+      setWalletBalance(balanceNumber); // ✅ store as number
+    } else {
+      toast.error("Unable to retrieve wallet balance.");
+    }
+  } catch (error) {
+    toast.error("Failed to fetch wallet balance");
+    console.error(error);
+  }
+};
+
+ const getDva = async () => {
+    try {
+      const resp = await GetDva();
+      const dvaData = resp?.data?.data;
+      if (dvaData) {
+        setDva({
+          bankName: dvaData?.bankName,
+          accountNumber: dvaData?.accountNumber,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch DVA details");
+    }
+  };
+  useEffect(() => {
+      GetWalletBalance();
+      getDva();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const formattedBalance =
+  typeof walletBalance === "number"
+    ? new Intl.NumberFormat("en-NG", {
+        style: "currency",
+        currency: "NGN",
+        minimumFractionDigits: 2,
+      }).format(walletBalance)
+    : "₦0.00";
   return (
     <div>
       <section className='w-full lg:grid lg:grid-cols-3 gap-5'>
@@ -24,15 +77,15 @@ const HeaderOne = () => {
           transition={{ duration: 0.5 }} 
         >
           <h3 className='font-poppins font-medium text-2xl text-white'>Available Balances</h3>
-          <h4 className='font-poppins font-medium text-3xl text-white mt-3'><span className='text-sm'>₦</span>{(currentUser?.wallet?.balance ?? 0).toLocaleString()}</h4>
+          <h4 className='font-poppins font-medium text-3xl text-white mt-3'>{formattedBalance}</h4>
           <div className='flex mt-3 text-white gap-3'>
-            <p>Wema bank: 4054673854</p>
+            <p>{dva.bankName}: {dva.accountNumber}</p>
             <span className='text-white'>
               <BiCopy className='w-4 h-4 text-white' />
             </span>
           </div>
           <div className='w-full my-5'>
-            <button className='bg-[#FFFF] text-blue-800 font-semibold py-3 w-full rounded-md text-sm lg:mt-5'>
+            <button className='bg-[#FFFF] text-blue-800 font-semibold py-3 w-full cursor-not-allowed rounded-md text-sm lg:mt-5'>
               Make Payment
             </button>
           </div>

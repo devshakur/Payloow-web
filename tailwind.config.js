@@ -9,7 +9,7 @@ export default {
         sans: ["Fira Sans", "sans-serif"],
       },
       screens: {
-        'xs': '390px', 
+        xs: "390px",
       },
       colors: {
         background: "#f2f7f8",
@@ -33,7 +33,16 @@ export default {
       fontSizes: {
         normal: "14px",
       },
+      animation: {
+        slide: "slide 40s linear infinite",
+      },
+      keyframes: {
+        slide: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+      },
     },
   },
-   plugins: [require('@tailwindcss/line-clamp')],
+  plugins: [require("@tailwindcss/line-clamp")],
 };

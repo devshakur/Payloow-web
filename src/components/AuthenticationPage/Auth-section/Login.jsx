@@ -63,7 +63,7 @@ function Login() {
             if (userData?.transactionPin === "") {
               router.push("/set-pin");
             } else if (userData?.bnvStatus !== "VERIFIED") {
-              router.push("/bvn-verification");
+              router.push("/set-virtual-account");
             } else {
               router.push("/dashboard");
             }

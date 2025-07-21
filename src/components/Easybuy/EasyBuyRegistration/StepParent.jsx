@@ -44,7 +44,7 @@ const StepParent = () => {
     state: currentUser?.state || '',
     country: currentUser?.country || '',
     nin: '',
-    bvn: '',
+    bvn: currentUser?.bnvStatus || '',
     easyBuyRole: '',
     employmentStatus: '',
     referralCode: '',

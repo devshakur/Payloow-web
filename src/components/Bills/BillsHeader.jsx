@@ -40,16 +40,14 @@ const BillsHeader = ({ active }) => {
   return (
     <div>
       <header className="w-full lg:bg-white shadow-lg mt-0  grid grid-cols-[auto, 1fr] grid-flow-col p-3 items-center">
-        <div className="lg:hidden">
-          <button>
-            <Category2
-              size="24"
-              color="black"
-              onClick={() => setIsOpen(true)}
-            />
-          </button>
-          <div>{isOpen && <MobileSideNav onClose={closeNav} />}</div>
-        </div>
+     <div className="lg:hidden">
+  <button onClick={() => setIsOpen(true)}>
+    <Category2 size="24" color="black" />
+  </button>
+
+  {isOpen && <MobileSideNav onClose={() => setIsOpen(false)} />}
+</div>
+
         <div className="hidden w-[65vw] lg:flex lg:justify-end xl:justify-center xl:ml-[5rem]">
           {/* <SearchNormal1 size="24" className='relative top-4 left-10' color="#697689" />  
                     <input type="text" placeholder="Tap here to search" className='h-14 w-[400px] pl-12 mr-3 border' />   */}

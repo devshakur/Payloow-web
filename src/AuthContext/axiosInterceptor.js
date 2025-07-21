@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 
 // Create an Axios instance
 const axiosInstance = axios.create({
-  baseURL: "https://api-dev.payloow.com/api/v1/",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 // Add a request interceptor

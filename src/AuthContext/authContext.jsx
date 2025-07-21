@@ -27,6 +27,7 @@ const AuthProvider = ({ children }) => {
             throw error;
         }
     }
+ 
 
     const RegisterUser = async (data) => {
         try {
@@ -88,7 +89,7 @@ const AuthProvider = ({ children }) => {
             throw error;
         } 
     }
-    const object = { ...state, dispatch, LoginUser, RegisterUser, ForgetPswd, ResetPswd, GetUser }
+    const object = { ...state, dispatch, LoginUser, RegisterUser, ForgetPswd,  ResetPswd, GetUser }
 
     return <AuthContext.Provider value={object}>{children}</AuthContext.Provider>
 }

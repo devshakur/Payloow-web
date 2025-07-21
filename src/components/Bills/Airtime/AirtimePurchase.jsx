@@ -13,16 +13,16 @@ const AirtimePurchase = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const formik = useFormik({
         initialValues: {
-            network_id: '',
+            network: '',
             amount: '',
             phone: '',
-            pin: '',
+            transactionPin: '',
         },
         validationSchema: Yup.object({
-            network_id: Yup.string().required('required***'),
+            network: Yup.string().required('required***'),
             amount: Yup.string().required('required***'),
             phone: Yup.string().matches(/^[0-9]+$/, 'Phone number must be digits').required('required***'),
-            pin: Yup.string().required('required***')
+            transactionPin: Yup.string().required('required***')
         }),
         onSubmit: async (values, { setSubmitting }) => {
                 setSubmitting(false);

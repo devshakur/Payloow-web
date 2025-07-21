@@ -1,61 +1,90 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, startTransition } from 'react';
 import { Wallet, ArrowRight2 } from "iconsax-react";
 import useBills from '../../../hooks/useBills';
 import { Toaster, toast } from 'react-hot-toast'
 import 'react-toastify/dist/ReactToastify.css';
 
-const ConfirmElectricity = ({ setActive, formik }) => {
+const ConfirmElectricity = ({ setActive, setResponseData, formik }) => {
     const [loading, setLoading] = useState(false);
     const [balances, setBalances] = useState(0)
     const headStyles = 'font-normal text-sm font-poppins leading-5 text-[#1D2433CC]';
     const { BuyElectricity, UserBalance, ConfirmPin } = useBills();
 
-    const { phone, meter_number, service_id, variation_id, amount, pin } = formik.values
+
+const {
+  meter_number,
+  service_id,
+  variation_id,
+  amount,
+  phone,
+  TransactionPin,
+  customerName,
+  customerAddress,
+} = formik.values;
+
+
+const data = {
+  meterNumber: meter_number,
+  disco: service_id?.toUpperCase(),
+  type: variation_id || "PREPAID",
+  transactionPin: TransactionPin,
+  phone: phone || "",
+  MeterType: variation_id || "Prepaid",
+  amount: parseFloat(amount),
+  customerName: customerName || "",
+  customerAddress: customerAddress || "",
+};
+
 
 
     useEffect(() => {
         const fetchBalance = async () => {
             const response = await UserBalance();
-            const fetchedBalance = response.data.data.data.balance;
+            const fetchedBalance = response.data.data.balance.$numberDecimal;
             setBalances(fetchedBalance);
         };
 
         fetchBalance();
     }, []);
 
-    const handleElectricityPurchase = async (e) => {
-        e.preventDefault();
-        setLoading(true)
-        const data = { phone, meter_number, service_id, variation_id, amount, pin };
-        try {
-            const balance = balances
-            const amountValue = parseFloat(data.amount)
-            if (balance >= amountValue) {
-                const pinValue = { pin }
-                const pinResponse = await ConfirmPin(pinValue);
-                if (pinResponse?.data.success) {
-                    const response = await BuyElectricity(data);
-                    if (response?.data.success) {
-                        setActive('page3')
+  const handleElectricityPurchase = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-                    }
 
-                } else {
-                    toast.error('Invalid Pin Please try again');
-                    setLoading(false);
-                }
-            } else if (balance <= amountValue) {
-                toast.error('Insufficient amount kindly fund your wallet')
-                setLoading(false);
-            }
 
-        } catch (error) {
-            const errorMsg = error?.response?.message
-            toast.error(errorMsg || 'Something went wrong')
-            setLoading(false);
-            setActive('page3')
-        }
-    };
+  try {
+    const response = await BuyElectricity(data);
+
+    if (response?.data?.success) {
+        setResponseData(response?.data?.data?.data)
+      startTransition(() => {
+        setActive("page3");
+      });
+    } else {
+      const msg = response?.data?.message || "Electricity purchase failed.";
+      toast.error(msg);
+       startTransition(() => {
+       setTimeout(() => {
+         setActive("page4");
+       }, 3000);
+      });
+    }
+  } catch (error) {
+    console.error("Purchase error:", error);
+    const errorMsg = error?.response?.data?.message || "Something went wrong";
+    toast.error(errorMsg);
+      startTransition(() => {
+       setTimeout(() => {
+         setActive("page4");
+       }, 3000);
+      });
+  } finally {
+    setLoading(false);
+  }
+};
+
+
     return (
         <div>
             <div className='grid  h-[-80vh] lg:-mt-12 items-center'>
@@ -112,10 +141,10 @@ const ConfirmElectricity = ({ setActive, formik }) => {
                                     id="outlined-required-5"
                                     placeholder='Enter pin'
                                     type='password'
-                                    name='pin'
+                                    name='TransactionPin'
                                     required
                                     autoComplete='off'
-                                    {...formik.getFieldProps('pin')}
+                                    {...formik.getFieldProps('TransactionPin')}
                                     className='border-2 h-[50px] w-[95%] shadow-md border-[#D0D5DD] rounded-lg text-[12px] pl-2 focus:outline-none'
                                 />
 

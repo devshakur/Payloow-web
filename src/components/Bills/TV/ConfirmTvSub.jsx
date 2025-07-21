@@ -1,14 +1,38 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, startTransition } from 'react';
 import { Wallet, ArrowRight2 } from "iconsax-react";
 import useBills from '../../../hooks/useBills';
 import { Toaster, toast } from 'react-hot-toast';
 import 'react-toastify/dist/ReactToastify.css';
 
-const ConfirmTvSub = ({formik, setActive }) => {
+const ConfirmTvSub = ({formik, setActive, customerName }) => {
     const [loading, setLoading] = useState(false);
+    const [serviceImage, setServiceImage] = useState()
     const { BuyTvSubscription, UserBalance, ConfirmPin } = useBills();
 
-    const { phone, service_id, smartcard_number, variation_id, pin } = formik.values;
+const {
+  cablename,
+  cableplan,
+  smart_card_number,
+  customer_name,
+  service_id,
+  variation_id,
+  pin,
+} = formik.values;
+
+const ChooseImage = () => {
+  if(service_id === 'GOtv') {
+    setServiceImage('/gotv.png')
+
+  } else if(service_id === 'Startimes') {
+    setServiceImage('/starttime.png')
+  } else if(service_id === "Dstv") {
+    setServiceImage('/images/dstv.png')
+  } else if(service_id === "NOVA") {
+    setServiceImage('/images/nova.png')
+  } else if(service_id === "Sky") {
+    setServiceImage('/images/sky.png')
+  }
+}
 
 
     const [balance, setBalance] = useState(0);
@@ -16,49 +40,59 @@ const ConfirmTvSub = ({formik, setActive }) => {
     useEffect(() => {
         const fetchBalance = async () => {
             const response = await UserBalance();
-            const fetchedBalance = response.data.data.data.balance;
+            const fetchedBalance = response.data.data.balance.$numberDecimal;
             setBalance(fetchedBalance);  
         };
 
         fetchBalance();
+        ChooseImage();
     }, []);  
 
 
 
-    const handleBuySub = async (e) => {
-        e.preventDefault();
-        setLoading(true)
-        try {
-            const data = { phone, service_id, smartcard_number, variation_id, pin };
-            const pinValue = { pin }
-            const pinResponse = await ConfirmPin(pinValue);
-            if (pinResponse?.data.success) {
-                const response = await BuyTvSubscription(data);
-                if (response?.data.success) {
-                    setActive('page3')
+   
+const handleBuySub = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  try {
+    // Extract amount from label, assuming label format: "GOtv Max - ₦8,500"
+    const amountString = variation_id?.label?.match(/₦[\d,]+/)?.[0];
+    const amount = amountString ? parseFloat(amountString.replace(/[₦,]/g, '')) : 0;
 
-                } else {
-                    toast.error('Invalid PIN. Please try again.');
-                    setLoading(false);
-                }
-            } else {
-                toast.error('Something went wrong. Please try again.');
-                setLoading(false);
-                setTimeout(() => {
-                    setActive('page4');
-                }, 2000);
-            }
+    if (balance >= amount) {
+      const response = await BuyTvSubscription({
+        cablename: cablename,
+        cableplan: variation_id.value,
+        smartcardNumber: smart_card_number,
+        customer_name: customerName,
+        transactionPin: pin, // 🔐 Pass pin as transactionPin
+      });
 
-        } catch (error) {
-            toast.error('error Occurred during Purchase:', error);
-            setLoading(false);
-            setTimeout(() => {
-                setActive('page4');
-            }, 2000);
-        } finally {
-            setLoading(false)
-        }
+      if (response?.data?.success) {
+        startTransition(() => {
+          setActive("page3");
+        });
+      } else {
+        toast.error(response?.data?.message || "Purchase failed.");
+        setLoading(false);
+      }
+    } else {
+      toast.error("Insufficient balance.");
+      setTimeout(() => {
+        setActive("page4"); // error screen
+      }, 2000);
     }
+  } catch (error) {
+    toast.error("An error occurred during purchase.");
+    setTimeout(() => {
+      setActive("page4");
+    }, 2000);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
 
 
 
@@ -69,25 +103,28 @@ const ConfirmTvSub = ({formik, setActive }) => {
                 <div className='w-screen flex justify-center lg:justify-center lg:-ml-[-10vw] 2xl:ml-[8vw]'>
                     <div className='w-full mx-4 h-[550px] md:w-[530px] lg:h-[490px] lg:w-[600px] 2xl:w-[700px] bg-[#FFFFFF] pb-[20px]  shadow-md rounded-lg'>
                         <h4 className='flex justify-center text-lg leading-7 font-poppins font-bold my-4 text-[#000000]'>Confirm TV Subscription</h4>
-                        <h6 className='flex justify-center font-medium text-[16px] text-[#1D2433] font-poppins leading-5 -mt-3'>{variation_id}</h6>
+                        <h6 className='flex justify-center font-medium text-[16px] text-[#1D2433] font-poppins leading-5 -mt-3'>{variation_id?.label}</h6>
                         <section className='h-[97px] w-[95%]  mx-2 mt-9'>
                             <div className='flex'>
                                 <h6 className='text-sm w-[83%] font-poppins font-[400] text-[#1D2433CC]'>TV subscription</h6>
                                 <div className='w-[70%] flex justify-end gap-3 ml-6'>
-                                    <img src="./images/dstv.png" className='w-9 h-6' alt="" />
+                                    <img src={serviceImage} className='w-9 h-8' alt="" />
                                     <p className={`${headStyles} mt-1 mr-2`}>{service_id}</p></div>
                             </div>
                             <div className='flex justify-between my-1'>
                                 <p className={`${headStyles}`}>Subscription Plan</p>
-                                <p className={`${headStyles}`}>{variation_id}</p>
+                                <p className={`${headStyles}`}>{variation_id?.label}</p>
                             </div>
                             <div className=' flex justify-between'>
                                 <p className={`${headStyles}`}>Amount</p>
-                                <p className={`${headStyles} ml-2`}>₦600</p>
+                             <p className={`${headStyles} ml-2`}>
+  {variation_id?.label?.match(/₦[\d,]+/)?.[0] || "₦0"}
+</p>
+
                             </div>
                             <div className='flex justify-between my-1'>
                                 <p className={`${headStyles}`}>Smartcard Number</p>
-                                <p className={`${headStyles}`}>{smartcard_number}</p>
+                                <p className={`${headStyles}`}>{smart_card_number}</p>
                             </div>
                             <div className='flex justify-center'>
                                 <p className='w-[90%] border-2 mt-6 border-dashed'></p>

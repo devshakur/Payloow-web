@@ -51,7 +51,7 @@ const PartnersDashboard = () => {
 
         if (productsData !== undefined) {
 
-          toast.success('Fetched Customers');
+          toast.success('Welcome to EasyBuy');
           setCustomers(productsData);
         } else {
           toast.error('No active customers found.');
@@ -72,7 +72,7 @@ const PartnersDashboard = () => {
         const productsData = resp?.data?.data?.[0]?.percentagePaid;
 
         if (productsData !== undefined) {
-          toast.success('Fetched Percentage');
+         
           setPercentage(productsData);
         } else {
           toast.error('No Percentage.');

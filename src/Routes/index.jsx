@@ -3,8 +3,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Loader } from "../AuthContext/Loader.jsx";
 import Policy from "../components/Dashboard/Policy.jsx";
 
+
+
 const App = lazy(() => import("../components/App.jsx"));
 const ErrorPage = lazy(() => import("../ErrorPage/ErrorPage.jsx"));
+
+const ELearningRegistration = lazy(() =>
+  import("../components/E-Learning/ElearningRegistration.jsx")
+);
 const DashboardHome = lazy(() =>
   import("../components/Dashboard/DashboardHome.jsx")
 );
@@ -13,6 +19,9 @@ const TutorDashboard = lazy(() =>
 );
 const StudentDashboard = lazy(() =>
   import("../components/E-Learning/Student/Dashboard.jsx")
+);
+const NotificationPage = lazy(() =>
+  import("../components/NotificationPage.jsx")
 );
 const CompleteProfile = lazy(() =>
   import("../components/E-Learning/Tutor/CompleteProfile.jsx")
@@ -59,7 +68,9 @@ const DebtorDashboard = lazy(() =>
 const BusinessParent = lazy(() =>
   import("../components/Investment/Debtor/Business/BusinessParent.jsx")
 );
-const Loans = lazy(() => import("../components/Investment/Loans/Loans.jsx"));
+const Loans = lazy(() => import("../components/Investment/Loans/Loans.jsx"))
+
+
 const Request = lazy(() =>
   import("../components/Investment/Request/Request.jsx")
 );
@@ -212,7 +223,9 @@ const Portfolio = React.lazy(() =>
 const Transaction = React.lazy(() =>
   import("../components/Shares/Transaction.jsx")
 );
-const Analysis = React.lazy(() => import("../components/Shares/Analysis.jsx"));
+const Analysis = React.lazy(() => import("../components/Shares/Analysis.jsx"))
+
+
 
 export const router = createBrowserRouter([
   {
@@ -360,6 +373,15 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
+    path: "/user/notification",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <NotificationPage />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
     path: "/payloow/policy",
     element: (
       <Suspense fallback={<Loader />}>
@@ -371,6 +393,15 @@ export const router = createBrowserRouter([
 
   // E leanring routes
   // Tutor Routes
+  {
+    path: "/e-learning/register",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <ELearningRegistration />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
   {
     path: "/e-learning/tutor/dashboard",
     element: (

@@ -16,30 +16,37 @@ const reducer = (state, action) => {
 const BillsContext = createContext()
 const BillsProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initial)
-    const BuyAirtime = async (data) => {
-        try {
-            const response = await axiosInstance.post(BillsEndpoints.airtime, data)
+ const BuyAirtime = async (data) => {
+  try {
+    const endpoint = BillsEndpoints.airtime;
+    const response = await axiosInstance.post(endpoint, data);
 
-            const purchase = response.data
-            dispatch({ type: 'AIRTIME', payload: { user: purchase } })
-             return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-         }
+    const purchase = response.data;
+    dispatch({ type: "AIRTIME", payload: { user: purchase } });
 
-    const BuyData = async (data) =>{
-     try{
-         const response = await axiosInstance.post(BillsEndpoints.data, data)
-         const purchase = response.data
-         dispatch({ type: 'DATA', payload: {user: purchase}})
-         return response;
-     } catch(error) {
-         console.error(error)
-         throw error;
-     }
-    }
+    return response;
+  } catch (error) {
+    console.error("BuyAirtime error:", error);
+    throw error;
+  }
+};
+
+
+
+   const BuyData = async (data) => {
+  try {
+      const endpoint = BillsEndpoints.data;
+    const response = await axiosInstance.post(endpoint, data);
+    const purchase = response.data;
+    dispatch({ type: 'DATA', payload: { user: purchase } });
+    return response;
+  } catch (error) {
+    console.error("BuyData error:", error);
+    throw error;
+  }
+};
+
+
 
     
     const BuyElectricity = async (data) =>{
@@ -56,7 +63,7 @@ const BillsProvider = ({ children }) => {
 
        const BuyTvSubscription = async (data) =>{
         try{
-            const response = await axiosInstance.post(BillsEndpoints.subscription, data)
+            const response = await axiosInstance.post(BillsEndpoints.buyCableSubscription, data)
             const purchase = response.data
             dispatch({ type: 'DATA', payload: {user: purchase}})
             return response;
@@ -69,6 +76,17 @@ const BillsProvider = ({ children }) => {
        const UserBalance = async()=>{
         try {
             const response = await axiosInstance.get(BillsEndpoints.balance)
+            const result = response.data
+            return response
+        } catch (error) {
+            console.error(error)
+            throw error;
+        }
+       }
+
+       const UserTransactions = async()=>{
+        try {
+            const response = await axiosInstance.get(BillsEndpoints.getAllTransactions)
             const result = response.data
             return response
         } catch (error) {
@@ -94,6 +112,16 @@ const BillsProvider = ({ children }) => {
             const purchase = response.data
             return response;
         } catch(error) {
+            console.error(error)
+            throw error;
+        }
+       }
+        const GetElectricityVariations = async()=>{
+        try {
+            const response = await axiosInstance.get(BillsEndpoints.electricityVariation)
+            const result = response.data
+            return response
+        } catch (error) {
             console.error(error)
             throw error;
         }
@@ -165,7 +193,8 @@ const BillsProvider = ({ children }) => {
    
 
 
-    const object = { ...state, dispatch, BuyAirtime, BuyData, BuyElectricity, VerifyBvn, BuyTvSubscription, GetUserBalance, UserBalance, DepositFund, WithdrawFund, SetPins, ConfirmPin, UserDetails, GetDva,  }
+    const object = { ...state, dispatch, BuyAirtime, BuyData, UserTransactions, BuyElectricity, GetElectricityVariations, VerifyBvn, BuyTvSubscription, GetUserBalance, UserBalance, DepositFund, WithdrawFund, SetPins, ConfirmPin, UserDetails, GetDva,  }
+
 
     return <BillsContext.Provider value={object}>{children}</BillsContext.Provider>
 }

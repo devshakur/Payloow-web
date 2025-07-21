@@ -4,6 +4,8 @@ import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { motion } from 'framer-motion';
 import useInvestment from '../../../../hooks/useInvetment';
+import { Menu } from '@headlessui/react';
+import { MoreVertical } from 'lucide-react';
 import {toast, Toaster} from 'react-hot-toast'
 const MyInventory = () => {
   const { GetProductInventory } = useInvestment();
@@ -102,10 +104,56 @@ const MyInventory = () => {
                     {item.price.$numberDecimal} {/* Display unit price */}
                   </span>
                 </div>
-                <div className="flex justify-between w-full lg:w-auto mt-3">
-                  <p className="font-poppins text-lg font-medium lg:hidden">Action:</p>
-                  <span className="font-poppins text-sm font-medium lg:relative lg:right-9 xl:right-24">...</span>
-                </div>
+                <Menu as="div" className="relative inline-block text-right xl:right-20">
+     <Menu.Button className="focus:outline-none">
+  <MoreVertical className="w-5 h-5 mt-4 text-gray-600" />
+</Menu.Button>
+
+
+      <Menu.Items className="absolute right-0 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none z-50">
+        <div className="px-1 py-1">
+          <Menu.Item>
+            {({ active }) => (
+              <button
+                className={`${
+                  active ? 'bg-gray-100 text-blue-600' : 'text-gray-800'
+                } group flex w-full items-center rounded-md px-4 py-2 text-sm`}
+                onClick={() => console.log('Edit clicked')}
+              >
+                Edit
+              </button>
+            )}
+          </Menu.Item>
+
+          <Menu.Item>
+            {({ active }) => (
+              <button
+                className={`${
+                  active ? 'bg-gray-100 text-red-600' : 'text-gray-800'
+                } group flex w-full items-center rounded-md px-4 py-2 text-sm`}
+                onClick={() => console.log('Delete clicked')}
+              >
+                Delete
+              </button>
+            )}
+          </Menu.Item>
+
+          <Menu.Item>
+            {({ active }) => (
+              <button
+                className={`${
+                  active ? 'bg-gray-100 text-green-600' : 'text-gray-800'
+                } group flex w-full items-center rounded-md px-4 py-2 text-sm`}
+                onClick={() => console.log('Activate clicked')}
+              >
+                Activate
+              </button>
+            )}
+          </Menu.Item>
+        </div>
+      </Menu.Items>
+    </Menu>
+
               </div>
             </motion.div>
           ))}

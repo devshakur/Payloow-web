@@ -230,7 +230,7 @@ useEffect(()=>{
 
             <div className="flex justify-between">
               <h3 className='font-medium text-lg text-[#000]'>Total Stock</h3>
-              <span>...</span>
+              <span></span>
             </div>
             <p className='text-[28px] text-[#1D2433] font-medium font-poppins mt-6'>{stock && stock.length === 0 ? '0' : stock}</p>
             <div className="mt-3 flex gap-2">
@@ -256,7 +256,7 @@ useEffect(()=>{
           >
             <div className="flex justify-between">
               <h3 className='font-medium text-lg text-[#000]'>Solar Products</h3>
-              <span>...</span>
+             
             </div>
             <p className='text-[28px] text-[#1D2433] font-medium font-poppins mt-6'>{solarStock && solarStock.length === 0 ? '0' : solarStock}</p>
             <div className="mt-3 flex gap-2">
@@ -283,7 +283,7 @@ useEffect(()=>{
           >
             <div className="flex justify-between">
               <h3 className='font-medium text-lg text-[#000]'>Phones</h3>
-              <span>...</span>
+              <span></span>
             </div>
             <p className='text-[28px] text-[#1D2433] font-medium font-poppins mt-6'>{phoneStock && phoneStock.length === 0 ? '0' : phoneStock}</p>
             <div className="mt-3 flex gap-2">
@@ -326,7 +326,7 @@ useEffect(()=>{
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
       >
-        <div className='lg:flex items-center gap-4'>
+        <div className='hidden lg:flex items-center gap-4'>
           <button className='border border-blue-800 px-2 lg:px-5 rounded-lg py-2 my-3 flex justify-start items-center gap-3'>
             <span><IoFilterOutline className='text-blue-800 w-7 h-7' /></span>
             <p className='text-lg text-blue-700'> Filters</p>
@@ -337,7 +337,7 @@ useEffect(()=>{
             </p>
           </div>
         </div>
-        <p className='font-poppins font-medium flex items-center gap-2 text-lg text-[#101928]'>
+        <p className='hidden lg:flex font-poppins font-medium  items-center gap-2 text-lg text-[#101928]'>
           Sort by: <span className='flex gap-2 items-center text-blue-800 font-poppins font-medium'>{date}</span>
         </p>
       </motion.div>

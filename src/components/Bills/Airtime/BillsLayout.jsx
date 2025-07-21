@@ -1,22 +1,44 @@
 import { useLocation } from "react-router-dom";
 import { MoneyChange, TableDocument, BookSaved, Chart, Home, Headphone, Setting2, LogoutCurve } from "iconsax-react";
 
+
+ const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Easybuy", href: "/easybuy/home", icon: MoneyChange },
+  { name: "Easybuy", 
+   href: currentUser?.role === 'Buyer'  ? "/buyers/dashboard"  : currentUser?.role === 'Partner' ? "/partners/dashboard" : "/easybuy/home", 
+  icon: MoneyChange
+},
+
   { name: "Bills", href: "/dashboard", icon: TableDocument },
+
+  //this is the route to E-learning, Investment, and shares. this code will reinstated when needed
+ {
+    name: "E-Learning",
+    href: currentUser?.role === 'Tutor' ? "/e-learning/tutor/dashboard" : "/e-learning/student/dashboard",
+    icon: BookSaved,
+  },
+  {
+    name: "Investment", 
+    href: currentUser?.role === 'Debtor' ? "/debtor/dashboard" : currentUser?.role === 'Investor' ? "/investor/dashboard" : '/investment',
+    icon: Chart
+  },
+  // { name: "Shares", href: "/shares/dashboard", icon: RiStockLine },
 ];
-
-
 const action = [
   { name: "Support", href: "/support", icon: Headphone },
-  { name: "Settings", href: "/settings", icon: Setting2 },
-  { name: "Logout", href: "/", icon: LogoutCurve },
+  { name: "Settings ", href: "/settings", icon: Setting2 },
+  { name: "Logout", href: "/", icon: LogoutCurve, onclick: () => localStorage.clear() },
+];
+const userNavigation = [
+  { name: "Your profile", href: "/settings" },
+  { name: "Sign out", href: "/" },
 ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
+ 
 
 export default function Sidebar({ onClose }) {   
   const location = useLocation();
@@ -29,65 +51,71 @@ export default function Sidebar({ onClose }) {
           <img alt="Paylow Logo" src="/images/logo.svg" className="h-14 w-auto" />
         </div>
         <nav className="flex flex-1 flex-col">
-          <ul role="list" className="flex flex-1 flex-col gap-y-7">
-            <li>
-              <ul role="list" className="-mx-2 space-y-3">
-                {navigation.map((item) => (
-                  <li key={item.name}>
-                    <a
-                      href={item.href}
-                      className={classNames(
-                        isActive(item.href)
-                          ? "bg-primary text-white"
-                          : "hover:bg-primary hover:text-white",
-                        "group flex gap-x-3 rounded-md p-5 text-sm font-semibold leading-6"
-                      )}
-                    >
-                      <item.icon
-                        aria-hidden="true"
-                        className={classNames(
-                          isActive(item.href)
-                            ? "text-white"
-                            : "group-hover:text-white",
-                          "h-6 w-6 shrink-0"
-                        )}
-                      />
-                      {item.name}
-                    </a>
-                  </li>
-                ))}
+              <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                <li>
+                  <ul role="list" className="-mx-2 space-y-3">
+                   {navigation.map((item) => (
+  <li key={item.name}>
+    <a
+      href={item.href}
+      className={classNames(
+        item.name === "Bills"
+          ? "bg-primary text-white" // Always highlighted
+          : isActive(item.href)
+          ? "bg-primary text-white"
+          : "hover:bg-primary hover:text-white",
+        "group flex gap-x-3 rounded-md p-5 text-sm font-semibold leading-6"
+      )}
+    >
+      <item.icon
+        aria-hidden="true"
+        className={classNames(
+          item.name === "Bills"
+            ? "text-white"
+            : isActive(item.href)
+            ? "text-white"
+            : "group-hover:text-white",
+          "h-6 w-6 shrink-0"
+        )}
+      />
+      {item.name}
+    </a>
+  </li>
+))}
+
+                  </ul>
+                </li>
+                <li className="mt-auto">
+                  <ul role="list" className="-mx-2 space-y-1">
+                    {action.map((item) => (
+                      <li key={item.name}>
+                        <a
+                          href={item.href}
+                          className={classNames(
+                            isActive(item.href)
+                              ? "bg-primary text-white"
+                              : "hover:bg-primary hover:text-white",
+                            "group flex gap-x-3 rounded-md p-5 text-sm font-semibold leading-6"
+                          )}
+                          onClick={item.onclick}
+                        >
+                          <item.icon
+                            aria-hidden="true"
+                            className={classNames(
+                              isActive(item.href)
+                                ? "text-white"
+                                : "group-hover:text-white",
+                              "h-6 w-6 shrink-0"
+                            )}
+                          />
+                          {item.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
               </ul>
-            </li>
-            <li className="mt-auto">
-              <ul role="list" className="-mx-2 space-y-1">
-                {action.map((item) => (
-                  <li key={item.name}>
-                    <a
-                      href={item.href}
-                      className={classNames(
-                        isActive(item.href)
-                          ? "bg-primary text-white"
-                          : "hover:bg-primary hover:text-white",
-                        "group flex gap-x-3 rounded-md p-5 text-sm font-semibold leading-6"
-                      )}
-                    >
-                      <item.icon
-                        aria-hidden="true"
-                        className={classNames(
-                          isActive(item.href)
-                            ? "text-white"
-                            : "group-hover:text-white",
-                          "h-6 w-6 shrink-0"
-                        )}
-                      />
-                      {item.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          </ul>
-        </nav>
+            </nav>
       </div>
     </div>
   );

@@ -16,13 +16,12 @@ const ChangeProfilePicture = () => {
   const getUser = async () => {
     try {
       const token = JSON.parse(localStorage.getItem("auth")).auth;
-      // console.log(token);
+
       const response = await axios.get(endpoints.getCurrentUser, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(response);
       localStorage.setItem("currentUser", JSON.stringify(response.data.data));
     } catch (error) {
       toast.error("An error occured while fetching user data");
@@ -49,7 +48,7 @@ const ChangeProfilePicture = () => {
 
     setIsUploading(true);
     const formData = new FormData();
-    formData.append("image", selectedFile);
+    formData.append("profilePicture", selectedFile);
 
     try {
       const token = JSON.parse(localStorage.getItem("auth"))?.auth;
@@ -68,8 +67,7 @@ const ChangeProfilePicture = () => {
           },
         }
       );
-      console.log(response);
-
+    
       if (response.status === 200) {
         toast.success("Profile picture updated successfully");
         setIsOpen(true);

@@ -2,13 +2,14 @@ import React from 'react'
 import { useState } from 'react'
 
 
+
 const StepTwo = ({ openStepThree, formik }) => {
 
   
   return (
     <div>
-      <div className='flex justify-center pb-[3rem]'>
-        <div className='bg-white w-[80%] max-w-3xl rounded-xl shadow-lg pb-10'>
+      <div className='flex justify-center h-full pb-[3rem]'>
+        <div className='bg-white w-[95%] max-w-2xl rounded-xl shadow-xl pb-10'>
           <form className='my-3 flex flex-col gap-3'>
             <div className='flex flex-col'>
               <label htmlFor="fullname" className='mx-5 font-poppins font-medium text-[15px] text-[#101928]'>Full Name<span className='text-red-700'>*</span></label>
@@ -116,7 +117,8 @@ const StepTwo = ({ openStepThree, formik }) => {
               <input 
               name='bvn' 
               id='bvn' 
-              type="text" 
+              type="text"
+              readOnly={formik.values.bvn ? true : false} 
               placeholder='BVN' 
               className='border mx-5 p-2 rounded-md focus:outline-none' 
               onChange={formik.handleChange}
@@ -152,3 +154,5 @@ const StepTwo = ({ openStepThree, formik }) => {
 }
 
 export default StepTwo
+
+

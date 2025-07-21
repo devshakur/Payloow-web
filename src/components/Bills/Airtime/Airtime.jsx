@@ -22,9 +22,9 @@ const Airtime = ({ handleNext, formik }) => {
     }, [])
     const Networks = [
         { value: 'MTN', label: 'MTN' },
-        { value: 'Airtel', label: 'Airtel' },
-        { value: 'Glo', label: 'Glo' },
-        { value: 'etisalat', label: 'etisalat' }
+        { value: 'AIRTEL', label: 'Airtel' },
+        { value: 'GLO', label: 'Glo' },
+        { value: '9MOBILE', label: '9Mobile' }
     ];
     const amounts = ['₦100', '₦200', '₦500', '₦1000'];
 
@@ -34,13 +34,13 @@ const Airtime = ({ handleNext, formik }) => {
 
     const validateFields = () => {
         const { values } = formik;
-        const { network_id, amount, phone } = values;
+        const { network, amount, phone } = values;
 
 
-        if (network_id && amount && phone) {
+        if (network && amount && phone) {
             handleNext();
         } else {
-            formik.setFieldTouched('network_id', true);
+            formik.setFieldTouched('network', true);
             formik.setFieldTouched('amount', true);
             formik.setFieldTouched('phone', true);
         }
@@ -82,13 +82,13 @@ const Airtime = ({ handleNext, formik }) => {
                         <form className='w-[95%] mt-5 mx-2 md:mx-8 overflow-y-auto'>
                             <label htmlFor="network_id" className='text-[#101928] text-[14px] font-plus-jakarta font-medium mb-2'>Choose Network<span className='text-red-700'>*</span></label>
                             <Select
-                                id="network_id"
-                                name="network_id"
+                                id="network"
+                                name="network"
                                 options={Networks}
                                 getOptionValue={(option) => option.value}
                                 getOptionLabel={(option) => option.label}
                                 onChange={(option) => {
-                                    formik.setFieldValue('network_id', option.value);
+                                    formik.setFieldValue('network', option.value);
                                 }}
                                 styles={{
                                     control: (provided) => ({

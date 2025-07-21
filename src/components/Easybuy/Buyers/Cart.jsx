@@ -6,10 +6,12 @@ import { useRouter } from '../../../Routes/router';
 import { motion } from 'framer-motion';
 import { toast, Toaster } from 'react-hot-toast';
 import useInvestment from '../../../hooks/useInvetment';
+import useAuth from '../../../hooks/useAuth';
 
 const Cart = () => {
   const router = useRouter();
   const { GetCart, DeleteCart } = useInvestment()
+  const { isLoggedIn, user } = useAuth();
   const [quantities, setQuantities] = useState({});
   const [cartItems, setCartItems] = useState([]);
   const [productId, setProductId] = useState(null);
@@ -34,19 +36,7 @@ const Cart = () => {
     DeleteCartItem(_id);
   };
 
-  // const handleIncrease = (id) => {
-  //   setQuantities((prev) => ({
-  //     ...prev,
-  //     [id]: (prev[id] || 0) + 1,
-  //   }));
-  // };
-
-  // const handleDecrease = (id) => {
-  //   setQuantities((prev) => ({
-  //     ...prev,
-  //     [id]: prev[id] > 1 ? prev[id] - 1 : 1,
-  //   }));
-  // };
+ 
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -67,7 +57,7 @@ const Cart = () => {
     };
 
     fetchCartItems();
-  }, []);
+  }, [isLoggedIn]);
 
   return (
     <BuyersLayout>

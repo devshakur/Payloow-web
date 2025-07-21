@@ -174,7 +174,7 @@ const CompleteProfile = () => {
           <p className="w-full text-center">Step {step} of 3</p>
           <button
             onClick={() => {
-              navigate("/e-learning/tutor/dashboard");
+              navigate("/e-learning/register");
             }}
             className="w-full text-right flex items-center justify-end"
           >

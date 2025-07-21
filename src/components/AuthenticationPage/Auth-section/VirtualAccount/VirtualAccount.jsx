@@ -2,29 +2,25 @@ import React, { useState, useMemo, useEffect } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import Select from "react-select";
+import { bankOptions } from "../../../../Utils/banksCodes";
 import countryList from "react-select-country-list";
 import "../../auth.css";
 import { useNavigate } from "react-router-dom";
 import useBills from "../../../../hooks/useBills";
-
 const VirtualAccount = () => {
   const navigate = useNavigate();
   const { VerifyBvn } = useBills();
 
-  const countryOptions = useMemo(() => countryList().getData(), []);
-  const bankOptions = [
-    { label: "Access Bank", value: "044" },
-    { label: "GTBank", value: "058" },
-    { label: "First Bank", value: "011" },
-    { label: "Zenith Bank", value: "057" },
-    { label: "UBA", value: "033" },
-    { label: "Fidelity Bank", value: "070" },
-    { label: "Union Bank", value: "032" },
-    { label: "Wema Bank", value: "035" },
-    { label: "Sterling Bank", value: "232" },
-    { label: "Kuda Bank", value: "999991" },
-  ];
 
+
+
+
+
+
+
+  const countryOptions = useMemo(() => countryList().getData(), []);
+
+ 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [country, setCountry] = useState(null);
@@ -77,8 +73,8 @@ if (CustomerData) {
       const response = await VerifyBvn(data);
       const result = response.data;
 
-      if (result.status === true) {
-        toast.success(result.message);
+      if (result.data.status === true) {
+        toast.success("User Verification Successful");
         navigate("/dashboard");
       }
     } catch (error) {

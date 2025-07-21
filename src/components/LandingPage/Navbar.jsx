@@ -75,7 +75,7 @@ const Navbar = () => {
                 onClick={() => {
                   setTimeout(() => {
                     window.location.href = "/login";
-                  }, 2000); // 2-second delay
+                  }, 200); // 2-second delay
                 }}
                 className={`${
                   scrolled

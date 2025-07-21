@@ -27,6 +27,7 @@ import {
 import { useLocation, Link } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import DefaultProfile from "../../Easybuy/Buyers/DefaultProfile";
+import { useRouter } from "../../../Routes/router";
 
 const navigation = [
   { name: "Dashboard", href: "/e-learning/tutor/dashboard", icon: Home },
@@ -51,6 +52,7 @@ function classNames(...classes) {
 
 export default function Layout({ children }) {
   const location = useLocation();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isActive = (href) => location.pathname === href;
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -98,7 +100,7 @@ export default function Layout({ children }) {
                     className="h-14 w-auto"
                   />
                   <div className="flex items-center justify-center">
-                    <div className="md:text-sm text-xs bg-primary text-white px-5 py-1 rounded-full">
+                    <div onClick={()=>router.push('/dashboard')} className="md:text-sm text-xs bg-primary text-white px-5 py-1 rounded-full">
                       E-Learning
                     </div>
                   </div>
@@ -181,7 +183,7 @@ export default function Layout({ children }) {
                 className="h-14 w-auto"
               />
               <div className="flex items-center justify-center">
-                <div className="md:text-sm text-xs bg-primary text-white px-5 py-1 rounded-full">
+                <div onClick={()=>router.push('/dashboard')} className="md:text-sm cursor-pointer text-xs bg-primary text-white px-5 py-1 rounded-full">
                   E-Learning
                 </div>
               </div>

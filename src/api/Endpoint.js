@@ -1,6 +1,6 @@
 export const BaseUrl = import.meta.env.VITE_API_BASE_URL;
 
-const investmentApiBaseUrl = "https://api-dev-investment.payloow.com/";
+const investmentApiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 if (!BaseUrl) {
   throw new Error("API_BASE_URL is not defined in your .env file");
@@ -45,7 +45,7 @@ export const endpoints = {
   // General
   getCurrentUser: `${BaseUrl}/get-current-user`,
   changeEmail: `${BaseUrl}/change-email`,
-  changePassword: `${BaseUrl}/change-password`,
+  changePassword: `${BaseUrl}/update-transaction-pin`,
   changeProfilePicture: `${BaseUrl}/add-profile-picture`,
   getUserById: (id) => `${BaseUrl}/get-user-by-id/${id}`,
 
@@ -69,19 +69,24 @@ export const endpoints = {
 };
 //Bills
 export const BillsEndpoints = {
-  airtime: `${BaseUrl}/buy-airtime-vtu`,
-  data: `${BaseUrl}/buy-data-vtu`,
-  electricity: `${BaseUrl}/buy-electricity-vtu`,
-  subscription: `${BaseUrl}/buy-cable-subscription-vtu`,
-  balance: `${BaseUrl}/get-vtu-providers-wallet-balance`,
+  airtime: `${BaseUrl}/payloow-bills/airtime`,
+  data: `${BaseUrl}/payloow-bills/data`,
+  electricityVariation: `${BaseUrl}/payloow-bills/electricity/discos`,
+  validateMeterNumber: `${BaseUrl}/payloow-bills/electricity/validate-meter`,
+  electricity: `${BaseUrl}/payloow-bills/electricity`,
+  cableVariation: `${BaseUrl}/payloow-bills/cable-tv/list`,
+  validateCableNumber: `${BaseUrl}/payloow-bills/cable-tv/validate`,
+  buyCableSubscription: `${BaseUrl}/payloow-bills/cable-tv`,
+  getAllTransactions: `${BaseUrl}/transactions/list`,
+  balance: `${BaseUrl}/wallet/get-wallet-balance`,
   setPin: `${BaseUrl}/set-transaction-pin`,
-  confirm: `${BaseUrl}/verify-transaction-pin`,
+  confirm: `${BaseUrl}/verify-pin`,
   getUserDetails: `${BaseUrl}/get-current-user`,
 };
 
 //Investment Endpoints
 export const InvestmentEndpoints = {
-  createDebtor: `${investmentApiBaseUrl}debtor/`,
+  createDebtor: `${investmentApiBaseUrl}/debtor/`,
   createInvestor: `${investmentApiBaseUrl}investor/`,
   createBusiness: `${investmentApiBaseUrl}debtor/business/`,
   getIndustries: `${investmentApiBaseUrl}user/business-industries`,
@@ -150,8 +155,11 @@ export const AdminEndpoints = {
 
 export const WalletEndpoints = {
   depositFund: `${BaseUrl}/wallet/deposit`,
-  withdrawFund: `${BaseUrl}/wallet/withdraw`,
+  withdrawFund: `${BaseUrl}/wallet/transfer`,
   getWalletBalance: `${BaseUrl}/wallet/get-wallet-balance`,
   verifyBvn: `${BaseUrl}/wallet/verify-customer`,
   getDva: `${BaseUrl}/user/dva`,
+  getbanklist: `${BaseUrl}/wallet/transfer/list-banks`,
+  verifyCustomerAccount: `${BaseUrl}/wallet/transfer/resolve-account`,
+  getRecipients: `${BaseUrl}/wallet/recipients`,
 };
