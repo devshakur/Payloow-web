@@ -28,18 +28,38 @@ import { useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { Toaster } from "react-hot-toast";
 import DefaultProfile from "../Easybuy/Buyers/DefaultProfile";
+import { useRouter } from "../../Routes/router";
+
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Easybuy", href: "/easybuy", icon: MoneyChange },
-  { name: "E-Learning", href: "/e-learning/tutor/dashboard", icon: BookSaved },
+  { name: "Easybuy", 
+   href: currentUser?.role === 'Buyer'  ? "/buyers/dashboard"  : currentUser?.role === 'Partner' ? "/partners/dashboard" : "/easybuy/home", 
+  icon: MoneyChange
+},
+
   { name: "Bills", href: "/dashboard", icon: TableDocument },
-  { name: "Investment", href: "/investment", icon: Chart },
+
+  //this is the route to E-learning, Investment, and shares. this code will reinstated when needed
+ {
+    name: "E-Learning",
+    href: currentUser?.role === 'Tutor' ? "/e-learning/tutor/dashboard" : currentUser?.role === 'student' ? "/e-learning/student/dashboard" : "/e-learning/register",
+    icon: BookSaved,
+  },
+  {
+    name: "Investment", 
+    href: currentUser?.investmentRole === 'debtor' ? "/debtor/dashboard" : currentUser?.role === 'Investor' ? "/investor/dashboard" : '/investment',
+    icon: Chart
+  },
+  // { name: "Shares", href: "/shares/dashboard", icon: RiStockLine },
 ];
 const action = [
   { name: "Support", href: "/support", icon: Headphone },
   { name: "Settings ", href: "/settings", icon: Setting2 },
-  { name: "Logout", href: "/", icon: LogoutCurve },
+  { name: "Logout", href: "/", icon: LogoutCurve, onclick: () => localStorage.clear() },
 ];
 const userNavigation = [
   { name: "Your profile", href: "/settings" },
@@ -50,8 +70,11 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+
+
 function InvestmentLayout({ children }) {
   const location = useLocation();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isActive = (href) => location.pathname === href;
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -275,7 +298,8 @@ function InvestmentLayout({ children }) {
               <div className="flex items-center gap-x-4 lg:gap-x-6">
                 <button
                   type="button"
-                  className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
+                  onClick={() => router.push('/user/notification')}
+                  className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500 cursor-pointer"
                 >
                   <span className="sr-only">View notifications</span>
                   <Notification aria-hidden="true" className="h-6 w-6" />
@@ -289,29 +313,30 @@ function InvestmentLayout({ children }) {
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative">
-                  <MenuButton className="-m-1.5 flex items-center p-1.5">
+                    <MenuButton className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    {currentUser ? (
-            
-            <img
-            alt="User Profile"
-            src={currentUser.profilePicture }
-            className="h-8 w-8 rounded-full bg-gray-50"
-          />
-          ) : (
-            currentUser ?  <DefaultProfile /> :
-            <img
-            alt="User Profile"
-            src='/images/user.png'
-            className="h-8 w-8 rounded-full bg-gray-50"
-          />
-          ) }
+                    {currentUser?.profilePicture ? (
+  <img
+    alt="User Profile"
+    src={currentUser.profilePicture}
+    className="h-8 w-8 rounded-full bg-gray-50"
+  />
+) : currentUser ? (
+  <DefaultProfile className="h-8 w-8 rounded-full" />
+) : (
+  <img
+    alt="User Profile"
+    src="/images/user.png"
+    className="h-8 w-8 rounded-full bg-gray-50"
+  />
+)}
+
                     <span className="hidden lg:flex lg:items-center">
                       <span
                         aria-hidden="true"
                         className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                       >
-                        {currentUser ? currentUser.firstName : 'John Doe'}
+                        {currentUser ? currentUser.firstName : 'Guest'}
                       </span>
                       <ArrowDown2
                         aria-hidden="true"

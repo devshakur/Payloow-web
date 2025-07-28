@@ -38,7 +38,7 @@ const currentUser =  JSON.parse(localStorage.getItem("currentUser"));
 
 const ELearningRegistration = () => {
   const handleTutor = () => {
-    if(currentUser?.isTutorVerified === true){
+    if(currentUser?.elearningRole === 'tutor'){
       window.location.href = '/e-learning/tutor/dashboard';
     }else{
     window.location.href =  '/e-learning/tutor/complete-profile';
@@ -46,7 +46,12 @@ const ELearningRegistration = () => {
   };
 
   const handleStudent = () => {
+      if(currentUser?.elearningRole === 'student'){
       window.location.href = '/e-learning/student/dashboard';
+    }else{
+    window.location.href =  '/e-learning/register';
+    }
+    
   };
 
   

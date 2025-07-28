@@ -104,7 +104,7 @@ const BuyersDashboard = () => {
                 >
                   <Link to={`/product-details/${product._id}`}>
                     <div className='w-full flex justify-center lg:justify-start'>
-                      <img src={product.imageUrl || '/images/default-img.png'} alt={product._id || 'Product'}  className='w-[85%]' />
+                      <img src={product.imageUrl || '/images/default-img.png'} alt={product._id || 'Product'}  className='w-[85%] md:h-[400px]' />
                     </div>
                     <div className='lg:w-[80%] w-[100%] flex justify-between md:w-[70%]'>
                       <p className='font-poppins font-medium text-[#101928] text-lg'>{product.name}</p>

@@ -10,6 +10,7 @@ import {toast, Toaster} from 'react-hot-toast'
 const MyInventory = () => {
   const { GetProductInventory } = useInvestment();
   const [currentPage, setCurrentPage] = useState(0);
+  const [totalPhones, setTotalPhones] = useState(0);
   const [inventory, setInventory] = useState([]); // To hold inventory data
 
   useEffect(() => {
@@ -19,9 +20,12 @@ const MyInventory = () => {
         
         // Fetching inventory from API response
         const productsData = resp?.data?.data?.data; 
+        
         if (productsData) {
          toast.success('Fetched User Inventory')
-          setInventory(productsData); // Setting the fetched data
+          setInventory(productsData); 
+         
+          
         }
       } catch (error) {
         toast.error('Error fetching inventory:', error);

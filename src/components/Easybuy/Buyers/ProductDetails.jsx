@@ -8,8 +8,10 @@ import { AiOutlineMinus } from "react-icons/ai";
 import { motion } from 'framer-motion';
 import BuyersLayout from '../EasyBuyRegistration/BuyersLayout';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import useInvestment from '../../../hooks/useInvetment';
 import { toast, Toaster } from 'react-hot-toast'
+
 import { phonesItems } from './product';
 import { solarItems } from './product';
 import { CartContext } from './cartContext';
@@ -25,6 +27,7 @@ const ProductDetails = () => {
     const [selecttedPrd, setSelectedPrd] = useState([])
     const [quantity, setQuantity] = useState(0)
     const [additionalImage, setAdditionalImage] = useState([])
+    const [selectedColor, setSelectedColor] = useState('');
     const [cartItems, setCartItems] = useState([])
     const [checkProduct, setCheckProduct] = useState('')
     const [colors, setColors] = useState([])
@@ -144,7 +147,8 @@ const ProductDetails = () => {
 
     const values = {
         productId: productId,
-        quantity: quantity
+        quantity: quantity,
+        color: selectedColor,
     }
 
     const AddItemsToCart = async () => {
@@ -287,7 +291,7 @@ const ProductDetails = () => {
                             </motion.h5>
                         </div>
 
-                        <motion.ul
+                        {/* <motion.ul
                             className="flex gap-3 items-center border p-5 bg-gray-100"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -301,7 +305,32 @@ const ProductDetails = () => {
                             <div className=" w-full flex justify-end rounded-lg text-white">
                                 <button onClick={saveId} className='w-[50%] text-blue-700 border border-blue-600 py-4 lg:-py-5 rounded-lg text-sm lg:text-lg'>Swap Product</button>
                             </div>
-                        </motion.ul>
+                        </motion.ul> */}
+                        <motion.ul
+  className="flex gap-3 items-center border p-5 bg-gray-100"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 0.5 }}
+>
+  {colors?.map((color, index) => (
+    <li
+      key={index}
+      onClick={() => setSelectedColor(color)}
+      style={{
+        backgroundColor: color,
+        border: selectedColor === color ? '3px solid #1D4ED8' : '1px solid #ccc',
+        opacity: selectedColor === color ? 1 : 0.8,
+        cursor: 'pointer'
+      }}
+      className='w-14 h-14 shadow-md rounded-[47%] transition-all duration-300'
+    />
+  ))}
+
+  <div className="w-full flex justify-end rounded-lg text-white">
+    <button onClick={saveId} className='w-[50%] text-blue-700 border border-blue-600 py-4 lg:-py-5 rounded-lg text-sm lg:text-lg'>Swap Product</button>
+  </div>
+</motion.ul>
+
 
                         <div className='mt-4 lg:mt-0'>
                             <motion.h4
@@ -324,14 +353,14 @@ const ProductDetails = () => {
                                     <p className='font-bold font-plus-jakarta text-xl'>{quantity}</p>
                                     <button onClick={increaseQuantity} className='font-bold pr-8'><GoPlus className='w-8 h-8' /></button>
                                 </div>
-                                <p className='font-poppins text-[15px] font-medium'>Only <span className='text-blue-700'>12 Items Left!</span> Don’t miss it</p>
+                                <p className='font-poppins text-[15px] font-medium'>Only <span className='text-blue-700'>{product.stock} Items Left!</span> Don’t miss it</p>
                                 <img src="/images/view.png" alt="view" />
                             </motion.div>
                         </div>
 
                         <div className='w-full flex flex-col lg:flex-row gap-3 mt-5 '>
                             <button onClick={handleCart} className='w-full bg-blue-600 text-white py-4 lg:py-0 rounded-lg text-lg'>View Cart</button>
-                            <button onClick={handleAddToCart} className='w-full text-blue-700 border border-blue-600 py-4 lg:-py-5 rounded-lg text-lg'>Add to Cart</button>
+                            <button onClick={handleAddToCart}  disabled={!selectedColor} className='w-full text-blue-700 border border-blue-600 py-4 lg:-py-5 rounded-lg text-lg'>Add to Cart</button>
                         </div>
                     </article>
                 </main>
@@ -348,7 +377,7 @@ const ProductDetails = () => {
                     <div className="grid lg:grid-cols-3 justify-start sm:grid-cols-2 gap-y-8 mt-5">
     {selecttedPrd
         .filter((product) =>
-            product?.category?.name?.toLowerCase().includes('phones') || 
+            product?.category?.name?.includes('Phones') || 
             product?.category?.name?.toLowerCase().includes('solar')
         )
         .map((product) => (
@@ -359,9 +388,9 @@ const ProductDetails = () => {
                 transition={{ duration: 0.5 }}
                 className='mx-2'
             >
-                {/* <Link to={`/product-details/${product._id}`}> */}
+                <Link to={`/product-details/${product._id}`}>
                 <div className='w-full flex justify-center lg:justify-start'>
-                    <img src={product.imageKey || '/images/default-img.png'} alt={product._id || 'Product'} className='w-[85%]' />
+                    <img src={product.additionalImages[0] || '/images/default-img.png'} alt={product._id || 'Product'} className='w-[95%] md:h-[300px]' />
                 </div>
                 <div className='lg:w-[80%] w-[100%] flex justify-between md:w-[70%]'>
                     <p className='font-poppins font-medium text-[#101928] text-lg'>{product.name}</p>
@@ -382,7 +411,7 @@ const ProductDetails = () => {
                         Add to Cart
                     </p>
                 </motion.button>
-                {/* </Link> */}
+                </Link>
             </motion.div>
         ))}
 </div>

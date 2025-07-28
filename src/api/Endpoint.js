@@ -17,7 +17,7 @@ export const AuthEndPoints = {
 
 export const endpoints = {
   // tutor
-  createTutorProfile: `${BaseUrl}/create-course-tutor-profile`,
+  createTutorProfile: `${BaseUrl}/tutors/profile`,
   getTutorProfileById: (id) =>
     `${BaseUrl}/get-course-tutor-profile-by-id/${id}`,
   addTutorImage: `${BaseUrl}/add-tutor-image`,
@@ -80,36 +80,31 @@ export const BillsEndpoints = {
   getAllTransactions: `${BaseUrl}/transactions/list`,
   balance: `${BaseUrl}/wallet/get-wallet-balance`,
   setPin: `${BaseUrl}/set-transaction-pin`,
-  confirm: `${BaseUrl}/verify-pin`,
   getUserDetails: `${BaseUrl}/get-current-user`,
 };
 
 //Investment Endpoints
 export const InvestmentEndpoints = {
-  createDebtor: `${investmentApiBaseUrl}/debtor/`,
-  createInvestor: `${investmentApiBaseUrl}investor/`,
-  createBusiness: `${investmentApiBaseUrl}debtor/business/`,
-  getIndustries: `${investmentApiBaseUrl}user/business-industries`,
-  viewBusiness: `${investmentApiBaseUrl}debtor/business/`,
-  getLoanBusiness: `${investmentApiBaseUrl}browse/`,
-  getFilteredLoanBusiness: `${investmentApiBaseUrl}browse/`,
+  createDebtor: `${BaseUrl}/debtors-users/profile`,
+  createInvestor: `${investmentApiBaseUrl}/investors-users/profile`,
+  createBusiness: `${investmentApiBaseUrl}/debtors-users/business`,
+  viewBusiness: `${investmentApiBaseUrl}/debtors-users/business`,
+  getLoanBusiness: `${investmentApiBaseUrl}/debtors-users/business`,
+  getInvestorsRequest: `${investmentApiBaseUrl}/debtors-users/business/investment`,
+  getFilteredLoanBusiness: `${investmentApiBaseUrl}/browse`,
   getBusinessInfo: (business_id) =>
     `${investmentApiBaseUrl}debtor/business/${business_id}/`,
-  addLoan: (businessId) =>
-    `${investmentApiBaseUrl}debtor/business/${businessId}/loan/`,
-  investInBusiness: `${investmentApiBaseUrl}investor/invest/`,
+  addLoan: `${BaseUrl}/debtors-users/business/loan`,
+  investInBusiness: `${investmentApiBaseUrl}/investors-users/invest`,
   getInvestmentRequest: (business_id) =>
-    `${investmentApiBaseUrl}debtor/business/${business_id}/investment/`,
-  getInvestorsInvestment: `${investmentApiBaseUrl}investor/investments/`,
-  getBusinessStages: `${investmentApiBaseUrl}debtor/business-stages/`,
-  getModels: `${investmentApiBaseUrl}debtor/models/`,
-  getUser: `${investmentApiBaseUrl}user/`,
-  acceptRequest: (investment_id) =>
-    `${investmentApiBaseUrl}debtor/investment/${investment_id}/accept/`,
-  declineRequest: (investment_id) =>
-    `${investmentApiBaseUrl}debtor/investment/${investment_id}/decline/`,
-  repayInvestment: (investment_id) =>
-    `${investmentApiBaseUrl}debtor/investment/${investment_id}/repayment/`,
+    `${investmentApiBaseUrl}debtor/business/${business_id}/investment`,
+  getInvestorsInvestment: `${investmentApiBaseUrl}/investors-users/investments`,
+  getUser: `${BaseUrl}/debtors-users/profile`,
+  acceptOrDecline: (investmentRequestId) =>
+    `${investmentApiBaseUrl}/debtors-users/business/investment/${investmentRequestId}`,
+  // this handles both accept & decline
+  repayInvestment: (investmentId) =>
+    `${investmentApiBaseUrl}/debtors-users/business/investment/${investmentId}/repay`,
 };
 
 //EasyBuy

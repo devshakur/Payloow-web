@@ -145,10 +145,13 @@ const validateMeterNumber = async (meterNumber, discoCode, type = "PREPAID") => 
     <div>
       <main className="pb-[30px]">
         <div className="w-[100vw] md:-mt-12 flex justify-center lg:-ml-[-10vw] xl:-mt-[14vh]">
-          <div className="w-[95%] md:mt-[5vh] md:w-[600px] px-4 lg:w-[650px] bg-white pb-4 shadow-md rounded-xl overflow-hidden">
+          <div className="w-[95%] md:mt-[5vh] md:w-[600px] px-4  bg-white pb-4 shadow-md rounded-xl overflow-hidden">
             <h4 className="flex justify-center text-xl font-plus-jakarta font-semibold my-4 text-[#212121]">
               Pay Electricity Bills
             </h4>
+            <p className="text-center text-sm text-gray-500 -mt-2 mb-4">
+  Enter your details below to complete your electricity bill payment seamlessly fast and secure payment.
+</p>
 
             <form className="w-[100%] mx-2 mt-4">
               {/* Provider */}

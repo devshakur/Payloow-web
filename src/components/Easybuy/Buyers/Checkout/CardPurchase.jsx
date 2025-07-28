@@ -19,11 +19,11 @@ const CardPurchase = ({handleModal, fullPayment, loading, SubmitCheckOutFlutter}
                              </div>
                            
                              <div>
-                 <p className='font-poppins font-medium text-lg text-[#1D2433]'>Your payment is secure. We use industry-standard SSL encryption to protect your personal information.</p>
+                 <p className='font-plus-jakarta font-medium text-md text-[#1D2433]'>Your payment is secure. We use industry-standard SSL encryption to protect your personal information.</p>
              </div>
              <div className="flex gap-2 mt-4">
                  <input type="checkbox" name="check" id="check" />
-                 <p className='font-poppins font-medium text-lg text-[#000]'>I have read and agree to the website terms and conditions *</p>
+                 <p className='font-plus-jakarta font-medium text-md text-[#1D2433]'>I have read and agree to the website terms and conditions *</p>
              </div>
              <div className='w-full flex justify-center my-5'>
                  <button  onClick={handleCheck} className='w-[90%] bg-yellow-500 py-4 rounded-md  text-white'>{loading ? 'Processing...' : 'Pay With PayStack...'}</button>

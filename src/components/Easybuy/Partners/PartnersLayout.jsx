@@ -261,13 +261,13 @@ function PartnersLayout({ children }) {
 
          {/* Notification Icon (Visible on all screens) */}
          <button
-          type="button"
-          onClick={()=>router.push('/settings')}
-          className="-m-2.5 p-1.5 bg-[#F1F3F9] rounded-[50%] text-[#1D2433CC] hover:text-gray-500"
-        >
-          <span className="sr-only">View notifications</span>
-          <Notification aria-hidden="true" className="h-5 w-5" />
-        </button>
+                  type="button"
+                  onClick={() => router.push('/user/notification')}
+                  className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500 cursor-pointer"
+                >
+                  <span className="sr-only">View notifications</span>
+                  <Notification aria-hidden="true" className="h-6 w-6" />
+                </button>
 
         {/* Profile Dropdown (Visible on all screens) */}
         <Menu as="div" className="relative">

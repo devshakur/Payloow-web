@@ -14,12 +14,12 @@ function RegisterTwo({ formik }) {
     { value: "Abuja", label: "FCT" },
     { value: "Kano", label: "Kano" },
     { value: "Lagos", label: "Lagos" },
+    { value: "Port Harcourt", label: "Port Harcourt" },
+    { value: "Delta", label: "Delta" },
   ];
   const register = [
     { value: "user", label: "Customer" },
-    { value: "tutor", label: "Tutor" },
-    { value: "partner", label: "Partner" },
-    { value: "investor", label: "Investor" },
+
   ];
   return (
     <div>

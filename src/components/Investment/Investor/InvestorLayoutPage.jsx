@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     Dialog,
     DialogBackdrop,
@@ -29,6 +29,8 @@ import '../investment.css';
 import { Toaster } from "react-hot-toast";
 import { useRouter } from "../../../Routes/router";
 import DefaultProfile from "../../Easybuy/Buyers/DefaultProfile";
+import useBills from "../../../hooks/useBills";
+
 
 const board = [
     { name: "Main Menu", href: '/dashboard', icon: Home },
@@ -58,6 +60,7 @@ function classNames(...classes) {
 
 function InvestorLayoutPage({ children }) {
     const [clickedStates, setClickedStates] = useState({ "Investment": true });
+    const { GetUserBalance, GetDva, } = useBills();
     const [activeItem, setActiveItem] = useState(null);
     const location = useLocation();
     const navigate = useNavigate();
@@ -77,6 +80,7 @@ function InvestorLayoutPage({ children }) {
         navigate(item.href);
     };
 
+  
     return (
         <>
             <Toaster />
@@ -319,12 +323,13 @@ function InvestorLayoutPage({ children }) {
                             </form>
                             <div className="flex items-center gap-x-4 lg:gap-x-6">
                                 <button
-                                    type="button"
-                                    className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
-                                >
-                                    <span className="sr-only">View notifications</span>
-                                    <Notification aria-hidden="true" className="h-6 w-6" />
-                                </button>
+                  type="button"
+                  onClick={() => router.push('/user/notification')}
+                  className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500 cursor-pointer"
+                >
+                  <span className="sr-only">View notifications</span>
+                  <Notification aria-hidden="true" className="h-6 w-6" />
+                </button>
                                 <div aria-hidden="true" className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" />
                                 <Menu as="div" className="relative">
                                     <MenuButton className="-m-1.5 flex items-center p-1.5">

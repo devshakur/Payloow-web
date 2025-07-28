@@ -95,7 +95,7 @@ const TutorDashboard = () => {
 
 
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  const isTutorVerified = currentUser?.isTutorVerified;
+  const isTutorVerified = currentUser?.elearningRole === 'tutor';
 
   return (
     <Layout>

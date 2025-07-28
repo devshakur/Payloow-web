@@ -16,10 +16,10 @@ const FailedPayment = () => {
                     <p className='font-poppins text-lg font-[550] leading-6 text-[#1D2433] my-4'>Airtime Purchase Failed!</p>  
                 </div> 
                 <div className='flex justify-center flex-col lg:flex-row lg:gap-5 my-5'>
-                <button onClick={()=>router.reload()} type='button' className="p-3 w-[95%] lg:w-[50%] font-poppins text-sm font-semibold leading-5 my-3 rounded-lg border border-[#6196F9] text-[#6196F9]">  
+                <button onClick={()=>router.back()} type='button' className="p-3 w-[95%] lg:w-[50%] font-poppins text-sm font-semibold leading-5 my-3 rounded-lg border border-[#6196F9] text-[#6196F9]">  
                   Cancel 
                 </button>  
-                <button onClick={()=>router.back()} type='button' className="p-3 w-[95%] lg:w-[50%] font-poppins my-3 rounded-lg bg-blue-500 text-white">  
+                <button onClick={()=>router.reload()} type='button' className="p-3 w-[95%] lg:w-[50%] font-poppins my-3 rounded-lg bg-blue-500 text-white">  
                     Retry  
                 </button>  
                     

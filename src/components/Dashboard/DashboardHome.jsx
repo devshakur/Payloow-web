@@ -17,10 +17,13 @@ import WithdrawFund from "../WithdrawFund/WithdrawFund";
 import useBills from "../../hooks/useBills";
 import NotificationHistory from "../NotificationHistory";
 import PayloowEasybuySlider from "../PayloowEasybuySlider";
+import { useRouter } from "../../Routes/router";
+import InvestmentMarquee from "../InvestmentMarquee";
 
 const DashboardHome = () => {
   const { GetUser } = useAuth();
   const { GetUserBalance, GetDva, UserTransactions } = useBills();
+  const router = useRouter();
   const [details, setDetails] = useState({});
   const [walletBalance, setWalletBalance] = useState({});
   const [isOpens, setIsOpens] = useState(false);
@@ -147,7 +150,7 @@ const DashboardHome = () => {
       .catch(() => toast.error("Failed to copy"));
   };
 
-  console.log(transaction);
+ 
   
   return (
     <DashboardLayout>
@@ -206,8 +209,8 @@ const DashboardHome = () => {
                   </p>
                 </div>
                 <div className="flex md:flex-row flex-col items-center gap-3">
-                  <Button text="Make a payment" className="bg-white text-primary font-medium" />
-                  <Button text="Apply for Loan" className="bg-white text-primary font-medium" />
+                  <Button onClick={()=>router.push('/easybuy/home')} text="Make a payment" className="bg-white text-primary font-medium" />
+                  <Button onClick={()=>router.push('/investment')} text="Apply for Loan" className="bg-white text-primary font-medium" />
                 </div>
               </div>
             </div>
@@ -279,7 +282,7 @@ const DashboardHome = () => {
           <div className="md:col-span-3 bg-white rounded-xl md:p-8 p-3 shadow">
             <div className="flex items-center justify-between pb-7">
               <p className="md:text-2xl text-lg font-medium">Recent Transactions</p>
-              <Link to={"#!"} className="text-sm text-primary">See all</Link>
+              <Link to={"/user/notification"} className="text-sm text-primary">See all</Link>
             </div>
             <NotificationHistory history={transaction} />
           </div>
@@ -310,6 +313,13 @@ const DashboardHome = () => {
           </span>
         </div>
             <PayloowEasybuySlider />
+          </div>
+        </div>
+        <div className="w-full mt-5">
+          <div className="bg-white shadow rounded-xl p-4">
+             <div className="flex   p-4 mt-9 items-center">
+        </div>
+            <InvestmentMarquee />
           </div>
         </div>
     </DashboardLayout>

@@ -114,13 +114,13 @@ const Confirm = ({ active, setActive, formik, selectedPlan, successResponse, set
 
   return (
     <div className="grid lg:-mt-12 items-center">
-      <div className="w-screen flex justify-center">
-        <div className="w-full mx-4 h-[550px] md:w-[530px] lg:h-[500px] lg:w-[600px] 2xl:w-[700px] bg-white pb-[20px] shadow-md rounded-md">
+      <div className="w-screen flex justify-center lg:ml-[8rem]">
+        <div className="w-full mx-4 h-[500px] md:w-[530px] lg:h-[500px] space-x-3 bg-white  shadow-md rounded-md">
           <h4 className="flex justify-center text-lg font-poppins font-bold my-4 text-black">
             Confirm Data Purchase
           </h4>
 
-          <h6 className="flex justify-center text-center font-plus-jakarta font-medium text-[16px] text-[#1D2433] leading-5 -mt-3">
+          <h6 className="flex justify-center text-center text-blue-600 font-plus-jakarta font-medium text-[16px] text-[#1D2433] leading-5 -mt-3">
             {selectedPlan
               ? `${selectedPlan?.size} - ₦${selectedPlan?.amount} (${selectedPlan?.validity})`
               : 'No Plan Selected'}

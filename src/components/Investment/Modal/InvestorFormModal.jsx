@@ -7,17 +7,19 @@ import { Toaster, toast } from 'react-hot-toast';
 import useInvestment from '../../../hooks/useInvetment';
 import { useRouter } from '../../../Routes/router';
 import '../investment.css'
+import useAuth from '../../../hooks/useAuth';
 
 const InvestorFormModal = ({ isOpen, onClose, onRegister }) => {
     const { CreateInvestorAccount } = useInvestment();
+    const {GetUser,  setUser} = useAuth();
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const user = JSON.parse(localStorage.getItem('currentUser'))
     const phone = `${'+234' + user?.phone}`
     const [investorDetails, setInvestorDetails] = useState({
-        contact_email: user?.email || '',
-        contact_phone_number: phone || '',
-        industry: [], // Stores selected industries
+        email: user?.email || '',
+        phoneNumber: phone || '',
+        industries: [], // Stores selected industries
     });
 
     const options = [
@@ -47,12 +49,12 @@ const InvestorFormModal = ({ isOpen, onClose, onRegister }) => {
             // Handle checkbox selection
             setInvestorDetails((prevState) => {
                 const updatedIndustries = checked
-                    ? [...prevState.industry, value] // Add industry if checked
-                    : prevState.industry.filter((industry) => industry !== value); // Remove industry if unchecked
+                    ? [...prevState.industries, value] // Add industries if checked
+                    : prevState.industries.filter((industries) => industries !== value); // Remove industries if unchecked
 
                 return {
                     ...prevState,
-                    industry: updatedIndustries,
+                    industries: updatedIndustries,
                 };
             });
         } else {
@@ -72,7 +74,11 @@ const InvestorFormModal = ({ isOpen, onClose, onRegister }) => {
             if (resp && resp.data && resp.data.success) {
                 setLoading(false)
                 toast.success('Your Profile has been created successfully. ' + resp.data.message);
-                onRegister(); // Trigger onRegister callback after successful registration
+                const updatedUser = await GetUser();
+      setUser(updatedUser);
+      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                onRegister(); 
+         
             } else {
                 toast.error(resp.data.message);
             }
@@ -90,10 +96,10 @@ const InvestorFormModal = ({ isOpen, onClose, onRegister }) => {
     // Handle form submission (validate and submit)
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (investorDetails.industry.length >= 3) {
+        if (investorDetails.industries.length >= 3) {
             registerInvestor(); // Proceed to register if at least 3 industries are selected
         } else {
-            toast.error('Please select at least 3 options for Industry.');
+            toast.error('Please select at least 3 options for Industries.');
         }
     };
 
@@ -114,9 +120,9 @@ const InvestorFormModal = ({ isOpen, onClose, onRegister }) => {
                             <label className="text-sm font-medium">Email</label>
                             <Input
                                 type="email"
-                                name="contact_email"
+                                name="email"
                                 onChange={handleChange}
-                                value={investorDetails.contact_email}
+                                value={investorDetails.email}
                                 placeholder="Enter your email address"
                                 className={clsx(
                                     'border border-gray-400 block w-full rounded-lg py-4 px-3 text-sm font-semibold mb-3'
@@ -127,26 +133,26 @@ const InvestorFormModal = ({ isOpen, onClose, onRegister }) => {
                             <label className="text-sm font-medium">Phone Number</label>
                             <Input
                                 type="tel"
-                                name="contact_phone_number"
+                                name="phoneNumber"
                                 onChange={handleChange}
-                                value={investorDetails.contact_phone_number}
+                                value={investorDetails.phoneNumber}
                                 placeholder="+12345678923"
                                 className={clsx(
                                     'block w-full rounded-lg py-4 px-3 text-sm font-semibold mb-3 border border-gray-400'
                                 )}
                             />
 
-                            {/* Select Industry */}
+                            {/* Select Industries */}
                             <div>
-                                <label className="text-lg font-medium">Select Industry (At least 3)</label>
+                                <label className="text-lg font-medium">Select Industries (At least 3)</label>
                                 <div className="flex flex-wrap gap-4 mb-3">
                                     {options.map((option) => (
                                         <div key={option.value} className="flex items-center">
                                             <input
                                                 type="checkbox"
-                                                name="industry"
+                                                name="industries"
                                                 value={option.value}
-                                                checked={investorDetails.industry.includes(option.value)}
+                                                checked={investorDetails.industries.includes(option.value)}
                                                 onChange={handleChange}
                                                 className="mr-2"
                                             />
@@ -154,7 +160,7 @@ const InvestorFormModal = ({ isOpen, onClose, onRegister }) => {
                                         </div>
                                     ))}
                                 </div>
-                                {investorDetails.industry.length < 3 && (
+                                {investorDetails.industries.length < 3 && (
                                     <div className="text-red-500 text-sm">
                                         Please select at least 3 options.
                                     </div>

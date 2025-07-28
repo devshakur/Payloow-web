@@ -11,7 +11,7 @@ const RepaySuccess = ({ setCurrent, data }) => {
         <div className='flex flex-col items-center justify-center'>
           <img src="/images/success.png" alt="success" />
           <h2 className="text-2xl font-semibold mb-4">Payment Successful!</h2>
-          <p>Thank you for your timely payment. Your remaining balance is now ₦{remainingBalance}!</p>
+          <p>Thank you for your timely payment. please check data for the next installment!</p>
           <div className='w-full flex-col lg:flex-row my-3 flex gap-3'>
             <button onClick={() => setCurrent(0)}  className='w-full border border-blue-400 p-2 px-6 rounded-lg'>Cancel</button>
             <button onClick={() => setCurrent(0)} className='w-full bg-blue-800 text-white rounded-lg p-2'>Done</button>

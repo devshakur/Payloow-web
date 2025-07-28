@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 
 // Reusable Invest Form Component
-const InvestModal = ({ formData, handleInputChange, handleInvest, close, verifying, }) => {
+const InvestModal = ({ formData, loading, handleInputChange, handleInvest, close, verifying, }) => {
   return (
     <form action="">
      
@@ -59,10 +59,10 @@ const InvestModal = ({ formData, handleInputChange, handleInvest, close, verifyi
         </Button>
         <Button
           onClick={handleInvest}
-          disabled={verifying}
+          disabled={verifying || loading}
           className="w-full rounded-lg bg-[#3369F4] py-2 px-2 text-md text-white mt-6 data-[hover]:bg-sky-500 data-[active]:bg-sky-700 data-[disabled]:bg-gray-500"
         >
-          {verifying ? 'Investing In Business...' : 'Invest Now'}
+          {loading ? 'Investing In Business...' : 'Invest Now'}
        
         </Button>
       </div>

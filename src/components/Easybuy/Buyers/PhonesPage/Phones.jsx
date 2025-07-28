@@ -26,7 +26,7 @@ const Phones = () => {
 
         if (productsData) {  
           const filteredProducts = productsData.filter((product) =>
-            product.category.name.toLowerCase().includes('electronics')
+            product.category.name.toLowerCase().includes('phones')
           );
 
           setPhones([...filteredProducts].reverse()); 
@@ -108,7 +108,7 @@ const Phones = () => {
               >
                 <Link to={`/product-details/${product._id}`}>
                   <div className='w-full flex justify-center lg:justify-start'>
-                    <img src={product.imageUrl} alt={product._id} className='w-[80%]' />
+                    <img src={product.imageUrl} alt={product._id} className='w-[95%]  md:h-[400px]' />
                   </div>
                   <div className='lg:w-[80%] w-[100%] flex justify-between md:w-[70%]'>
                     <p className='font-poppins font-medium text-[#101928] text-lg'>{product.name}</p>

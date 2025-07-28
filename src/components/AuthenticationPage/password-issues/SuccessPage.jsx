@@ -19,7 +19,7 @@ const SuccessPage = () => {
                 <div className='h-[120px] w-full flex justify-center'>
                     <img src="images/success.png" alt="success" />
                 </div>
-                <p className='font-poppins text-2xl my-5 text-[#1D2433] font-medium'>Password Reset Successful!</p>
+                <p className='font-poppins text-center text-2xl my-5 text-[#1D2433] font-medium'>Password Reset Successful!</p>
                 <div className='w-[95%] font-plus-jakarta ml-3 leading-7 text-lg font-normal text-center text-[#1D2433CC]'>
                     <p>Your password has been successfully reset. login using your new password.</p>
                 </div>

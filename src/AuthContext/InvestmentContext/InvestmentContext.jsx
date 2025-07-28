@@ -78,44 +78,7 @@ const InvestmentProvider = ({ children }) => {
     };
 
 
-    const GetIndustries = async () => {
-        try {
-            const response = await axiosInstance.get(InvestmentEndpoints.getIndustries)
-
-            const result = response.data
-            dispatch({ type: 'GETINDUSTRIES', payload: { user: result } })
-            return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    }
-
-    const GetBusinessStages = async () => {
-        try {
-            const response = await axiosInstance.get(InvestmentEndpoints.getBusinessStages)
-
-            const result = response.data
-            dispatch({ type: 'GETSTAGES', payload: { user: result } })
-            return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    }
-
-    const GetModels = async () => {
-        try {
-            const response = await axiosInstance.get(InvestmentEndpoints.getModels)
-
-            const result = response.data
-            dispatch({ type: 'GETMODELS', payload: { user: result } })
-            return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    }
+   
 
     const ViewBusiness = async () => {
         try {
@@ -155,19 +118,25 @@ const InvestmentProvider = ({ children }) => {
         }
     }
 
-    const AddLoan = async (businessId, data) => {
-        try {
-            const url = InvestmentEndpoints.addLoan(businessId)
-            const response = await axiosInstance.post(url, data)
+  const AddLoan = async (formData) => {
+  try {
+    const url = InvestmentEndpoints.addLoan; // remove businessId from here since it's in formData
+    const response = await axiosInstance.post(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
 
-            const result = response.data
-            dispatch({ type: 'ADDLOAN', payload: { user: result } })
-            return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    }
+    const result = response.data;
+    dispatch({ type: 'ADDLOAN', payload: { user: result } });
+
+    return response;
+  } catch (error) {
+    console.error("AddLoan error:", error);
+    throw error;
+  }
+};
+
 
     const InvestInBusiness = async (data) => {
         try {
@@ -180,9 +149,9 @@ const InvestmentProvider = ({ children }) => {
             throw error;
         }
     }
-    const GetInvestmentRequest = async (business_id, data) => {
+    const GetInvestmentRequest = async () => {
         try {
-            const url = InvestmentEndpoints.getInvestmentRequest(business_id)
+            const url = InvestmentEndpoints.getInvestorsRequest
             const response = await axiosInstance.get(url)
 
             const result = response.data
@@ -236,61 +205,64 @@ const InvestmentProvider = ({ children }) => {
         }
     }
 
-    const AcceptInvestmentRequest = async (investment_id) => {
-        try {
-            const url = InvestmentEndpoints.acceptRequest(investment_id)
-            const response = await axiosInstance.patch(url)
+    // const AcceptInvestmentRequest = async (investment_id) => {
+    //     try {
+    //         const url = InvestmentEndpoints.acceptRequest(investment_id)
+    //         const response = await axiosInstance.patch(url)
 
-            const result = response.data
-            dispatch({ type: 'ACCEPTREQUEST', payload: { user: result } })
-            return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    }
+    //         const result = response.data
+    //         dispatch({ type: 'ACCEPTREQUEST', payload: { user: result } })
+    //         return response;
+    //     } catch (error) {
+    //         console.error(error);
+    //         throw error;
+    //     }
+    // }
 
 
-    const DeclineInvestmentRequest = async (investment_id) => {
-        try {
-            const url = InvestmentEndpoints.declineRequest(investment_id)
-            const response = await axiosInstance.patch(url)
+    // const DeclineInvestmentRequest = async (investment_id) => {
+    //     try {
+    //         const url = InvestmentEndpoints.declineRequest(investment_id)
+    //         const response = await axiosInstance.patch(url)
 
-            const result = response.data
-            dispatch({ type: 'DECLINEREQUEST', payload: { user: result } })
-            return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    }
+    //         const result = response.data
+    //         dispatch({ type: 'DECLINEREQUEST', payload: { user: result } })
+    //         return response;
+    //     } catch (error) {
+    //         console.error(error);
+    //         throw error;
+    //     }
+    // }
 
-    const RepayInvestmentRequest = async (investment_id) => {
-        try {
-            const url = InvestmentEndpoints.repayInvestment(investment_id)
-            const response = await axiosInstance.post(url)
+  const AcceptOrDeclineInvestment = async (investmentId, status) => {
+  try {
+    const url = InvestmentEndpoints.acceptOrDecline(investmentId);
+    const response = await axiosInstance.post(url, { status }); // status: 'accept' or 'decline'
 
-            const result = response.data
-            dispatch({ type: 'REPAYREQUEST', payload: { user: result } })
-            return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    }
+    const result = response.data;
+    dispatch({ type: 'UPDATE_REQUEST_STATUS', payload: { user: result } });
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
-    //EasyBuy
-    const GetCart = async () => {
-        try {
-            const response = await axiosInstance.get(EasyBuyEndpoints.getCart)
-            const result = response.data
-            dispatch({ type: 'GETCART', payload: { user: result } })
-            return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    }
+
+
+const RepayInvestmentRequest = async (investmentId, payload) => {
+  const url = InvestmentEndpoints.repayInvestment(investmentId);
+
+  return await axiosInstance.post(url, payload);
+};
+
+
+
+
+
+
+
+  
     const CreateBuyerProfile = async (data) => {
         try {
             const response = await axiosInstance.post(EasyBuyEndpoints.createProfile, data)
@@ -318,6 +290,18 @@ const InvestmentProvider = ({ children }) => {
             const response = await axiosInstance.delete(EasyBuyEndpoints.deleteFromCart, {data})
             const result = response.data
             dispatch({ type: 'ADDTOCART', payload: { user: result } })
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    const GetCart = async ()=> {
+        try {
+            const response = await axiosInstance.get(EasyBuyEndpoints.getCart)
+            const result = response.data
+            dispatch({ type: 'GETCART', payload: { user: result } })
             return response;
         } catch (error) {
             console.error(error);
@@ -586,11 +570,11 @@ const InvestmentProvider = ({ children }) => {
 };
 
     const object = {
-        ...state, dispatch, CreateDebtorAccount, CreateInvestorAccount, CreateBusiness, GetIndustries, getBusinessInfo,
-        ViewBusiness, AddLoan, GetBusinessStages, GetModels,
+        ...state, dispatch, CreateDebtorAccount, CreateInvestorAccount, CreateBusiness,  getBusinessInfo,
+        ViewBusiness, AddLoan, 
         InvestInBusiness, GetInvestmentRequest, GetLoanBusiness, getUserDetails, GetFilteredLoanBusiness, InvestorsInvestment,
-        AcceptInvestmentRequest, DeclineInvestmentRequest, RepayInvestmentRequest, GetCart, CreateBuyerProfile, AddToCart,
-        FetchAllProduct, ValidateCoupon, DeleteCart, GetEasyBuyCatgories, CreateProduct, GetDeliveryInfo, checkOut, swapProduct, GetPercentage, DeleteEasyBuyCart,
+        AcceptOrDeclineInvestment, RepayInvestmentRequest, CreateBuyerProfile, AddToCart,
+        FetchAllProduct, ValidateCoupon, DeleteCart, GetCart, GetEasyBuyCatgories, CreateProduct, GetDeliveryInfo, checkOut, swapProduct, GetPercentage, DeleteEasyBuyCart,
         GetUserOrders, GetUInstallmentOrders, GetSolarStock, GetInventoryOrders, SubmitInstallmentPlanRequest,  GetProductInventory,GetActiveCustomers, CreateServiceCenter, GetServiceCenter, GetPartnerCustomers,
     }
 

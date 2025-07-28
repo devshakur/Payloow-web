@@ -11,9 +11,11 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import MobileSideNav from "./MobileSideNav";
 import { useRouter } from "../../Routes/router";
 import DefaultProfile from "../Easybuy/Buyers/DefaultProfile";
+import { useNavigate } from "react-router-dom";
 
 const BillsHeader = ({ active }) => {
   const router = useRouter();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -34,7 +36,7 @@ const BillsHeader = ({ active }) => {
   const secondary =
     active === "page2" ? "w-[146px] lg:mt-[12vh] border-[#6196F9]" : null;
   const move = () => {
-    router.push("/dashboard");
+    navigate("/dashboard");
   };
 
   return (
@@ -97,7 +99,7 @@ const BillsHeader = ({ active }) => {
           </div>
         </div>
       </header>
-      <div onClick={move} className="xl:-ml-20">
+      <div  className="xl:-ml-20">
         <button
           onClick={move}
           className={`${baseStyles} ${activeStyles} ${secondary}`}

@@ -4,14 +4,30 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import CopyText from '../../../../CopyText/CopyText';
 
 
-const StageTwo = ({isOpen,  setIsOpen, setIsActive, links, businesslinks,}) => {
-  const { website, twitter_url, linkedIn_url, facebook_url, youTube_url, instagram_url, tikTok_url } = links
+const StageTwo = ({isOpen,  setIsOpen, setIsActive, businessData}) => {
+  console.log(businessData);
+  
+   if (!businessData) {
+    return <div className="loader">Loading...</div>;
+  }
+  
   const {
-    financial_statements,
-    growth_plans,
-loan_requirements
+    website = '',
+    twitter_url = '',
+    linkedIn_url = '',
+    facebook_url = '',
+    youTube_url = '',
+    instagram_url = '',
+    tikTok_url = '',
+    financial_statements = [],
+    growth_plans = [],
+    loan_requirements = [],
+  } = businessData;
+ 
 
-    } = businesslinks
+console.log(businessData);
+
+ 
 
     function open() {
         setIsOpen(false)  
@@ -31,14 +47,32 @@ loan_requirements
     <div>
          <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
       <div className="fixed inset-0 bg-black/30 ">
-        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-          <DialogPanel className="w-[500px] lg:w-[650px] shadow-md space-y-4 border bg-[#FFFFFF] p-12 ">
+        <div className="fixed inset-0 flex w-full items-center justify-center p-4">
+          <DialogPanel className="w-[390px] lg:w-[650px] shadow-md space-y-4 border bg-[#FFFFFF] p-12 ">
             
-            <DialogTitle className="w-full font-bold flex flex-row">
+            {/* <DialogTitle className="w-full font-bold flex flex-row">
               <Button onClick={stageOne} className='border border-gray-400 flex-1 py-2 rounded-l-lg text-[#475367] font-poppins font-medium text-lg hover:bg-blue-700 active:bg-blue-700 hover:text-white px-3'>Overview</Button>
               <Button className='border border-gray-400 flex-1  font-poppins font-medium text-l bg-blue-700 text-white'>Links</Button>
               <Button onClick={stageThree} className='border border-gray-400 flex-1 rounded-r-lg text-[#475367] font-poppins font-medium text-lg hover:bg-blue-700 hover:text-white px-3 active:bg-blue-700'>Loan</Button>
-            </DialogTitle>
+            </DialogTitle> */}
+                 <DialogTitle>
+            <div className="flex gap-2 flex-col sm:flex-row">
+              <Button onClick={stageOne} className="flex-1 border border-gray-300 text-gray-700 hover:bg-blue-600 hover:text-white rounded-md py-2 font-semibold">
+                Overview
+              </Button>
+              <Button
+                className=" flex-1 bg-blue-600 text-white font-semibold py-2 rounded-md"
+              >
+                Links
+              </Button>
+              <Button
+                onClick={stageThree}
+                className="flex-1 border border-gray-300 text-gray-700 hover:bg-blue-600 hover:text-white rounded-md py-2 font-semibold"
+              >
+                Loan
+              </Button>
+            </div>
+          </DialogTitle>
             <div className='border border-[#E1E6EF] py-5 px-2'>
             <Description className=''>
               <p className='font-poppins text-xl text-[#1D2433] font-medium'>Website Link</p>
@@ -55,7 +89,7 @@ loan_requirements
            <div>
             <ul className='flex gap-6 cursor-pointer'>
               <div className='h-14 w-14 rounded-[50%] bg-[#DBE7FE] flex items-center justify-center hover:bg-green-200'>
-              <a href={twitter_url} target="_blank" rel="noopener noreferrer">
+              <a href={businessData?.twitter_url} target="_blank" rel="noopener noreferrer">
               <li><img src="/images/X.png" className='h-6' alt="X" /></li>
               </a>
               </div>

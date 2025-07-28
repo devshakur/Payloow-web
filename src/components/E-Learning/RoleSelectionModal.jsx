@@ -3,8 +3,10 @@ import { Dialog, DialogPanel, DialogTitle, DialogBackdrop } from '@headlessui/re
 import { CloseCircle } from 'iconsax-react';
 
 import { motion } from 'framer-motion';
+import { useRouter } from '../../Routes/router';
 
 const RoleSelectionModal = ({ handleTutor, handleStudent }) => {
+  const router = useRouter();
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -19,7 +21,7 @@ const RoleSelectionModal = ({ handleTutor, handleStudent }) => {
               <DialogTitle className="font-bold font-plus-jakarta text-lg text-[#1D2433]">
                 Register as?
               </DialogTitle>
-              <CloseCircle size="28" color="black" />
+              <CloseCircle onClick={()=>router.push('/dashboard')} size="28" color="black" />
             </div>
 
             <form>

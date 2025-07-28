@@ -63,7 +63,7 @@ const ComparePage1 = () => {
         <div className="mt-5 flex flex-col lg:flex-row justify-between">
           <button
             onClick={() => setIsOpen(true)}
-            className="flex text-[14px] font-poppins font-medium border border-blue-500 px-4 py-2 gap-3 justify-between rounded-lg items-center bg-blue-100"
+            className="flex text-[14px] font-plus-jakarta font-medium border border-blue-500 px-4 py-2 gap-3 justify-between rounded-lg items-center bg-blue-100"
           >
             <p className=''>Click Me!</p>
           </button>
@@ -71,16 +71,23 @@ const ComparePage1 = () => {
 
         {/* Display selected items side-by-side */}
         <main className="flex w-full flex-col md:flex-row gap-5 lg:gap-1 mt-6">
-          {compareProducts.map((item) => (
-             <Link to={`/product-details/${item._id}`}>
-            <div key={item._id} className="border p-4 w-full sm:w-[85%] lg:w-[70%] rounded-lg shadow-md">
-              <img src={item.imageKey || '/images/z-fold.jpeg'} alt={item.name} className="w-full h-auto" />
-              <h4 className="font-poppins font-medium text-lg text-black">{item.name}</h4>
-              <p className="font-poppins text-gray-600 text-sm">{item.description}</p>
-              <p className="font-poppins font-semibold text-blue-500">₦{item.price.$numberDecimal}</p>
-            </div>
-            </Link>
-          ))}
+         {compareProducts.map((item) => (
+  <Link key={item._id} to={`/product-details/${item._id}`}>
+    <div className="border p-4 w-full sm:w-[85%] lg:w-[70%] rounded-lg shadow-md">
+      <img
+        src={item.imageUrl || '/images/z-fold.jpeg'}
+        alt={item.name}
+        className="w-full h-auto"
+      />
+      <h4 className="font-plus-jakarta font-medium text-lg text-black">{item.name}</h4>
+      <p className="font-plus-jakarta text-gray-600 text-sm">{item.description}</p>
+      <p className="font-plus-jakarta font-semibold text-blue-500">
+        ₦{parseFloat(item.price?.$numberDecimal || 0).toLocaleString()}
+      </p>
+    </div>
+  </Link>
+))}
+
         </main>
 
         {/* Modal */}
@@ -94,19 +101,24 @@ const ComparePage1 = () => {
               </DialogTitle>
               <Description>
                 <div className="grid grid-cols-2 gap-4 mt-4 max-h-[60vh] overflow-auto">
-                  {productList.map((item) => (
-                    <div
-                      key={item._id}
-                      onClick={() => handleSelectItem(item._id)}
-                      className={`cursor-pointer p-4 border rounded-lg ${
-                        selectedItems.includes(item._id) ? 'bg-blue-300' : ''
-                      }`}
-                    >
-                      <img src={item.imageKey || '/images/z-fold.jpeg'} alt={item.name} className="w-full h-auto" />
-                      <h5 className="font-medium">{item.name}</h5>
-                      <p>₦{item.price.$numberDecimal}</p>
-                    </div>
-                  ))}
+                 {productList.map((item) => (
+  <div
+    key={item._id}
+    onClick={() => handleSelectItem(item._id)}
+    className={`cursor-pointer p-4 border rounded-lg ${
+      selectedItems.includes(item._id) ? 'bg-blue-300' : ''
+    }`}
+  >
+    <img
+      src={item.imageUrl || '/images/z-fold.jpeg'}
+      alt={item.name}
+      className="w-full h-auto"
+    />
+    <h5 className="font-medium">{item.name}</h5>
+    <p>₦{parseFloat(item.price?.$numberDecimal || 0).toLocaleString()}</p>
+  </div>
+))}
+
                 </div>
                 <div className="flex justify-end mt-4">
                   <button onClick={handleSave} className="bg-blue-600 text-white px-4 py-2 rounded-lg">

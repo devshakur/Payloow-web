@@ -35,13 +35,13 @@ function Login() {
 
   const formik = useFormik({
     initialValues: {
-      phone: "",
+      phone: "234",
       password: "",
     },
     validationSchema: Yup.object({
       phone: Yup.string()
-        .matches(/^[0-9]+$/, "Phone number must be digits")
-        .required("required***"),
+    .matches(/^234\d{10}$/, "Phone must start with 234 and contain 13 digits total")
+    .required("Phone is required"),
       password: Yup.string().required("required***"),
     }),
     onSubmit: async (values, { setSubmitting }) => {
@@ -58,9 +58,9 @@ function Login() {
           );
           const userData = await getUser();
           setTimeout(() => {
-            console.log(userData?.pin);
-            
-            if (userData?.transactionPin === "") {
+            console.log(userData?.transactionPin);
+
+            if (userData?.transactionPin === null) {
               router.push("/set-pin");
             } else if (userData?.bnvStatus !== "VERIFIED") {
               router.push("/set-virtual-account");
@@ -130,11 +130,16 @@ function Login() {
                 required
                 id="outlined-required-3"
                 placeholder="Mobile No."
-                type="phone"
-                fullWidth
+                type="tel"
                 {...formik.getFieldProps("phone")}
                 className="input-field"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (!value.startsWith("234")) return;
+                  formik.setFieldValue("phone", value.replace(/\D/g, "")); // remove non-digits
+                }}
               />
+
               {formik.touched.phone && formik.errors.phone ? (
                 <div style={{ color: "red", marginTop: "-2vh" }}>
                   {formik.errors.phone}

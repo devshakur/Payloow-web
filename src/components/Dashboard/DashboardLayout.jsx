@@ -42,12 +42,12 @@ const navigation = [
   //this is the route to E-learning, Investment, and shares. this code will reinstated when needed
  {
     name: "E-Learning",
-    href: currentUser?.role === 'Tutor' ? "/e-learning/tutor/dashboard" : currentUser?.role === 'student' ? "/e-learning/student/dashboard" : "/e-learning/register",
+    href: currentUser?.elearningRole === 'tutor' ? "/e-learning/tutor/dashboard" : currentUser?.elearningRole === 'student' ? "/e-learning/student/dashboard" : "/e-learning/register",
     icon: BookSaved,
   },
   {
     name: "Investment", 
-    href: currentUser?.role === 'Debtor' ? "/debtor/dashboard" : currentUser?.role === 'Investor' ? "/investor/dashboard" : '/investment',
+    href: currentUser?.investmentRole === 'debtor' ? "/debtor/dashboard" : currentUser?.investmentRole === 'investor' ? "/investor/dashboard" : '/investment',
     icon: Chart
   },
   // { name: "Shares", href: "/shares/dashboard", icon: RiStockLine },

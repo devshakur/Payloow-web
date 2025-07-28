@@ -3,6 +3,8 @@ import { useDropzone } from 'react-dropzone';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { toast, Toaster } from 'react-hot-toast';
 import { useRouter } from '../../../../Routes/router';
+import axiosInstance from '../../../../AuthContext/axiosInstance';
+import axios from "axios";
 
 const BusinessStep4 = ({ formik,nextStep, stepThree, loading, setLoading }) => {
     const { setFieldValue, values } = formik;
@@ -18,9 +20,9 @@ const BusinessStep4 = ({ formik,nextStep, stepThree, loading, setLoading }) => {
         setFieldValue(fieldName, acceptedFiles);
     };
 
-    const { getRootProps: getRootProps1, getInputProps: getInputProps1 } = useDropzone({ onDrop: handleFileDrop('financial_statements') });
-    const { getRootProps: getRootProps2, getInputProps: getInputProps2 } = useDropzone({ onDrop: handleFileDrop('growth_plans') });
-    const { getRootProps: getRootProps3, getInputProps: getInputProps3 } = useDropzone({ onDrop: handleFileDrop('loan_requirements') });
+    const { getRootProps: getRootProps1, getInputProps: getInputProps1 } = useDropzone({ onDrop: handleFileDrop('financialStatements') });
+    const { getRootProps: getRootProps2, getInputProps: getInputProps2 } = useDropzone({ onDrop: handleFileDrop('growthPlans') });
+    const { getRootProps: getRootProps3, getInputProps: getInputProps3 } = useDropzone({ onDrop: handleFileDrop('loanRequirements') });
 
     const renderFiles = (files) => {
         return files.length > 0 ? files.map((file, index) => (
@@ -28,32 +30,134 @@ const BusinessStep4 = ({ formik,nextStep, stepThree, loading, setLoading }) => {
         )) : <li>No files selected</li>;
     };
 
+
    
-    const handleSubmit = async (event) => {
-        setLoading(true)
-            event.preventDefault();
-      
-       
-            const formData = new FormData();
-    
-            // Appending each of the fields with files to FormData
-            values.financial_statements?.forEach(file => formData.append('financial_statements', file));
-            values.growth_plans?.forEach(file => formData.append('growth_plans', file));
-            values.loan_requirements?.forEach(file => formData.append('loan_requirements', file));
-           
-           await formik.handleSubmit();
-           if (formik.isValid && formik.dirty) {
-               setTimeout(() => {
-                toast.success("Business Created Successfully");
-              open();
-            }, 4000);
-      
-           }else{
-            toast.error('something went wrong')
-           }        
-        
-    };
-    
+
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  setLoading(true);
+
+  try {
+    const formData = new FormData();
+
+    // Append files to FormData
+    values.financialStatements?.forEach((file) =>
+      formData.append("financialStatements", file)
+    );
+    values.growthPlans?.forEach((file) =>
+      formData.append("growthPlans", file)
+    );
+    values.loanRequirements?.forEach((file) =>
+      formData.append("loanRequirements", file)
+    );
+
+    // Validate form using Formik
+    await formik.validateForm();
+
+    if (!formik.isValid) {
+      toast.error("Please fix validation errors.");
+      setLoading(false);
+      return;
+    }
+
+    // Submit to backend
+    const response = await axiosInstance.post("/debtors-users/business", {
+      ...formik.values,
+      // Optionally attach file-related formData if needed
+    });
+
+    if (response?.data?.business?._id) {
+      toast.success("Business Created Successfully");
+      open(); // redirect or show modal
+    } else {
+      toast.error("Something went wrong. Please check your inputs.");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+
+    const errorMessage =
+       error?.response.error ||
+      error?.response?.data?.error ||
+      error?.response?.data?.message ||
+      "Something went wrong. Please try again.";
+
+    toast.error(errorMessage);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+  
+// const handleSubmit = async (event) => {
+//   event.preventDefault();
+//   setLoading(true);
+
+//   try {
+//     // Validate the form first
+//     await formik.validateForm();
+
+//     if (!formik.isValid) {
+//       toast.error("Please fix validation errors.");
+//       setLoading(false);
+//       return;
+//     }
+
+//     const values = formik.values;
+
+//     const formData = new FormData();
+//     formData.append("businessName", values.businessName);
+//     formData.append("businessDescription", values.businessDescription);
+//     formData.append("businessStage", values.businessStage);
+//     formData.append("customerModel", values.customerModel);
+//     formData.append("website", values.website);
+
+//     // Append social media URLs
+//     formData.append("twitterUrl", values.twitterUrl);
+//     formData.append("linkedInUrl", values.linkedInUrl);
+//     formData.append("facebookUrl", values.facebookUrl);
+//     formData.append("youTubeUrl", values.youTubeUrl);
+//     formData.append("instagramUrl", values.instagramUrl);
+//     formData.append("tikTokUrl", values.tikTokUrl);
+
+//     // Append industries individually
+//     values.industry?.forEach((ind) => formData.append("industry", ind));
+
+//     // Append files
+//     values.financialStatements?.forEach((file) =>
+//       formData.append("financialStatements", file)
+//     );
+//     values.growthPlans?.forEach((file) =>
+//       formData.append("growthPlans", file)
+//     );
+//     values.loanRequirements?.forEach((file) =>
+//       formData.append("loanRequirements", file)
+//     );
+
+//     // Make API request
+//     const response = await axiosInstance.post("/debtors-users/business", formData, {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//       },
+//     });
+
+//     if (response.data?.business?._id) {
+//       toast.success("Business Created Successfully 🎉");
+//       open(); // your modal or navigation step
+//     } else {
+//       toast.error("Business created but missing response data.");
+//     }
+//   } catch (error) {
+//     console.error("Submission error:", error);
+//     toast.error(
+//       error?.response?.data?.message || "Something went wrong. Try again."
+//     );
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+
    
 
 
@@ -90,7 +194,7 @@ const BusinessStep4 = ({ formik,nextStep, stepThree, loading, setLoading }) => {
                                     <p className="text-black text-md font-poppins font-medium">Drop files here to upload…</p>
                                 </div>
                                 <aside className="-mt-5">
-                                    <ul className="list-disc pl-5">{renderFiles(values.financial_statements || [])}</ul>
+                                    <ul className="list-disc pl-5">{renderFiles(values.financialStatements || [])}</ul>
                                 </aside>
 
                                 {/* Growth Plans */}
@@ -104,7 +208,7 @@ const BusinessStep4 = ({ formik,nextStep, stepThree, loading, setLoading }) => {
                                     <p className="text-black text-md font-poppins font-medium">Drop files here to upload…</p>
                                 </div>
                                 <aside className="-mt-5">
-                                    <ul className="list-disc pl-5">{renderFiles(values.growth_plans || [])}</ul>
+                                    <ul className="list-disc pl-5">{renderFiles(values.growthPlans || [])}</ul>
                                 </aside>
 
                                 {/* Loan Requirements */}
@@ -118,7 +222,7 @@ const BusinessStep4 = ({ formik,nextStep, stepThree, loading, setLoading }) => {
                                     <p className="text-black text-md font-poppins font-medium">Drop files here to upload…</p>
                                 </div>
                                 <aside className="-mt-5">
-                                    <ul className="list-disc pl-5">{renderFiles(values.loan_requirements || [])}</ul>
+                                    <ul className="list-disc pl-5">{renderFiles(values.loanRequirements || [])}</ul>
                                 </aside>
                             </section>
 

@@ -62,7 +62,7 @@ const data = {
         setActive("page3");
       });
     } else {
-      const msg = response?.data?.message || "Electricity purchase failed.";
+      const msg = response?.data?.data?.message || "Electricity purchase failed.";
       toast.error(msg);
        startTransition(() => {
        setTimeout(() => {
@@ -89,7 +89,7 @@ const data = {
         <div>
             <div className='grid  h-[-80vh] lg:-mt-12 items-center'>
                 <div className='w-screen flex justify-center lg:justify-center lg:-ml-[-10vw] 2xl:ml-[8vw]'>
-                    <div className='w-full mx-4 h-[550px] md:w-[530px] lg:h-[490px] lg:w-[600px] 2xl:w-[700px] bg-[#FFFFFF] pb-[20px]  shadow-md rounded-lg'>
+                    <div className='w-full mx-4 h-[520px] md:w-[530px] bg-[#FFFFFF]  shadow-md rounded-lg'>
                         <h4 className='flex justify-center text-lg leading-7 font-plus-jakarta font-bold my-4 text-[#000000]'>Confirm Electricity Subscription</h4>
                         <h6 className='flex justify-center font-bold text-[16px] text-[#1D2433] font-plus-jakarta leading-5 -mt-3'>₦{amount}</h6>
                         <section className='h-[97px] w-[95%]  mx-2 mt-9'>

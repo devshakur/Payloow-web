@@ -16,7 +16,7 @@ import { useRouter } from '../../../../Routes/router';
 
 
 const Inventory = () => {
-  const { GetEasyBuyCatgories, CreateProduct, GetSolarStock } = useInvestment();
+  const { GetEasyBuyCatgories, CreateProduct, GetProductInventory } = useInvestment();
   const [orders, setOrders] = useState('Inventory');
   const router = useRouter()
   let [isOpen, setIsOpen] = useState(true)
@@ -135,10 +135,10 @@ const Inventory = () => {
 
       const message = resp?.data?.message;
       const productsData = resp?.data?.data;
-
+     
       if (productsData) {
-        setCategory(productsData); // this will now correctly set the array
-        console.log(productsData); // should log your array of categories
+    
+      setCategory(productsData)
 
         if (message) {
           toast.success(message);
@@ -161,39 +161,28 @@ const Inventory = () => {
 }, []);
 
 
-
-
   useEffect(() => {
-    const totalStock = async () => {
+    const getInventory = async () => {
       try {
-        const resp = await GetSolarStock();
-
-        const message = resp?.data?.message;
-        const products = resp?.data?.data[0];
-        const totalStock = products?.totalStock[0]?.totalStock
-        const solarProduct = products?.categories[0]?.totalStock
-        const phoneProduct = products?.categories[1]?.totalStock
-        if (products) {
-          setStock(totalStock);
-          setSolarStock(solarProduct)
-          setPhoneStock(phoneProduct)
-          if (message) {
-            toast.success(message);
-          } else {
-            toast.error('Message is empty');
-          }
-        } else {
-          toast.error('Failed to fetch products');
+        const resp = await GetProductInventory();
+        
+        // Fetching inventory from API response
+        const productsData = resp?.data?.data?.inventoryPerCategory?.Phones?.totalStock 
+        const solarStocks = resp?.data?.data?.inventoryPerCategory?.Solar?.totalStock
+        const totalStocks = productsData + solarStocks
+        if (productsData) {
+          
+       setPhoneStock(productsData)
+        setSolarStock(solarStocks)
+        setStock(totalStocks)
         }
       } catch (error) {
-        console.error('Error fetching categories:', error);
-        const errorMsg = error?.response?.data?.msg || 'Failed to fetch stock categories';
-        toast.error(errorMsg);
+        toast.error('Error fetching inventory:', error);
       }
     };
 
-    totalStock();
-  }, []);
+    getInventory();
+  }, [GetProductInventory]);
 
 useEffect(()=>{
  const currentDate = new Date().toLocaleString()
@@ -285,7 +274,7 @@ useEffect(()=>{
               <h3 className='font-medium text-lg text-[#000]'>Phones</h3>
               <span></span>
             </div>
-            <p className='text-[28px] text-[#1D2433] font-medium font-poppins mt-6'>{phoneStock && phoneStock.length === 0 ? '0' : phoneStock}</p>
+            <p className='text-[28px] text-[#1D2433] font-medium font-poppins mt-6'>{phoneStock}</p>
             <div className="mt-3 flex gap-2">
               <img src="/images/chart-down.png" alt="down" />
               <p className='text-red-600'>18%</p>

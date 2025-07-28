@@ -292,15 +292,17 @@ import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import axiosInstance from "../../../AuthContext/axiosInstance";
 import useBills from "../../../hooks/useBills";
-
-const DataBundles = ({ handleNext, formik, selectedPlan, setSelectedPlan }) => {
+ import {toast, Toaster} from "react-hot-toast";
+const DataBundles = ({ handleNext, formik, selectedPlan, setSelectedPlan, }) => {
   const [allVariations, setAllVariations] = useState({});
+    const [transactions, setTransactions] = useState([]);
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [info, setInfo] = useState([]);
-  const { UserDetails } = useBills();
+ 
+  const { UserDetails, UserTransactions } = useBills();
 
   const Providers = [
     { value: "AIRTEL", label: "Airtel" },
@@ -390,6 +392,36 @@ const DataBundles = ({ handleNext, formik, selectedPlan, setSelectedPlan }) => {
       ? allVariations[selectedNetwork][selectedCategory]
       : [];
 
+  const getUserTransaction = async () => {
+  try {
+    const resp = await UserTransactions();
+    const allTransactions = resp.data?.data || [];
+
+    // Filter for transactions with "data purchase" in the narration (case-insensitive)
+    const successfulDataPurchases = allTransactions.filter(
+      (txn) =>
+        txn.narration?.toLowerCase().includes("data purchase") &&
+        (txn.status === "pending" || txn.status === "success" || txn.status === "failed")
+    );
+
+    // Sort by newest first
+    successfulDataPurchases.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
+    // Get most recent one
+    const recentDataPurchase = successfulDataPurchases[0] || null;
+    setTransactions(recentDataPurchase);
+  } catch (error) {
+    toast.error("Failed to fetch user transactions");
+  }
+};
+
+
+  useEffect(() => {
+    getUserTransaction();
+  }, []);
+
   return (
     <main className="pb-[40px]">
       <div className="w-[100vw] xl:-mt-24 flex justify-center lg:-ml-[-10vw] xl:justify-center">
@@ -397,37 +429,51 @@ const DataBundles = ({ handleNext, formik, selectedPlan, setSelectedPlan }) => {
           <h4 className="text-center text-xl font-semibold my-4 text-[#212121]">Buy Data Bundles</h4>
 
           <h4 className="text-lg font-semibold mx-3">Most recent</h4>
-          <article className="flex gap-3 mx-2 overflow-x-auto">
-            {Array.isArray(info) && info.length > 0 ? (
-              info
-                .filter((user) => user.title === "Data")
-                .map((user) => (
-                  <section key={user.code} className="flex flex-row gap-6 my-4">
-                    <div className="flex flex-col gap-2">
-                      <img
-                        src={
-                          user.body === "airtel"
-                            ? "./images/airtel.jpg"
-                            : user.body === "mtn"
-                            ? "./images/mtn.jpg"
-                            : user.body === "glo"
-                            ? "./images/glos.png"
-                            : user.body === "etisalat"
-                            ? "./images/img4.jpg"
-                            : "./images/default.jpg"
-                        }
-                        className="w-[40px] h-[40px] ml-4"
-                        alt={user.title}
-                      />
-                      <span className="text-[13px] ml-5 font-medium">{user.title}</span>
-                      <span className="text-[13px] ml-1 font-medium">{user.code}</span>
-                    </div>
-                  </section>
-                ))
-            ) : (
-              <div className="ml-8 my-5 text-lg text-green-500">No recent Purchase</div>
-            )}
-          </article>
+        <article className="flex gap-3 mx-2">
+  {transactions ? (
+    <section className="flex flex-row gap-6 my-4">
+      <div className="flex flex-col gap-2">
+       <img
+  src={
+    transactions?.narration?.toLowerCase().includes("airtel")
+      ? "./images/airtel.jpg"
+      : transactions?.narration?.toLowerCase().includes("mtn")
+      ? "./images/mtn.jpg"
+      : transactions?.narration?.toLowerCase().includes("glo")
+      ? "./images/glos.png"
+      : transactions?.narration?.toLowerCase().includes("9mobile") ||
+        transactions?.narration?.toLowerCase().includes("etisalat")
+      ? "./images/img4.jpg"
+      : "./images/default.jpg"
+  }
+  className="w-[40px] h-[40px] ml-4"
+  alt="network"
+/>
+
+      
+        <span className="text-[13px] ml-4 -mt-2 font-medium">
+          ₦{transactions.amount}
+        </span>
+        <span
+          className={`text-[12px] -mt-1 ml-4 font-semibold ${
+            transactions.status === "success"
+              ? "text-green-500"
+              : transactions.status === "pending"
+              ? "text-yellow-500"
+              : "text-red-500"
+          }`}
+        >
+          {transactions.status}
+        </span>
+      </div>
+    </section>
+  ) : (
+    <div className="ml-8 my-5 text-lg text-green-500">
+      No recent Data Purchase
+    </div>
+  )}
+</article>
+
 
           <form className="mx-4 my-6 flex flex-col gap-3">
             {/* Provider */}

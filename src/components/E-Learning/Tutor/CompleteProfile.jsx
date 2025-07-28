@@ -10,18 +10,18 @@ const CompleteProfile = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    tutor_name: "",
-    tutor_email: "",
-    tutor_phone: "",
-    tutor_facebook: "",
-    tutor_twitter: "",
-    tutor_linkedin: "",
-    tutor_instagram: "",
-    tutor_qualification: "",
-    tutor_experience: "",
-    tutor_achievements: "",
-    tutor_about: "",
-    tutor_image: "",
+    tutorName: "",
+    tutorEmail: "",
+    tutorPhone: "",
+    tutorFacebook: "",
+    tutorTwitter: "",
+    tutorLinkedin: "",
+    tutorInstagram: "",
+    tutorQualification: "",
+    tutorExperience: "",
+    tutorAchievements: "",
+    tutorAbout: "",
+    tutorImage: "",
   });
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -65,7 +65,7 @@ const CompleteProfile = () => {
           setUploadProgress(percentCompleted);
         },
       });
-      console.log(response);
+    
 
       if (response.status === 200) {
         toast.success("Image uploaded successfully");
@@ -93,7 +93,7 @@ const CompleteProfile = () => {
       if (currentUser.profilePicture) {
         setFormData((prevState) => ({
           ...prevState,
-          tutor_image: currentUser.profilePicture,
+          tutorImage: currentUser.profilePicture,
         }));
       }
     } catch (error) {
@@ -104,7 +104,7 @@ const CompleteProfile = () => {
   const handleRemove = () => {
     setFormData((prevState) => ({
       ...prevState,
-      tutor_image: "",
+      tutorImage: "",
     }));
     setSelectedFile(null);
   };
@@ -152,8 +152,8 @@ const CompleteProfile = () => {
         toast.error("Failed to create profile. Please try again.");
       }
     } catch (error) {
-      if (error.response && error.response.data && error.response.data.msg) {
-        toast.error(error.response.data.msg);
+      if (error.response && error.response.data && error.response.data.error) {
+        toast.error(error.response.data.error);
       } else {
         toast.error("An error occurred. Please try again.");
       }
@@ -190,14 +190,14 @@ const CompleteProfile = () => {
             {step === 1 && (
               <>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="tutor_name" className="form-label">
+                  <label htmlFor="tutorName" className="form-label">
                     Full Name
                   </label>
                   <input
                     type="text"
-                    name="tutor_name"
-                    id="tutor_name"
-                    value={formData.tutor_name}
+                    name="tutorName"
+                    id="tutorName"
+                    value={formData.tutorName}
                     onChange={handleChange}
                     className="form-input"
                     placeholder="Full Name"
@@ -205,14 +205,14 @@ const CompleteProfile = () => {
                   />
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="tutor_email" className="form-label">
+                  <label htmlFor="tutorEmail" className="form-label">
                     Email
                   </label>
                   <input
-                    type="tutor_email"
-                    name="tutor_email"
-                    id="tutor_email"
-                    value={formData.tutor_email}
+                    type="tutorEmail"
+                    name="tutorEmail"
+                    id="tutorEmail"
+                    value={formData.tutorEmail}
                     onChange={handleChange}
                     className="form-input"
                     placeholder="Email"
@@ -220,14 +220,14 @@ const CompleteProfile = () => {
                   />
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="tutor_phone" className="form-label">
+                  <label htmlFor="tutorPhone" className="form-label">
                     Phone Number
                   </label>
                   <input
                     type="text"
-                    name="tutor_phone"
-                    id="tutor_phone"
-                    value={formData.tutor_phone}
+                    name="tutorPhone"
+                    id="tutorPhone"
+                    value={formData.tutorPhone}
                     onChange={handleChange}
                     className="form-input"
                     placeholder="Phone Number"
@@ -235,14 +235,14 @@ const CompleteProfile = () => {
                   />
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="tutor_facebook" className="form-label">
+                  <label htmlFor="tutorFacebook" className="form-label">
                     Facebook Handle
                   </label>
                   <input
                     type="text"
-                    name="tutor_facebook"
-                    id="tutor_facebook"
-                    value={formData.tutor_facebook}
+                    name="tutorFacebook"
+                    id="tutorFacebook"
+                    value={formData.tutorFacebook}
                     onChange={handleChange}
                     className="form-input"
                     placeholder="Facebook Handle"
@@ -250,14 +250,14 @@ const CompleteProfile = () => {
                   />
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="tutor_twitter" className="form-label">
+                  <label htmlFor="tutorTwitter" className="form-label">
                     Twitter Handle
                   </label>
                   <input
                     type="text"
-                    name="tutor_twitter"
-                    id="tutor_twitter"
-                    value={formData.tutor_twitter}
+                    name="tutorTwitter"
+                    id="tutorTwitter"
+                    value={formData.tutorTwitter}
                     onChange={handleChange}
                     className="form-input"
                     placeholder="Twitter Handle"
@@ -265,14 +265,14 @@ const CompleteProfile = () => {
                   />
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="tutor_linkedin" className="form-label">
+                  <label htmlFor="tutorLinkedin" className="form-label">
                     Linkedin Handle
                   </label>
                   <input
                     type="text"
-                    name="tutor_linkedin"
-                    id="tutor_linkedin"
-                    value={formData.tutor_linkedin}
+                    name="tutorLinkedin"
+                    id="tutorLinkedin"
+                    value={formData.tutorLinkedin}
                     onChange={handleChange}
                     className="form-input"
                     placeholder="Linkedin Handle"
@@ -280,14 +280,14 @@ const CompleteProfile = () => {
                   />
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="tutor_instagram" className="form-label">
+                  <label htmlFor="tutorInstagram" className="form-label">
                     Instagram Handle
                   </label>
                   <input
                     type="text"
-                    name="tutor_instagram"
-                    id="tutor_instagram"
-                    value={formData.tutor_instagram}
+                    name="tutorInstagram"
+                    id="tutorInstagram"
+                    value={formData.tutorInstagram}
                     onChange={handleChange}
                     className="form-input"
                     placeholder="Instagram Handle"
@@ -307,14 +307,14 @@ const CompleteProfile = () => {
             {step === 2 && (
               <>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="tutor_qualification" className="form-label">
+                  <label htmlFor="tutorQualification" className="form-label">
                     Qualification
                   </label>
                   <div className="form-input">
                     <select
-                      name="tutor_qualification"
-                      id="tutor_qualification"
-                      value={formData.tutor_qualification}
+                      name="tutorQualification"
+                      id="tutorQualification"
+                      value={formData.tutorQualification}
                       onChange={handleChange}
                       className="bg-transparent outline-none w-full"
                       required
@@ -343,14 +343,14 @@ const CompleteProfile = () => {
                   </div>
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="tutor_experience" className="form-label">
+                  <label htmlFor="tutorExperience" className="form-label">
                     Experience
                   </label>
                   <input
                     type="text"
-                    name="tutor_experience"
-                    id="tutor_experience"
-                    value={formData.tutor_experience}
+                    name="tutorExperience"
+                    id="tutorExperience"
+                    value={formData.tutorExperience}
                     onChange={handleChange}
                     className="form-input"
                     placeholder="Experience"
@@ -358,14 +358,14 @@ const CompleteProfile = () => {
                   />
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="tutor_achievements" className="form-label">
+                  <label htmlFor="tutorAchievements" className="form-label">
                     Achievements
                   </label>
                   <input
                     type="text"
-                    name="tutor_achievements"
-                    id="tutor_achievements"
-                    value={formData.tutor_achievements}
+                    name="tutorAchievements"
+                    id="tutorAchievements"
+                    value={formData.tutorAchievements}
                     onChange={handleChange}
                     className="form-input"
                     placeholder="Achievements"
@@ -373,7 +373,7 @@ const CompleteProfile = () => {
                   />
                 </div>
                 {/* <div className="flex flex-col space-y-2">
-                <label htmlFor="tutor_instagram" className="form-label">
+                <label htmlFor="tutorInstagram" className="form-label">
                   Upload Certificates
                 </label>
                 <div className="bg-primary/20 h-40 flex items-center justify-center rounded-2xl border-2 border-primary border-dashed">
@@ -402,13 +402,13 @@ const CompleteProfile = () => {
             {step === 3 && (
               <>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="tutor_image" className="form-label">
+                  <label htmlFor="tutorImage" className="form-label">
                     Profile Picture
                   </label>
                   <div className="flex items-center space-x-8">
                     <div className="relative h-32 w-32 rounded-full overflow-hidden">
                       <img
-                        src={formData.tutor_image || "/images/user.png"}
+                        src={formData.tutorImage || "/images/user.png"}
                         alt="user image"
                         className="w-32 h-32 rounded-full object-cover"
                       />
@@ -447,15 +447,15 @@ const CompleteProfile = () => {
                   </div>
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="tutor_about" className="form-label">
+                  <label htmlFor="tutorAbout" className="form-label">
                     About
                   </label>
                   <textarea
                     cols="5"
                     rows="5"
-                    name="tutor_about"
-                    id="tutor_about"
-                    value={formData.tutor_about}
+                    name="tutorAbout"
+                    id="tutorAbout"
+                    value={formData.tutorAbout}
                     onChange={handleChange}
                     className="form-input"
                     placeholder="Write a short about"

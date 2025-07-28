@@ -13,15 +13,22 @@ import { useRouter } from '../../../../Routes/router';
 import CheckOutModalCrad from './CheckOutModalCrad';
 import { EasyBuyEndpoints, } from '../../../../api/Endpoint';
 import PlansModal from './PlansModal';
+import tinycolor from 'tinycolor2';
+import useBills from '../../../../hooks/useBills';
+
 
 
 const Checkout = () => {
   const { ValidateCoupon, GetCart, GetDeliveryInfo, checkOut, DeleteEasyBuyCart, SubmitInstallmentPlanRequest, } = useInvestment();
+  
+    
+   
   const router = useRouter();
   const [selectedForm, setSelectedForm] = useState('');
   const [isClicked, setIsClicked] = useState(false);
   const [isClickedTwo, setIsClickedTwo] = useState(false);
   const [cartItems, setCartItems] = useState([])
+ 
   const [coupon, setCoupon] = useState('')
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(false)
@@ -98,6 +105,7 @@ const [numberOfInstallments, setNumberOfInstallments] = useState('');
   }
 
 
+
   //Fetch Cart Items
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -125,6 +133,7 @@ const [numberOfInstallments, setNumberOfInstallments] = useState('');
     };
 
     fetchCartItems();
+   
   }, []);
 
   const deleteCartItems = async () => {
@@ -283,7 +292,11 @@ const SubmitCheckOutFlutter = async () => {
     // Retrieve the selected colors from localStorage when the component mounts
     const colors = JSON.parse(localStorage.getItem('selectedColors')) || {};
     setSelectedColors(colors);
+   
+    
   }, []);
+
+   
 
   return (
     <div>
@@ -317,7 +330,19 @@ const SubmitCheckOutFlutter = async () => {
                     <img src={item?.product?.imageUrl || "/images/iphon-yellow.png"} alt={item?.name} />
                     <div className="">
                       <p className='font-semibold text-lg font-plus-jakarta'>{item?.product?.name}</p>
-                      <p className='font-normal text-[#475367] text-[12px] font-inter'>Color: <span>{selectedColors[item._id]} </span></p>
+                     <div className="flex items-center gap-2">
+      <p className="font-normal text-[#475367] text-[12px] font-inter">
+        Color: <span className="capitalize">{item.color}</span>
+      </p>
+      <div
+        className="w-4 h-4 rounded-full border border-gray-300"
+        style={{
+          backgroundColor: tinycolor(item.color).isValid()
+            ? tinycolor(item.color).toHexString()
+            : "#ccc",
+        }}
+      ></div>
+    </div>
                     </div>
                   </div>
                   <div className="font-plus-jakarta text-xl font-medium text-[#1D2433] my-2">₦{new Intl.NumberFormat().format(item?.product?.price?.$numberDecimal || 0)} or ₦{new Intl.NumberFormat().format(((item?.product?.price?.$numberDecimal || 0) / 6).toFixed(0))}/Month</div>
@@ -488,7 +513,7 @@ const SubmitCheckOutFlutter = async () => {
       <ul className='p-3 flex gap-3 w-full'>
         {/* Wallet Option */}
         <li
-          className={`w-[50%] py-4 rounded-md pl-12 text-[#000] flex justify-between items-center 
+          className={`w-[50%] py-4 rounded-md pl-12 font-plus-jakarta text-[#000] flex justify-between items-center 
             ${selectedForm === 'wallet' ? 'bg-blue-100 text-blue-700' : 'bg-[#F8F9FC]'} 
             ${fullPayment === 'installment' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
           onClick={() => {

@@ -89,7 +89,17 @@ const AuthProvider = ({ children }) => {
             throw error;
         } 
     }
-    const object = { ...state, dispatch, LoginUser, RegisterUser, ForgetPswd,  ResetPswd, GetUser }
+   const object = {
+  ...state,
+  dispatch,
+  LoginUser,
+  RegisterUser,
+  ForgetPswd,
+  ResetPswd,
+  GetUser,
+  setUser: (user) => dispatch({ type: 'SET_USER', payload: { user } })
+};
+
 
     return <AuthContext.Provider value={object}>{children}</AuthContext.Provider>
 }

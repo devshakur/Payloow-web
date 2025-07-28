@@ -1,26 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { SliderVertical1 } from 'iconsax-react';
-import clsx from 'clsx';
-import DebtorLayoutPage from '../Debtor/DebtorLayoutPage';
-import { Button, Dialog, DialogPanel, DialogTitle, Field, Input } from '@headlessui/react';
-import { CloseCircle } from 'iconsax-react';
-import Success from './Success';
-import useInvestment from './../../../hooks/useInvetment';
-import Modal from '../Debtor/Business/BusinessModal/Modal';
-import StageTwo from '../Debtor/Business/BusinessModal/StageTwo';
-import Loan from '../Debtor/Business/BusinessModal/Loan';
-import { Toaster, toast } from 'react-hot-toast';
+import React, { useState, useEffect } from "react";
+import { SliderVertical1 } from "iconsax-react";
+import clsx from "clsx";
+import DebtorLayoutPage from "../Debtor/DebtorLayoutPage";
+import {
+  Button,
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Field,
+  Input,
+} from "@headlessui/react";
+import { CloseCircle } from "iconsax-react";
+import Success from "./Success";
+import useInvestment from "./../../../hooks/useInvetment";
+import Modal from "../Debtor/Business/BusinessModal/Modal";
+import StageTwo from "../Debtor/Business/BusinessModal/StageTwo";
+import Loan from "../Debtor/Business/BusinessModal/Loan";
+import { Toaster, toast } from "react-hot-toast";
+import LoanCard from "../../LoanCard";
 
 const Loans = () => {
-  const { AddLoan, ViewBusiness, getBusinessInfo } = useInvestment();
+  const { AddLoan, ViewBusiness, } = useInvestment();
   const [data, setData] = useState({
-    loan_amount: 0,
-    collateral: '',
-  });
+  loan_amount: "",
+  credit_score: "",
+  collateral: "",
+  proofOfCreditScoreFile: null,
+  proofOfCollateralFile: null,
+});
+
   const [business, setBusiness] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [active, setActive] = useState('one'); // To toggle between stages (one and two)
+  const [active, setActive] = useState("one");
   const [isOpen, setIsOpen] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
@@ -28,158 +40,131 @@ const Loans = () => {
   const [user, setUser] = useState({});
   const [links, setLinks] = useState({});
   const [selectedBusinessId, setSelectedBusinessId] = useState(null);
-  const [businesslinks, setBusinessLinks] = useState([])
+  const [businesslinks, setBusinessLinks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-const [itemsPerPage, setItemsPerPage] = useState(6);
+  const [itemsPerPage, setItemsPerPage] = useState(6);
+
+ 
+
+  
 
   useEffect(() => {
-    const businessDetails = async () => { 
+    const businessDetails = async () => {
       try {
-        const resp = await ViewBusiness();
-        let result = resp.data.data.businesses;
-        setBusiness(result);
-  
-        // Fetch loan details for each business as well
-        for (let business of result) {
-          const loanData = await getBusinessInfo(business.business_id);
-          // Add loan data to each business object if available
-          const businessWithLoan = {
-            ...business,
-            loan: loanData?.data?.data?.business?.loan || null,
-          };
-          setBusiness((prevBusiness) => {
-            return prevBusiness.map((item) =>
-              item.business_id === businessWithLoan.business_id ? businessWithLoan : item
-            );
-          });
-        }
+        const response = await ViewBusiness();
+        const businesses = response.data;
+        setData(businesses);
+
+      
+
+        toast.success("All open businesses have been approved.");
       } catch (error) {
-        console.error('Failed to fetch information on business:', error);
+        console.error("Error processing businesses:", error);
+        toast.error("Failed to fetch or update businesses.");
+      } finally {
+        setLoading(false);
       }
     };
-  
+
     businessDetails();
   }, []);
-  
 
-  useEffect(() => {
-    if (selectedBusinessId) {
-      const businessInfo = async () => { //this get all information on a specific business
-        try {
-          const resp = await getBusinessInfo(selectedBusinessId);
-          const info = resp.data?.data?.business;
-          const businessLinks = info.online;
-          const documentLinks = info.business_details;
-          const users = resp.data?.data?.user;
-
-          if (info) {
-            setBusinessData(info);
-            setUser(users);
-            setLinks(businessLinks);
-            setBusinessLinks(documentLinks)
-          } else {
-            console.error('No business data found.');
-            setBusinessData({});
-          }
-        } catch (error) {
-          console.error('Failed to fetch business info:', error);
-          setBusinessData({});
-        }
-      };
-
-      businessInfo();
-    }
-  }, [selectedBusinessId]);
-
-  // const [selectedBusinessId, setSelectedBusinessId] = useState(null); 
-
-  const addingLoan = async () => {
-    const loanData = {
-      loan_amount: parseFloat(data.loan_amount),
-      collateral: data.collateral,
-    };
-  
-    if (isNaN(loanData.loan_amount) || loanData.collateral.trim() === '') {
-      setError('Please fill in all fields correctly');
-      return;
-    }
-  
-    try {
-      setLoading(true);
-      setError(null);
-  
-      if (!selectedBusinessId) {
-        setError('Please select a business first');
-        return;
-      }
-  
-      console.log('Selected Business ID:', selectedBusinessId);
-      const resp = await AddLoan(selectedBusinessId, loanData);
-      if (resp) {
-        openSuccessModal();
-      }
-  
-    } catch (error) {
-      if (error?.response?.data?.message) {
-        console.log(error.response.data.message);
-        toast.error(error.response.data.message);
-      } else {
-        toast.error('Something went wrong. Please try again.');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-  
   const handleView = (id) => {
-    setSelectedBusinessId(id); // Set the selected business Id
-    
-   setIsOpen(true); // Open the modal
-  };
+  setSelectedBusinessId(id);
+  setIsOpen(true);
+};
+
+
   
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+const addingLoan = async () => {
+  if (!selectedBusinessId) {
+    setError("Please select a business first");
+    return;
+  }
+
+  const {
+    loan_amount,
+    credit_score,
+    collateral,
+    proofOfCreditScoreFile,
+    proofOfCollateralFile,
+  } = data;
+
+  if (
+    !loan_amount ||
+    !credit_score ||
+    !collateral ||
+    !proofOfCreditScoreFile ||
+    !proofOfCollateralFile
+  ) {
+    setError("Please fill in all fields and upload all required documents");
+    return;
+  }
+
+  try {
+    setLoading(true);
+    setError(null);
+
+    const formData = new FormData();
+    formData.append("businessId", selectedBusinessId);
+    formData.append("loan_amount", loan_amount);
+    formData.append("credit_score", credit_score);
+    formData.append("collateral", collateral);
+    formData.append("proofOfCreditScoreFile", proofOfCreditScoreFile);
+    formData.append("proofOfCollateralFile", proofOfCollateralFile);
+
+    const resp = await AddLoan(formData);
+    if (resp) openSuccessModal();
+  } catch (error) {
+    toast.error(
+      error?.response?.data?.message || "Something went wrong. Please try again."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+;
+
+
+
+
+ const handleInputChange = (e) => {
+  const { name, value } = e.target;
+  setData((prevData) => ({ ...prevData, [name]: value }));
+};
+
 
   const openDialog = () => setIsOpened(true);
   const closeDialog = () => setIsOpened(false);
-
   const openSuccessModal = () => {
     closeDialog();
     setIsSuccessModalOpen(true);
   };
-
   const closeSuccessModal = () => setIsSuccessModalOpen(false);
+  const goToStageTwo = () => setActive("two");
+  const goToStageOne = () => setActive("one");
 
-  // For stage navigation (One -> Two)
-  const goToStageTwo = () => setActive('two');
-  const goToStageOne = () => setActive('one');
-const openAddLoan = ()=>{
-  toast.error('View your business info before adding Loan')
-  openDialog();
-}
-const indexOfLastItem = currentPage * itemsPerPage;
-const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-const currentBusinesses = business.slice(indexOfFirstItem, indexOfLastItem);
+  const openAddLoan = (businessId) => {
+     setSelectedBusinessId(businessId); // 👈 Set the selected business
+    openDialog();
+  };
 
-const totalPages = Math.ceil(business.length / itemsPerPage);
-
-// Function to change page
-const handlePageChange = (pageNumber) => {
-  setCurrentPage(pageNumber);
-};
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentBusinesses = business.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(business.length / itemsPerPage);
+  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <DebtorLayoutPage>
       <main>
         <header className="bg-[#DBE7FE] px-12 shadow-lg rounded-md">
-          <h1 className="font-poppins text-[28px] py-4 font-semibold">Add a Loan to Fuel Your Business Growth</h1>
+          <h1 className="font-poppins text-[28px] py-4 font-semibold">
+            Add a Loan to Fuel Your Business Growth
+          </h1>
           <p className="lg:w-[70%] my-5 lg:-my-0 text-[22px] font-medium text-black font-poppins">
-            Secure the funding your business needs to thrive. Provide the loan details, and take a step closer to bringing your vision to life.
+            Secure the funding your business needs to thrive. Provide the loan
+            details, and take a step closer to bringing your vision to life.
           </p>
           <div className="flex justify-center lg:justify-end lg:relative lg:-top-[9rem]">
             <img src="/images/loan.png" className="h-[15rem]" alt="person" />
@@ -191,202 +176,212 @@ const handlePageChange = (pageNumber) => {
             >
               Add Loan
             </Button>
-            <Dialog open={isOpened} as="div" className="relative z-10 focus:outline-none" onClose={closeDialog}>
-              <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-              <div className="fixed inset-1 lg:inset-x-[5rem] xl:-inset-[-6rem] z-10 w-screen overflow-y-auto">
-                <div className="flex min-h-full items-center justify-center">
-                  <DialogPanel
-                    transition
-                    className="w-full h-auto mx-4 p-5 max-w-xl rounded-xl bg-white duration-300 ease-out"
-                  >
-                    <div className="flex justify-between">
-                      <DialogTitle as="h3" className="font-semibold text-xl">
-                        Add Loan
-                      </DialogTitle>
-                      <div className="mb-3">
-                        <CloseCircle size="30" color="black" onClick={closeDialog} />
-                      </div>
-                    </div>
-                    <form>
-                      <Field>
-                        <label htmlFor="loan_amount" className="font-poppins text-lg font-semibold">
-                          Loan Amount
-                        </label>
-                        <Input
-                          type="number"
-                          name="loan_amount"
-                          value={data.loan_amount}
-                          onChange={handleInputChange}
-                          placeholder="Loan Amount"
-                          className={clsx(
-                            'block w-full border border-black rounded-md bg-[#F1F3F9] py-2 mb-8 px-2 text-xl font-medium cursor-pointer',
-                          )}
-                        />
-                        <label htmlFor="interest_rate" className="font-poppins text-lg font-semibold">
-                          Interest Rate
-                        </label>
-                        <Input
-                          type="number"
-                          name="interest_rate"
-                          placeholder="Interest Rate"
-                          className={clsx(
-                            'block w-full border border-black rounded-md bg-[#F1F3F9] py-2 mb-8 px-2 text-xl font-medium cursor-pointer',
-                          )}
-                        />
-                        <label htmlFor="collateral" className="font-poppins text-lg font-semibold">
-                          Collateral
-                        </label>
-                        <Input
-                          type="text"
-                          name="collateral"
-                          value={data.collateral}
-                          onChange={handleInputChange}
-                          placeholder="Collateral"
-                          className={clsx(
-                            'block w-full border border-black rounded-md bg-[#F1F3F9] py-2 mb-8 px-2 text-xl font-medium cursor-pointer',
-                          )}
-                        />
-                      </Field>
-                      <div className="w-full flex lg:flex-row gap-5">
-                        <Button
-                          onClick={closeDialog}
-                          autoFocus
-                          className="w-full rounded-lg border border-blue-500 py-3 px-4 text-md text-blue-500 mt-6"
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          onClick={addingLoan}
-                          disabled={loading || !selectedBusinessId} // Disable if no business is selected
-                          autoFocus
-                          className="w-full rounded-lg bg-[#3369F4] py-3 px-4 text-md text-white mt-6"
-                        >
-                          {loading ? 'Submitting...' : 'Add Nows'}
-                        </Button>
-                      </div>
-                    </form>
-                  </DialogPanel>
-                </div>
-              </div>
-            </Dialog>
+           <Dialog
+  open={isOpened}
+  as="div"
+  className="relative z-50 focus:outline-none"
+  onClose={closeDialog}
+>
+  {/* Overlay */}
+  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300" aria-hidden="true" />
+
+  {/* Modal container */}
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-y-auto">
+    <DialogPanel className="w-full max-w-2xl transform rounded-2xl bg-white p-6 shadow-xl transition-all">
+      
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <DialogTitle as="h3" className="text-2xl font-bold text-gray-800">
+          Add Loan
+        </DialogTitle>
+        <button onClick={closeDialog} className="text-gray-400 hover:text-gray-600 transition">
+          <CloseCircle size="28" />
+        </button>
+      </div>
+
+      {/* Form */}
+      <form className="space-y-6">
+        <Field>
+          <div>
+            <label htmlFor="loan_amount" className="block text-lg font-medium text-gray-700 mb-1">
+              Loan Amount
+            </label>
+            <Input
+              type="number"
+              name="loan_amount"
+              value={data.loan_amount}
+              onChange={handleInputChange}
+              placeholder="Enter amount"
+              className="w-full rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="interest_rate" className="block text-lg font-medium text-gray-700 mb-1">
+              Interest Rate (%)
+            </label>
+            <Input
+              type="number"
+              name="interest_rate"
+              placeholder="Enter rate"
+              className="w-full rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="collateral" className="block text-lg font-medium text-gray-700 mb-1">
+              Collateral
+            </label>
+            <Input
+              type="text"
+              name="collateral"
+              value={data.collateral}
+              onChange={handleInputChange}
+              placeholder="Enter collateral"
+              className="w-full rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="credit_score" className="block text-lg font-medium text-gray-700 mb-1">
+              Credit Score
+            </label>
+            <Input
+              type="number"
+              name="credit_score"
+              value={data.credit_score}
+              onChange={handleInputChange}
+              placeholder="Enter credit score"
+              className="w-full rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+          <label className="block text-lg font-medium text-gray-700 mb-1">
+    Proof of Credit Score (5MB)
+  </label>
+  <Input
+    type="file"
+    name="proofOfCreditScoreFile"
+    accept=".pdf,.jpg,.png"
+    onChange={(e) => {
+      const file = e.target.files[0];
+      if (file && file.size > 5 * 1024 * 1024) {
+        toast.error("File must be 5MB or less");
+        return;
+      }
+      setData((prev) => ({
+        ...prev,
+        proofOfCreditScoreFile: file,
+      }));
+    }}
+    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+          </div>
+
+          <div>
+           <label className="block text-lg font-medium text-gray-700 mb-1">
+    Proof of Collateral (5MB)
+  </label>
+  <Input
+    type="file"
+    name="proofOfCollateralFile"
+    accept=".pdf,.jpg,.png"
+    onChange={(e) => {
+      const file = e.target.files[0];
+      if (file && file.size > 5 * 1024 * 1024) {
+        toast.error("File must be 5MB or less");
+        return;
+      }
+      setData((prev) => ({
+        ...prev,
+        proofOfCollateralFile: file,
+      }));
+    }}
+    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+          </div>
+        </Field>
+
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row justify-between gap-4 pt-4">
+          <Button
+            type="button"
+            onClick={closeDialog}
+            className="w-full sm:w-1/2 rounded-lg border border-blue-600 text-blue-600 hover:bg-blue-50 py-3 text-center font-semibold transition"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            onClick={addingLoan}
+            className="w-full sm:w-1/2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white py-3 text-center font-semibold transition"
+          >
+            {loading ? "Submitting..." : "Add Loan"}
+          </Button>
+        </div>
+      </form>
+    </DialogPanel>
+  </div>
+</Dialog>
+
             <Success isOpen={isSuccessModalOpen} onClose={closeSuccessModal} />
           </div>
         </header>
-        <section className="lg:my-[15rem]">
+
+        <section className="lg:mt-[15rem]">
           <div className="flex justify-between mx-6">
             <h3 className="font-poppins font-medium text-xl">My Businesses</h3>
-            <p className="font-poppins text-blue-500 font-medium text-xl">See all</p>
+            <p className="font-poppins text-blue-500 font-medium text-xl">
+              See all
+            </p>
           </div>
-          <div className="flex flex-wrap justify-center lg:justify-start">
-            {business && business.length > 0 ? (
-              currentBusinesses.map((startup) => (
-                <article key={startup.business_id} className="flex lg:flex-row justify-center my-4 lg:mx-4 w-full lg:w-[30%]">
-                  <div className="bg-white w-full lg:py-[5rem] py-3 rounded-lg shadow-lg">
-                    <div className="flex justify-between mx-3 lg:-mt-12">
-                      <div className="h-10 w-10 flex justify-center items-center bg-gray-300 rounded-[50%]">
-                        <SliderVertical1 size="17" color="blue" />
-                      </div>
-                      <div className="bg-green-200 rounded-md flex justify-center items-center py-3 px-3">
-                        <img src="/images/Approved.png" alt={startup.business_name} />
-                      </div>
-                    </div>
-                    <h3 className="font-poppins font-semibold mt-7 text-2xl text-[#1D2433] mx-3">{startup.business_name}</h3>
-                    <p className="font-medium font-poppins mt-2 text-xl truncate tracking-wide mx-3 text-[#1D2433CC]">
-                      {startup.business_description}
-                    </p>
-                    <div className="flex my-4 mx-3 justify-between gap-3 lg:mt-9">
-                      <h4 className="font-medium font-poppins text-xl">Loans:</h4>
-                      <p className="font-semibold font-poppins text-lg"><p className="font-semibold font-poppins text-xl">
-                      {startup.loan ? startup.loan.loan_amount : <p className='text-gray-400'>No Available Loan</p>}
-                      </p>
-                      </p>
-                    </div>
-                    <div className="mx-4 mt-9 flex gap-4 flex-col lg:-mb-[3rem]">
-                      <button onClick={()=> openAddLoan()}    className="w-full bg-[#3369F4] py-3 rounded-md text-white font-semibold font-poppins">
-                        Add Loan
-                      </button>
-                      <Button
-                        onClick={() => handleView(startup.business_id)}
-                        className="w-full border border-blue-300 py-3 rounded-md text-blue-500 font-semibold"
-                      >
-                        View Business
-                      </Button>
-                    </div>
-                    <Toaster />
-                    
-                    {active === 'one' && (
-                      <Modal
-                        isOpen={isOpen}
-                        setIsOpen={setIsOpen}
-                        user={user}
-                        setIsActive={setActive}
-                        businessData={businessData}
-                      />
-                    )}
-                    {active === 'two' && (
-                      <StageTwo
-                        isOpen={isOpen}
-                        setIsOpen={setIsOpen}
-                        setIsActive={setActive}
-                        links={links}
-                        businesslinks={businesslinks}
-                      />
-                    )}
-                    {active === 'three' && (
-                      <Loan
-                        isOpen={isOpen}
-                        setIsOpen={setIsOpen}
-                        setIsActive={setActive}
-                        user={user}
-                        businessData={businessData} />
 
-                    )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 py-10">
+            {data && data.length > 0 ? (
+              data.map((startup) => (
+              <LoanCard
+  key={startup.business_id}
+  loan={startup}
+  openAddLoan={openAddLoan}
+  handleView={() => handleView(startup._id)}
+/>
 
-                  </div>
-                </article>
               ))
             ) : (
-              <div className="w-full my-4 flex justify-center">
-                <p className="text-xl font-medium font-plus-jakarta">No Available Business...</p>
-              </div>
+              <p>No businesses found.</p>
             )}
           </div>
+
           <div className="pagination flex justify-center lg:justify-end items-center space-x-3 py-8">
-  <button
-    onClick={() => handlePageChange(currentPage - 1)}
-    disabled={currentPage === 1}
-    className={clsx(
-      'px-4 py-2 text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed'
-    )}
-  >
-    Previous
-  </button>
-  {[...Array(totalPages)].map((_, index) => (
-    <button
-      key={index}
-      onClick={() => handlePageChange(index + 1)}
-      className={clsx(
-        'px-4 py-2 text-lg font-medium text-blue-600 border border-blue-500 rounded-md transition-all',
-        currentPage === index + 1
-          ? 'bg-blue-500 text-white shadow-md'
-          : 'bg-white hover:bg-blue-50'
-      )}
-    >
-      {index + 1}
-    </button>
-  ))}
-  <button
-    onClick={() => handlePageChange(currentPage + 1)}
-    disabled={currentPage === totalPages}
-    className={clsx(
-      'px-4 py-2 text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed'
-    )}
-  >
-    Next
-  </button>
-</div>
-
-
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            {[...Array(totalPages)].map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handlePageChange(index + 1)}
+                className={`px-4 py-2 text-lg font-medium border rounded-md ${
+                  currentPage === index + 1
+                    ? "bg-blue-500 text-white shadow-md"
+                    : "text-blue-600 border-blue-500 bg-white hover:bg-blue-50"
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 text-white bg-blue-500 rounded-md shadow-md hover:bg-blue-600 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
         </section>
       </main>
     </DebtorLayoutPage>
@@ -394,5 +389,3 @@ const handlePageChange = (pageNumber) => {
 };
 
 export default Loans;
-
-
