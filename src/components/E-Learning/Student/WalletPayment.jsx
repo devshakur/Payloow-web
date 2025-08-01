@@ -1,7 +1,7 @@
 import React from 'react'
 import { Wallet, ArrowRight2 } from "iconsax-react";
 
-const WalletPayment = ({Submit, loading}) => {
+const WalletPayment = ({Submit, balance, loading}) => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   return (
     <div className="">
@@ -12,7 +12,7 @@ const WalletPayment = ({Submit, loading}) => {
            <Wallet size="24" color="#1D2433CC" />
          </div>
          <p className="mt-5 font-poppins font-normal text-sm leading-5">
-           Wallet ({`₦${currentUser?.wallet?.balance ?? 0}`})
+           Wallet ({balance})
          </p>
        </div>
        <div className="mt-1 flex items-center gap-1">

@@ -43,6 +43,20 @@ body {
   color: #000 !important;
 }
 
+/* Add this to your global styles or the component's CSS file */
+.slider-container .slick-slide {
+  display: flex !important;
+  justify-content: center;
+  align-items: stretch;
+  height: auto;
+}
+
+.slider-container .slick-slide > div {
+  height: 100%;
+  display: flex !important;
+}
+
+
 .form-label {
   @apply font-semibold
 }

@@ -76,7 +76,7 @@ const TutorDashboard = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      setCourses(response.data.data)
+      setCourses(response.data.courses)
     } catch (error) {
       console.error(error)
       toast.error('An error occured while fetching tutor courses')
@@ -137,7 +137,7 @@ const TutorDashboard = () => {
             </div>
             <div className="text-center">
               <h4 className="md:text-lg">Students Enrolled</h4>
-              <p className="pt-3 text-3xl font-extrabold">200</p>
+              <p className="pt-3 text-3xl font-extrabold">{courses?.reduce((acc, course) => acc + course.students_enrolled, 0)}</p>
             </div>
             <SlOptionsVertical />
           </div>

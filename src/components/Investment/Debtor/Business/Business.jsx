@@ -288,6 +288,7 @@ import { useRouter } from '../../../../Routes/router';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
 import { Wallet, ArrowRight2 } from 'iconsax-react';
+import UnifiedModal from './BusinessModal/UnifiedModal';
 
 const Business = ({ nextStep }) => {
   const { ViewBusiness, getBusinessInfo, UpdateBusiness } = useInvestment();
@@ -551,32 +552,14 @@ const Business = ({ nextStep }) => {
         </div>
 
         {/* Modals rendered once only */}
-        {active === "one" && (
-          <Modal
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            user={user}
-            businessData={businessData}
-            setIsActive={setIsActive}
-          />
-        )}
-        {active === "two" && (
-          <StageTwo
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIsActive={setIsActive}
-             businessData={businessData}
-          />
-        )}
-        {active === "three" && (
-          <Loan
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setIsActive={setIsActive}
-            user={user}
-            businessData={businessData}
-          />
-        )}
+        {isOpen && businessData && (
+  <UnifiedModal
+    isOpen={isOpen}
+    setIsOpen={setIsOpen}
+    businessData={businessData}
+    user={user}
+  />
+)}
 
       </main>
     </DebtorLayoutPage>

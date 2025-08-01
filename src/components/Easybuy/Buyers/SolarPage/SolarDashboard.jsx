@@ -23,7 +23,7 @@ const SolarDashboard = () => {
         if (productsData) {
           // Filter products that contain "phone" (case-insensitive)
           const filteredProducts = productsData.filter((product) =>
-          product.category.name.toLowerCase().includes('solar panel')
+          product.category.name.toLowerCase().includes('solar')
           );
           setProducts(filteredProducts); // Set filtered products to state
         } else {
@@ -151,7 +151,7 @@ const SolarDashboard = () => {
             >
               <Link to={`/product-details/${product._id}`}>
               <div className='w-full flex justify-center lg:justify-start'>
-                  <img src={product.imageKey} alt={product._id} className='w-[100%] h-[100%]' />
+                  <img src={product.imageUrl} alt={product._id} className='w-[100%] h-[100%]' />
                 </div>
                 <div className='lg:w-[80%] w-[100%] flex justify-between md:w-[70%]'>
                   <p className='font-poppins font-medium text-[#101928] text-lg'>{product.name}</p>

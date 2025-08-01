@@ -144,7 +144,6 @@ const ProductDetails = () => {
 
 
 
-
     const values = {
         productId: productId,
         quantity: quantity,
@@ -175,9 +174,17 @@ const ProductDetails = () => {
     }
 
     const handleAddToCart = () => {
+        if(!selectedColor){
+        toast.error('choose a color')
+
+    }else {
+
         AddItemsToCart();
         fetchCartItems()
     }
+    }
+
+
  
     return (
         <BuyersLayout>
@@ -360,7 +367,7 @@ const ProductDetails = () => {
 
                         <div className='w-full flex flex-col lg:flex-row gap-3 mt-5 '>
                             <button onClick={handleCart} className='w-full bg-blue-600 text-white py-4 lg:py-0 rounded-lg text-lg'>View Cart</button>
-                            <button onClick={handleAddToCart}  disabled={!selectedColor} className='w-full text-blue-700 border border-blue-600 py-4 lg:-py-5 rounded-lg text-lg'>Add to Cart</button>
+                            <button onClick={handleAddToCart} className='w-full text-blue-700 border border-blue-600 py-4 lg:-py-5 rounded-lg text-lg'>Add to Cart</button>
                         </div>
                     </article>
                 </main>

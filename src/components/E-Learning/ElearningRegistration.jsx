@@ -46,11 +46,7 @@ const ELearningRegistration = () => {
   };
 
   const handleStudent = () => {
-      if(currentUser?.elearningRole === 'student'){
       window.location.href = '/e-learning/student/dashboard';
-    }else{
-    window.location.href =  '/e-learning/register';
-    }
     
   };
 

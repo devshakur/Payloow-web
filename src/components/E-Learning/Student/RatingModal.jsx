@@ -4,6 +4,7 @@ import { FaStar } from 'react-icons/fa'
 import axios from 'axios'
 import { endpoints } from '../../../api/Endpoint'
 import toast from 'react-hot-toast'
+import axiosInstance from '../../../AuthContext/axiosInstance'
 
 const RatingModal = ({ isOpen, onClose, courseId }) => {
   const [rating, setRating] = useState(0)
@@ -16,7 +17,7 @@ const RatingModal = ({ isOpen, onClose, courseId }) => {
     setIsLoading(true)
     try {
       const token = JSON.parse(localStorage.getItem('auth')).auth
-      await axios.post(endpoints.addCourseRating, {
+     await axiosInstance.post(endpoints.addCourseRating(courseId), {
         course_id: courseId,
         rating,
         comment

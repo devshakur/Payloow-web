@@ -75,7 +75,7 @@ const CourseList = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      setCourses(response.data.data);
+      setCourses(response.data.courses);
     } catch (error) {
       toast.error('An error occurred while fetching user data');
     } finally {

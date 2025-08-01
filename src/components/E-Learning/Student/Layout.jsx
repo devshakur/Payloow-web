@@ -78,28 +78,23 @@ export default function Layout({ children }) {
   const [cartCount, setCartCount] = useState(0);
 
   const getCartCourses = async () => {
-    try {
-      const token = JSON.parse(localStorage.getItem("auth")).auth;
-      const response = await axios.get(endpoints.getCartCourses, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      localStorage.setItem("cart", JSON.stringify(response.data.data.length));
-      const cartCount = JSON.parse(localStorage.getItem("cart"));
-      setCartCount(cartCount);
-    } catch (error) {
-      console.error(error);
-      // toast.error('An error occured while fetching cart')
-    }
-  };
+  try {
+    const token = JSON.parse(localStorage.getItem("auth")).auth;
+    const response = await axios.get(endpoints.getCartCourses, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const cartLength = response.data.cart.length;
+    setCartCount(cartLength);
+    // Optional: localStorage.setItem("cart", JSON.stringify(cartLength));
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+  }
+};
+
 
   useEffect(() => {
-    const interval = setInterval(() => {
       getCartCourses();
-    }, 10000);
-
-    return () => clearInterval(interval);
   }, []);
 
   const goToCart = () => {

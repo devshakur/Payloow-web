@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouter } from '../Routes/router';
 
 const items = [
   {
@@ -46,6 +47,7 @@ const items = [
 ];
 
 const PayloowEasybuySlider = () => {
+  const router = useRouter();
   return (
     <div className="w-full overflow-hidden bg-white py-6 px-4 rounded-lg shadow-md">
 
@@ -55,7 +57,8 @@ const PayloowEasybuySlider = () => {
           {[...items, ...items].map((item, index) => (
             <div
               key={`${item.id}-${index}`}
-              className="min-w-[200px] max-w-[200px] bg-gray-100 rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-105"
+              onClick={()=>router.push('/easybuy/home')}
+              className="min-w-[200px] max-w-[200px] cursor-pointer bg-gray-100 rounded-xl overflow-hidden shadow-sm transition-transform hover:scale-105"
             >
               <img src={item.img} alt={item.name} className="w-full h-36 object-cover" />
               <div className="p-3">

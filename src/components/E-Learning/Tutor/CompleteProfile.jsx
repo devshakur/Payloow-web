@@ -15,7 +15,7 @@ const CompleteProfile = () => {
     tutorPhone: "",
     tutorFacebook: "",
     tutorTwitter: "",
-    tutorLinkedin: "",
+    tutorLinkedIn: "",
     tutorInstagram: "",
     tutorQualification: "",
     tutorExperience: "",
@@ -26,6 +26,7 @@ const CompleteProfile = () => {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
@@ -37,9 +38,9 @@ const CompleteProfile = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
-  };
+  // const handleFileChange = (e) => {
+  //   setSelectedFile(e.target.files[0]);
+  // };
 
   const handleUpload = async () => {
     if (!selectedFile) {
@@ -145,7 +146,7 @@ const CompleteProfile = () => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         toast.success(response.data.message);
         navigate("/e-learning/tutor/dashboard");
       } else {
@@ -162,6 +163,20 @@ const CompleteProfile = () => {
       setUploadProgress(0); // Reset progress after submission
     }
   };
+
+  const handleFileChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const previewURL = URL.createObjectURL(file);
+    setFormData((prev) => ({
+      ...prev,
+      tutorImage: previewURL,
+    }));
+    // Store the raw file too if needed later for upload
+    setSelectedFile(file);
+  }
+};
+
 
   return (
     <>
@@ -265,14 +280,14 @@ const CompleteProfile = () => {
                   />
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="tutorLinkedin" className="form-label">
+                  <label htmlFor="tutorLinkedIn" className="form-label">
                     Linkedin Handle
                   </label>
                   <input
                     type="text"
-                    name="tutorLinkedin"
-                    id="tutorLinkedin"
-                    value={formData.tutorLinkedin}
+                    name="tutorLinkedIn"
+                    id="tutorLinkedIn"
+                    value={formData.tutorLinkedIn}
                     onChange={handleChange}
                     className="form-input"
                     placeholder="Linkedin Handle"
@@ -353,7 +368,7 @@ const CompleteProfile = () => {
                     value={formData.tutorExperience}
                     onChange={handleChange}
                     className="form-input"
-                    placeholder="Experience"
+                    placeholder="E.g 10 years of teaching experience"
                     required
                   />
                 </div>
@@ -371,16 +386,7 @@ const CompleteProfile = () => {
                     placeholder="Achievements"
                     required
                   />
-                </div>
-                {/* <div className="flex flex-col space-y-2">
-                <label htmlFor="tutorInstagram" className="form-label">
-                  Upload Certificates
-                </label>
-                <div className="bg-primary/20 h-40 flex items-center justify-center rounded-2xl border-2 border-primary border-dashed">
-                  Drop files here to upload…
-                </div>
-              </div> */}
-                <div className="flex items-center justify-between space-x-8">
+                </div>  <div className="flex items-center justify-between space-x-8">
                   <button
                     type="button"
                     onClick={handlePrevStep}
@@ -396,56 +402,77 @@ const CompleteProfile = () => {
                     Continue
                   </button>
                 </div>
+                {/* <div className="flex flex-col space-y-2">
+                <label htmlFor="tutorInstagram" className="form-label">
+                  Upload Certificates
+                </label>
+                <div className="bg-primary/20 h-40 flex items-center justify-center rounded-2xl border-2 border-primary border-dashed">
+                  Drop files here to upload…
+                </div>
+              </div> */}
+             
+         
+
               </>
             )}
 
             {step === 3 && (
               <>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="tutorImage" className="form-label">
-                    Profile Picture
-                  </label>
-                  <div className="flex items-center space-x-8">
-                    <div className="relative h-32 w-32 rounded-full overflow-hidden">
-                      <img
-                        src={formData.tutorImage || "/images/user.png"}
-                        alt="user image"
-                        className="w-32 h-32 rounded-full object-cover"
-                      />
-                      <label
-                        htmlFor="fileInput"
-                        className="absolute bottom-0 flex items-center justify-center w-full h-10 bg-black/50 cursor-pointer"
-                      >
-                        <BsCameraFill color="#ffffff" />
-                      </label>
-                    </div>
-                    <input
-                      type="file"
-                      onChange={handleFileChange}
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      id="fileInput"
-                    />
-                    <button
-                      onClick={handleUpload}
-                      disabled={isUploading}
-                      type="button"
-                      className={`md:py-4 px-10 py-3 rounded-lg md:text-base text-sm bg-primary text-white border border-primary ${
-                        isUploading ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
-                    >
-                      {isUploading
-                        ? `Uploading... ${uploadProgress}%`
-                        : "Upload"}
-                    </button>
-                    <button
-                      onClick={handleRemove}
-                      className="md:py-4 px-10 py-3 rounded-lg md:text-base text-sm text-primary border border-primary"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
+  <label htmlFor="tutorImage" className="form-label">
+    Profile Picture
+  </label>
+
+  <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-8">
+    
+    {/* Profile Image + Camera Icon */}
+    <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden flex-shrink-0">
+      <img
+        src={formData.tutorImage || "/images/user.png"}
+        alt="user"
+        className="w-full h-full object-cover rounded-full"
+      />
+      <label
+        htmlFor="fileInput"
+        className="absolute bottom-0 left-0 w-full h-10 bg-black/50 flex items-center justify-center cursor-pointer"
+      >
+        <BsCameraFill color="#ffffff" />
+      </label>
+    </div>
+
+    {/* File Input - Hidden */}
+    <input
+      type="file"
+      id="fileInput"
+      onChange={handleFileChange}
+      accept="image/*"
+      style={{ display: "none" }}
+    />
+
+    {/* Buttons */}
+    <div className="flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:space-x-4">
+      <button
+        onClick={handleUpload}
+        disabled={isUploading}
+        type="button"
+        className={`py-3 px-6 rounded-lg text-sm md:text-base bg-primary text-white border border-primary ${
+          isUploading ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+      >
+        {isUploading ? `Uploading... ${uploadProgress}%` : "Upload"}
+      </button>
+
+      <button
+        onClick={handleRemove}
+        type="button"
+        className="py-3 px-6 rounded-lg text-sm md:text-base text-primary border border-primary"
+      >
+        Remove
+      </button>
+    </div>
+  </div>
+</div>
+
                 <div className="flex flex-col space-y-2">
                   <label htmlFor="tutorAbout" className="form-label">
                     About

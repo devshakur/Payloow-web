@@ -28,6 +28,7 @@ const CourseDetails = () => {
   const [courses, setCourses] = useState([]);
   const navigate = useNavigate();
   const [openSectionId, setOpenSectionId] = useState(null);
+  const [announcement, setAnnouncement] = useState([])
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const [isAnnouncementModalOpen, setIsAnnouncementModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,10 +38,18 @@ const CourseDetails = () => {
     title: "",
     description: "",
   });
+   const [openIndex, setOpenIndex] = useState(null);
+
+  const toggleOpen = (index) => {
+    setOpenIndex((prev) => (prev === index ? null : index));
+  };
+
 
   const handleCourseClick = (courseId) => {
     navigate(`/e-learning/tutor/course/edit-course/${courseId}`);
   };
+
+        const token = JSON.parse(localStorage.getItem("auth")).auth;
 
   const sectionVariant = {
     hidden: { opacity: 0, height: 0 },
@@ -49,13 +58,27 @@ const CourseDetails = () => {
 
   const getAllCourses = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem("auth")).auth;
+
       const response = await axios.get(endpoints.getAllCourses, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setCourses(response.data.data);
+      setCourses(response.data.courses);
+    } catch (error) {
+      toast.error("An error occured while fetching user data");
+    }
+  };
+
+    const getAllAnnoucement = async () => {
+    try {
+     
+      const response = await axios.get(endpoints.createAnnouncement, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setAnnouncement(response.data);
     } catch (error) {
       toast.error("An error occured while fetching user data");
     }
@@ -85,13 +108,15 @@ const CourseDetails = () => {
 
   useEffect(() => {
     getAllCourses();
+    getAllAnnoucement();
   }, []);
 
   const backToCourses = () => {
     navigate("/e-learning/tutor/all-courses");
   };
 
-  const course = courses.find((c) => c._id === id);
+ const course = courses.length > 0 ? courses.find((c) => c._id === id) : null;
+
 
   const handleQuizSubmit = async (quizzes) => {
     const payload = {
@@ -138,7 +163,7 @@ const CourseDetails = () => {
                 <Tab className="course-detail-card">Contents</Tab>
                 <Tab className="course-detail-card">Quiz</Tab>
                 <Tab className="course-detail-card">Announcements</Tab>
-                <Tab className="course-detail-card">Q&A</Tab>
+                {/* <Tab className="course-detail-card">Q&A</Tab> */}
               </TabList>
               <TabPanels className="mt-6">
                 <TabPanel>
@@ -205,12 +230,30 @@ const CourseDetails = () => {
                   </button>
                 </TabPanel>
                 <TabPanel>
+                <div className="space-y-4 mt-4">
+      {announcement.map((item, index) => (
+        <div
+          key={item.id}
+          className="border border-gray-200 rounded-lg shadow-sm cursor-pointer"
+          onClick={() => toggleOpen(index)}
+        >
+          <div className="p-4 font-semibold bg-gray-100">
+            {item.title}
+          </div>
+          {openIndex === index && (
+            <div className="p-4 text-gray-700 bg-white border-t">{item.description}</div>
+          )}
+        </div>
+      ))}
+    </div>
                   <button
                     onClick={() => setIsAnnouncementModalOpen(true)}
-                    className="bg-blue-600 text-white py-2 px-4 rounded-lg"
+                    className="bg-blue-600 mt-4 text-white py-2 px-4 rounded-lg"
                   >
                     Add Announcement
                   </button>
+                
+                  
                 </TabPanel>
                 <TabPanel>No Q&A</TabPanel>
               </TabPanels>

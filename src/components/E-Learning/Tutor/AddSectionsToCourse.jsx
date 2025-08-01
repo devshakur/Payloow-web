@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { IoIosReturnLeft, IoIosArrowDown } from 'react-icons/io';
-import { GoPlus } from 'react-icons/go';
-import { MdClose } from 'react-icons/md';
-import { motion } from 'framer-motion';
-import axios from 'axios';
-import toast, { Toaster } from 'react-hot-toast';
-import { endpoints } from '../../../api/Endpoint';
-import Layout from './Layout';
-import { Loader } from '../../../AuthContext/Loader';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { IoIosReturnLeft, IoIosArrowDown } from "react-icons/io";
+import { GoPlus } from "react-icons/go";
+import { MdClose } from "react-icons/md";
+import { motion } from "framer-motion";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import { endpoints } from "../../../api/Endpoint";
+import Layout from "./Layout";
+import { Loader } from "../../../AuthContext/Loader";
 
 const EditCourse = () => {
   const { id } = useParams();
@@ -17,18 +17,21 @@ const EditCourse = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [course, setCourse] = useState(null);
   const [courses, setCourses] = useState(null);
+  const [isEdited, setIsEdited] = useState(false);
+const [modifiedSections, setModifiedSections] = useState({});
+  const [originalCourseInfo, setOriginalCourseInfo] = useState(null);
 
   const getAllCourses = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
+      const token = JSON.parse(localStorage.getItem("auth")).auth;
       const response = await axios.get(endpoints.getAllCourses, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      setCourses(response.data.data);
+      setCourses(response.data.courses);
     } catch (error) {
-      toast.error('An error occurred while fetching user data');
+      toast.error("An error occurred while fetching user data");
     }
   };
 
@@ -38,65 +41,161 @@ const EditCourse = () => {
 
   useEffect(() => {
     if (courses) {
-      const currentCourse = courses.find(c => c._id === id);
+      const currentCourse = courses.find((c) => c._id === id);
+      setCourse(currentCourse);
+      if (currentCourse) {
+        setOriginalCourseInfo({
+          title: currentCourse.title,
+          category: currentCourse.category,
+          description: currentCourse.description,
+          price: currentCourse.price,
+          discount_price: currentCourse.discount_price,
+          duration: currentCourse.duration,
+          thumbnailUrl: currentCourse.thumbnailUrl,
+        });
+      }
+    }
+  }, [courses, id]);
+
+  useEffect(() => {
+    if (courses) {
+      const currentCourse = courses?.find((c) => c._id === id);
       setCourse(currentCourse);
     }
   }, [courses, id]);
 
+  // const handleChange = (e, sectionIndex = null, lessonIndex = null) => {
+  //   const { name, value } = e.target;
+
+  //   setCourse((prevCourse) => {
+  //     const updatedCourse = { ...prevCourse };
+
+  //     if (sectionIndex === null) {
+  //       updatedCourse[name] = value;
+
+  //       // Only check if name is one of the tracked fields
+  //       if (
+  //         originalCourseInfo &&
+  //         Object.keys(originalCourseInfo).includes(name)
+  //       ) {
+  //         const isModified = Object.keys(originalCourseInfo).some((key) => {
+  //           return updatedCourse[key] !== originalCourseInfo[key];
+  //         });
+  //         setIsEdited(isModified);
+  //       }
+
+  //       return updatedCourse;
+  //     }
+
+  //     // For section/lesson changes
+  //     const updatedSections = [...prevCourse.sections];
+  //     if (lessonIndex === null) {
+  //       updatedSections[sectionIndex][name] = value;
+  //     } else {
+  //       updatedSections[sectionIndex].lessons[lessonIndex][name] = value;
+  //     }
+  //     updatedCourse.sections = updatedSections;
+  //     return updatedCourse;
+  //   });
+  // };
+
+
   const handleChange = (e, sectionIndex = null, lessonIndex = null) => {
-    const { name, value } = e.target;
-    setCourse(prevCourse => {
-      if (sectionIndex === null) {
-        return { ...prevCourse, [name]: value };
+  const { name, value } = e.target;
+
+  setCourse((prevCourse) => {
+    const updatedCourse = { ...prevCourse };
+
+    // If it's course-level input, keep existing logic
+    if (sectionIndex === null) {
+      updatedCourse[name] = value;
+
+      if (
+        originalCourseInfo &&
+        Object.keys(originalCourseInfo).includes(name)
+      ) {
+        const isModified = Object.keys(originalCourseInfo).some((key) => {
+          return updatedCourse[key] !== originalCourseInfo[key];
+        });
+        setIsEdited(isModified);
       }
 
-      const updatedSections = [...prevCourse.sections];
-      if (lessonIndex === null) {
-        updatedSections[sectionIndex][name] = value;
-      } else {
-        updatedSections[sectionIndex].lessons[lessonIndex][name] = value;
-      }
+      return updatedCourse;
+    }
 
-      return { ...prevCourse, sections: updatedSections };
-    });
-  };
+    // Section or lesson update
+    const updatedSections = [...prevCourse.sections];
+    if (lessonIndex === null) {
+      updatedSections[sectionIndex][name] = value;
+    } else {
+      updatedSections[sectionIndex].lessons[lessonIndex][name] = value;
+    }
+    updatedCourse.sections = updatedSections;
+
+    // Mark this section as edited
+    setModifiedSections((prev) => ({
+      ...prev,
+      [sectionIndex]: true,
+    }));
+
+    return updatedCourse;
+  });
+};
 
   const handleFileChange = async (event, sectionIndex, lessonIndex) => {
     const file = event.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("video", file);
+    if (!file || !course?._id) return;
 
     try {
-      const token = JSON.parse(localStorage.getItem("auth")).auth;
-      const response = await axios.post(endpoints.uploadCourseVideo, formData, {
+      const token = JSON.parse(localStorage.getItem("auth"))?.auth;
+
+      // 1. Get signed URL from backend
+      const res = await axios.post(
+        endpoints.uploadCourseVideo,
+        {
+          fileName: file.name,
+          fileType: file.type,
+          courseId: course._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const { uploadUrl, publicUrl } = res.data;
+
+      // 2. Upload video to GCS
+      await axios.put(uploadUrl, file, {
         headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          "Content-Type": file.type,
         },
         onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
+          const percent = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
           );
-          setCourse((prevData) => {
-            const updatedSections = [...prevData.sections];
+          setCourse((prev) => {
+            const updatedSections = [...prev.sections];
             updatedSections[sectionIndex].lessons[lessonIndex].uploadProgress =
-              percentCompleted;
-            return { ...prevData, sections: updatedSections };
+              percent;
+            return { ...prev, sections: updatedSections };
           });
         },
       });
+
+      // 3. Save video URL to state
       toast.success("Video uploaded successfully");
-      setCourse((prevData) => {
-        const updatedSections = [...prevData.sections];
-        updatedSections[sectionIndex].lessons[lessonIndex].videoUrl =
-          response.data.data;
-        return { ...prevData, sections: updatedSections };
+      setCourse((prev) => {
+        const updatedSections = [...prev.sections];
+        updatedSections[sectionIndex].lessons[lessonIndex].videoUrl = publicUrl;
+        updatedSections[sectionIndex].lessons[lessonIndex].uploadProgress = 100;
+        return { ...prev, sections: updatedSections };
       });
-    } catch (error) {
-      console.error("Error uploading video:", error);
-      toast.error("Failed to upload video");
+    } catch (err) {
+      console.error("Video upload failed", err);
+      toast.error("Video upload failed");
     }
   };
 
@@ -121,6 +220,7 @@ const EditCourse = () => {
         }
       );
       toast.success("Thumbnail uploaded successfully");
+      setIsEdited(true);
       setCourse((prevData) => ({
         ...prevData,
         thumbnailUrl: response.data.data,
@@ -134,13 +234,13 @@ const EditCourse = () => {
   };
 
   const addSection = () => {
-    setCourse(prevCourse => ({
+    setCourse((prevCourse) => ({
       ...prevCourse,
       sections: [
         ...prevCourse.sections,
         {
-          title: '',
-          description: '',
+          title: "",
+          description: "",
           lessons: [],
           collapsed: false,
         },
@@ -149,18 +249,20 @@ const EditCourse = () => {
   };
 
   const removeSection = (sectionIndex) => {
-    setCourse(prevCourse => ({
+    setCourse((prevCourse) => ({
       ...prevCourse,
-      sections: prevCourse.sections.filter((_, index) => index !== sectionIndex),
+      sections: prevCourse.sections.filter(
+        (_, index) => index !== sectionIndex
+      ),
     }));
   };
 
   const addLesson = (sectionIndex) => {
-    setCourse(prevCourse => {
+    setCourse((prevCourse) => {
       const updatedSections = [...prevCourse.sections];
       updatedSections[sectionIndex].lessons.push({
-        title: '',
-        videoUrl: '',
+        title: "",
+        videoUrl: "",
         duration: 0,
         order: updatedSections[sectionIndex].lessons.length + 1,
         collapsed: false,
@@ -170,11 +272,11 @@ const EditCourse = () => {
   };
 
   const removeLesson = (sectionIndex, lessonIndex) => {
-    setCourse(prevCourse => {
+    setCourse((prevCourse) => {
       const updatedSections = [...prevCourse.sections];
-      updatedSections[sectionIndex].lessons = updatedSections[sectionIndex].lessons.filter(
-        (_, index) => index !== lessonIndex
-      );
+      updatedSections[sectionIndex].lessons = updatedSections[
+        sectionIndex
+      ].lessons.filter((_, index) => index !== lessonIndex);
       updatedSections[sectionIndex].lessons.forEach((lesson, index) => {
         lesson.order = index + 1;
       });
@@ -183,17 +285,19 @@ const EditCourse = () => {
   };
 
   const toggleSectionCollapse = (sectionIndex) => {
-    setCourse(prevCourse => {
+    setCourse((prevCourse) => {
       const updatedSections = [...prevCourse.sections];
-      updatedSections[sectionIndex].collapsed = !updatedSections[sectionIndex].collapsed;
+      updatedSections[sectionIndex].collapsed =
+        !updatedSections[sectionIndex].collapsed;
       return { ...prevCourse, sections: updatedSections };
     });
   };
 
   const toggleLessonCollapse = (sectionIndex, lessonIndex) => {
-    setCourse(prevCourse => {
+    setCourse((prevCourse) => {
       const updatedSections = [...prevCourse.sections];
-      updatedSections[sectionIndex].lessons[lessonIndex].collapsed = !updatedSections[sectionIndex].lessons[lessonIndex].collapsed;
+      updatedSections[sectionIndex].lessons[lessonIndex].collapsed =
+        !updatedSections[sectionIndex].lessons[lessonIndex].collapsed;
       return { ...prevCourse, sections: updatedSections };
     });
   };
@@ -201,43 +305,131 @@ const EditCourse = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const payload = {
-      courseId: course._id,
-      sections: course.sections.map(section => ({
-        sectionId: section._id,
-        title: section.title,
-        description: section.description,
-        lessons: section.lessons.map(lesson => ({
-          title: lesson.title,
-          videoUrl: lesson.videoUrl,
-          duration: parseInt(lesson.duration),
-          order: lesson.order,
-        })),
-      })),
-    };
 
-    console.log(payload);
     try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
-      const response = await axios.patch(endpoints.editCourse, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-      });
+      const token = JSON.parse(localStorage.getItem("auth")).auth;
 
-      if (response.status === 200) {
-        toast.success('Course updated successfully');
-        navigate(`/e-learning/tutor/course/${course._id}`);
-      } else {
-        toast.error('Failed to update course. Please try again.');
+      for (const section of course.sections) {
+        const payload = {
+          courseId: course._id,
+          title: section.title,
+          description: section.description,
+          lessons: section.lessons.map((lesson) => ({
+            title: lesson.title,
+            videoUrl: lesson.videoUrl,
+            duration: parseInt(lesson.duration),
+            order: lesson.order,
+          })),
+        };
+
+        // Submit each section
+        await axios.post(endpoints.editCourse, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
       }
+
+      toast.success("Course sections updated successfully");
+      navigate(`/e-learning/tutor/course/${course._id}`);
     } catch (error) {
-      toast.error('An error occurred. Please try again.');
+      console.error("Failed to update course sections", error);
+      toast.error("An error occurred while updating. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
+
+const handleUpdateCourseInfo = async () => {
+  const token = JSON.parse(localStorage.getItem("auth")).auth;
+
+  const formData = new FormData();
+  formData.append("title", course.title);
+  formData.append("description", course.description);
+  formData.append("category", course.category);
+  formData.append("price", course.price);
+  formData.append("discount_price", course.discount_price);
+  formData.append("duration", course.duration);
+  formData.append("thumbnailUrl", course.thumbnailUrl);
+
+  try {
+    setIsSubmitting(true);
+    const response = await axios.patch(
+      endpoints.updateCourse(course._id), // ✅ FIXED
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    toast.success("Course updated successfully");
+    setIsEdited(false);
+  } catch (err) {
+    console.error("Update failed", err);
+    toast.error("Failed to update course");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+const saveSection = async (sectionIndex) => {
+  const token = JSON.parse(localStorage.getItem("auth"))?.auth;
+  const section = course.sections[sectionIndex];
+
+  if (!token || !section?._id) {
+    toast.error("Missing auth token or section ID");
+    return;
+  }
+
+  const payload = {
+    courseId: course._id,
+    title: section.sectionTitle,        // assuming your UI uses sectionTitle
+    description: section.description || "", // optional
+    lessons: section.lessons?.map((lesson, i) => ({
+      ...lesson,
+      order: i + 1, // optional, ensure order is numeric and sequential
+    })),
+  };
+
+  try {
+    setIsSubmitting(true);
+
+    const response = await axios.patch(
+      endpoints.updateSection(section._id),
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response?.status === 200) {
+      toast.success("Section updated successfully");
+      setModifiedSections((prev) => {
+        const updated = { ...prev };
+        delete updated[sectionIndex];
+        return updated;
+      });
+    } else {
+      toast.error("Failed to update section");
+    }
+  } catch (err) {
+    console.error("Section update failed:", err);
+    toast.error("Something went wrong");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+
+
+
+  
 
   if (!course) return <Loader />;
 
@@ -258,7 +450,12 @@ const EditCourse = () => {
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Title
+              </label>
               <input
                 type="text"
                 id="title"
@@ -270,7 +467,12 @@ const EditCourse = () => {
               />
             </div>
             <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
+              <label
+                htmlFor="category"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Category
+              </label>
               <input
                 type="text"
                 id="category"
@@ -284,7 +486,12 @@ const EditCourse = () => {
           </div>
 
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Description
+            </label>
             <textarea
               id="description"
               name="description"
@@ -298,7 +505,12 @@ const EditCourse = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
+              <label
+                htmlFor="price"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Price
+              </label>
               <input
                 type="number"
                 id="price"
@@ -310,7 +522,12 @@ const EditCourse = () => {
               />
             </div>
             <div>
-              <label htmlFor="discount_price" className="block text-sm font-medium text-gray-700">Discount Price</label>
+              <label
+                htmlFor="discount_price"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Discount Price
+              </label>
               <input
                 type="number"
                 id="discount_price"
@@ -321,7 +538,12 @@ const EditCourse = () => {
               />
             </div>
             <div>
-              <label htmlFor="duration" className="block text-sm font-medium text-gray-700">Duration (hours)</label>
+              <label
+                htmlFor="duration"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Duration (hours)
+              </label>
               <input
                 type="number"
                 id="duration"
@@ -333,7 +555,12 @@ const EditCourse = () => {
               />
             </div>
             <div>
-              <label htmlFor="thumbnail" className="block text-sm font-medium text-gray-700">Course Thumbnail</label>
+              <label
+                htmlFor="thumbnail"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Course Thumbnail
+              </label>
               <div className="flex items-center space-x-5">
                 <input
                   type="text"
@@ -356,13 +583,29 @@ const EditCourse = () => {
                 />
                 <label
                   htmlFor="thumbnail"
-                  className={`cursor-pointer bg-primary text-white px-5 py-4 rounded-lg md:text-base text-sm ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}
+                  className={`cursor-pointer bg-primary text-white px-5 py-4 rounded-lg md:text-base text-sm ${
+                    isUploading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 >
                   {isUploading ? <div className="loader"></div> : "Upload"}
                 </label>
               </div>
             </div>
           </div>
+          {isEdited && (
+            <div className="text-right">
+              <button
+                type="button"
+                onClick={handleUpdateCourseInfo}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Updating..." : "Update Course Info"}
+              </button>
+            </div>
+          )}
+
+          {/* {section content} */}
 
           <div>
             <h2 className="text-2xl font-bold mb-4">Course Content</h2>
@@ -375,12 +618,22 @@ const EditCourse = () => {
                 transition={{ duration: 0.5 }}
               >
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-xl font-semibold">Section {sectionIndex + 1}</h3>
+                  <h3 className="text-xl font-semibold">
+                    Section {sectionIndex + 1}
+                  </h3>
                   <div>
-                    <button type="button" onClick={() => toggleSectionCollapse(sectionIndex)} className="mr-2">
+                    <button
+                      type="button"
+                      onClick={() => toggleSectionCollapse(sectionIndex)}
+                      className="mr-2"
+                    >
                       <IoIosArrowDown />
                     </button>
-                    <button type="button" onClick={() => removeSection(sectionIndex)} className="text-red-500">
+                    <button
+                      type="button"
+                      onClick={() => removeSection(sectionIndex)}
+                      className="text-red-500"
+                    >
                       <MdClose />
                     </button>
                   </div>
@@ -388,7 +641,12 @@ const EditCourse = () => {
                 {!section.collapsed && (
                   <>
                     <div className="my-5">
-                      <label htmlFor={`section-${sectionIndex}-title`} className="block text-sm font-medium text-gray-700">Section Title</label>
+                      <label
+                        htmlFor={`section-${sectionIndex}-title`}
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Section Title
+                      </label>
                       <input
                         type="text"
                         id={`section-${sectionIndex}-title`}
@@ -400,7 +658,12 @@ const EditCourse = () => {
                       />
                     </div>
                     <div className="mb-4">
-                      <label htmlFor={`section-${sectionIndex}-description`} className="block text-sm font-medium text-gray-700">Section Description</label>
+                      <label
+                        htmlFor={`section-${sectionIndex}-description`}
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Section Description
+                      </label>
                       <textarea
                         id={`section-${sectionIndex}-description`}
                         name="description"
@@ -421,43 +684,65 @@ const EditCourse = () => {
                         transition={{ duration: 0.5 }}
                       >
                         <div className="flex justify-between items-center mb-2">
-                          <h5 className="font-medium">Lesson {lessonIndex + 1}</h5>
+                          <h5 className="font-medium">
+                            Lesson {lessonIndex + 1}
+                          </h5>
                           <div>
-                            <button type="button" onClick={() => toggleLessonCollapse(sectionIndex, lessonIndex)} className="mr-2">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                toggleLessonCollapse(sectionIndex, lessonIndex)
+                              }
+                              className="mr-2"
+                            >
                               <IoIosArrowDown />
                             </button>
-                            <button type="button" onClick={() => removeLesson(sectionIndex, lessonIndex)} className="text-red-500">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                removeLesson(sectionIndex, lessonIndex)
+                              }
+                              className="text-red-500"
+                            >
                               <MdClose />
                             </button>
                           </div>
                         </div>
                         {!lesson.collapsed && (
-                          <div className='space-y-5 mt-5'>
+                          <div className="space-y-5 mt-5">
                             <div className="mb-2">
-                              <label htmlFor={`lesson-${sectionIndex}-${lessonIndex}-title`} className="block text-sm font-medium text-gray-700">Lesson Title</label>
+                              <label
+                                htmlFor={`lesson-${sectionIndex}-${lessonIndex}-title`}
+                                className="block text-sm font-medium text-gray-700"
+                              >
+                                Lesson Title
+                              </label>
                               <input
                                 type="text"
                                 id={`lesson-${sectionIndex}-${lessonIndex}-title`}
                                 name="title"
                                 value={lesson.title}
-                                onChange={(e) => handleChange(e, sectionIndex, lessonIndex)}
+                                onChange={(e) =>
+                                  handleChange(e, sectionIndex, lessonIndex)
+                                }
                                 className="form-input"
                                 required
                               />
                             </div>
                             <div className="mb-2">
-                              <label htmlFor={`lesson-${sectionIndex}-${lessonIndex}-videoUrl`} className="block text-sm font-medium text-gray-700">Video URL</label>
+                              <label
+                                htmlFor={`lesson-${sectionIndex}-${lessonIndex}-videoUrl`}
+                                className="block text-sm font-medium text-gray-700"
+                              >
+                                Video URL
+                              </label>
                               <div className="flex items-center space-x-5">
                                 <input
                                   name="videoUrl"
                                   id={`lesson-${sectionIndex}-${lessonIndex}-videoUrl`}
                                   value={lesson.videoUrl}
                                   onChange={(e) =>
-                                    handleChange(
-                                      e,
-                                      sectionIndex,
-                                      lessonIndex
-                                    )
+                                    handleChange(e, sectionIndex, lessonIndex)
                                   }
                                   className="form-input flex-grow text-sm"
                                   placeholder="Video URL"
@@ -469,7 +754,13 @@ const EditCourse = () => {
                                   accept="video/*"
                                   id={`${sectionIndex}-${lessonIndex}-videoUrl`}
                                   name="lesson videoUrl"
-                                  onChange={(e) => handleFileChange(e, sectionIndex, lessonIndex)}
+                                  onChange={(e) =>
+                                    handleFileChange(
+                                      e,
+                                      sectionIndex,
+                                      lessonIndex
+                                    )
+                                  }
                                   className="form-input"
                                   style={{ display: "none" }}
                                 />
@@ -498,25 +789,39 @@ const EditCourse = () => {
                             </div>
                             <div className="grid grid-cols-2 gap-2">
                               <div>
-                                <label htmlFor={`lesson-${sectionIndex}-${lessonIndex}-duration`} className="block text-sm font-medium text-gray-700">Duration (minutes)</label>
+                                <label
+                                  htmlFor={`lesson-${sectionIndex}-${lessonIndex}-duration`}
+                                  className="block text-sm font-medium text-gray-700"
+                                >
+                                  Duration (minutes)
+                                </label>
                                 <input
                                   type="number"
                                   id={`lesson-${sectionIndex}-${lessonIndex}-duration`}
                                   name="duration"
                                   value={lesson.duration}
-                                  onChange={((e) => handleChange(e, sectionIndex, lessonIndex))}
+                                  onChange={(e) =>
+                                    handleChange(e, sectionIndex, lessonIndex)
+                                  }
                                   className="form-input"
                                   required
                                 />
                               </div>
                               <div>
-                                <label htmlFor={`lesson-${sectionIndex}-${lessonIndex}-order`} className="block text-sm font-medium text-gray-700">Order</label>
+                                <label
+                                  htmlFor={`lesson-${sectionIndex}-${lessonIndex}-order`}
+                                  className="block text-sm font-medium text-gray-700"
+                                >
+                                  Order
+                                </label>
                                 <input
                                   type="number"
                                   id={`lesson-${sectionIndex}-${lessonIndex}-order`}
                                   name="order"
                                   value={lesson.order}
-                                  onChange={(e) => handleChange(e, sectionIndex, lessonIndex)}
+                                  onChange={(e) =>
+                                    handleChange(e, sectionIndex, lessonIndex)
+                                  }
                                   className="form-input"
                                   required
                                 />
@@ -534,6 +839,18 @@ const EditCourse = () => {
                       <GoPlus className="mr-2" />
                       Add Lesson
                     </button>
+                    {modifiedSections[sectionIndex] && (
+  <div className="mt-4 flex justify-end">
+    <button
+      type="button"
+      onClick={() => saveSection(sectionIndex)}
+      className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition"
+    >
+      Save Section
+    </button>
+  </div>
+)}
+
                   </>
                 )}
               </motion.div>
@@ -548,13 +865,17 @@ const EditCourse = () => {
             </button>
           </div>
 
+   
+
           <div className="flex justify-end">
             <button
               type="submit"
-              className={`px-6 py-2 rounded-md text-white ${isSubmitting ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'}`}
+              className={`px-6 py-2 rounded-md text-white ${
+                isSubmitting ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+              }`}
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Submitting...' : 'Save Changes'}
+              {isSubmitting ? "Submitting..." : "Save Changes"}
             </button>
           </div>
         </form>

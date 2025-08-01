@@ -6,11 +6,26 @@ import MessageTab from './MessageTab'
 import AnnouncementTab from './AnnouncementTab'
 import RatingModal from './RatingModal'
 
-const CourseTabs = ({ course, tutor, courseId, courseQuiz, courseMessages, announcements }) => {
+const CourseTabs = ({
+  course,
+  tutor,
+  courseId,
+  courseQuiz,
+  courseMessages,
+  announcements,
+  fetchQuiz,
+  setCourseQuiz,
+  selectedTabIndex,
+  setSelectedTabIndex
+}) => {
+
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false)
 
+ 
+  
+
   return (
-    <TabGroup>
+ <TabGroup selectedIndex={selectedTabIndex} onChange={setSelectedTabIndex}>
       <TabList className="flex mb-6 border-b">
         <Tab className={({ selected }) =>
           `px-4 py-2 font-medium ${selected ? 'text-blue-600 border-b-2 border-b-blue-600 outline-none' : 'text-gray-500'}`
@@ -42,8 +57,9 @@ const CourseTabs = ({ course, tutor, courseId, courseQuiz, courseMessages, annou
         <TabPanel>
           <TutorInfo course={course} tutor={tutor} courseId={courseId} />
         </TabPanel>
+      
         <TabPanel>
-          {courseQuiz.length > 0 ? (
+          {courseQuiz?.length > 0 ? (
             <QuizTab quizData={courseQuiz} />
           ) : (
             <p className="text-gray-600">No Quiz available at the moment.</p>

@@ -14,13 +14,30 @@ const SingleCourse = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [currentVideoUrl, setCurrentVideoUrl] = useState('')
-  const { course, tutor, courseQuiz, loading, courseMessages, announcements } = useCourse(id)
+  const {
+  course,
+  tutor,
+  courseMessages,
+  loading,
+  fetchQuiz,
+  courseQuiz,
+  setCourseQuiz,
+  announcements,
+} = useCourse(id);
+ const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+
+
+   console.log(currentVideoUrl);
+
 
   const backToCourses = () => {
     navigate('/e-learning/student/courses')
   }
 
   if (loading) return <div><Loader /></div>
+
+
+  
 
   return (
     <>
@@ -38,28 +55,41 @@ const SingleCourse = () => {
                 currentVideoUrl={currentVideoUrl}
               />
               <div className="md:hidden my-6">
-                <CourseContent
-                  course={course}
-                  setCurrentVideoUrl={setCurrentVideoUrl}
-                  isMobile={true}
-                />
+               <CourseContent
+  course={course}
+  setCurrentVideoUrl={setCurrentVideoUrl}
+  isMobile={true}
+  fetchQuiz={fetchQuiz}
+  setCourseQuiz={setCourseQuiz}
+  setSelectedTabIndex={setSelectedTabIndex}
+/>
+
               </div>
-              <CourseTabs
-                course={course}
-                tutor={tutor}
-                courseId={id}
-                courseQuiz={courseQuiz}
-                courseMessages={courseMessages}
-                announcements={announcements}
-              />
+            <CourseTabs
+  course={course}
+  tutor={tutor}
+  courseId={id}
+  courseQuiz={courseQuiz}
+  courseMessages={courseMessages}
+  announcements={announcements}
+  fetchQuiz={fetchQuiz}
+  setCourseQuiz={setCourseQuiz}
+  selectedTabIndex={selectedTabIndex}
+  setSelectedTabIndex={setSelectedTabIndex}
+/>
+
             </div>
 
             <div className="md:col-span-2 md:order-last order-first md:block hidden">
-              <CourseContent
-                course={course}
-                setCurrentVideoUrl={setCurrentVideoUrl}
-                isMobile={false}
-              />
+            <CourseContent
+  course={course}
+  setCurrentVideoUrl={setCurrentVideoUrl}
+  isMobile={false}
+  fetchQuiz={fetchQuiz}
+  setCourseQuiz={setCourseQuiz}
+  setSelectedTabIndex={setSelectedTabIndex}
+/>
+
             </div>
           </div>
         </div>

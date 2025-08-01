@@ -12,11 +12,13 @@ import { Loader } from '../../../AuthContext/Loader';
 import { Dialog, DialogPanel, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { motion } from 'framer-motion';
 import toast, { Toaster } from 'react-hot-toast';
+import useInvestment from '../../../hooks/useInvetment';
 
 
 
 const CourseDetails = () => {
   const { id } = useParams();
+  const {getCartCourses} = useInvestment()
   const [courses, setCourses] = useState([])
   const navigate = useNavigate();
   const [openSectionId, setOpenSectionId] = useState(null);
@@ -36,32 +38,18 @@ const CourseDetails = () => {
   const getAllCourses = async () => {
     try {
       const token = JSON.parse(localStorage.getItem('auth')).auth;
-      const response = await axios.get(endpoints.getAllCourses, {
+      const response = await axios.get(endpoints.getAllStdCourses, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      setCourses(response.data.data)
+      setCourses(response.data.courses)
     } catch (error) {
       toast.error('An error occured while fetching user data')
     }
   }
 
-  // const getCourseById = async () => {
-  //   try {
-  //     const token = JSON.parse(localStorage.getItem('auth')).auth;
-  //     const response = await axios.get(endpoints.getCourseById(id), {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`
-  //       }
-  //     })
-  //     const data = await response.json();
-  //     // setCourseQuiz(data.data);
-  //     console.log(data);
-  //   } catch (error) {
-  //     console.error("Error fetching course:", error);
-  //   }
-  // }
+ 
 
 
   const fetchQuiz = async () => {
@@ -80,31 +68,38 @@ const CourseDetails = () => {
     }
   };
 
-  const addToCart = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
-      const response = await axios.post(endpoints.addToCart, {
-        course_id: id
-      }, {
+const addToCart = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+
+  try {
+    const token = JSON.parse(localStorage.getItem('auth'))?.auth;
+    
+    const response = await axios.post(
+      endpoints.addToCart(id), // ✅ dynamic URL with courseId
+      {}, // ✅ no body, since backend expects ID in the URL
+      {
         headers: {
           Authorization: `Bearer ${token}`
         }
-      });
-      console.log(response.data);
-      toast.success('Course added to cart')
-    } catch (error) {
-      console.error(error.response.data.message)
-      toast.error(error.response.data.message)
-    } finally {
-      setIsLoading(false);
-    }
+      }
+    );
+
+   
+    toast.success('Course added to cart');
+    getCartCourses();
+  } catch (error) {
+    console.error(error?.response?.data?.message || "Something went wrong");
+    toast.error(error?.response?.data?.error || "Failed to add to cart");
+  } finally {
+    setIsLoading(false);
   }
+};
+
 
   useEffect(() => {
     getAllCourses();
-    fetchQuiz();
+     fetchQuiz();
     // getCourseById();
   }, []);
 
@@ -112,11 +107,12 @@ const CourseDetails = () => {
     navigate('/e-learning/student/all-courses');
   }
 
-  const goToBuyCourse = () => {
-    navigate(`/e-learning/student/course/buy/${id}`);
-  }
+const goToBuyCourse = () => {
+  navigate(`/e-learning/student/wallet-checkout?courseId=${course._id}`);
+};
 
-  const course = courses.find(c => c._id === (id));
+const course = courses.find(c => String(c._id) === String(id));
+
 
 
   if (!course) return <div><Loader /></div>;
@@ -239,7 +235,7 @@ const CourseDetails = () => {
                 </button>
                 <button
                   disabled={isLoading}
-                  onClick={addToCart}
+                 onClick={(e) => addToCart(e)}
                   className={`w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
                     }`}>
                   {isLoading ? <div className="loader"></div> : "Add to Cart"}

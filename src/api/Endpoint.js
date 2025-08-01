@@ -23,24 +23,29 @@ export const endpoints = {
   addTutorImage: `${BaseUrl}/add-tutor-image`,
 
   // cart
-  addToCart: `${BaseUrl}/enroll-course`,
-  getCartCourses: `${BaseUrl}/get-course-in-cart`,
-  removeCourseFromCart: (courseId) =>
-    `${BaseUrl}/delete-all-course-in-cart/${courseId}`,
+  addToCart: (id) => `${BaseUrl}/students/courses/${id}/cart`,
+  getCartCourses: `${BaseUrl}/students/cart`,
+  removeCourseFromCart: (id) => `${BaseUrl}/students/courses/${id}/cart`,
 
   // course
-  getAllCourses: `${BaseUrl}/get-all-courses`,
+  getAllCourses: `${BaseUrl}/tutors/courses`,
+  getAllStdCourses: `${BaseUrl}/students/courses`,
+  getPurchasedCourse: `${BaseUrl}/students/my-courses`,
   getEnrolledCourses: `${BaseUrl}/get-all-enrolled-courses`,
-  uploadCourseThumbnail: `${BaseUrl}/add-course-thumbnail-image`,
-  editCourse: `${BaseUrl}/add-to-existing-lessons`,
-  getCourseQuiz: (id) => `${BaseUrl}/get-course-quiz/${id}`,
+  uploadVideoToCloud: `${BaseUrl}/elearning-uploads/courses/intro-video-upload-url`,
+  editCourse: `${BaseUrl}/tutors/courses/sections`,
+  updateCourse: (id) => `${BaseUrl}/tutors/courses/${id}`,
+  updateSection: (id) => `${BaseUrl}/tutors/sections/${id}`,
+  getCourseQuiz: (id) => `${BaseUrl}/students/lessons/${id}/quizzes`,
   getCourseById: (id) => `${BaseUrl}/get-course-by-id/${id}`,
-  addQuiz: `${BaseUrl}/add-course-question`,
+  addQuiz: `${BaseUrl}/tutors/quiz`,
+  submitQuiz: (id) => `${BaseUrl}/students/quiz/${id}/attempt`,
   getCourseContent: `${BaseUrl}/get-course-content`,
-  uploadCourseVideo: `${BaseUrl}/upload-course-video-document`,
-  createCourseContent: `${BaseUrl}/create-course-content`,
-  addCourseRating: `${BaseUrl}/add-course-rating`,
-  purchaseCourse: `${BaseUrl}/course/payment`,
+  uploadCourseVideo: `${BaseUrl}/elearning-uploads/courses/lesson-video-upload-url`,
+  createCourseContent: `${BaseUrl}/tutors/courses`,
+  addCourseRating: (id) => `${BaseUrl}/students/courses/${id}/reviews`,
+  purchaseCourse: (id) => `${BaseUrl}/students/courses/${id}/enroll`,
+  purchaseCourseInCart: `${BaseUrl}/students/cart/enroll`,
   deleteCart: `${BaseUrl}/delete-all-course-in-cart`,
   // General
   getCurrentUser: `${BaseUrl}/get-current-user`,
@@ -61,11 +66,11 @@ export const endpoints = {
     `${BaseUrl}/get-messages-for-course/${courseId}`,
 
   // announcement
-  createAnnouncement: `${BaseUrl}/make-course-announcement`,
+  createAnnouncement: `${BaseUrl}/tutors/announcements`,
   getAnnouncements: (courseId) =>
     `${BaseUrl}/get-all-course-announcements/${courseId}`,
   getCourseAnnouncements: (courseId) =>
-    `${BaseUrl}/course-announcement/${courseId}`,
+    `${BaseUrl}/students/announcement/${courseId}`,
 };
 //Bills
 export const BillsEndpoints = {

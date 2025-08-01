@@ -1,7 +1,7 @@
 import { createContext, useReducer } from "react"
 import axiosInstance from "../axiosInterceptor"
 import { InvestmentHandler } from "./InvestmentHandler"
-import { EasyBuyEndpoints, InvestmentEndpoints } from "../../api/Endpoint"
+import { EasyBuyEndpoints, endpoints, InvestmentEndpoints } from "../../api/Endpoint"
 
 
 const initial = {
@@ -568,6 +568,22 @@ const RepayInvestmentRequest = async (investmentId, payload) => {
     throw error;
   }
 };
+const getCartCourses = async () => {
+  try {
+    const token = JSON.parse(localStorage.getItem("auth"))?.auth;
+    const response = await axiosInstance.get(endpoints.getCartCourses, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const cartItems = response.data.cart || [];
+    const count = cartItems.length;
+
+    return { count, cartItems }; // Return both
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+    return { count: 0, cartItems: [] }; // Safe fallback
+  }
+};
 
     const object = {
         ...state, dispatch, CreateDebtorAccount, CreateInvestorAccount, CreateBusiness,  getBusinessInfo,
@@ -575,7 +591,7 @@ const RepayInvestmentRequest = async (investmentId, payload) => {
         InvestInBusiness, GetInvestmentRequest, GetLoanBusiness, getUserDetails, GetFilteredLoanBusiness, InvestorsInvestment,
         AcceptOrDeclineInvestment, RepayInvestmentRequest, CreateBuyerProfile, AddToCart,
         FetchAllProduct, ValidateCoupon, DeleteCart, GetCart, GetEasyBuyCatgories, CreateProduct, GetDeliveryInfo, checkOut, swapProduct, GetPercentage, DeleteEasyBuyCart,
-        GetUserOrders, GetUInstallmentOrders, GetSolarStock, GetInventoryOrders, SubmitInstallmentPlanRequest,  GetProductInventory,GetActiveCustomers, CreateServiceCenter, GetServiceCenter, GetPartnerCustomers,
+        GetUserOrders, GetUInstallmentOrders, GetSolarStock, GetInventoryOrders, SubmitInstallmentPlanRequest,  GetProductInventory,GetActiveCustomers, getCartCourses, CreateServiceCenter, GetServiceCenter, GetPartnerCustomers,
     }
 
     return <InvestmentContext.Provider value={object}>{children}</InvestmentContext.Provider>

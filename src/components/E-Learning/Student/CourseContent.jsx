@@ -5,7 +5,15 @@ import { CiPlay1 } from "react-icons/ci"
 import { FaCheckCircle } from "react-icons/fa"
 import toast from 'react-hot-toast'
 
-const CourseContent = ({ course, setCurrentVideoUrl, isMobile }) => {
+const CourseContent = ({
+  course,
+  setCurrentVideoUrl,
+  isMobile,
+  fetchQuiz,
+  setCourseQuiz,
+  setSelectedTabIndex
+}) => {
+
   const [openSectionId, setOpenSectionId] = useState(null)
 
   const sectionVariant = {
@@ -13,10 +21,16 @@ const CourseContent = ({ course, setCurrentVideoUrl, isMobile }) => {
     visible: { opacity: 1, height: "auto" },
   }
 
-  const handleLessonClick = (videoUrl) => {
-    const cleanedUrl = videoUrl.trim().replace(/\s+/g, '%20')
-    setCurrentVideoUrl(cleanedUrl)
-  }
+ const handleLessonClick = async (videoUrl, lessonId) => {
+  const cleanedUrl = videoUrl.trim().replace(/\s+/g, '%20');
+  setCurrentVideoUrl(cleanedUrl);
+
+  // ✅ fetch and show the quiz
+  const result = await fetchQuiz(lessonId);
+  setCourseQuiz(result);          // Update courseQuiz state
+  setSelectedTabIndex(1);        // Switch to Quiz tab (index 1)
+}
+
 
   const handleLessonComplete = (courseId, sectionId, lessonId) => {
     toast.success('Lesson completed successfully')
@@ -83,7 +97,7 @@ const Section = ({
             <div key={lesson._id} className='flex items-center justify-between py-2 border-b last:border-b-0'>
               <div
                 className='flex items-center space-x-3 cursor-pointer'
-                onClick={() => handleLessonClick(lesson.videoUrl)}
+                onClick={() => handleLessonClick(lesson.videoUrl, lesson._id)}
               >
                 <span className="text-blue-500"><CiPlay1 size={20} /></span>
                 <span className="text-gray-700 hover:text-blue-600 transition-colors">

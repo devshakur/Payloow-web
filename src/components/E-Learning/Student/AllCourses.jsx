@@ -23,12 +23,12 @@ const AllCourses = () => {
     try {
       const token = JSON.parse(localStorage.getItem('auth')).auth;
       setIsLoading(true)
-      const response = await axios.get(endpoints.getAllCourses, {
+      const response = await axios.get(endpoints.getAllStdCourses, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      setCourses(response.data.data)
+      setCourses(response.data.courses)
     } catch (error) {
       toast.error('An error occured while fetching user data')
     } finally {

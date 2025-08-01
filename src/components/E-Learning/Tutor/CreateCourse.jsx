@@ -15,6 +15,7 @@ const CreateCourse = () => {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isVideoUploading, setIsVideoUploading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const router = useNavigate();
 
@@ -47,17 +48,11 @@ const CreateCourse = () => {
     duration: "",
     price: "",
     discount_price: "",
-    course_thumbnail: "",
-    sections: [
-      {
-        title: "",
-        description: "",
-        lessons: [],
-        collapsed: false,
-      },
-    ],
+    courseThumbnail: "",
+    introductoryVideoUrl: "",
     tags: [],
   });
+  const [thumbnailPreview, setThumbnailPreview] = useState(null);
 
   const handleChange = (e, sectionIndex = null, lessonIndex = null) => {
     const { name, value } = e.target;
@@ -202,98 +197,214 @@ const CreateCourse = () => {
     }
   };
 
-  const handleThumbnailUpload = async (event) => {
-    const file = event.target.files[0];
+  // const handleThumbnailUpload = async (event) => {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+
+  //   const formData = new FormData();
+  //   formData.append("image", file);
+
+  //   try {
+  //     const token = JSON.parse(localStorage.getItem("auth")).auth;
+  //     setIsUploading(true)
+  //     const response = await axios.post(
+  //       endpoints.uploadCourseThumbnail,
+  //       formData,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       }
+  //     );
+  //     toast.success("Thumbnail uploaded successfully");
+  //     console.log(response)
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       courseThumbnail: response.data.data,
+  //     }));
+  //   } catch (error) {
+  //     console.error("Error uploading thumbnail:", error);
+  //     toast.error("Failed to upload thumbnail");
+  //   } finally {
+  //     setIsUploading(false)
+  //   }
+  // };
+
+const handleThumbnailUpload = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  setFormData((prev) => ({ ...prev, courseThumbnail: file }));
+  setThumbnailPreview(URL.createObjectURL(file));
+};
+
+
+
+  const handleVideoUpload = async (e) => {
+    const file = e.target.files[0];
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append("image", file);
+    setIsVideoUploading(true);
 
     try {
-      const token = JSON.parse(localStorage.getItem("auth")).auth;
-      setIsUploading(true)
-      const response = await axios.post(
-        endpoints.uploadCourseThumbnail,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      toast.success("Thumbnail uploaded successfully");
-      console.log(response)
-      setFormData((prevData) => ({
-        ...prevData,
-        course_thumbnail: response.data.data,
-      }));
-    } catch (error) {
-      console.error("Error uploading thumbnail:", error);
-      toast.error("Failed to upload thumbnail");
-    } finally {
-      setIsUploading(false)
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    const payload = {
-      title: formData.title,
-      description: formData.description,
-      duration: formData.duration,
-      price: formData.price,
-      discount_price: formData.discount_price,
-      category: formData.category,
-      course_thumbnail: formData.course_thumbnail,
-      sections: formData.sections.map((section) => ({
-        title: section.title,
-        description: section.description,
-        lessons: section.lessons.map((lesson) => ({
-          title: lesson.title,
-          videoUrl: lesson.videoUrl,
-          duration: parseInt(lesson.duration),
-          order: lesson.order,
-        })),
-      })),
-      tags: formData.tags,
-    };
-    console.log("Form Submitted: ", payload);
-    try {
-      const token = JSON.parse(localStorage.getItem("auth")).auth;
+      const token = JSON.parse(localStorage.getItem("auth"))?.auth;
       if (!token) {
         toast.error("No token found. Please log in again.");
         return;
       }
 
-      const response = await axios.post(
-        endpoints.createCourseContent,
-        payload,
+      // Step 1: Get signed URL and public URL from backend
+      const { data } = await axios.post(
+        endpoints.uploadVideoToCloud,
+        {
+          fileName: file.name,
+          fileType: file.type,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         }
       );
 
-      if (response.status === 201) {
-        toast.success(response.data.message);
-        setIsOpen(true);
-      } else {
-        toast.error("Failed to create course. Please try again.");
+      const { uploadUrl, publicUrl } = data;
+
+      if (!uploadUrl || !publicUrl) {
+        throw new Error("Invalid upload/public URL");
       }
-    } catch (error) {
-      if (error.response && error.response.data && error.response.data.msg) {
-        toast.error(error.response.data.msg);
-      } else {
-        toast.error("An error occurred. Please try again.");
-      }
+
+      // Step 2: Upload to Google Cloud Storage
+      await axios.put(uploadUrl, file, {
+        headers: {
+          "Content-Type": file.type,
+        },
+      });
+
+      // Step 3: Update form
+      setFormData((prev) => ({
+        ...prev,
+        introductoryVideoUrl: publicUrl,
+      }));
+
+      toast.success("Video uploaded successfully");
+    } catch (err) {
+      console.error("Video upload failed", err);
+      toast.error("Failed to upload video");
     } finally {
-      setIsSubmitting(false);
+      setIsVideoUploading(false);
     }
   };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setIsSubmitting(true);
+  //   const payload = {
+  //     title: formData.title,
+  //     description: formData.description,
+  //     duration: formData.duration,
+  //     price: formData.price,
+  //     discount_price: formData.discount_price,
+  //     category: formData.category,
+  //     courseThumbnail: formData.courseThumbnail,
+  //     introductoryVideoUrl: formData.introductoryVideoUrl,
+  //     tags: formData.tags,
+  //   };
+  //   console.log("Form Submitted: ", payload);
+  //   try {
+  //     const token = JSON.parse(localStorage.getItem("auth")).auth;
+  //     if (!token) {
+  //       toast.error("No token found. Please log in again.");
+  //       return;
+  //     }
+
+  //     const response = await axios.post(
+  //       endpoints.createCourseContent,
+  //       payload,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     if (response.status === 201) {
+  //       toast.success(response.data.message);
+  //       setIsOpen(true);
+  //     } else {
+  //       toast.error("Failed to create course. Please try again.");
+  //     }
+  //   } catch (error) {
+  //     if (error.response && error.response.data && error.response.data.msg) {
+  //       toast.error(error.response.data.msg);
+  //     } else {
+  //       toast.error("An error occurred. Please try again.");
+  //     }
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  const formPayload = new FormData();
+
+  formPayload.append("title", formData.title);
+  formPayload.append("description", formData.description);
+  formPayload.append("duration", formData.duration);
+  formPayload.append("price", formData.price);
+  formPayload.append("discount_price", formData.discount_price);
+  formPayload.append("category", formData.category);
+
+  if (formData.courseThumbnail) {
+    formPayload.append("courseThumbnail", formData.courseThumbnail); // ✅ This is a File
+  }
+
+  if (formData.introductoryVideoUrl) {
+    formPayload.append("introductoryVideoUrl", formData.introductoryVideoUrl); // ✅ This is a URL
+  }
+
+  if (formData.tags && formData.tags.length > 0) {
+    formPayload.append("tags", JSON.stringify(formData.tags)); // ✅ Assuming backend accepts JSON string
+  }
+
+  try {
+    const token = JSON.parse(localStorage.getItem("auth"))?.auth;
+    if (!token) {
+      toast.error("No token found. Please log in again.");
+      return;
+    }
+
+    const response = await axios.post(
+      endpoints.createCourseContent,
+      formPayload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data", // ✅ Required for file upload
+        },
+      }
+    );
+
+    if (response.status === 201) {
+      toast.success(response.data.message || "Course created successfully");
+      setIsOpen(true);
+    } else {
+      toast.error("Failed to create course. Please try again.");
+    }
+  } catch (error) {
+    if (error.response?.data?.msg) {
+      toast.error(error.response.data.msg);
+    } else {
+      toast.error("An error occurred. Please try again.");
+    }
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <>
@@ -410,37 +521,77 @@ const CreateCourse = () => {
                     placeholder="Discount Price"
                   />
                 </div>
+             <div className="flex flex-col space-y-2">
+  <label htmlFor="thumbnailInput" className="form-label">
+    Course Thumbnail
+  </label>
+
+  {/* Image preview */}
+  {thumbnailPreview && (
+    <img
+     src={thumbnailPreview} 
+      alt="Course Thumbnail Preview"
+      className="h-32 w-32 rounded-md object-cover mb-2"
+    />
+  )}
+
+  {/* File upload */}
+  <input
+    type="file"
+    accept="image/*"
+    id="thumbnailInput"
+    onChange={handleThumbnailUpload}
+    className="form-input cursor-pointer"
+  />
+
+  {/* Uploading indicator */}
+  {isUploading && (
+    <div className="text-sm text-gray-500 mt-1">Uploading...</div>
+  )}
+</div>
+
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="course_thumbnail" className="form-label">
-                    Course Thumbnail
+                  <label htmlFor="course_video" className="form-label">
+                    Course Intro Video
                   </label>
                   <div className="flex items-center space-x-2">
                     <input
                       type="text"
-                      name="course_thumbnail"
-                      id="course_thumbnail"
-                      value={formData.course_thumbnail}
+                      name="introductoryVideoUrl"
+                      id="introductoryVideoUrl"
+                      value={formData.introductoryVideoUrl}
                       onChange={handleChange}
                       className="form-input flex-grow"
-                      placeholder="Thumbnail URL"
-                      required
+                      placeholder="Video URL"
                       disabled
+                      required
                     />
+
+                    {/* Hidden file input */}
                     <input
                       type="file"
-                      accept="image/*"
+                      accept="video/*"
                       style={{ display: "none" }}
-                      id="thumbnailInput"
-                      onChange={handleThumbnailUpload}
+                      id="videoInput"
+                      onChange={handleVideoUpload}
                     />
+
+                    {/* Upload button triggers file input */}
                     <label
-                      htmlFor="thumbnailInput"
-                      className={`cursor-pointer bg-primary text-white px-5 py-4 rounded-lg ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}
+                      htmlFor="videoInput"
+                      className={`cursor-pointer bg-primary text-white px-5 py-4 rounded-lg ${
+                        isVideoUploading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                     >
-                      {isUploading ? <div className="loader"></div> : "Upload"}
+                      {isVideoUploading ? (
+                        <div className="loader w-4 h-4 border-2 border-white rounded-full border-t-transparent animate-spin"></div>
+                      ) : (
+                        "Upload"
+                      )}
                     </label>
                   </div>
                 </div>
+
                 <div className="flex flex-col space-y-2">
                   <label htmlFor="tags" className="form-label">
                     Tags (comma-separated)
@@ -456,16 +607,16 @@ const CreateCourse = () => {
                   />
                 </div>
                 <button
-                  type="button"
-                  onClick={handleNextStep}
+                  type="submit"
+                  disabled={isSubmitting}
                   className="w-full md:py-4 py-3 rounded-lg md:text-base text-sm bg-primary text-white"
                 >
-                  Continue
+                  {isSubmitting ? <div className="loader"></div> : "Submit"}
                 </button>
               </>
             )}
 
-            {step === 2 && (
+            {/* {step === 2 && (
               <>
                 {formData.sections.map((section, sectionIndex) => (
                   <motion.div
@@ -752,7 +903,7 @@ const CreateCourse = () => {
                   </button>
                 </div>
               </>
-            )}
+            )} */}
           </form>
         </div>
       </section>

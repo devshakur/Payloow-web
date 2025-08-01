@@ -18,7 +18,7 @@ import useInvestment from '../../../hooks/useInvetment';
 
 const Cart = () => {
   const { id } = useParams();
-  const {checkOut} = useInvestment();
+  const {checkOut, getCartCourses} = useInvestment();
   const navigate = useNavigate();
   const [cart, setCart] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -56,27 +56,26 @@ const Cart = () => {
     visible: { opacity: 1, height: "auto" },
   };
 
-  const getCartCourses = async () => {
-    try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
-      const response = await axios.get(endpoints.getCartCourses, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setCart(response.data.data)
-    } catch (error) {
-      console.error(error)
-      // toast.error('An error occured while fetching cart')
-    }
-  }
+  // const getCartCourses = async () => {
+  //   try {
+  //     const token = JSON.parse(localStorage.getItem('auth')).auth;
+  //     const response = await axios.get(endpoints.getAllStdCourses, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`
+  //       }
+  //     });
+  //     setCart(response.data.data)
+  //   } catch (error) {
+  //     console.error(error)
+  //     // toast.error('An error occured while fetching cart')
+  //   }
+  // }
 
   const removeCourseFromCart = async (e, courseId) => {
     e.preventDefault();
     setIsLoading(true);
     try {
       const token = JSON.parse(localStorage.getItem('token'));
-      console.log(token);
       const response = await axios.delete(endpoints.removeCourseFromCart(courseId), {
         headers: {
           Authorization: `Bearer ${token}`
@@ -131,7 +130,7 @@ const Cart = () => {
       if (purchaseUrl) {
         window.location.href = purchaseUrl; // Redirect to the purchase URL
         toast.success('Purchase submitted successfully');
-        deleteCartItems();
+      removeCourseFromCart();
       } else {
         toast.error('Could not access Flutterwave Gateway, please try again in a few minutes');
       }
@@ -165,13 +164,20 @@ const Cart = () => {
   const summary = calculateSummary();
 
 
-  useEffect(() => {
-    getCartCourses()
-  }, []);
+
+ useEffect(() => {
+  const fetchCart = async () => {
+    const { count, cartItems } = await getCartCourses();
+    setCart(cartItems); // ✅ Set the cart here
+  };
+  fetchCart();
+}, []);
 
 
 
-  if (!cart) return <div><Loader /></div>;
+
+ if (!Array.isArray(cart)) return <Loader />;
+
   return (
     <>
       <Toaster />
@@ -208,7 +214,7 @@ const Cart = () => {
                   </div>
                   :
 
-                  cart.map((course, index) => (
+                  cart?.map((course, index) => (
                     <motion.div
                       key={index}
                       initial="hidden"
@@ -228,11 +234,11 @@ const Cart = () => {
                               </div>
                               <div className="flex items-center space-x-1">
                                 <span className='md:block hidden'><RiBookLine /></span>
-                                <span>{course.course_id.sections.length} sections</span>
+                                <span>{course?.course_id?.sections?.length} sections</span>
                               </div>
                               <div className="flex md:flex-auto flex-1 items-center space-x-1">
                                 <span className='md:block hidden'><BsPatchQuestion /></span>
-                                <span>{course.course_id.sections.length} quizzess</span>
+                                <span>{course?.course_id?.sections?.length} quizzess</span>
                               </div>
                             </div>
                           </div>

@@ -54,18 +54,36 @@ const StudentDashboard = () => {
 
 
   const [isLoading, setIsLoading] = useState(false)
+  const [recommendedCourses, setRecommendedCourses] = useState([])
   const [courses, setCourses] = useState([])
+
+  const getMyCourses = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem('auth')).auth;
+      setIsLoading(true)
+      const response = await axios.get(endpoints.getPurchasedCourse, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setCourses(response.data.courses)
+    } catch (error) {
+      toast.error('An error occured while fetching user data')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const getAllCourses = async () => {
     try {
       const token = JSON.parse(localStorage.getItem('auth')).auth;
       setIsLoading(true)
-      const response = await axios.get(endpoints.getAllCourses, {
+      const response = await axios.get(endpoints.getAllStdCourses, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      setCourses(response.data.data)
+      setRecommendedCourses(response.data.courses)
     } catch (error) {
       toast.error('An error occured while fetching user data')
     } finally {
@@ -75,6 +93,7 @@ const StudentDashboard = () => {
 
   useEffect(() => {
     getAllCourses();
+    getMyCourses()
   }, []);
 
 
@@ -95,15 +114,27 @@ const StudentDashboard = () => {
         </div>
 
         <div className="mt-10 space-y-5">
-          <p className="font-normal text-xl">Let's keep learning</p>
-          <div className="slider-container md:px-0 px-5">
-            <Slider {...settings}>
+          <p className="font-normal text-xl"> Let's keep learning</p>
+         <div className="md:px-0 px-5 flex flex-wrap w-full">
+         
               {courses.map((course) => (
-                <div key={course.id} className="pr-5">
+                <div key={course.id} className="pr-5 max-w-sm w-full">
                   <LearningCard key={course.id} {...course} />
                 </div>
               ))}
-            </Slider>
+        
+          </div>
+        </div>
+         <div className="mt-10 space-y-5">
+          <p className="font-normal text-xl">Recommended for you</p>
+         <div className="md:px-0 px-5 flex flex-wrap w-full">
+         
+              {recommendedCourses.map((course) => (
+                <div key={course.id} className="pr-5 max-w-sm w-full">
+                  <LearningCard key={course.id} {...course} />
+                </div>
+              ))}
+        
           </div>
         </div>
       </section>

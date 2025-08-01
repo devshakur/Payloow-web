@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Wallet, ArrowRight2 } from 'iconsax-react';
+import { useRouter } from '../Routes/router';
 
 // Dummy loan data
 const dummyLoans = [
@@ -35,10 +36,11 @@ const dummyLoans = [
 // LoanCard Component
 const LoanCard = ({ loan, openAddLoan }) => {
   const [showTooltip, setShowTooltip] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 w-[300px] mx-4 relative shrink-0">
-      <div className="flex items-center justify-between mb-4">
+      <div  className="flex cursor-pointer items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
           <div className="bg-[#e0f7fa] p-2 rounded-full">
             <Wallet size={24} className="text-[#00acc1]" />
@@ -93,7 +95,7 @@ const LoanCard = ({ loan, openAddLoan }) => {
 
       <div className="flex flex-col gap-3 mt-4 border-t pt-4">
         <button
-          onClick={() => openAddLoan(loan._id)}
+          onClick={()=>router.push('/investment')}
           className="w-full bg-[#718f9e] py-2 rounded-md text-white font-semibold hover:bg-[#546e7a] transition"
         >
           Add Loan

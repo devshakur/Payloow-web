@@ -8,85 +8,149 @@ import { endpoints } from '../../../api/Endpoint';
 import WalletPayment from './WalletPayment';
 import { toast, Toaster } from 'react-hot-toast'
 import { useRouter } from '../../../Routes/router';
+import useBills from '../../../hooks/useBills';
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 // const userId = currentUser._id
 const ElearningCheckout = () => {
   const [cart, setCart] = useState([])
+  const [isDirectPurchase, setIsDirectPurchase] = useState(false);
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  useEffect(()=>{
-    const getCartCourses = async () => {
-      try {
-        const token = JSON.parse(localStorage.getItem('auth')).auth;
-        const response = await axios.get(endpoints.getCartCourses, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setCart(response.data.data)
-      } catch (error) {
-        console.error(error)
-        // toast.error('An error occured while fetching cart')
-      }
-    }
-  getCartCourses();
-  },[])
+  const [walletBalance, setWalletBalance] = useState();
+ const {GetUserBalance} = useBills();
+ const location = useLocation();
+const queryParams = new URLSearchParams(location.search);
+const courseId = queryParams.get("courseId");
+//  const { id: courseId } = useParams(); // Assuming URL is /buy/:id
+  const navigate = useNavigate()
 
- 
+
+
+
+  
+   
+  
+
+  
+
+const fetchCartOrSingleCourse = async () => {
+  try {
+    const token = JSON.parse(localStorage.getItem("auth"))?.auth;
+
+    // 1. Try getting cart items
+    const response = await axios.get(endpoints.getCartCourses, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (response.data?.cart?.length > 0) {
+      setCart(response.data.cart);
+      setIsDirectPurchase(false); // it's a cart purchase
+    } else if (courseId) {
+      // 2. No cart items, check for single course
+      const allCoursesResp = await axios.get(endpoints.getAllStdCourses, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const courseList = allCoursesResp.data?.courses || [];
+      const matchedCourse = courseList.find((course) => course._id === courseId);
+
+      if (matchedCourse) {
+        setCart([{ course_id: matchedCourse }]); // mimic cart structure
+        setIsDirectPurchase(true); // this is a direct course purchase
+      } else {
+        toast.error("Course not found.");
+      }
+    } else {
+      toast.error("No course selected.");
+    }
+  } catch (error) {
+    console.error("Error fetching cart or course:", error);
+    toast.error("Failed to load checkout data.");
+  }
+};
+
+
   const deleteCartItems = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem('token'));
-      const response = await axios.delete(endpoints.deleteCart, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+      const token = JSON.parse(localStorage.getItem("auth"))?.auth;
+      await axios.delete(endpoints.clearCartCourses, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      toast.success('Course successfully removed from cart')
-    } catch (error) {
-      toast.error('Failed to delete cart Item')
-    } 
-  }
+    } catch (err) {
+      console.warn("Failed to clear cart after purchase");
+    }
+  };
 
-  const WalletPurchase = async (e) => {
-    e.preventDefault();
-    setLoading(true)
-    try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
-  
-      // Make the API call and store the response in a variable
-      const response = await axios.post(
-        endpoints.purchaseCourse,
+const WalletPurchase = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  try {
+    const token = JSON.parse(localStorage.getItem("auth"))?.auth;
+    if (!token) {
+      toast.error("User not authenticated");
+      return;
+    }
+
+    let response;
+
+    if (isDirectPurchase && courseId) {
+      // Purchase single course directly
+      response = await axios.post(
+        endpoints.purchaseCourse(courseId),
+        { paymentType: "wallet" },
         {
-          paymentType: 'wallet',
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      const data = response?.data
-      if(data){
-        toast.success('Purchase successfully');
-        deleteCartItems()
-        setTimeout(() => {
-        router.push('/e-learning/student/all-courses')
-        }, 1000);
-      }else{
-        toast.success('Purchase Successful')
-      }   
-    } catch (error) {
-      const errorMsg = error?.response?.data?.message
-      if(errorMsg){
-        toast.error(errorMsg);
-      }else{
-        toast.error('Something went wWong')
-      }
-    }finally{
-      setLoading(false)
-    } 
-  };
+    } else if (cart?.length > 0) {
+      // Purchase cart
+      response = await axios.post(
+        endpoints.purchaseCourseInCart,
+        { paymentType: "wallet" },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+    } else {
+      toast.error("No course selected to purchase.");
+      return;
+    }
+
+   const data = response?.data;
+
+if (
+  data?.success || 
+  data?.message === "Purchase successful" || 
+  data?.message === "Enrolled in course"
+) {
+  toast.success("Purchase successful");
+  setTimeout(() => {
+    navigate("/e-learning/student/all-courses");
+  }, 1000);
+
+  if (!isDirectPurchase && cart?.length > 0) {
+    await deleteCartItems();
+  }
+} else {
+  toast.error(data?.message || "Unexpected server response");
+}
+  } catch (error) {
+    const errorMsg = error?.response?.data?.error || error?.message;
+    toast.error(errorMsg || "Something went wrong");
+     setTimeout(() => {
+        navigate("/e-learning/student/all-courses");
+      }, 1000);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
 
 
 
@@ -94,7 +158,7 @@ const ElearningCheckout = () => {
 
    // Calculate cart summary
    const calculateSummary = () => {
-    const summary = cart.reduce((acc, item) => {
+    const summary = cart?.reduce((acc, item) => {
       const originalPrice = parseFloat(item.course_id.price) || 0;
       const discountPrice = parseFloat(item.course_id.discount_price) || originalPrice;
      
@@ -106,13 +170,44 @@ const ElearningCheckout = () => {
     }, { originalTotal: 0, discountTotal: 0,  });
 
     return {
-      originalPrice: summary.originalTotal.toFixed(2),
-      discountTotal: summary.discountTotal.toFixed(2),
-      savings: (summary.originalTotal - summary.discountTotal).toFixed(2)
+      originalPrice: summary?.originalTotal?.toFixed(2),
+      discountTotal: summary?.discountTotal?.toFixed(2),
+      savings: (summary?.originalTotal - summary?.discountTotal).toFixed(2)
     };
   };
 
   const summary = calculateSummary();
+
+  useEffect(() => {
+  fetchCartOrSingleCourse();
+
+  const fetchWalletBalance = async () => {
+    try {
+      const resp = await GetUserBalance();
+      const balanceString = resp?.data?.data?.balance?.["$numberDecimal"];
+      if (balanceString !== undefined) {
+        const balanceNumber = Number(balanceString);
+        setWalletBalance(balanceNumber);
+      } else {
+        toast.error("Unable to retrieve wallet balance.");
+      }
+    } catch (error) {
+      toast.error("Failed to fetch wallet balance");
+    }
+  };
+
+  fetchWalletBalance();
+}, [courseId]);
+
+const formattedBalance =
+    typeof walletBalance === "number"
+      ? new Intl.NumberFormat("en-NG", {
+          style: "currency",
+          currency: "NGN",
+          minimumFractionDigits: 2,
+        }).format(walletBalance)
+      : "₦0.00";
+
 
   return (
     <div>
@@ -128,15 +223,21 @@ const ElearningCheckout = () => {
           Cart
         </div>
         <div className='mt-2'>
-          <button className='cursor-pointer font-poppins font-medium text-2xl text-blue-600'>Exit</button>
+          <button 
+  className='cursor-pointer font-poppins font-medium text-2xl text-blue-600'
+  onClick={() => router.push('/e-learning/student/all-courses')}
+>
+  Exit
+</button>
+
         </div>
       </header>
-      {cart.length === 0 ?
+      {cart?.length === 0 ?
     <div className="flex items-center justify-center h-96">
     <p className="text-lg">No item in cart</p>
   </div>  
    :
-   cart.map((course, index)=>(
+   cart?.map((course, index)=>(
     <main key={index} className="flex flex-col md:grid md:grid-cols-[2fr_1fr] md:gap-8 p-5">
     <div className='flex flex-col gap-3 xl:grid grid-cols-2'>
       <div className="bg-white shadow-lg p-4 h-[19rem] lg:h-[17rem] rounded-lg ">
@@ -206,8 +307,8 @@ const ElearningCheckout = () => {
               Wallet Option
             </li>
           </ul>
-          <button onClick={deleteCartItems}>Testing DeletCart</button>
-            <WalletPayment Submit={WalletPurchase} loading={loading} />
+       
+            <WalletPayment Submit={WalletPurchase} loading={loading} balance={formattedBalance} />
         </div>
       </div>
     </div>

@@ -8,40 +8,33 @@ export const useCourse = (courseId) => {
   const [courseQuiz, setCourseQuiz] = useState([]);
   const [courseMessages, setCourseMessages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [announcements, setAnnouncements] = useState({});
+  const [announcements, setAnnouncements] = useState([]);
 
   const token = JSON.parse(localStorage.getItem("auth") || "{}").auth;
 
-  const getCourseById = async (courseId) => {
-    try {
-      const response = await axios.get(endpoints.getCourseById(courseId), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setCourse(response.data.data);
-      await getTutorProfileById(response.data.data.tutor_id);
-    } catch (error) {
-      console.error("Error fetching course:", error);
-    }
-  };
+const getMyCourses = async (courseId) => {
+  try {
+    const response = await axios.get(endpoints.getPurchasedCourse, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  const getCourseAnnouncements = async (courseId) => {
-    try {
-      const response = await axios.get(
-        endpoints.getCourseAnnouncements(courseId),
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log("Announcements:", response.data.data);
-      setAnnouncements(response.data.data);
-    } catch (error) {
-      console.error("Error fetching course:", error);
+    const allCourses = response.data.courses;
+    const selectedCourse = allCourses.find((c) => c._id === courseId);
+
+
+    if (selectedCourse) {
+      setCourse(selectedCourse);
+      await getTutorProfileById(selectedCourse.tutor_id);
+      setAnnouncements(selectedCourse.announcements || [])
+    } else {
+      console.warn(`Course with ID ${courseId} not found`);
     }
-  };
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+  }
+};
 
   const getTutorProfileById = async (id) => {
     try {
@@ -56,20 +49,28 @@ export const useCourse = (courseId) => {
     }
   };
 
-  const fetchQuiz = async () => {
-    try {
-      const response = await axios.get(endpoints.getCourseQuiz(courseId), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setCourseQuiz(response.data.data);
-    } catch (error) {
-      console.error("Error fetching quiz:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchQuiz = async (lessonId) => {
+  try {
+    const response = await axios.get(endpoints.getCourseQuiz(lessonId), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = response?.data?.quizzes;
+
+    setCourseQuiz(result);
+    console.log(result);
+
+    return result; // ✅ Add this line
+  } catch (error) {
+    console.error("Error fetching quiz:", error);
+    return null; // Optional: return null on error for safe handling
+  } finally {
+    setLoading(false);
+  }
+};
+
+
 
   const fetchMessages = async () => {
     try {
@@ -104,12 +105,17 @@ export const useCourse = (courseId) => {
     }
   };
 
-  useEffect(() => {
-    fetchQuiz();
-    getCourseById(courseId);
-    getCourseAnnouncements(courseId);
-    fetchMessages();
-  }, [courseId]);
+ useEffect(() => {
+  const init = async () => {
+    await getMyCourses(courseId);
+  //  await getCourseAnnouncements(courseId);
+   // await fetchMessages();
+    setLoading(false); // ✅ ensure loading ends here
+  };
+  init();
+}, [courseId]);
+
+
 
   return {
     course,
@@ -118,6 +124,8 @@ export const useCourse = (courseId) => {
     courseMessages,
     loading,
     fetchCourseReplies,
-    announcements,
+  announcements,
+    fetchQuiz,        
+  setCourseQuiz,
   };
 };

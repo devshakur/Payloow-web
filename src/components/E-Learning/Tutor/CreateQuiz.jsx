@@ -14,24 +14,36 @@ const CreateQuiz = ({ onClose, onSubmit }) => {
   const [quizTitle, setQuizTitle] = useState("");
   const [questions, setQuestions] = useState([]);
 
+
+
+const fetchCourseById = async () => {
+  try {
+    const token = JSON.parse(localStorage.getItem("auth")).auth;
+    const response = await fetch(endpoints.getAllCourses, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    const course = data.courses.find((course) => course._id === id);
+
+    if (!course) {
+      toast.error("Course not found");
+      return;
+    }
+
+    setCourseData(course);
+  } catch (error) {
+    console.error("Error fetching course:", error);
+    toast.error("Something went wrong while fetching course data");
+  }
+};
+
   useEffect(() => {
     fetchCourseById();
   }, []);
 
-  const fetchCourseById = async () => {
-    try {
-      const token = JSON.parse(localStorage.getItem("auth")).auth;
-      const response = await fetch(endpoints.getCourseById(id), {
-        headers: {
-          // Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      setCourseData(data.data);
-    } catch (error) {
-      console.error("Error fetching course:", error);
-    }
-  };
 
   // Get sections from course data
   const sections = courseData?.sections || [];
@@ -94,9 +106,8 @@ const CreateQuiz = ({ onClose, onSubmit }) => {
     e.preventDefault();
     const payload = {
       course_id: courseData?._id,
-      section_id: selectedSectionId,
       lesson_id: selectedLessonId,
-      quiz_title: quizTitle,
+      title: quizTitle,
       questions: questions,
     };
     try {
@@ -109,10 +120,12 @@ const CreateQuiz = ({ onClose, onSubmit }) => {
       toast.success("quiz uploaded successfully");
       const data = await response.json();
       setCourseData(data);
+      onClose();
     } catch (error) {
-      console.error("Error fetching course:", error);
+      const ErrMsg = error?.response?.data?.message
+      toast.error(ErrMsg);
+       onClose();
     }
-    console.log(payload);
     onSubmit(payload);
   };
 

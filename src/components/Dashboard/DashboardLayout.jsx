@@ -42,7 +42,7 @@ const navigation = [
   //this is the route to E-learning, Investment, and shares. this code will reinstated when needed
  {
     name: "E-Learning",
-    href: currentUser?.elearningRole === 'tutor' ? "/e-learning/tutor/dashboard" : currentUser?.elearningRole === 'student' ? "/e-learning/student/dashboard" : "/e-learning/register",
+    href:  "/e-learning/register",
     icon: BookSaved,
   },
   {
