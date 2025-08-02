@@ -4,12 +4,15 @@ import { GoArrowSwitch } from "react-icons/go";
 import { PiDevicesDuotone } from "react-icons/pi";
 import { BiCopy } from "react-icons/bi";
 import { IoIosArrowForward } from "react-icons/io";
+import Button from '../../Button';
 import { motion } from 'framer-motion'; 
 import { useRouter } from '../../../Routes/router';
 import useBills from '../../../hooks/useBills';
 import toast from "react-hot-toast";
+import WithdrawFund from '../../WithdrawFund/WithdrawFund';
 const HeaderOne = () => {
     const [walletBalance, setWalletBalance] = useState({});
+      const [isOpens, setIsOpens] = useState(false);
      const [dva, setDva] = useState({
     bankName: "",
     accountNumber: "",
@@ -58,7 +61,7 @@ const HeaderOne = () => {
       getDva();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
+ const isBalanceZero = Number(walletBalance) <= 1;
   const formattedBalance =
   typeof walletBalance === "number"
     ? new Intl.NumberFormat("en-NG", {
@@ -85,9 +88,20 @@ const HeaderOne = () => {
             </span>
           </div>
           <div className='w-full my-5'>
-            <button className='bg-[#FFFF] text-blue-800 font-semibold py-3 w-full cursor-not-allowed rounded-md text-sm lg:mt-5'>
+            {/* <button className='bg-[#FFFF] text-blue-800 font-semibold py-3 w-full cursor-not-allowed rounded-md text-sm lg:mt-5'>
               Make Payment
-            </button>
+            </button> */}
+            <Button
+                  text="Withdraw Fund"
+                  className={`text-primary bg-white mt-3 font-medium ${
+                    isBalanceZero ? " cursor-not-allowed" : ""
+                  }`}
+                  onClick={() => !isBalanceZero && setIsOpens(true)}
+                  disabled={isBalanceZero}
+                />
+                {isOpens && (
+                  <WithdrawFund isOpens={isOpens} onClosed={() => setIsOpens(false)} />
+                )}
           </div>
         </motion.div>
 

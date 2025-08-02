@@ -26,7 +26,7 @@ const getMyCourses = async (courseId) => {
 
     if (selectedCourse) {
       setCourse(selectedCourse);
-      await getTutorProfileById(selectedCourse.tutor_id);
+      // await getTutorProfileById(selectedCourse.tutor_id);
       setAnnouncements(selectedCourse.announcements || [])
     } else {
       console.warn(`Course with ID ${courseId} not found`);
@@ -36,18 +36,18 @@ const getMyCourses = async (courseId) => {
   }
 };
 
-  const getTutorProfileById = async (id) => {
-    try {
-      const response = await axios.get(endpoints.getTutorProfileById(id), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setTutor(response.data.data);
-    } catch (error) {
-      console.error("Error fetching tutor:", error);
-    }
-  };
+  // const getTutorProfileById = async (id) => {
+  //   try {
+  //     const response = await axios.get(endpoints.getTutorProfileById(id), {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     setTutor(response.data.data);
+  //   } catch (error) {
+  //     console.error("Error fetching tutor:", error);
+  //   }
+  // };
 
 const fetchQuiz = async (lessonId) => {
   try {
@@ -59,7 +59,7 @@ const fetchQuiz = async (lessonId) => {
     const result = response?.data?.quizzes;
 
     setCourseQuiz(result);
-    console.log(result);
+ 
 
     return result; // ✅ Add this line
   } catch (error) {

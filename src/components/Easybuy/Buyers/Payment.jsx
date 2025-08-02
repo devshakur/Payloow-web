@@ -7,19 +7,62 @@ import ReactPaginate from 'react-paginate';
 import {toast, Toaster} from 'react-hot-toast'
 import { motion } from 'framer-motion';
 import useInvestment from '../../../hooks/useInvetment';
+import useBills from '../../../hooks/useBills';
+import BuyersLayout from '../EasyBuyRegistration/BuyersLayout';
+import Button from '../../Button';
+import WithdrawFund from '../../WithdrawFund/WithdrawFund';
+
 
 
 
 const Payment = () => {
   const [selectedStatus, setSelectedStatus] = useState('All');
   const { GetUserOrders} = useInvestment();
+   const { GetUserBalance, GetDva,} = useBills();
   const [currentPage, setCurrentPage] = useState(0);
   const [orders, setOrders] = useState([])
+    const [isOpens, setIsOpens] = useState(false);
  const [totalPaid, setTotalPaid] = useState([])
  const [pendingAmount, setPendingAmount] = useState([])
  const [approved, setApproved] = useState([])
  const [processing, setProcessing] = useState([])
  const [date, setDate] = useState()
+   const [walletBalance, setWalletBalance] = useState({});
+  const [dva, setDva] = useState({
+    bankName: "",
+    accountNumber: "",
+  });
+
+  const getDva = async () => {
+    try {
+      const resp = await GetDva();
+      const dvaData = resp?.data?.data;
+      if (dvaData) {
+        setDva({
+          bankName: dvaData?.bankName,
+          accountNumber: dvaData?.accountNumber,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch DVA details");
+    }
+  };
+
+  const GetWalletBalance = async () => {
+    try {
+      const resp = await GetUserBalance();
+      const balanceString = resp?.data?.data?.balance?.["$numberDecimal"];
+      if (balanceString !== undefined) {
+        const balanceNumber = Number(balanceString);
+        setWalletBalance(balanceNumber);
+      } else {
+        toast.error("Unable to retrieve wallet balance.");
+      }
+    } catch (error) {
+      toast.error("Failed to fetch wallet balance");
+    }
+  };
+
   useEffect(() => {
     const getAllOrders = async () => {
         try {
@@ -77,8 +120,16 @@ const Payment = () => {
     };
 
     getAllOrders();
+
 }, []);
-const user = JSON.parse(localStorage.getItem(('currentUser')))
+
+ const copyToClipboard = () => {
+    const content = document.querySelector(".account-number").innerText;
+    navigator.clipboard
+      .writeText(content)
+      .then(() => toast.success("Account Number copied to clipboard!"))
+      .catch(() => toast.error("Failed to copy"));
+  };
 
 
   // Filter orders based on selected status
@@ -104,8 +155,25 @@ const user = JSON.parse(localStorage.getItem(('currentUser')))
     setDate(formattedDate)
 
   },[])
+
+   const isBalanceZero = Number(walletBalance) <= 1;
+
+    const formattedBalance =
+    typeof walletBalance === "number"
+      ? new Intl.NumberFormat("en-NG", {
+          style: "currency",
+          currency: "NGN",
+          minimumFractionDigits: 2,
+        }).format(walletBalance)
+      : "₦0.00";
+
+      useEffect(()=>{
+        getDva();
+        GetWalletBalance();
+      },[])
+      
   return (
-    <BuyersLayoutGen>
+    <BuyersLayout>
       <div className='lg:grid lg:grid-cols-3 lg:gap-4'>
         {/* Available Balance Card */}
         <motion.div 
@@ -115,17 +183,28 @@ const user = JSON.parse(localStorage.getItem(('currentUser')))
           transition={{ duration: 0.5 }}
         >
           <h3 className='font-poppins font-medium text-2xl text-white'>Available Balance</h3>
-          <h4 className='font-poppins font-medium text-4xl text-white mt-3'><span className='text-[16px]'>₦</span>{user ? user?.wallet?.balance.toLocaleString() : '0'}</h4>
+          <h4 className='font-poppins font-medium text-4xl text-white mt-3'>{formattedBalance}</h4>
           <div className='flex mt-3 text-white gap-3'>
-            <p>Wema bank: 4054673854</p>
-            <span className='text-white'>
-              <BiCopy className='w-4 h-4 text-white'/>
+            <p>{dva.bankName}: {dva.accountNumber}</p>
+            <span onClick={copyToClipboard} className='account-number text-white'>
+              <BiCopy  className='w-4 h-4 text-white'/>
             </span>
           </div>
           <div className='w-full my-5'>
-            <button className='bg-[#FFFF] text-blue-800 font-semibold py-3 w-full rounded-md text-sm lg:mt-5'>
+            {/* <button disabled={isBalanceZero} className='bg-[#FFFF] text-blue-800 font-semibold py-3 w-full rounded-md text-sm lg:mt-5'>
               Make Payment
-            </button>
+            </button> */}
+             <Button
+                  text="Make Payment"
+                  className={`text-primary bg-white mt-3 font-medium ${
+                    isBalanceZero ? " cursor-not-allowed" : ""
+                  }`}
+                  onClick={() => !isBalanceZero && setIsOpens(true)}
+                  disabled={isBalanceZero}
+                />
+                {isOpens && (
+                  <WithdrawFund isOpens={isOpens} onClosed={() => setIsOpens(false)} />
+                )}
           </div>
         </motion.div>
 
@@ -330,7 +409,7 @@ const user = JSON.parse(localStorage.getItem(('currentUser')))
         </article>
       </motion.div>
       <Toaster />
-    </BuyersLayoutGen>
+    </BuyersLayout>
   );
 };
 

@@ -1,293 +1,3 @@
-// import React, { useEffect, useState, useRef } from "react";
-// import Select from "react-select";
-// import axiosInstance from "../../../AuthContext/axiosInstance";
-// import useBills from "../../../hooks/useBills";
-
-// const DataBundles = ({ handleNext, formik, selectedPlan, setSelectedPlan }) => {
-//   const [showAll, setShowAll] = useState(false);
-//   const [info, setInfo] = useState([]);
-//   const [isLoadingVariations, setIsLoadingVariations] = useState(false);
-//   const { UserDetails } = useBills();
-
-//   const scrollContainerRef = useRef(null);
-
-//   const calculateScrollPercentage = () => {
-//     if (!scrollContainerRef.current) return 0;
-//     const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-//     return (scrollLeft / (scrollWidth - clientWidth)) * 100;
-//   };
-
-//   useEffect(() => {
-//     const handleScroll = () => setScrollPercentage(calculateScrollPercentage());
-//     const container = scrollContainerRef.current;
-//     container?.addEventListener("scroll", handleScroll);
-//     return () => container?.removeEventListener("scroll", handleScroll);
-//   }, []);
-
-//   const getUser = async () => {
-//     try {
-//       const details = await UserDetails();
-//       const userDetails = details.data.data.previousReference;
-//       setInfo(userDetails);
-//     } catch (error) {
-//       console.error(error.message);
-//     }
-//   };
-
-//   useEffect(() => {
-//     getUser();
-//   }, []);
-
-//   const handleShowMore = () => {
-//     setShowAll(true);
-//   };
-
-//   const Providers = [
-//     { value: "airtel", label: "Airtel" },
-//     { value: "mtn", label: "MTN" },
-//     { value: "glo", label: "Glo" },
-//     { value: "9mobile", label: "9mobile" },
-//    { value: "smile", label: "Smile" },
-//    { value: "spectranet", label: "Spectranet" }
-//   ];
-
-//   const [variations, setVariations] = useState({});
-//   const [selectedNetwork, setSelectedNetwork] = useState("");
-
-//   const handlePlanSelect = (plan) => {
-//     setSelectedPlan(plan);
-//     const selectedVariation = variations[selectedNetwork]?.find(
-//       (variation) => variation.plan === plan
-//     );
-//     if (selectedVariation) {
-//       formik.setFieldValue("amount", selectedVariation.price);
-//       formik.setFieldValue("variation_id", selectedVariation.variationID);
-//       formik.setFieldValue("network_id", selectedNetwork);
-//     }
-//   };
-
-
-// const fetchVariations = async (provider) => {
-//   if (!provider) return;
-//   setIsLoadingVariations(true);
-
-//   try {
-//     // Handle custom endpoints
-//     let variationEndpoint = `/payloow-bills/data/list`;
-//     if (provider === "smile") {
-//       variationEndpoint = `/smile/smile-variations`;
-//     } else if (provider === "spectranet") {
-//       variationEndpoint = `/spectranet/spectranet-variations`;
-//     }
-
-//     const response = await axiosInstance.get(variationEndpoint);
-
-//     if (response?.data?.statusCode === 200 || response?.data?.message?.toLowerCase().includes("fetched")) {
-//       const variationList = response.data.data.content.variations;
-
-//       const mappedVariations = variationList.map((item) => ({
-//         _id: item.variation_code,
-//         plan: item.name,
-//         price: parseFloat(item.variation_amount) || item.variation_amount, // convert string to number if possible
-//         variationID: item.variation_code,
-//       }));
-
-//       setVariations((prev) => ({
-//         ...prev,
-//         [provider]: mappedVariations,
-//       }));
-//     } else {
-//       console.error("Unexpected variation format:", response.data);
-//     }
-//   } catch (error) {
-//     console.error("Error fetching variations:", error);
-//   } finally {
-//     setIsLoadingVariations(false);
-//   }
-// };
-
-
-
-//   useEffect(() => {
-//     if (selectedNetwork) {
-//       fetchVariations(selectedNetwork);
-//     }
-//   }, [selectedNetwork]);
-
-//   const validateFields = () => {
-//     const { values } = formik;
-//     const { network_id, amount, phone } = values;
-
-//     if (network_id && amount && phone) {
-//       handleNext();
-//     } else {
-//       formik.setFieldTouched("network_id", true);
-//       formik.setFieldTouched("amount", true);
-//       formik.setFieldTouched("phone", true);
-//       formik.setFieldTouched("variation_id", true);
-//     }
-//   };
-
-//   const isFormValid =
-//     formik.values.network_id && formik.values.amount && formik.values.phone;
-
-//   return (
-//     <div>
-//         <main className='pb-[40px]'>
-//                 <div className='w-[100vw] xl:-mt-24 flex justify-center lg:-ml-[-10vw] xl:justify-center'>
-//                     <div className='mx-4 w-[97%] md:w-[65%] lg:w-[45%] bg-[#FFFFFF] pb-4 shadow-md rounded-sm overflow-hidden'>
-//             <h4 className="text-center text-xl font-semibold my-4 text-[#212121]">
-//               Buy Data Bundles
-//             </h4>
-
-//             <h4 className="text-lg font-semibold mx-3">Most recent</h4>
-//             <article className="flex gap-3 mx-2">
-//               {Array.isArray(info) && info.length > 0 ? (
-//                 info
-//                   .filter((user) => user.title === "Data")
-//                   .map((user) => (
-//                     <section key={user.code} className="flex flex-row gap-6 my-4">
-//                       <div className="flex flex-col gap-2">
-//                         <img
-//                           src={
-//                             user.body === "airtel"
-//                               ? "./images/airtel.jpg"
-//                               : user.body === "mtn"
-//                               ? "./images/mtn.jpg"
-//                               : user.body === "glo"
-//                               ? "./images/glos.png"
-//                               : user.body === "etisalat"
-//                               ? "./images/img4.jpg"
-//                               : "./images/default.jpg"
-//                           }
-//                           className="w-[40px] h-[40px] ml-4"
-//                           alt={user.title}
-//                         />
-//                         <span className="text-[13px] ml-5 font-medium">{user.title}</span>
-//                         <span className="text-[13px] ml-1 font-medium">{user.code}</span>
-//                       </div>
-//                     </section>
-//                   ))
-//               ) : (
-//                 <div className="ml-8 my-5 text-lg text-green-500">No recent Purchase</div>
-//               )}
-//             </article>
-
-//             <form className="mx-4 my-6 flex flex-col gap-3">
-//               <label htmlFor="package" className="text-sm font-bold">
-//                 Package<span className="text-red-700">*</span>
-//               </label>
-//               <Select
-//                 id="package"
-//                 name="package"
-//                 options={Providers}
-//                 getOptionValue={(option) => option.value}
-//                 getOptionLabel={(option) => option.label}
-//                 onChange={(option) => {
-//                   setSelectedNetwork(option.value);
-//                   setSelectedPlan("");
-//                   formik.setFieldValue("network_id", option.value);
-//                 }}
-//                 styles={{
-//                   control: (provided) => ({
-//                     ...provided,
-//                     height: "56px",
-//                     fontWeight: "800",
-//                     padding: "5px",
-//                   }),
-//                 }}
-//               />
-
-//               {isLoadingVariations ? (
-//                 <div className="text-center py-5">Loading Variations..</div> 
-//               ) : (
-//                 <div className="w-full px-4 overflow-x-auto">
-//                   <div className="flex flex-row gap-4 py-2">
-//                     {(showAll
-//                       ? variations[selectedNetwork]
-//                       : variations[selectedNetwork]?.slice(0, 3)
-//                     )?.map((variation) => (
-//                       <div
-//                         key={variation._id}
-//                         className={`flex-shrink-0 min-w-[150px] p-4 border font-medium text-sm rounded-xl cursor-pointer ${
-//                           selectedPlan === variation.plan
-//                             ? "bg-blue-500 text-white border-blue-600"
-//                             : "bg-gray-100 text-gray-800 hover:shadow-lg"
-//                         }`}
-//                         onClick={() => handlePlanSelect(variation.plan)}
-//                       >
-//                         <div className="text-lg font-bold">₦{variation.price}</div>
-//                         <div className="mt-1">{variation.plan}</div>
-//                       </div>
-//                     ))}
-//                     {!showAll && variations[selectedNetwork]?.length > 3 && (
-//                       <div
-//                         className="flex-shrink-0 min-w-[150px] p-4 border rounded-xl bg-gray-100 text-gray-800 cursor-pointer"
-//                         onClick={handleShowMore}
-//                       >
-//                         <span>Show More...</span>
-//                       </div>
-//                     )}
-//                   </div>
-//                 </div>
-//               )}
-
-//               <div>
-//                 <label htmlFor="amount" className="text-sm font-semibold">
-//                   Amount<span className="text-red-700">*</span>
-//                 </label>
-//                 <input
-//                   type="text"
-//                   id="amount"
-//                   readOnly
-//                   placeholder="Amount"
-//                   name="amount"
-//                   {...formik.getFieldProps("amount")}
-//                   className="border-2 h-[56px] w-full rounded-lg text-lg pl-2 focus:outline-none"
-//                 />
-//                 {formik.touched.amount && formik.errors.amount && (
-//                   <div className="text-red-500">{formik.errors.amount}</div>
-//                 )}
-//               </div>
-
-//               <div>
-//                 <label htmlFor="phone" className="text-sm font-semibold">
-//                   Phone Number<span className="text-red-700">*</span>
-//                 </label>
-//                 <input
-//                   type="tel"
-//                   name="phone"
-//                   placeholder="Phone Number"
-//                   {...formik.getFieldProps("phone")}
-//                   className="border-2 h-[56px] w-full rounded-lg text-lg pl-2 mb-5"
-//                 />
-//                 {formik.touched.phone && formik.errors.phone && (
-//                   <div className="text-red-500">{formik.errors.phone}</div>
-//                 )}
-//               </div>
-
-//               <div className="flex justify-center">
-//                 <button
-//                   type="button"
-//                   onClick={validateFields}
-//                   disabled={!isFormValid}
-//                   className={`p-2 w-[55%] font-poppins rounded-lg text-white ${
-//                     isFormValid ? "bg-blue-500" : "bg-gray-400 cursor-not-allowed"
-//                   }`}
-//                 >
-//                   Next
-//                 </button>
-//               </div>
-//             </form>
-//           </div>
-//         </div>
-//       </main>
-//     </div>
-//   );
-// };
-
-// export default DataBundles;
-
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import axiosInstance from "../../../AuthContext/axiosInstance";
@@ -295,6 +5,8 @@ import useBills from "../../../hooks/useBills";
  import {toast, Toaster} from "react-hot-toast";
 const DataBundles = ({ handleNext, formik, selectedPlan, setSelectedPlan, }) => {
   const [allVariations, setAllVariations] = useState({});
+  const [smileVariations, setSmileVariations] = useState([]);
+  const [spectranetVariations, setSpectranetVariations] = useState([]);
     const [transactions, setTransactions] = useState([]);
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -309,6 +21,8 @@ const DataBundles = ({ handleNext, formik, selectedPlan, setSelectedPlan, }) => 
     { value: "MTN", label: "MTN" },
     { value: "GLO", label: "Glo" },
     { value: "9MOBILE", label: "9mobile" },
+    { value: "SMILE", label: "Smile" },
+    { value: "SPECTRANET", label: "Spectranet" },
   ];
 
   const fetchAllVariations = async () => {
@@ -325,6 +39,34 @@ const DataBundles = ({ handleNext, formik, selectedPlan, setSelectedPlan, }) => 
     }
   };
 
+  const fetchSmileVariations = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get("/smile/smile-variations");
+      if (res?.data?.success) {
+        setSmileVariations(res.data.data.content.variations);
+      }
+    } catch (err) {
+      console.error("Failed to fetch Smile variations:", err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchSpectranetVariations = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get("/spectranet/spectranet-variations");
+      if (res?.data?.success) {
+        setSpectranetVariations(res.data.data.content.variations);
+      }
+    } catch (err) {
+      console.error("Failed to fetch Spectranet variations:", err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const getUser = async () => {
     try {
       const details = await UserDetails();
@@ -336,11 +78,44 @@ const DataBundles = ({ handleNext, formik, selectedPlan, setSelectedPlan, }) => 
 
   useEffect(() => {
     fetchAllVariations();
+    fetchSmileVariations();
+    fetchSpectranetVariations();
     getUser();
   }, []);
 
   const handlePlanSelect = (plan) => {
-    if (plan?.id && plan?.amount && plan?.size && plan?.validity && selectedCategory) {
+    if (selectedNetwork === "SMILE") {
+      if (plan?.variation_code && plan?.variation_amount) {
+        setSelectedPlan({
+          code: plan.variation_code,
+          amount: plan.variation_amount,
+          planType: "smile",
+        });
+        formik.setFieldValue("planId", plan.variation_code);
+        formik.setFieldValue("planType", "smile");
+        formik.setFieldValue("amount", plan.variation_amount);
+        formik.setFieldValue("network", selectedNetwork);
+      }
+    } else if (selectedNetwork === "SPECTRANET") {
+      if (plan?.variation_code && plan?.variation_amount) {
+        setSelectedPlan({
+          code: plan.variation_code,
+          amount: plan.variation_amount,
+          planType: "spectranet",
+        });
+        formik.setFieldValue("planId", plan.variation_code);
+        formik.setFieldValue("planType", "spectranet");
+        formik.setFieldValue("amount", plan.variation_amount);
+        formik.setFieldValue("network", selectedNetwork);
+      }
+    }
+     else if (
+      plan?.id &&
+      plan?.amount &&
+      plan?.size &&
+      plan?.validity &&
+      selectedCategory
+    ) {
       const selected = {
         id: plan.id,
         amount: plan.amount,
@@ -365,6 +140,8 @@ const DataBundles = ({ handleNext, formik, selectedPlan, setSelectedPlan, }) => 
   const mapCategoryToPlanType = (category) => {
     const lower = category.toLowerCase();
     if (lower.includes("daily") || lower.includes("7 day") || lower.includes("weekly")) return "weekly";
+    if (selectedNetwork === "SMILE") return "smile";
+    if (selectedNetwork === "SPECTRANET") return "spectranet";
     return "monthly";
   };
 
@@ -523,6 +300,46 @@ const DataBundles = ({ handleNext, formik, selectedPlan, setSelectedPlan, }) => 
             {/* Plans */}
             {isLoading ? (
               <div className="text-center py-5">Loading Variations...</div>
+            ) : selectedNetwork === "SMILE" ? (
+              <div className="w-full px-4 overflow-x-auto">
+                <div className="flex flex-row gap-4 py-2">
+                  {smileVariations?.map((variation) => (
+                    <div
+                      key={variation.variation_code}
+                      className={`flex-shrink-0 min-w-[150px] p-4 border font-medium text-sm rounded-xl cursor-pointer ${
+                        selectedPlan?.code === variation.variation_code
+                          ? "bg-blue-500 text-white border-blue-600"
+                          : "bg-gray-100 text-gray-800 hover:shadow-lg"
+                      }`}
+                      onClick={() => handlePlanSelect(variation)}
+                    >
+                      <div className="text-lg font-bold">₦{variation.variation_amount}</div>
+                      {/* <div className="mt-1">{variation.size}</div> */}
+                      <div className="text-xs text-gray-500">{variation.name}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : selectedNetwork === "SPECTRANET" ? (
+              <div className="w-full px-4 overflow-x-auto">
+                <div className="flex flex-row gap-4 py-2">
+                  {spectranetVariations?.map((variation) => (
+                    <div
+                      key={variation.variation_code}
+                      className={`flex-shrink-0 min-w-[150px] p-4 border font-medium text-sm rounded-xl cursor-pointer ${
+                        selectedPlan?.code === variation.variation_code
+                          ? "bg-blue-500 text-white border-blue-600"
+                          : "bg-gray-100 text-gray-800 hover:shadow-lg"
+                      }`}
+                      onClick={() => handlePlanSelect(variation)}
+                    >
+                      <div className="text-lg font-bold">₦{variation.variation_amount}</div>
+                      {/* <div className="mt-1">{variation.size}</div> */}
+                      <div className="text-xs text-gray-500">{variation.name}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             ) : selectedCategory ? (
               <div className="w-full px-4 overflow-x-auto">
                 <div className="flex flex-row gap-4 py-2">

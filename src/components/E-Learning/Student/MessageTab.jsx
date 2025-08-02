@@ -1,29 +1,322 @@
+// "use client";
+
+// import React, {
+//   useState,
+//   useEffect,
+//   useRef,
+// } from "react";
+// import { io } from "socket.io-client";
+// import { useCourse } from "../../../hooks/useCourse";
+// import { toast } from "react-hot-toast";
+// import { motion, AnimatePresence } from "framer-motion";
+// import axios from "axios"; // Import axios
+
+// export default function MessageTab({ courseMessages = [], courseId, tutorId }) {
+//   const [expandedMessage, setExpandedMessage] = useState(null);
+//   const socketRef = useRef(null);
+//   const [replies, setReplies] = useState({});
+//   const [localMessages, setLocalMessages] = useState(courseMessages);
+//   const [users, setUsers] = useState({});
+//   const [isSending, setIsSending] = useState(false);
+//   const [isRepliesLoading, setIsRepliesLoading] = useState(false);
+//   const [isLoading, setIsLoading] = useState(false);
+//   const [formData, setFormData] = useState({ message_id: "", text: "" });
+//   const [payload, setPayload] = useState({
+//     chatId: "", // Will be constructed dynamically
+//     message: "", // The message text
+//     senderId: "", // Current user ID
+//     receiverId: "", // Target user ID (e.g., tutor)
+//   });
+
+//   const { fetchCourseReplies } = useCourse(courseId);
+
+//   // Variants for animation
+//   const messageVariant = {
+//     hidden: { opacity: 0, height: 0 },
+//     visible: { opacity: 1, height: "auto" },
+//   };
+
+//   const replyVariant = {
+//     hidden: { opacity: 0, height: 0 },
+//     visible: { opacity: 1, height: "auto", transition: { duration: 0.3 } },
+//   };
+
+//   // Connect to socket
+//   useEffect(() => {
+//     const socket = io("wss://api.payloow.com", {
+//       transports: ["websocket"],
+//     });
+//     socketRef.current = socket;
+
+//     socket.on("connect", () => {
+//       console.log("✅ Socket connected:", socket.id);
+//       const senderId = JSON.parse(localStorage.getItem("currentUser"))._id;
+//       const chatId = [senderId, tutorId].sort().join("_");
+//       socket.emit("joinRoom", chatId);
+
+//       // Fetch previous messages
+//       const fetchPreviousMessages = async () => {
+//         try {
+//           const response = await axios.get(
+//             `{{base_url}}/v1/e-learning/live-messaging/messages/${chatId}` // Replace with your API endpoint
+//           );
+//           setLocalMessages(response.data);
+//         } catch (error) {
+//           console.error("❌ Fetch previous messages error:", error);
+//           toast.error("Failed to load previous messages");
+//         }
+//       };
+
+//       fetchPreviousMessages();
+//     });
+
+//     socket.on("connect_error", (err) => {
+//       console.error("❌ Socket connection error:", err.message);
+//     });
+
+//     socket.on("receiveMessage", (newMessage) => {
+//       console.log("📥 New message received:", newMessage);
+//       setLocalMessages((prev) => [...prev, newMessage]);
+//     });
+
+//     socket.on("new_reply", ({ messageId, reply }) => {
+//       console.log("📥 New reply received:", reply);
+//       setReplies((prev) => ({
+//         ...prev,
+//         [messageId]: [...(prev[messageId] || []), reply],
+//       }));
+//     });
+
+//     return () => {
+//       socket.disconnect();
+//     };
+//   }, [courseId, tutorId]);
+
+//   // Toggle replies
+//   const handleMessageClick = async (messageId) => {
+//     if (expandedMessage === messageId) {
+//       setExpandedMessage(null);
+//     } else {
+//       setExpandedMessage(messageId);
+//       if (!replies[messageId]) {
+//         setIsRepliesLoading(true);
+//         try {
+//           const fetched = await fetchCourseReplies(messageId);
+//           setReplies((prev) => ({ ...prev, [messageId]: fetched }));
+//         } catch (err) {
+//           console.error("❌ Fetch replies error:", err);
+//         } finally {
+//           setIsRepliesLoading(false);
+//         }
+//       }
+//     }
+//   };
+
+//   const handleTextChange = (e) => {
+//     setPayload({ ...payload, message: e.target.value }); // Changed text to message
+//   };
+
+//   const handleMessageChange = (e) => {
+//     setFormData({ ...formData, text: e.target.value });
+//   };
+//   const handleSendMessage = async (e) => {
+//     e.preventDefault();
+
+//     const senderId = JSON.parse(localStorage.getItem("currentUser"))._id;
+//     const receiverId = tutorId; // Get this based on your course data
+
+//     const chatId = [senderId, receiverId].sort().join("_");
+
+//     const messagePayload = {
+//       chatId,
+//       message: payload.message,
+//       senderId,
+//       receiverId,
+//     };
+
+//     if (!messagePayload.message.trim()) return;
+//     setIsSending(true);
+
+//     try {
+//       socketRef.current.emit("sendMessage", messagePayload);
+//       toast.success("Message sent");
+//       setLocalMessages((prev) => [...prev, messagePayload]); //optimistic update
+//     } catch (err) {
+//       console.error("Send message error:", err);
+//       toast.error("Failed to send message");
+//     } finally {
+//       setPayload({
+//         chatId: "",
+//         message: "",
+//         senderId: "",
+//         receiverId: "",
+//       });
+//       setIsSending(false);
+//     }
+//   };
+
+//   const handleReplyMessage = async (e, messageId) => {
+//     e.preventDefault();
+//     if (!formData.text.trim()) return;
+//     setIsLoading(true);
+//     try {
+//       const senderId = JSON.parse(localStorage.getItem("currentUser"))._id;
+//       const replyData = { ...formData, message_id: messageId, senderId };
+//       socketRef.current.emit("send_reply", replyData);
+//       toast.success("Reply sent");
+//       const updatedReplies = await fetchCourseReplies(messageId);
+//       setReplies((prev) => ({ ...prev, [messageId]: updatedReplies }));
+//     } catch (err) {
+//       console.error("❌ Reply error:", err);
+//       toast.error("Failed to send reply");
+//     } finally {
+//       setFormData({ message_id: "", text: "" });
+//       setIsLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="message-container space-y-4">
+//       {localMessages.length > 0 ? (
+//         localMessages.map((message) => (
+//           <motion.div
+//             key={message._id || message.chatId + message.senderId + message.message} // Use a combination of fields for key
+//             className="bg-white shadow-md rounded-lg p-4"
+//             initial="hidden"
+//             animate="visible"
+//             exit="hidden"
+//             variants={messageVariant}
+//           >
+//             <div>
+//               <p
+//                 className="font-semibold cursor-pointer flex justify-between"
+//                 onClick={() => handleMessageClick(message._id)}
+//               >
+//                 <span>{message.senderId}</span> {/* Display senderId */}
+//                 <span className="text-sm text-gray-500">
+//                   {expandedMessage === message._id ? "▲" : "▼"}
+//                 </span>
+//               </p>
+//               <p className="pl-2">{message.message}</p>
+//             </div>
+
+//             <AnimatePresence>
+//               {expandedMessage === message._id && (
+//                 <motion.div
+//                   className="mt-4 space-y-2"
+//                   initial="hidden"
+//                   animate="visible"
+//                   exit="hidden"
+//                   variants={replyVariant}
+//                 >
+//                   {isRepliesLoading ? (
+//                     <p>Loading replies...</p>
+//                   ) : replies[message._id]?.length > 0 ? (
+//                     replies[message._id].map((reply) => (
+//                       <div
+//                         key={reply._id}
+//                         className="bg-gray-100 p-3 rounded-md"
+//                       >
+//                         <p className="font-bold">
+//                           {reply.senderId || "Unknown"}
+//                         </p>
+//                         <p className="text-sm">{reply.text}</p>
+//                       </div>
+//                     ))
+//                   ) : (
+//                     <p className="text-sm text-gray-500">
+//                       No replies for this message.
+//                     </p>
+//                   )}
+
+//                   <form
+//                     onSubmit={(e) => handleReplyMessage(e, message._id)}
+//                     className="flex gap-2 mt-3"
+//                   >
+//                     <input
+//                       type="text"
+//                       className="form-input flex-1 rounded-full"
+//                       placeholder="Type reply..."
+//                       value={formData.text}
+//                       onChange={handleMessageChange}
+//                       required
+//                     />
+//                     <button
+//                       type="submit"
+//                       className="bg-primary px-4 py-2 rounded-md text-white"
+//                       disabled={isLoading}
+//                     >
+//                       {isLoading ? "..." : "Reply"}
+//                     </button>
+//                   </form>
+//                 </motion.div>
+//               )}
+//             </AnimatePresence>
+//           </motion.div>
+//         ))
+//       ) : (
+//         <p className="text-gray-600">No messages yet.</p>
+//       )}
+
+//       {/* Send new message */}
+//       <div className="pt-6">
+//         <p className="mb-2">Send a message</p>
+//         <form onSubmit={handleSendMessage} className="flex gap-2">
+//           <input
+//             type="text"
+//             className="form-input flex-1 rounded-full"
+//             placeholder="Type message here..."
+//             value={payload.message}
+//             onChange={handleTextChange}
+//             required
+//           />
+//           <button
+//             type="submit"
+//             className="bg-primary px-5 py-3 rounded-md text-white"
+//             disabled={isSending}
+//           >
+//             {isSending ? <div className="loader"></div> : "Send"}
+//           </button>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// }
+
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+} from "react";
+import { io } from "socket.io-client";
 import { useCourse } from "../../../hooks/useCourse";
-import axios from "axios";
+import { toast } from "react-hot-toast";
+import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios"; // Import axios
 import { endpoints } from "../../../api/Endpoint";
-import toast from "react-hot-toast";
 
-export default function MessageTab({ courseMessages = [], courseId }) {
+export default function MessageTab({ courseMessages = [], courseId, tutorId }) {
   const [expandedMessage, setExpandedMessage] = useState(null);
+  const socketRef = useRef(null);
   const [replies, setReplies] = useState({});
-  const { fetchCourseReplies } = useCourse(courseId);
-  const [isLoading, setIsLoading] = useState(false);
+  const [localMessages, setLocalMessages] = useState([]); // Initialize as an empty array
+  const [users, setUsers] = useState({});
   const [isSending, setIsSending] = useState(false);
   const [isRepliesLoading, setIsRepliesLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    message_id: "",
-    text: "",
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({ message_id: "", text: "" });
   const [payload, setPayload] = useState({
-    text: "",
-    course_id: courseId,
+    chatId: "", // Will be constructed dynamically
+    message: "", // The message text
+    senderId: "", // Current user ID
+    receiverId: "", // Target user ID (e.g., tutor)
   });
-  const [users, setUsers] = useState({});
 
+  const { fetchCourseReplies } = useCourse(courseId);
+
+  // Variants for animation
   const messageVariant = {
     hidden: { opacity: 0, height: 0 },
     visible: { opacity: 1, height: "auto" },
@@ -34,36 +327,58 @@ export default function MessageTab({ courseMessages = [], courseId }) {
     visible: { opacity: 1, height: "auto", transition: { duration: 0.3 } },
   };
 
-  const getUserById = async (id) => {
-    if (users[id]) return users[id];
-
-    try {
-      const token = JSON.parse(localStorage.getItem("auth")).auth;
-      const response = await axios.get(endpoints.getUserById(id), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const userData = response.data.data;
-      setUsers((prevUsers) => ({ ...prevUsers, [id]: userData }));
-      // console.log('User data:', userData);
-
-      return userData;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  };
-
+  // Connect to socket
   useEffect(() => {
-    const fetchUsers = async () => {
-      for (const message of courseMessages) {
-        await getUserById(message.sender_id);
-      }
-    };
-    fetchUsers();
-  }, [courseMessages]);
+    const socket = io("wss://api.payloow.com", {
+      transports: ["websocket"],
+    });
+    socketRef.current = socket;
 
+    socket.on("connect", () => {
+      console.log("✅ Socket connected:", socket.id);
+      const senderId = JSON.parse(localStorage.getItem("currentUser"))._id;
+      const chatId = [senderId, tutorId].sort().join("_");
+      socket.emit("joinRoom", chatId);
+
+      // Fetch previous messages
+      const fetchPreviousMessages = async () => {
+        try {
+          const response = await axios.get(
+            endpoints.getReplies(chatId)
+          );
+          setLocalMessages(response.data);
+        } catch (error) {
+          console.error("❌ Fetch previous messages error:", error);
+          toast.error("Failed to load previous messages");
+        }
+      };
+
+      fetchPreviousMessages();
+    });
+
+    socket.on("connect_error", (err) => {
+      console.error("❌ Socket connection error:", err.message);
+    });
+
+    socket.on("receiveMessage", (newMessage) => {
+      console.log("📥 New message received:", newMessage);
+      setLocalMessages((prev) => [...prev, newMessage]);
+    });
+
+    socket.on("new_reply", ({ messageId, reply }) => {
+      console.log("📥 New reply received:", reply);
+      setReplies((prev) => ({
+        ...prev,
+        [messageId]: [...(prev[messageId] || []), reply],
+      }));
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [courseId, tutorId]);
+
+  // Toggle replies
   const handleMessageClick = async (messageId) => {
     if (expandedMessage === messageId) {
       setExpandedMessage(null);
@@ -72,14 +387,10 @@ export default function MessageTab({ courseMessages = [], courseId }) {
       if (!replies[messageId]) {
         setIsRepliesLoading(true);
         try {
-          const fetchedReplies = await fetchCourseReplies(messageId);
-          setReplies((prev) => ({ ...prev, [messageId]: fetchedReplies }));
-          for (const reply of fetchedReplies) {
-            await getUserById(reply.sender_id);
-          }
-        } catch (error) {
-          console.error("Error fetching replies:", error);
-          setReplies((prev) => ({ ...prev, [messageId]: [] }));
+          const fetched = await fetchCourseReplies(messageId);
+          setReplies((prev) => ({ ...prev, [messageId]: fetched }));
+        } catch (err) {
+          console.error("❌ Fetch replies error:", err);
         } finally {
           setIsRepliesLoading(false);
         }
@@ -88,83 +399,77 @@ export default function MessageTab({ courseMessages = [], courseId }) {
   };
 
   const handleTextChange = (e) => {
-    setPayload({
-      ...payload,
-      text: e.target.value,
-    });
-  };
-
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-    setIsSending(true);
-    try {
-      const token = JSON.parse(localStorage.getItem("auth")).auth;
-      const response = await axios.post(endpoints.sendMessage, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      toast.success("Message sent successfully");
-    } catch (error) {
-      console.error(error.response.data.message);
-      toast.error(error.response.data.message);
-    } finally {
-      setIsSending(false);
-      setPayload({
-        course_id: courseId,
-        text: "",
-      });
-    }
+    setPayload({ ...payload, message: e.target.value }); // Changed text to message
   };
 
   const handleMessageChange = (e) => {
-    const { value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      text: value,
-    }));
+    setFormData({ ...formData, text: e.target.value });
+  };
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+
+    const senderId = JSON.parse(localStorage.getItem("currentUser"))._id;
+    const receiverId = tutorId; // Get this based on your course data
+
+    const chatId = [senderId, receiverId].sort().join("_");
+
+    const messagePayload = {
+      chatId,
+      message: payload.message,
+      senderId,
+      receiverId,
+    };
+
+    if (!messagePayload.message.trim()) return;
+    setIsSending(true);
+
+    try {
+      socketRef.current.emit("sendMessage", messagePayload);
+      toast.success("Message sent");
+      setLocalMessages((prev) => [...prev, messagePayload]); //optimistic update
+    } catch (err) {
+      console.error("Send message error:", err);
+      toast.error("Failed to send message");
+    } finally {
+      setPayload({
+        chatId: "",
+        message: "",
+        senderId: "",
+        receiverId: "",
+      });
+      setIsSending(false);
+    }
   };
 
   const handleReplyMessage = async (e, messageId) => {
     e.preventDefault();
+    if (!formData.text.trim()) return;
     setIsLoading(true);
-
-    const updatedFormData = { ...formData, message_id: messageId };
-
     try {
-      const token = JSON.parse(localStorage.getItem("auth")).auth;
-      await axios.post(endpoints.replyMessage, updatedFormData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      toast.success("Reply sent successfully");
-
+      const senderId = JSON.parse(localStorage.getItem("currentUser"))._id;
+      const replyData = { ...formData, message_id: messageId, senderId };
+      socketRef.current.emit("send_reply", replyData);
+      toast.success("Reply sent");
       const updatedReplies = await fetchCourseReplies(messageId);
       setReplies((prev) => ({ ...prev, [messageId]: updatedReplies }));
-      for (const reply of updatedReplies) {
-        await getUserById(reply.sender_id);
-      }
-    } catch (error) {
-      console.error(error.response?.data?.message || "Error sending message");
-      toast.error(error.response?.data?.message || "Error sending message");
+    } catch (err) {
+      console.error("❌ Reply error:", err);
+      toast.error("Failed to send reply");
     } finally {
+      setFormData({ message_id: "", text: "" });
       setIsLoading(false);
-      setFormData({
-        message_id: "",
-        text: "",
-      });
     }
   };
 
   return (
     <div className="message-container space-y-4">
-      {courseMessages && courseMessages.length > 0 ? (
-        <>
-          {courseMessages.map((message) => (
+      {Array.isArray(localMessages) && localMessages.length > 0 ? ( // Check if localMessages is an array
+        localMessages.map((message) => {
+          const sender = JSON.parse(localStorage.getItem("currentUser"));
+          return (
             <motion.div
-              key={message._id}
-              className="message-block bg-white shadow-md rounded-lg p-4"
+              key={message._id || message.chatId + message.senderId + message.message} // Use a combination of fields for key
+              className="bg-white shadow-md rounded-lg p-4"
               initial="hidden"
               animate="visible"
               exit="hidden"
@@ -172,56 +477,48 @@ export default function MessageTab({ courseMessages = [], courseId }) {
             >
               <div>
                 <p
-                  className="message-title font-semibold cursor-pointer flex items-center justify-between"
+                  className="font-semibold cursor-pointer flex justify-between items-center"
                   onClick={() => handleMessageClick(message._id)}
                 >
-                  <span className="ml-2 capitalize">
-                    {users[message.sender_id]
-                      ? `${users[message.sender_id].firstName} ${
-                          users[message.sender_id].lastName
-                        } `
-                      : ""}
-                    <br />
-                  </span>
+                  <div className="flex items-center space-x-2">
+                    {sender?.profilePicture && (
+                      <img
+                        src={sender?.profilePicture}
+                        alt="Profile"
+                        className="w-8 h-8 rounded-full"
+                      />
+                    )}
+                    <span>{sender?.firstName} {sender?.lastName}</span> {/* Display sender's name */}
+                  </div>
                   <span className="text-sm text-gray-500">
                     {expandedMessage === message._id ? "▲" : "▼"}
                   </span>
                 </p>
-                <span className="flex-none pl-2">{message.text}</span>
+                <p className="pl-2">{message.message}</p>
               </div>
+
               <AnimatePresence>
                 {expandedMessage === message._id && (
                   <motion.div
+                    className="mt-4 space-y-2"
                     initial="hidden"
                     animate="visible"
                     exit="hidden"
                     variants={replyVariant}
-                    className="mt-4 space-y-2"
                   >
                     {isRepliesLoading ? (
-                      <div className="flex items-center justify-center">
-                        <div className="dots-5"></div>
-                      </div>
-                    ) : replies[message._id] &&
-                      replies[message._id].length > 0 ? (
+                      <p>Loading replies...</p>
+                    ) : replies[message._id]?.length > 0 ? (
                       replies[message._id].map((reply) => (
-                        <motion.div
+                        <div
                           key={reply._id}
                           className="bg-gray-100 p-3 rounded-md"
-                          initial="hidden"
-                          animate="visible"
-                          exit="hidden"
-                          variants={messageVariant}
                         >
                           <p className="font-bold">
-                            {users[reply.sender_id]
-                              ? `${users[reply.sender_id].firstName} ${
-                                  users[reply.sender_id].lastName
-                                }`
-                              : "Unknown User"}
+                            {reply.senderId || "Unknown"}
                           </p>
                           <p className="text-sm">{reply.text}</p>
-                        </motion.div>
+                        </div>
                       ))
                     ) : (
                       <p className="text-sm text-gray-500">
@@ -231,91 +528,55 @@ export default function MessageTab({ courseMessages = [], courseId }) {
 
                     <form
                       onSubmit={(e) => handleReplyMessage(e, message._id)}
-                      className="space-y-4"
+                      className="flex gap-2 mt-3"
                     >
-                      <div className="flex space-x-2 mt-5">
-                        <input
-                          type="text"
-                          className="form-input rounded-full"
-                          placeholder="Type reply here ..."
-                          value={formData.text}
-                          onChange={handleMessageChange}
-                          name="text"
-                          required
-                        />
-                        <button
-                          type="submit"
-                          className={`bg-primary py-3 px-5 rounded-md text-white ${
-                            isLoading ? "opacity-50" : ""
-                          }`}
-                          disabled={isLoading}
-                        >
-                          {isLoading ? <div className="loader"></div> : "Reply"}
-                        </button>
-                      </div>
+                      <input
+                        type="text"
+                        className="form-input flex-1 rounded-full"
+                        placeholder="Type reply..."
+                        value={formData.text}
+                        onChange={handleMessageChange}
+                        required
+                      />
+                      <button
+                        type="submit"
+                        className="bg-primary px-4 py-2 rounded-md text-white"
+                        disabled={isLoading}
+                      >
+                        {isLoading ? "..." : "Reply"}
+                      </button>
                     </form>
                   </motion.div>
                 )}
               </AnimatePresence>
             </motion.div>
-          ))}
-
-          <div className="pt-10">
-            <p>Send message</p>
-            <div className="flex space-x-2 mt-5">
-              <input
-                type="text"
-                className="form-input rounded-full"
-                placeholder="Type message here ..."
-                value={payload.text}
-                onChange={handleTextChange}
-                name="text"
-                required
-              />
-              <div className="">
-                <button
-                  className={`w-full bg-primary py-4 px-5 rounded-md text-white whitespace-nowrap ${
-                    isSending ? "opacity-50" : ""
-                  }`}
-                  onClick={handleSendMessage}
-                  disabled={isSending}
-                >
-                  {isSending ? <div className="loader"></div> : "Send message"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </>
+          )
+        })
       ) : (
-        <>
-          <p className="text-gray-600">No Messages for this course yet ....</p>
-          <div className="pt-10">
-            <p>Send message</p>
-            <div className="flex space-x-2 mt-5">
-              <input
-                type="text"
-                className="form-input rounded-full"
-                placeholder="Type message here ..."
-                value={payload.text}
-                onChange={handleTextChange}
-                name="text"
-                required
-              />
-              <div className="">
-                <button
-                  className={`w-full bg-primary py-4 px-5 rounded-md text-white whitespace-nowrap ${
-                    isSending ? "opacity-50" : ""
-                  }`}
-                  onClick={handleSendMessage}
-                  disabled={isSending}
-                >
-                  {isSending ? <div className="loader"></div> : "Send message"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </>
+        <p className="text-gray-600">No messages yet.</p>
       )}
+
+      {/* Send new message */}
+      <div className="pt-6">
+        <p className="mb-2">Send a message</p>
+        <form onSubmit={handleSendMessage} className="flex gap-2">
+          <input
+            type="text"
+            className="form-input flex-1 rounded-full"
+            placeholder="Type message here..."
+            value={payload.message}
+            onChange={handleTextChange}
+            required
+          />
+          <button
+            type="submit"
+            className="bg-primary px-5 py-3 rounded-md text-white"
+            disabled={isSending}
+          >
+            {isSending ? <div className="loader"></div> : "Send"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -38,7 +38,8 @@ const Service = () => {
 
   const updateMapUrl = (address) => {
     const encodedAddress = encodeURIComponent(address);
-    const url = `https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${encodedAddress}`;
+    // const url = `https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${encodedAddress}`;
+    const url = `https://maps.google.com/maps?q=${encodedAddress}&t=&z=13&ie=UTF8&iwloc=&output=embed`
     setMapUrl(url);
   };
 
@@ -170,10 +171,10 @@ const Service = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <iframe
-            // src={mapUrl}
-            src="/images/map.png"
+            src={mapUrl}
+            // src="/images/map.jpg"
             title="Service Center Map"
-            className="w-full h-[59vh] rounded"
+            className="w-full h-[59vh] rounded shadow-md"
             frameBorder="0"
             allowFullScreen
           ></iframe>

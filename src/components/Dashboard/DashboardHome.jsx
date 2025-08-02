@@ -263,8 +263,8 @@ const DashboardHome = () => {
                 { name: "Data", icon: <GiNetworkBars />, to: "/data" },
                 { name: "Electricity", icon: <FaBolt />, to: "/electricity" },
                 { name: "TV Sub", icon: <FaTv />, to: "/tv-sub" },
-                { name: "Loans", icon: <FaMoneyBills />, to: "#" },
-                { name: "Courses", icon: <MdOutlineMenuBook />, to: "#" },
+                { name: "Loans", icon: <FaMoneyBills />, to: "/investment" },
+                { name: "Courses", icon: <MdOutlineMenuBook />, to: "/e-learning/register" },
               ].map((service) => (
                 <div key={service.name} className="text-center flex flex-col items-center space-y-2">
                   <Link

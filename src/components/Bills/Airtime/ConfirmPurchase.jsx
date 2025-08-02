@@ -56,20 +56,20 @@ const ConfirmPurchase = ({ active, setActive, formik }) => {
           if (airtimeResponse?.data?.success) {
             setActive("page3");
           } else {
-            toast.error("Airtime purchase failed. Please try again.");
+            toast.error(response?.data?.message || "Airtime purchase failed.");
             setTimeout(() => setActive("page4"), 2000);
           }
         } catch (error) {
           console.error("Airtime purchase error:", error);
-          toast.error("Airtime purchase failed. Please try again.");
-          setTimeout(() => setActive("page4"), 2000);
+          toast.error(error?.response?.data?.message || "Airtime purchase failed.");
+           setTimeout(() => setActive("page4"), 2000);
         }
       } else {
         toast.error("Insufficient balance. Kindly fund your wallet.");
       }
     } catch (error) {
       toast.error("An error occurred. Please try again.");
-      setTimeout(() => setActive("page4"), 2000);
+       setTimeout(() => setActive("page4"), 2000);
     } finally {
       setLoading(false);
     }

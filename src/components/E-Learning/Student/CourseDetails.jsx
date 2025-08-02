@@ -145,14 +145,14 @@ const course = courses.find(c => String(c._id) === String(id));
                   <Tab className="course-detail-card">
                     Announcements
                   </Tab>
-                  <Tab className="course-detail-card">
+                  {/* <Tab className="course-detail-card">
                     Q&A
-                  </Tab>
+                  </Tab> */}
                 </TabList>
                 <TabPanels className="mt-6">
                   <TabPanel>
                     <div className="mt-10 mb-6">
-                      {course.sections?.map((section) => (
+                      {course?.sections?.map((section) => (
                         <motion.div key={section._id}
                           className="mb-4"
                           initial="hidden"
@@ -177,7 +177,7 @@ const course = courses.find(c => String(c._id) === String(id));
                               exit="hidden"
                               variants={sectionVariant}
                               transition={{ duration: 0.5 }}>
-                              {section.lessons.map(lesson => (
+                              {section?.lessons?.map(lesson => (
                                 <div key={lesson._id} className='flex items-center space-x-3'>
 
                                   <span><CiPlay1 /></span>

@@ -42,7 +42,7 @@ import DefaultProfile from "../Buyers/DefaultProfile";
 const navigation = [
   { name: "Main Menu", href: "/easybuy/home", icon: Category2 },
   { name: "Dashboard", href: "/partners/dashboard", icon: Home  },
-  { name: "Commission", href: "/partners/commission", icon:  SlChart  },
+  // { name: "Commission", href: "/partners/commission", icon:  SlChart  },
   { name: "Service Centers", href: "/partners/service-center", icon: LuStore },
   { name: "Customers", href: "/partners/customers", icon: SlPeople },
   { name: "Inventory", href: "/partners/inventory", icon: TbMessageStar },

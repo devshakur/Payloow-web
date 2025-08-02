@@ -1,11 +1,9 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 import { Wallet, ArrowRight2 } from "iconsax-react";
 import useBills from '../../../hooks/useBills';
 import { Toaster, toast } from 'react-hot-toast';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '../../../AuthContext/axiosInstance';
 
 const Confirm = ({ active, setActive, formik, selectedPlan, successResponse, setSuccessResponse }) => {
   const [loading, setLoading] = useState(false);
@@ -31,47 +29,66 @@ const Confirm = ({ active, setActive, formik, selectedPlan, successResponse, set
     e.preventDefault();
     setLoading(true);
 
-    if (
-      !selectedPlan?.id ||
-      !selectedPlan?.amount ||
-      !selectedPlan?.planType ||
-      !selectedPlan?.validity
-    ) {
+    if (!selectedPlan?.amount) {
       toast.error('Invalid data plan selected. Please try again.');
       setLoading(false);
       return;
     }
-
-    const payload = {
-      phone,
-      transactionPin: pin,
-      network: network?.toUpperCase(),
-      planType: selectedPlan.planType,
-      planId: String(selectedPlan.id),
-      ported: false,
-    };
 
     try {
       const response = await UserBalance();
       const balance = parseFloat(response.data.data.balance?.$numberDecimal);
 
       if (balance >= Number(selectedPlan.amount)) {
-        const dataResponse = await BuyData(payload);
+        let dataResponse;
+
+        if (network === "SMILE") {
+          const smilePayload = {
+            billersCode: "123456", // You might need to get this dynamically
+            variation_code: selectedPlan.code,
+            phone: phone,
+            request_id: `2025071714389mobiledata${Math.floor(
+              Math.random() * 100000
+            )}`,
+          };
+          dataResponse = await axiosInstance.post(
+            "/smile/smile-purchase",
+            smilePayload
+          );
+        } else if (network === "SPECTRANET") {
+          const spectranetPayload = {
+            number: phone,
+          };
+          dataResponse = await axiosInstance.post(
+            "/spectranet/spectranet-purchase",
+            spectranetPayload
+          );
+        } else {
+          const payload = {
+            phone,
+            transactionPin: pin,
+            network: network?.toUpperCase(),
+            planType: selectedPlan.planType,
+            planId: String(selectedPlan.id),
+            ported: false,
+          };
+          dataResponse = await BuyData(payload);
+        }
 
         if (dataResponse?.data?.success) {
           setSuccessResponse(dataResponse?.data?.data?.data);
-          setTimeout(()=> {
+          setTimeout(() => {
             setActive('page3');
-          }, 2000)
-         
+          }, 2000);
         } else {
-  const msg =
-      dataResponse?.data?.data?.data?.error?.[0] || // Most specific
-      dataResponse?.data?.data?.message ||          // Next best
-      dataResponse?.data?.message ||                // Fallback
-      'Data purchase failed. Please try again.';    // Default
-    toast.error(msg);
-    setTimeout(() => setActive('page4'), 2000);        }
+          const msg =
+            dataResponse?.data?.data?.data?.error?.[0] ||
+            dataResponse?.data?.data?.message ||
+            dataResponse?.data?.message ||
+            'Data purchase failed. Please try again.';
+          toast.error(msg);
+          setTimeout(() => setActive('page4'), 2000);
+        }
       } else {
         toast.error('Insufficient amount. Kindly fund your wallet');
       }
@@ -99,6 +116,12 @@ const Confirm = ({ active, setActive, formik, selectedPlan, successResponse, set
       case "9mobile":
         setImage("/images/9mobile.png");
         break;
+      case "smile":
+        setImage("/images/smile.jpg");
+        break;
+      case "spectranet":
+        setImage("/images/spectranet.png");
+        break;
       default:
         setImage("/images/default.jpg");
         break;
@@ -109,9 +132,6 @@ const Confirm = ({ active, setActive, formik, selectedPlan, successResponse, set
     switchImage();
   }, [network]);
 
-
-  
-
   return (
     <div className="grid lg:-mt-12 items-center">
       <div className="w-screen flex justify-center lg:ml-[8rem]">
@@ -121,9 +141,15 @@ const Confirm = ({ active, setActive, formik, selectedPlan, successResponse, set
           </h4>
 
           <h6 className="flex justify-center text-center text-blue-600 font-plus-jakarta font-medium text-[16px] text-[#1D2433] leading-5 -mt-3">
-            {selectedPlan
-              ? `${selectedPlan?.size} - ₦${selectedPlan?.amount} (${selectedPlan?.validity})`
-              : 'No Plan Selected'}
+            {selectedPlan ? (
+              ["SMILE", "SPECTRANET"].includes(network?.toUpperCase()) ? (
+                `₦${selectedPlan?.amount} - Code: ${selectedPlan?.code}`
+              ) : (
+                `${selectedPlan?.size} - ₦${selectedPlan?.amount} (${selectedPlan?.validity})`
+              )
+            ) : (
+              'No Plan Selected'
+            )}
           </h6>
 
           <section className="h-[97px] w-[95%] mx-2 mt-9">

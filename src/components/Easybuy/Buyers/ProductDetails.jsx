@@ -20,7 +20,8 @@ import { Loader } from '../../../AuthContext/Loader';
 const ProductDetails = () => {
     const { id } = useParams()
     const { FetchAllProduct, AddToCart, GetCart } = useInvestment();
-    const { increaseCartQuantity } = useContext(CartContext)
+   
+    const { cartTotalQuantity, refreshCart } = useContext(CartContext);
     const router = useRouter();
     const [selectedImage, setSelectedImage] = useState(null);
     const [product, setProduct] = useState(null);
@@ -150,28 +151,54 @@ const ProductDetails = () => {
         color: selectedColor,
     }
 
+    // const AddItemsToCart = async () => {
+    //     setLoading(true)
+    //     try {
+    //         const resp = await AddToCart(values);
+    //         const info = resp?.data?.data
+    //         if (info) {
+    //             setCartItems(info)
+    //             increaseCartQuantity(quantity)
+    //             toast.success('View Cart Items')
+    //             setLoading(false)
+    //         } else {
+    //             setCartItems([])
+    //             toast.error('Failed to add Items to Cart', info)
+    //         }
+    //     } catch (error) {
+    //         if (error?.response?.data?.msg) {
+    //             toast.error(error.response.data.msg);
+    //         } else {
+    //             toast.error('Failed to add Items to Cart');
+    //         }
+    //     }
+    // }
+
     const AddItemsToCart = async () => {
-        setLoading(true)
-        try {
-            const resp = await AddToCart(values);
-            const info = resp?.data?.data
-            if (info) {
-                setCartItems(info)
-                increaseCartQuantity(quantity)
-                toast.success('View Cart Items')
-                setLoading(false)
-            } else {
-                setCartItems([])
-                toast.error('Failed to add Items to Cart', info)
-            }
-        } catch (error) {
-            if (error?.response?.data?.msg) {
-                toast.error(error.response.data.msg);
-            } else {
-                toast.error('Failed to add Items to Cart');
-            }
+    setLoading(true);
+
+    try {
+        const resp = await AddToCart(values);
+        const info = resp?.data?.data;
+
+        if (info) {
+            setCartItems(info);
+            await refreshCart(); // ✅ ensures global cart stays in sync
+            toast.success('Item added to cart');
+        } else {
+            setCartItems([]);
+            toast.error('Failed to add items to cart');
         }
+    } catch (error) {
+        if (error?.response?.data?.msg) {
+            toast.error(error.response.data.msg);
+        } else {
+            toast.error('Failed to add items to cart');
+        }
+    } finally {
+        setLoading(false);
     }
+};
 
     const handleAddToCart = () => {
         if(!selectedColor){

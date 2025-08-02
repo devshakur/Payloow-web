@@ -10,21 +10,24 @@ import { toast, Toaster } from 'react-hot-toast'
 import { useRouter } from '../../../Routes/router';
 import useBills from '../../../hooks/useBills';
 import { useLocation, useNavigate } from "react-router-dom";
+import useInvestment from '../../../hooks/useInvetment';
 
 
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-// const userId = currentUser._id
+
 const ElearningCheckout = () => {
   const [cart, setCart] = useState([])
   const [isDirectPurchase, setIsDirectPurchase] = useState(false);
+  const [coupon, setCoupon] = useState('')
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [walletBalance, setWalletBalance] = useState();
  const {GetUserBalance} = useBills();
+ const {ValidateCoupon} = useInvestment();
  const location = useLocation();
 const queryParams = new URLSearchParams(location.search);
 const courseId = queryParams.get("courseId");
-//  const { id: courseId } = useParams(); // Assuming URL is /buy/:id
+
   const navigate = useNavigate()
 
 
@@ -71,6 +74,7 @@ const fetchCartOrSingleCourse = async () => {
     toast.error("Failed to load checkout data.");
   }
 };
+
 
 
   const deleteCartItems = async () => {
@@ -125,7 +129,7 @@ const WalletPurchase = async (e) => {
 if (
   data?.success || 
   data?.message === "Purchase successful" || 
-  data?.message === "Enrolled in course"
+  data?.message === "Enrolled in courses"
 ) {
   toast.success("Purchase successful");
   setTimeout(() => {
@@ -133,7 +137,7 @@ if (
   }, 1000);
 
   if (!isDirectPurchase && cart?.length > 0) {
-    await deleteCartItems();
+    // {later logic}
   }
 } else {
   toast.error(data?.message || "Unexpected server response");
@@ -174,6 +178,25 @@ if (
       discountTotal: summary?.discountTotal?.toFixed(2),
       savings: (summary?.originalTotal - summary?.discountTotal).toFixed(2)
     };
+  };
+
+   const applyCoupon = async () => {
+    try {
+      const Coupon = {
+        code: coupon,
+      };
+
+      const resp = await ValidateCoupon(Coupon);
+      const info = resp?.data?.data;
+      if (info) {
+        toast.success('Correct');
+      } else {
+        toast.error('Invalid Coupon');
+      }
+    } catch (error) {
+      const errorMsg = error?.response?.data?.msg || 'Invalid Coupon';
+      toast.error(errorMsg);
+    }
   };
 
   const summary = calculateSummary();
@@ -259,8 +282,10 @@ const formattedBalance =
             type="text"
             className='w-[70%] border border-gray-200 pl-2 py-2 rounded-lg'
             placeholder='Coupon here'
+            value={coupon}
+            onChange={(e) => setCoupon(e.target.value)}
           />
-          <button className='bg-blue-700 text-white py-2 rounded-lg w-[30%]'>Apply Coupon</button>
+          <button onClick={applyCoupon} className='bg-blue-700 text-white py-2 rounded-lg w-[30%]'>Apply Coupon</button>
         </div>
       </div>
     </div>
@@ -274,7 +299,7 @@ const formattedBalance =
       <div className="border-t px-5 border-dashed border-gray-500 w-full"></div>
       <div className='flex justify-between p-3'>
         <p className='font-poppins text-lg font-medium text-[#000]'>Total:</p>
-        <p className='font-poppins text-lg font-medium text-[#000]'>${summary.originalPrice}</p>
+        <p className='font-poppins text-lg font-medium text-[#000]'>${summary.discountTotal}</p>
       </div>
       <ul className='p-4'>
         <h3 className='text-lg font-plus-jakarta font-medium text-[#000]'>Pay</h3>
@@ -283,12 +308,12 @@ const formattedBalance =
             className="w-5 h-5 bg-white rounded-full flex justify-center items-center shadow-lg border border-gray-300 focus:bg-blue-700"
           >
             <button
-              className='w-[70%] h-[70%] rounded-full  bg-white'
+              className='w-[70%] h-[70%] rounded-full  bg-primary'
             ></button>
           </li>
           <p className='font-medium text-[#000] font-poppins text-[14px]'>Full Payment</p>
         </div>
-        <div className="flex gap-3 pt-4">
+        {/* <div className="flex gap-3 pt-4">
           <li
             className="w-5 h-5 bg-white rounded-full flex justify-center items-center shadow-lg border border-gray-300 focus:bg-blue-700"
           >
@@ -297,7 +322,7 @@ const formattedBalance =
             ></button>
           </li>
           <p className='font-medium text-[#000] font-poppins text-[14px]'>Pay on Installment</p>
-        </div>
+        </div> */}
       </ul>
       <div className="p-4">
         <h3 className='font-plus-jakarta font-medium text-lg'>Payment Method</h3>

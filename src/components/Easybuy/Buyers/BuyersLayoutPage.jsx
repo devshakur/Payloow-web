@@ -282,7 +282,7 @@ function BuyersLayoutPage({ children}) {
         >
           <FiHeart className="w-5 h-5"  />
         </button>
-        <span className="hidden fixed bg-slate-200 w-5 h-5 rounded-full lg:flex justify-center items-center right-[12.8rem] top-[14px]"><p className="text-red-700 font-poppins font-medium text-sm">{cartTotalQuantity}</p></span>
+        <span className="hidden fixed bg-slate-200 w-5 h-5 rounded-full lg:flex justify-center items-center right-[13.5rem] top-[14px]"><p className="text-red-700 font-poppins font-medium text-sm">{cartTotalQuantity}</p></span>
         <button
           type="button"
           onClick={handleCart}
@@ -294,7 +294,7 @@ function BuyersLayoutPage({ children}) {
          {/* Notification Icon (Visible on all screens) */}
          <button
           type="button"
-          onClick={()=>router.push('/settings')}
+          onClick={()=>router.push('/user/notification')}
           className="-m-2.5 p-1.5 bg-[#F1F3F9] rounded-[50%] text-[#1D2433CC] hover:text-gray-500"
         >
           <span className="sr-only">View notifications</span>

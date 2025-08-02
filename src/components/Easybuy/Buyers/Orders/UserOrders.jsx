@@ -183,7 +183,7 @@ const filteredOrders = allOrders.filter(order => {
                                     <div className="flex justify-between w-full lg:w-[12%] mt-3">
                                         <p className="font-plus-jakarta text-lg font-medium lg:hidden">Product:</p>
                                         <div className="text-sm flex gap-2 justify-start ml-[-1rem] font-poppins font-semibold lg:truncate">
-                                            <img src={item.img} alt="phone" style={{ width: '30px', height: '30px' }} />
+                                            {/* <img src={item.img} alt="phone" style={{ width: '30px', height: '30px' }} /> */}
                                             <p>{item.productName}</p>
                                         </div>
                                     </div>

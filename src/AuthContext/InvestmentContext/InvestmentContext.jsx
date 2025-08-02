@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react"
+import { createContext, useReducer, useState } from "react"
 import axiosInstance from "../axiosInterceptor"
 import { InvestmentHandler } from "./InvestmentHandler"
 import { EasyBuyEndpoints, endpoints, InvestmentEndpoints } from "../../api/Endpoint"
@@ -15,6 +15,8 @@ const reducer = (state, action) => {
 const InvestmentContext = createContext()
 const InvestmentProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initial)
+    const [cartCount, setCartCount] = useState(0);
+const [cartItems, setCartItems] = useState([]);
 
     const CreateDebtorAccount = async (data) => {
         try {
@@ -575,13 +577,16 @@ const getCartCourses = async () => {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    const cartItems = response.data.cart || [];
-    const count = cartItems.length;
+    const items = response.data.cart || [];
+    setCartCount(items.length);
+    setCartItems(items); // Store in state so UI updates
 
-    return { count, cartItems }; // Return both
+    return { count: items.length, cartItems: items };
   } catch (error) {
     console.error("Error fetching cart:", error);
-    return { count: 0, cartItems: [] }; // Safe fallback
+    setCartCount(0);
+    setCartItems([]);
+    return { count: 0, cartItems: [] };
   }
 };
 
@@ -590,7 +595,9 @@ const getCartCourses = async () => {
         ViewBusiness, AddLoan, 
         InvestInBusiness, GetInvestmentRequest, GetLoanBusiness, getUserDetails, GetFilteredLoanBusiness, InvestorsInvestment,
         AcceptOrDeclineInvestment, RepayInvestmentRequest, CreateBuyerProfile, AddToCart,
-        FetchAllProduct, ValidateCoupon, DeleteCart, GetCart, GetEasyBuyCatgories, CreateProduct, GetDeliveryInfo, checkOut, swapProduct, GetPercentage, DeleteEasyBuyCart,
+        FetchAllProduct, ValidateCoupon, DeleteCart, GetCart, 
+      cartCount,
+      cartItems, GetEasyBuyCatgories, CreateProduct, GetDeliveryInfo, checkOut, swapProduct, GetPercentage, DeleteEasyBuyCart,
         GetUserOrders, GetUInstallmentOrders, GetSolarStock, GetInventoryOrders, SubmitInstallmentPlanRequest,  GetProductInventory,GetActiveCustomers, getCartCourses, CreateServiceCenter, GetServiceCenter, GetPartnerCustomers,
     }
 

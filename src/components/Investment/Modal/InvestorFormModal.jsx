@@ -15,7 +15,7 @@ const InvestorFormModal = ({ isOpen, onClose, onRegister }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const user = JSON.parse(localStorage.getItem('currentUser'))
-    const phone = `${'+234' + user?.phone}`
+    const phone = user?.phone ? `+234${typeof user.phone === 'string' && user.phone.startsWith('234') ? user.phone.slice(3) : user.phone}` : '';
     const [investorDetails, setInvestorDetails] = useState({
         email: user?.email || '',
         phoneNumber: phone || '',
@@ -71,24 +71,27 @@ const InvestorFormModal = ({ isOpen, onClose, onRegister }) => {
         setLoading(true);
         try {
             const resp = await CreateInvestorAccount(investorDetails);
+            setLoading(false); // Ensure loading is set to false after the API call
+
             if (resp && resp.data && resp.data.success) {
-                setLoading(false)
                 toast.success('Your Profile has been created successfully. ' + resp.data.message);
                 const updatedUser = await GetUser();
-      setUser(updatedUser);
-      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-                onRegister(); 
-         
+                setUser(updatedUser);
+                localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                onRegister();
+                router.push('/investor/dashboard'); // Redirect to investor dashboard
             } else {
                 toast.error(resp.data.message);
             }
         } catch (error) {
-            setLoading(false)
-            toast.error('An error occurred: ' + (error.response?.data?.message || error.message));
-            if (error.response.data.message === 'Investor Profile Already Created') {
-                setTimeout(() => {
-                    router.push('/investor/dashboard');
-                }, 3000);
+            setLoading(false); // Ensure loading is set to false in case of an error
+            const errorMsg = error.response?.data?.error || error.message;
+            if (errorMsg === "Investor Profile Already Created") {
+                toast.error("Investor profile already exists.");
+                  router.push('/investor/dashboard');
+            } else {
+                toast.error('An error occurred: ' + errorMsg);
+                  router.push('/investor/dashboard');
             }
         }
     };

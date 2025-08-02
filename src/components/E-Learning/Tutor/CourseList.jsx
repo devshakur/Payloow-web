@@ -124,7 +124,10 @@ const CourseList = () => {
               <Slider {...settings}>
                 {courses.map((course) => (
                   <div key={course._id} className="pr-5 mb-5" onClick={() => handleCourseClick(course._id)}>
-                    <CourseCard key={course._id} {...course} />
+                     <div className="w-[370px] sm:w-[300px] lg:w-[270px] xl:w-[360px]">
+     <CourseCard key={course._id} {...course} />
+      </div>
+                    
                   </div>
                 ))}
               </Slider>

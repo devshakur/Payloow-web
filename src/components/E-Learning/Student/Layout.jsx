@@ -32,6 +32,7 @@ import DefaultProfile from "../../Easybuy/Buyers/DefaultProfile";
 import axios from "axios";
 import { endpoints } from "../../../api/Endpoint";
 import { useRouter } from "../../../Routes/router";
+import useInvestment from "../../../hooks/useInvetment";
 
 const navigation = [
   { name: "Main Menu", href: "/dashboard", icon: Category2 },
@@ -75,22 +76,11 @@ export default function Layout({ children }) {
   const isActive = (href) => location.pathname === href;
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const cart = JSON.parse(localStorage.getItem("cart"));
-  const [cartCount, setCartCount] = useState(0);
+  // const [cartCount, setCartCount] = useState(0);
 
-  const getCartCourses = async () => {
-  try {
-    const token = JSON.parse(localStorage.getItem("auth")).auth;
-    const response = await axios.get(endpoints.getCartCourses, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  const { cartCount, getCartCourses } = useInvestment()
 
-    const cartLength = response.data.cart.length;
-    setCartCount(cartLength);
-    // Optional: localStorage.setItem("cart", JSON.stringify(cartLength));
-  } catch (error) {
-    console.error("Error fetching cart:", error);
-  }
-};
+
 
 
   useEffect(() => {
@@ -101,9 +91,7 @@ export default function Layout({ children }) {
     navigate("/e-learning/student/cart");
   };
 
-  // useEffect(() => {
-  //   getCartCourses();
-  // }, []);
+ 
 
   return (
     <>
@@ -338,9 +326,11 @@ export default function Layout({ children }) {
                 >
                   <span className="sr-only">View cart</span>
                   <ShoppingCart aria-hidden="true" className="h-6 w-6" />
+                   {cartCount > 0 && (
                   <div className="absolute bg-red-500 text-white text-xs h-5 w-5 flex items-center justify-center rounded-full top-0 right-0">
-                    {cart ? cart : 0}
+                     {cartCount ? cartCount : 0}
                   </div>
+                      )}
                 </button>
 
                 {/* Separator */}

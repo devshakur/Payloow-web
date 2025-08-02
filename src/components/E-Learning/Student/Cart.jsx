@@ -12,6 +12,7 @@ import { CloseCircle } from 'iconsax-react';
 import { Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { MdDeleteOutline } from "react-icons/md";
 import useInvestment from '../../../hooks/useInvetment';
+import useBills from '../../../hooks/useBills';
 
 
 
@@ -19,8 +20,10 @@ import useInvestment from '../../../hooks/useInvetment';
 const Cart = () => {
   const { id } = useParams();
   const {checkOut, getCartCourses} = useInvestment();
+  const {GetUserBalance} = useBills();
   const navigate = useNavigate();
   const [cart, setCart] = useState([])
+  const [walletBalance, setWalletBalance] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [checkOuts, setCheckOuts] = useState(false)
   const [selectedCourseId, setSelectedCourseId] = useState(null);
@@ -56,20 +59,7 @@ const Cart = () => {
     visible: { opacity: 1, height: "auto" },
   };
 
-  // const getCartCourses = async () => {
-  //   try {
-  //     const token = JSON.parse(localStorage.getItem('auth')).auth;
-  //     const response = await axios.get(endpoints.getAllStdCourses, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`
-  //       }
-  //     });
-  //     setCart(response.data.data)
-  //   } catch (error) {
-  //     console.error(error)
-  //     // toast.error('An error occured while fetching cart')
-  //   }
-  // }
+  
 
   const removeCourseFromCart = async (e, courseId) => {
     e.preventDefault();
@@ -92,53 +82,53 @@ const Cart = () => {
     }
   }
 
-  const deleteCartItems = async () => {
-    try {
-      const token = JSON.parse(localStorage.getItem('token'));
-      const response = await axios.delete(endpoints.deleteCart, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      toast.success('Course successfully removed from cart')
-    } catch (error) {
-      toast.error('Failed to delete cart Item')
-    } 
-  }
+  // const deleteCartItems = async () => {
+  //   try {
+  //     const token = JSON.parse(localStorage.getItem('token'));
+  //     const response = await axios.delete(endpoints.deleteCart, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`
+  //       }
+  //     });
+  //     toast.success('Course successfully removed from cart')
+  //   } catch (error) {
+  //     toast.error('Failed to delete cart Item')
+  //   } 
+  // }
 
   
-  const FlutterPurchase = async (e) => {
-    e.preventDefault();
-    try {
-      const token = JSON.parse(localStorage.getItem('auth')).auth;
+  // const FlutterPurchase = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const token = JSON.parse(localStorage.getItem('auth')).auth;
   
-      // Make the API call and store the response in a variable
-      const response = await axios.post(
-        endpoints.purchaseCourse,
-        {
-          paymentType: 'flutterwave',
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Access and store data from the response
-      const purchaseUrl = response?.data?.data;
+  //     // Make the API call and store the response in a variable
+  //     const response = await axios.post(
+  //       endpoints.purchaseCourse,
+  //       {
+  //         paymentType: 'flutterwave',
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     // Access and store data from the response
+  //     const purchaseUrl = response?.data?.data;
   
-      if (purchaseUrl) {
-        window.location.href = purchaseUrl; // Redirect to the purchase URL
-        toast.success('Purchase submitted successfully');
-      removeCourseFromCart();
-      } else {
-        toast.error('Could not access Flutterwave Gateway, please try again in a few minutes');
-      }
-    } catch (error) {
-      toast.error('Failed to submit purchase');
-      console.error('Error submitting purchase:', error);
-    } 
-  };
+  //     if (purchaseUrl) {
+  //       window.location.href = purchaseUrl; // Redirect to the purchase URL
+  //       toast.success('Purchase submitted successfully');
+  //     removeCourseFromCart();
+  //     } else {
+  //       toast.error('Could not access Flutterwave Gateway, please try again in a few minutes');
+  //     }
+  //   } catch (error) {
+  //     toast.error('Failed to submit purchase');
+  //     console.error('Error submitting purchase:', error);
+  //   } 
+  // };
   
   
   // Calculate cart summary
@@ -173,6 +163,34 @@ const Cart = () => {
   fetchCart();
 }, []);
 
+  useEffect(() => {
+
+  const fetchWalletBalance = async () => {
+    try {
+      const resp = await GetUserBalance();
+      const balanceString = resp?.data?.data?.balance?.["$numberDecimal"];
+      if (balanceString !== undefined) {
+        const balanceNumber = Number(balanceString);
+        setWalletBalance(balanceNumber);
+      } else {
+        toast.error("Unable to retrieve wallet balance.");
+      }
+    } catch (error) {
+      toast.error("Failed to fetch wallet balance");
+    }
+  };
+
+  fetchWalletBalance();
+}, []);
+
+const formattedBalance =
+    typeof walletBalance === "number"
+      ? new Intl.NumberFormat("en-NG", {
+          style: "currency",
+          currency: "NGN",
+          minimumFractionDigits: 2,
+        }).format(walletBalance)
+      : "₦0.00";
 
 
 
@@ -356,10 +374,10 @@ const Cart = () => {
                   <div className="flex items-center">
                     <span className="text-lg">Pay ${summary.discountTotal} with Wallet</span>
                   </div>
-                  <span className="">Balance: $0.00</span>
+                  <span className="">Balance: {formattedBalance}</span>
                 </button>
 
-                <button
+                {/* <button
                   className="w-full flex items-center justify-between p-4 border rounded-lg hover:bg-primary hover:text-white"
                   onClick={FlutterPurchase}
                 >
@@ -367,7 +385,7 @@ const Cart = () => {
                     <span className="text-lg">Pay ${summary.discountTotal} with Card</span>
                   </div>
                   <span>→</span>
-                </button>
+                </button> */}
               </div>
 
               <div className="mt-6 flex gap-4">

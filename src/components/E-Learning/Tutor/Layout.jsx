@@ -32,7 +32,7 @@ import { useRouter } from "../../../Routes/router";
 const navigation = [
   { name: "Dashboard", href: "/e-learning/tutor/dashboard", icon: Home },
   { name: "Courses", href: "/e-learning/tutor/courses", icon: BookSaved },
-  { name: "Analytics", href: "/e-learning/tutor/analytics", icon: Chart },
+ // { name: "Analytics", href: "/e-learning/tutor/analytics", icon: Chart },
   // { name: "Quiz", href: "/e-learning/tutor/create-quiz", icon: TableDocument },
   { name: "Messages", href: "/e-learning/tutor/messages", icon: Message },
 ];

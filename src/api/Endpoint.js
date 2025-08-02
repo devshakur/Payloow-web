@@ -40,6 +40,7 @@ export const endpoints = {
   getCourseById: (id) => `${BaseUrl}/get-course-by-id/${id}`,
   addQuiz: `${BaseUrl}/tutors/quiz`,
   submitQuiz: (id) => `${BaseUrl}/students/quiz/${id}/attempt`,
+  getAllQuizzes: (id) => `${BaseUrl}/tutors/quiz/${id}`,
   getCourseContent: `${BaseUrl}/get-course-content`,
   uploadCourseVideo: `${BaseUrl}/elearning-uploads/courses/lesson-video-upload-url`,
   createCourseContent: `${BaseUrl}/tutors/courses`,
@@ -57,7 +58,8 @@ export const endpoints = {
   // message
   sendMessage: `${BaseUrl}/send-message`,
   replyMessage: `${BaseUrl}/reply-to-message`,
-  getReplies: (messageId) => `${BaseUrl}/get-replies-message/${messageId}`,
+  getReplies: (messageId) =>
+    `${BaseUrl}/e-learning/live-messaging/messages/${messageId}`,
   getMessages: `${BaseUrl}/get-messages`,
   updateMessage: `${BaseUrl}/update-messages`,
   getSingleMessage: (messageId) => `${BaseUrl}/get-single-message/${messageId}`,
@@ -76,6 +78,7 @@ export const endpoints = {
 export const BillsEndpoints = {
   airtime: `${BaseUrl}/payloow-bills/airtime`,
   data: `${BaseUrl}/payloow-bills/data`,
+
   electricityVariation: `${BaseUrl}/payloow-bills/electricity/discos`,
   validateMeterNumber: `${BaseUrl}/payloow-bills/electricity/validate-meter`,
   electricity: `${BaseUrl}/payloow-bills/electricity`,

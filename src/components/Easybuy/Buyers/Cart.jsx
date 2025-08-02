@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import BuyersLayout from '../EasyBuyRegistration/BuyersLayout';
 import { GoPlus } from "react-icons/go";
 import { AiOutlineMinus } from "react-icons/ai";
@@ -7,10 +7,12 @@ import { motion } from 'framer-motion';
 import { toast, Toaster } from 'react-hot-toast';
 import useInvestment from '../../../hooks/useInvetment';
 import useAuth from '../../../hooks/useAuth';
+import { CartContext } from './cartContext';
 
 const Cart = () => {
   const router = useRouter();
   const { GetCart, DeleteCart } = useInvestment()
+  const {refreshCart} = useContext(CartContext)
   const { isLoggedIn, user } = useAuth();
   const [quantities, setQuantities] = useState({});
   const [cartItems, setCartItems] = useState([]);
@@ -23,6 +25,7 @@ const Cart = () => {
       const info = resp?.data;
       if (info?.success) {
         toast.success(info?.message || 'Items removed from cart');
+        await refreshCart();
       } else {
         toast.error('Failed to remove Items from Cart');
       }

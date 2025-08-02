@@ -1,49 +1,52 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { InvestmentContext } from '../../../AuthContext/InvestmentContext/InvestmentContext';
-import useAuth from '../../../hooks/useAuth';
+import React, { createContext, useState, useEffect, useContext } from "react";
+import { InvestmentContext } from "../../../AuthContext/InvestmentContext/InvestmentContext";
+import useAuth from "../../../hooks/useAuth";
 
 export const CartContext = createContext();
 
 const CartProvider = ({ children }) => {
-    const { GetCart } = useContext(InvestmentContext); 
-    const {user} = useAuth();// use GetCart from context
-    const [cartTotalQuantity, setCartTotalQuantity] = useState(0);
+  const { GetCart } = useContext(InvestmentContext);
+  const { user } = useAuth();
 
-    useEffect(() => {
-        if(user) {
-            const fetchCartItems = async () => {
-                try {
-                    const resp = await GetCart();
-                    const info = resp?.data?.data;
-    
-                    if (info) {
-                        const total = info.reduce((sum, item) => sum + item.quantity, 0);
-                        setCartTotalQuantity(total);
-                    }
-                } catch (error) {
-                    console.error("Failed to fetch cart items:", error);
-                }
-            };
-    
-            if (GetCart) {
-                fetchCartItems();
-            } else {
-                console.error("GetCart function is not available");
-            }
+  const [cartTotalQuantity, setCartTotalQuantity] = useState(0);
 
-        }
-    }, [user]);
+  // Rehydrate cart from localStorage on first load
+  useEffect(() => {
+    const stored = localStorage.getItem("cart_quantity");
+    if (stored) {
+      setCartTotalQuantity(parseInt(stored));
+    }
+  }, []);
 
-    // Function to increase cartTotalQuantity
-    const increaseCartQuantity = (amount) => {
-        setCartTotalQuantity((prevQuantity) => prevQuantity + amount);
-    };
+  // Sync to localStorage on change
+  useEffect(() => {
+    localStorage.setItem("cart_quantity", cartTotalQuantity);
+  }, [cartTotalQuantity]);
 
-    return (
-        <CartContext.Provider value={{ cartTotalQuantity, increaseCartQuantity }}>
-            {children}
-        </CartContext.Provider>
-    );
+  // Refresh cart from backend
+  const refreshCart = async () => {
+    try {
+      const resp = await GetCart();
+      const items = resp?.data?.data || [];
+      const total = items.reduce((sum, item) => sum + item.quantity, 0);
+      setCartTotalQuantity(total);
+    } catch (error) {
+      console.error("Failed to refresh cart:", error);
+    }
+  };
+
+  // Fetch once on login
+  useEffect(() => {
+    if (user && GetCart) {
+      refreshCart();
+    }
+  }, [user]);
+
+  return (
+    <CartContext.Provider value={{ cartTotalQuantity, refreshCart }}>
+      {children}
+    </CartContext.Provider>
+  );
 };
 
 export default CartProvider;

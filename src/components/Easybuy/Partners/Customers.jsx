@@ -81,7 +81,7 @@ const Customers = ({ handleStep }) => {
                         onClick={handleStep} 
                         className='mt-5 md:mt-0 bg-blue-600 py-2 px-12 text-sm rounded-md text-white'
                     >
-                        Add new Customer
+                       Defaulted Customers
                     </button>
                 </div>
             </motion.div>
