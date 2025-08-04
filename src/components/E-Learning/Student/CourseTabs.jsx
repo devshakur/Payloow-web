@@ -16,13 +16,15 @@ const CourseTabs = ({
   fetchQuiz,
   setCourseQuiz,
   selectedTabIndex,
-  setSelectedTabIndex
+  setSelectedTabIndex,
+  setCurrentVideoUrl,
+  tutorId
 }) => {
 
-  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false)
 
- 
   
+
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false)
 
   return (
  <TabGroup selectedIndex={selectedTabIndex} onChange={setSelectedTabIndex}>
@@ -69,7 +71,7 @@ const CourseTabs = ({
           <AnnouncementTab announcements={announcements} />
         </TabPanel>
         <TabPanel>
-          <MessageTab courseMessages={courseMessages} courseId={courseId} />
+          <MessageTab courseMessages={courseMessages} courseId={courseId} tutorId={tutorId} />
         </TabPanel>
         <TabPanel>
           <button

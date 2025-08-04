@@ -12,29 +12,27 @@ export const useCourse = (courseId) => {
 
   const token = JSON.parse(localStorage.getItem("auth") || "{}").auth;
 
-const getMyCourses = async (courseId) => {
-  try {
-    const response = await axios.get(endpoints.getPurchasedCourse, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  const getMyCourses = async (courseId) => {
+    try {
+      const response = await axios.get(endpoints.getPurchasedCourse, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    const allCourses = response.data.courses;
-    const selectedCourse = allCourses.find((c) => c._id === courseId);
+      const allCourses = response.data.courses;
+      const selectedCourse = allCourses.find((c) => c._id === courseId);
 
-
-    if (selectedCourse) {
-      setCourse(selectedCourse);
-      // await getTutorProfileById(selectedCourse.tutor_id);
-      setAnnouncements(selectedCourse.announcements || [])
-    } else {
-      console.warn(`Course with ID ${courseId} not found`);
+      if (selectedCourse) {
+        setCourse(selectedCourse);
+        // await getTutorProfileById(selectedCourse.tutor_id);
+      } else {
+        console.warn(`Course with ID ${courseId} not found`);
+      }
+    } catch (error) {
+      console.error("Error fetching courses:", error);
     }
-  } catch (error) {
-    console.error("Error fetching courses:", error);
-  }
-};
+  };
 
   // const getTutorProfileById = async (id) => {
   //   try {
@@ -49,28 +47,25 @@ const getMyCourses = async (courseId) => {
   //   }
   // };
 
-const fetchQuiz = async (lessonId) => {
-  try {
-    const response = await axios.get(endpoints.getCourseQuiz(lessonId), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const result = response?.data?.quizzes;
+  const fetchQuiz = async (lessonId) => {
+    try {
+      const response = await axios.get(endpoints.getCourseQuiz(lessonId), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const result = response?.data?.quizzes;
 
-    setCourseQuiz(result);
- 
+      setCourseQuiz(result);
 
-    return result; // ✅ Add this line
-  } catch (error) {
-    console.error("Error fetching quiz:", error);
-    return null; // Optional: return null on error for safe handling
-  } finally {
-    setLoading(false);
-  }
-};
-
-
+      return result; // ✅ Add this line
+    } catch (error) {
+      console.error("Error fetching quiz:", error);
+      return null; // Optional: return null on error for safe handling
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchMessages = async () => {
     try {
@@ -105,17 +100,28 @@ const fetchQuiz = async (lessonId) => {
     }
   };
 
- useEffect(() => {
-  const init = async () => {
-    await getMyCourses(courseId);
-  //  await getCourseAnnouncements(courseId);
-   // await fetchMessages();
-    setLoading(false); // ✅ ensure loading ends here
+  const getCourseAnnouncements = async (courseId) => {
+    try {
+      const response = await axios.get(endpoints.getAnnouncements(courseId), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setAnnouncements(response.data);
+    } catch (error) {
+      console.error("Error fetching announcements:", error);
+    }
   };
-  init();
-}, [courseId]);
 
-
+  useEffect(() => {
+    const init = async () => {
+      await getMyCourses(courseId);
+      await getCourseAnnouncements(courseId);
+      //  await fetchMessages();
+      setLoading(false); // ✅ ensure loading ends here
+    };
+    init();
+  }, [courseId]);
 
   return {
     course,
@@ -124,8 +130,8 @@ const fetchQuiz = async (lessonId) => {
     courseMessages,
     loading,
     fetchCourseReplies,
-  announcements,
-    fetchQuiz,        
-  setCourseQuiz,
+    announcements,
+    fetchQuiz,
+    setCourseQuiz,
   };
 };

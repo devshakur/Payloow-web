@@ -7,12 +7,13 @@ import { endpoints } from "../../../api/Endpoint";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Layout from "./Layout";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Loader } from "../../../AuthContext/Loader";
 
 const AllCourses = () => {
   const [courses, setCourses] = useState([])
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false)
 
   const handleCourseClick = (courseId) => {
@@ -40,16 +41,22 @@ const AllCourses = () => {
     getAllCourses();
   }, []);
 
+  useEffect(() => {
+    if (location.state?.refresh) {
+      getAllCourses();
+    }
+  }, [location]);
+
   if (isLoading) return <div><Loader /></div>;
 
   return (
     <Layout>
       <div className="my-10">
         <h3 className="font-semibold md:text-3xl text-xl my-5">
-          All Courses ({courses.length})
+          All Courses ({courses?.length})
         </h3>
         <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 gap-8">
-          {courses.map((course) => (
+          {courses?.map((course) => (
             <div key={course._id} className="" onClick={() => handleCourseClick(course._id)}>
               <CourseCard key={course.id} {...course} />
             </div>

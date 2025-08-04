@@ -22,15 +22,17 @@ import {
 import { motion } from "framer-motion";
 import CreateQuiz from "./CreateQuiz";
 import toast from "react-hot-toast";
+import { useRouter } from "../../../Routes/router";
 
 const CourseDetails = () => {
   const { id } = useParams();
   const [courses, setCourses] = useState([]);
+  const router = useRouter();
   const navigate = useNavigate();
   const [openSectionId, setOpenSectionId] = useState(null);
   const [allQuizzes, setAllQuizzes] = useState([]);
   const [openQuizId, setOpenQuizId] = useState(null);
-  const [announcement, setAnnouncement] = useState([])
+  const [announcement, setAnnouncement] = useState([]);
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const [isAnnouncementModalOpen, setIsAnnouncementModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,18 +42,17 @@ const CourseDetails = () => {
     title: "",
     description: "",
   });
-   const [openIndex, setOpenIndex] = useState(null);
+  const [openIndex, setOpenIndex] = useState(null);
 
   const toggleOpen = (index) => {
     setOpenIndex((prev) => (prev === index ? null : index));
   };
 
-
   const handleCourseClick = (courseId) => {
     navigate(`/e-learning/tutor/course/edit-course/${courseId}`);
   };
 
-        const token = JSON.parse(localStorage.getItem("auth")).auth;
+  const token = JSON.parse(localStorage.getItem("auth")).auth;
 
   const sectionVariant = {
     hidden: { opacity: 0, height: 0 },
@@ -60,7 +61,6 @@ const CourseDetails = () => {
 
   const getAllCourses = async () => {
     try {
-
       const response = await axios.get(endpoints.getAllCourses, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -72,34 +72,20 @@ const CourseDetails = () => {
     }
   };
 
-    const getAllAnnoucement = async () => {
+  const getAllAnnoucement = async () => {
     try {
-     
-      const response = await axios.get(endpoints.createAnnouncement, {
+      const response = await axios.get(endpoints.getAnnouncements(id), {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       setAnnouncement(response.data);
     } catch (error) {
-      toast.error("An error occured while fetching user data");
+      toast.error("An error occurred while fetching announcements");
+      console.error("Error fetching announcements:", error);
     }
   };
-const getAllQuizzes = async (id) => {
-  try {
-    const token = JSON.parse(localStorage.getItem("auth")).auth;
-    const response = await axios.get(endpoints.getAllQuizzes(id), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const result = response.data.quizzes
-    setAllQuizzes(result);
-
-  } catch (error) {
-    toast.error("An error occured while fetching user data");
-  }
-}
+  
   const addAnnouncement = async () => {
     setIsLoading(true);
     try {
@@ -122,18 +108,41 @@ const getAllQuizzes = async (id) => {
     }
   };
 
-  useEffect(() => {
-    getAllCourses();
-    getAllAnnoucement();
-    getAllQuizzes(id);
-  }, []);
-
-  const backToCourses = () => {
-    navigate("/e-learning/tutor/all-courses");
-  };
+ useEffect(() => {
+  getAllCourses();
+  getAllAnnoucement();
+}, [id]);
 
  const course = courses.length > 0 ? courses.find((c) => c._id === id) : null;
 
+useEffect(() => {
+  if (course) {
+    const quizzes = [];
+
+    course.sections.forEach((section) => {
+      section.lessons.forEach((lesson) => {
+        if (lesson.quizzes && lesson.quizzes.length > 0) {
+          lesson.quizzes.forEach((quiz) => {
+            quizzes.push({
+              ...quiz,
+              lessonTitle: lesson.title,
+              sectionTitle: section.title,
+            });
+          });
+        }
+      });
+    });
+
+    setAllQuizzes(quizzes);
+  }
+}, [course]);
+
+
+  const backToCourses = () => {
+    router.push("/e-learning/tutor/courses")
+  };
+
+ 
 
   const handleQuizSubmit = async (quizzes) => {
     const payload = {
@@ -238,12 +247,66 @@ const getAllQuizzes = async (id) => {
                     ))}
                   </div>
                 </TabPanel>
-              <TabPanel>
+                {/* <TabPanel>
+                  <div className="mt-10 mb-6">
+                    {Array.isArray(allQuizzes) && allQuizzes.length > 0 ? (
+                      allQuizzes.map((quiz) => (
+                        <motion.div
+                          key={quiz._id}
+                          className="mb-4"
+                          initial="hidden"
+                          animate="visible"
+                          exit="hidden"
+                          variants={sectionVariant}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <div
+                            className="bg-white flex items-center justify-between text-xl p-3 rounded-xl cursor-pointer"
+                            onClick={() =>
+                              setOpenQuizId(openQuizId === quiz._id ? null : quiz._id)
+                            }
+                          >
+                            <span>{quiz.title}</span>
+                            <span>
+                              {openQuizId === quiz._id ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                            </span>
+                          </div>
+
+                          {openQuizId === quiz._id && (
+                            <motion.div
+                              className="space-y-3 pl-5 mt-4"
+                              initial="hidden"
+                              animate="visible"
+                              exit="hidden"
+                              variants={sectionVariant}
+                              transition={{ duration: 0.5 }}
+                            >
+                              <p className="text-sm text-gray-600">Quiz ID: {quiz._id}</p>
+                              <p className="text-sm text-gray-600">
+                                Number of Questions: {quiz.questions?.length || 0}
+                              </p>
+                            </motion.div>
+                          )}
+                        </motion.div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500">No quizzes available for this course.</p>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => setIsQuizModalOpen(true)}
+                    className="bg-blue-600 text-white py-2 px-4 rounded-lg"
+                  >
+                    Create Quiz
+                  </button>
+                </TabPanel> */}
+                <TabPanel>
   <div className="mt-10 mb-6">
     {Array.isArray(allQuizzes) && allQuizzes.length > 0 ? (
-      allQuizzes.map((quiz) => (
+      allQuizzes.map((quiz, index) => (
         <motion.div
-          key={quiz._id}
+          key={quiz._id || index}
           className="mb-4"
           initial="hidden"
           animate="visible"
@@ -272,8 +335,19 @@ const getAllQuizzes = async (id) => {
               variants={sectionVariant}
               transition={{ duration: 0.5 }}
             >
-              <p className="text-sm text-gray-600">Quiz ID: {quiz._id}</p>
-              <p className="text-sm text-gray-600">Number of Questions: {quiz.questions?.length || 0}</p>
+              <p className="text-sm text-gray-600">
+                <strong>Section:</strong> {quiz.sectionTitle}
+              </p>
+              <p className="text-sm text-gray-600">
+                <strong>Lesson:</strong> {quiz.lessonTitle}
+              </p>
+              <p className="text-sm text-gray-600">
+                <strong>Quiz ID:</strong> {quiz._id}
+              </p>
+              <p className="text-sm text-gray-600">
+                <strong>Number of Questions:</strong>{" "}
+                {quiz.questions?.length || 0}
+              </p>
             </motion.div>
           )}
         </motion.div>
@@ -291,31 +365,32 @@ const getAllQuizzes = async (id) => {
   </button>
 </TabPanel>
 
+
                 <TabPanel>
-                <div className="space-y-4 mt-4">
-      {announcement.map((item, index) => (
-        <div
-          key={item.id}
-          className="border border-gray-200 rounded-lg shadow-sm cursor-pointer"
-          onClick={() => toggleOpen(index)}
-        >
-          <div className="p-4 font-semibold bg-gray-100">
-            {item.title}
-          </div>
-          {openIndex === index && (
-            <div className="p-4 text-gray-700 bg-white border-t">{item.description}</div>
-          )}
-        </div>
-      ))}
-    </div>
+                  <div className="space-y-4 mt-4">
+                    {announcement.map((item, index) => (
+                      <div
+                        key={item.id}
+                        className="border border-gray-200 rounded-lg shadow-sm cursor-pointer"
+                        onClick={() => toggleOpen(index)}
+                      >
+                        <div className="p-4 font-semibold bg-gray-100">
+                          {item.title}
+                        </div>
+                        {openIndex === index && (
+                          <div className="p-4 text-gray-700 bg-white border-t">
+                            {item.description}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                   <button
                     onClick={() => setIsAnnouncementModalOpen(true)}
                     className="bg-blue-600 mt-4 text-white py-2 px-4 rounded-lg"
                   >
                     Add Announcement
                   </button>
-                
-                  
                 </TabPanel>
                 <TabPanel>No Q&A</TabPanel>
               </TabPanels>
@@ -358,9 +433,7 @@ const getAllQuizzes = async (id) => {
               >
                 Edit Course
               </button>
-              {/* <button onClick={() => alert('Working on it')} className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">
-                Edit Course
-              </button> */}
+             
 
               <h3 className="font-bold text-xl mt-10">Course Includes</h3>
               <div className="space-y-4 mt-5">

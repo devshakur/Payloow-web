@@ -1,97 +1,135 @@
-import React, { useState } from "react"
-import { FiSearch, FiSmile, FiPaperclip, FiSend } from "react-icons/fi"
-import Layout from "./Layout"
+import React, { useState, useEffect, useRef } from "react";
+import { FiSearch, FiSmile, FiPaperclip, FiSend } from "react-icons/fi";
+import Layout from "./Layout";
+import { io } from "socket.io-client";
 
 export default function StudentMessages() {
-  const [activeChat, setActiveChat] = useState(null)
+  const [activeChat, setActiveChat] = useState(null);
+  const [messageText, setMessageText] = useState("");
+  const [messages, setMessages] = useState({});
+  const [chatEntries, setChatEntries] = useState([]);
 
-  const chatEntries = [
-    {
-      id: 1,
-      name: "Wisdom",
-      lastMessage: "Yea, Sure!",
-      time: "11:30am",
-      unread: 23,
-      online: true,
-      image: '/images/user1.jpg',
-      messages: [
-        { id: 1, content: "Hey, how's the project going?", time: "11:00am", isSelf: false },
-        { id: 2, content: "I've made some progress on the frontend.", time: "11:15am", isSelf: true },
-        { id: 3, content: "That's great! Can you show me?", time: "11:20am", isSelf: false },
-        { id: 4, content: "Sure, I'll send you a screenshot.", time: "11:25am", isSelf: true },
-        { id: 5, content: "Yea, Sure!", time: "11:30am", isSelf: false },
-      ]
-    },
-    {
-      id: 2,
-      name: "Naomi Vehance",
-      lastMessage: "Let's discuss the design.",
-      time: "10:45am",
-      unread: 10,
-      online: false,
-      image: '/images/user2.png',
-      messages: [
-        { id: 1, content: "Hi Naomi, do you have a moment?", time: "10:30am", isSelf: true },
-        { id: 2, content: "Sure, what's up?", time: "10:35am", isSelf: false },
-        { id: 3, content: "I wanted to talk about the new design.", time: "10:40am", isSelf: true },
-        { id: 4, content: "Let's discuss the design.", time: "10:45am", isSelf: false },
-      ]
-    },
-    {
-      id: 3,
-      name: "Mayowa Sunusi",
-      lastMessage: "I've fixed the bug!",
-      time: "09:15am",
-      unread: 0,
-      online: false,
-      image: '/images/user1.jpg',
-      messages: [
-        { id: 1, content: "I've been working on that bug you mentioned.", time: "09:00am", isSelf: false },
-        { id: 2, content: "Any progress?", time: "09:05am", isSelf: true },
-        { id: 3, content: "Yes, I think I've found the issue.", time: "09:10am", isSelf: false },
-        { id: 4, content: "I've fixed the bug!", time: "09:15am", isSelf: false },
-      ]
-    },
-    {
-      id: 4,
-      name: "Marvellous",
-      lastMessage: "Meeting at 2 PM?",
-      time: "08:50am",
-      unread: 0,
-      online: false,
-      image: '/images/user3.png',
-      messages: [
-        { id: 1, content: "Good morning! Are we still on for the meeting?", time: "08:45am", isSelf: false },
-        { id: 2, content: "Yes, I believe so. What time was it again?", time: "08:48am", isSelf: true },
-        { id: 3, content: "Meeting at 2 PM?", time: "08:50am", isSelf: false },
-      ]
-    },
-    {
-      id: 5,
-      name: "Yusuf",
-      lastMessage: "I'll send the report soon.",
-      time: "Yesterday",
-      unread: 0,
-      online: false,
-      image: '/images/user1.png',
-      messages: [
-        { id: 1, content: "How's the quarterly report coming along?", time: "Yesterday", isSelf: true },
-        { id: 2, content: "I'm almost done with it.", time: "Yesterday", isSelf: false },
-        { id: 3, content: "Great, when can I expect it?", time: "Yesterday", isSelf: true },
-        { id: 4, content: "I'll send the report soon.", time: "Yesterday", isSelf: false },
-      ]
-    },
-  ]
+  const socketRef = useRef(null);
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const tutorId = currentUser?._id;
+
+  useEffect(() => {
+    if (!tutorId) return;
+
+    const socket = io("wss://api.payloow.com", { transports: ["websocket"] });
+    socketRef.current = socket;
+
+    socket.on("connect", () => {
+      console.log("🟢 Connected to WebSocket");
+      socket.emit("registerUser", tutorId);
+      socket.emit("notificationMessage", tutorId); // triggers list of studentIds
+    });
+
+    socket.on("notificationMessage", (studentId) => {
+      const id = Array.isArray(studentId) ? studentId : [studentId];
+      id.forEach((sId) => {
+        const chatId = [tutorId, sId].sort().join("_");
+
+        socket.emit("joinRoom", chatId);
+        socket.emit("getChatHistory", chatId);
+      });
+    });
+
+    socket.on("chatHistory", (msgs) => {
+      if (!msgs || msgs.length === 0) return;
+      const chatId = msgs[0].chatId;
+      const lastMsg = msgs[msgs.length - 1];
+      const studentId = lastMsg.senderId === tutorId ? lastMsg.receiverId : lastMsg.senderId;
+      const user = lastMsg.senderId === tutorId ? lastMsg.receiver : lastMsg.sender;
+
+      // Update message state by chatId
+      setMessages((prev) => ({ ...prev, [chatId]: msgs }));
+
+      // Only add if not already present
+      setChatEntries((prev) => {
+        const exists = prev.find((c) => c.id === studentId);
+        if (exists) return prev;
+        return [
+          ...prev,
+          {
+            id: studentId,
+            chatId,
+            name: user?.name || "Student",
+            profile: user?.profilePicture || null,
+            lastMessage: lastMsg.message,
+            time: new Date(lastMsg.timestamp || Date.now()).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            online: true,
+          },
+        ];
+      });
+    });
+
+    socket.on("receiveMessage", (msg) => {
+      const chatId = msg.chatId;
+      setMessages((prev) => ({
+        ...prev,
+        [chatId]: [...(prev[chatId] || []), msg],
+      }));
+    });
+
+    return () => socket.disconnect();
+  }, [tutorId]);
+
+  const handleSendMessage = () => {
+    if (!messageText.trim() || !activeChat) return;
+
+    const chatId = activeChat.chatId;
+    const payload = {
+      chatId,
+      message: messageText,
+      senderId: tutorId,
+      receiverId: activeChat.id,
+    };
+
+    socketRef.current.emit("sendMessage", payload);
+    socketRef.current.emit("newMessageNotification", {
+      chatId,
+      senderId: tutorId,
+      message: messageText,
+    });
+
+    setMessages((prev) => ({
+      ...prev,
+      [chatId]: [...(prev[chatId] || []), payload],
+    }));
+    setMessageText("");
+  };
+
+  const getChatMessages = () => {
+    if (!activeChat) return [];
+    return messages[activeChat.chatId] || [];
+  };
 
   return (
     <Layout>
       <div className="flex h-screen bg-gray-100">
-        <Sidebar chatEntries={chatEntries} activeChat={activeChat} setActiveChat={setActiveChat} />
-        <ChatArea activeChat={activeChat ? chatEntries.find(chat => chat.id === activeChat) : null} />
+        <Sidebar
+          chatEntries={chatEntries}
+          activeChat={activeChat}
+          setActiveChat={setActiveChat}
+        />
+        <ChatArea
+          activeChat={activeChat}
+          messageText={messageText}
+          setMessageText={setMessageText}
+          handleSendMessage={handleSendMessage}
+          getChatMessages={getChatMessages}
+        />
       </div>
     </Layout>
-  )
+  );
 }
+
+// Sidebar and Chat UI remains the same from your current component — no need to rewrite here
+
 
 function Sidebar({ chatEntries, activeChat, setActiveChat }) {
   return (

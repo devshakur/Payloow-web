@@ -44,20 +44,20 @@ const TutorInfo = ({ course, tutor, courseId, }) => {
           <p>Instructor</p>
           <div className='space-y-5'>
             <div className="text-gray-600 mb-6 space-x-3 flex items-center">
-              <img src={'/images/user1.jpg'} alt="" className='h-20 w-20 rounded-full' />
+              <img src={course?.tutor_profile?.tutor_image || '/images/user1.jpg'} alt="" className='h-20 w-20 rounded-full' />
               <div>
-                <p className="font-semibold text-lg">{tutor?.tutor_name}</p>
-                <p className="">{tutor?.tutor_experience}</p>
+                <p className="font-semibold text-lg">{course?.tutor_profile?.tutor_name}</p>
+                <p className="">{course?.tutor_profile?.tutor_experience}</p>
               </div>
 
             </div>
             <div className="flex items-center space-x-5">
-              <a href={tutor?.tutor_email} target='_blank'><MdEmail size={24} /></a>
-              <a href={tutor?.tutor_linkedin} target='_blank'><FaLinkedin size={24} /></a>
-              <a href={tutor?.tutor_twitter} target='_blank'><FaSquareXTwitter size={24} /></a>
+              <a href={course?.tutor_profile?.tutor_email} target='_blank'><MdEmail size={24} /></a>
+              <a href={course?.tutor_profile?.tutor_linkedin} target='_blank'><FaLinkedin size={24} /></a>
+              <a href={course?.tutor_profile?.tutor_twitter} target='_blank'><FaSquareXTwitter size={24} /></a>
             </div>
             <div>
-              <p>&quot;{tutor?.tutor_about}&quot;</p>
+              <p>&quot;{course?.tutor_profile?.tutor_about}&quot;</p>
             </div>
           </div>
         </div>

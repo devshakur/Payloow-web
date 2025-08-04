@@ -40,7 +40,7 @@ export const endpoints = {
   getCourseById: (id) => `${BaseUrl}/get-course-by-id/${id}`,
   addQuiz: `${BaseUrl}/tutors/quiz`,
   submitQuiz: (id) => `${BaseUrl}/students/quiz/${id}/attempt`,
-  getAllQuizzes: (id) => `${BaseUrl}/tutors/quiz/${id}`,
+  getAllQuizzes: `${BaseUrl}/tutors/quiz/`,
   getCourseContent: `${BaseUrl}/get-course-content`,
   uploadCourseVideo: `${BaseUrl}/elearning-uploads/courses/lesson-video-upload-url`,
   createCourseContent: `${BaseUrl}/tutors/courses`,
@@ -70,7 +70,7 @@ export const endpoints = {
   // announcement
   createAnnouncement: `${BaseUrl}/tutors/announcements`,
   getAnnouncements: (courseId) =>
-    `${BaseUrl}/get-all-course-announcements/${courseId}`,
+    `${BaseUrl}/students/courses/${courseId}/announcements`,
   getCourseAnnouncements: (courseId) =>
     `${BaseUrl}/students/announcement/${courseId}`,
 };

@@ -46,7 +46,7 @@ const AllCourses = () => {
     <Layout>
       <div className="my-10">
         <h3 className="font-semibold md:text-3xl text-xl my-5">
-          All Courses ({courses.length})
+          All Courses ({courses?.length})
         </h3>
         <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 gap-8">
           {courses.map((course) => (
